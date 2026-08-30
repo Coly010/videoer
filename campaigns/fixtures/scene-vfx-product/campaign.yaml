@@ -1,0 +1,12 @@
+schemaVersion: 1
+id: scene-vfx-product
+title: Product scene VFX fixture
+type: product
+style: saas-promo
+durationSeconds: 4
+targetAudience: educators
+description: Clean product scene proving the engine is genre-independent
+tone: [clear, energetic]
+cta: Start teaching
+output: { width: 540, height: 960, fps: 30, format: mp4 }
+brand: { name: Tutarium, colors: ['#6d5dfc', '#55d6be', '#ffffff'] }

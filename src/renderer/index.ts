@@ -5,6 +5,7 @@ import { renderMedia, selectComposition } from '@remotion/renderer';
 import type { Campaign, Storyboard } from '../domain/schemas.js';
 import { resolveTemplate } from '../templates/index.js';
 import type { VideoerCompositionProps } from './video.js';
+import { validateStoryboardScenes } from '../scene/validation.js';
 
 export interface RenderPlan {
   campaign: Campaign;
@@ -17,6 +18,7 @@ export interface RenderPlan {
 export interface RenderOptions {
   outputPath: string;
   draft?: boolean;
+  frameRange?: [number, number];
   onProgress?: (progress: number) => void;
 }
 
@@ -56,6 +58,8 @@ export function createRenderPlan(
 }
 
 function mime(path: string) {
+  if (path.endsWith('.mp4')) return 'video/mp4';
+  if (path.endsWith('.webm')) return 'video/webm';
   if (path.endsWith('.svg')) return 'image/svg+xml';
   if (path.endsWith('.png')) return 'image/png';
   if (path.endsWith('.webp')) return 'image/webp';
@@ -69,7 +73,40 @@ async function compositionProps(
   const root = dirname(plan.campaignFile);
   const assetData: Record<string, string> = {};
   const keyframeData: VideoerCompositionProps['keyframeData'] = {};
+  const sceneAssetData: VideoerCompositionProps['sceneAssetData'] = {};
   for (const shot of plan.storyboard.shots) {
+    if (shot.type === 'scene') {
+      sceneAssetData[shot.id] = {};
+      for (const layer of shot.scene.layers) {
+        if ('asset' in layer) {
+          const path = resolve(root, layer.asset);
+          try {
+            const data = await readFile(path);
+            sceneAssetData[shot.id]![layer.id] =
+              `data:${mime(path)};base64,${data.toString('base64')}`;
+          } catch (error) {
+            throw new RendererError(
+              `Campaign '${plan.campaign.id}', shot '${shot.id}', layer '${layer.id}', renderer 'asset-loader': ${error instanceof Error ? error.message : String(error)}`,
+              { cause: error },
+            );
+          }
+        }
+        if (layer.mask?.type === 'asset') {
+          const path = resolve(root, layer.mask.asset);
+          try {
+            const data = await readFile(path);
+            sceneAssetData[shot.id]![`mask:${layer.id}`] =
+              `data:${mime(path)};base64,${data.toString('base64')}`;
+          } catch (error) {
+            throw new RendererError(
+              `Campaign '${plan.campaign.id}', shot '${shot.id}', mask '${layer.id}', renderer 'mask-loader': ${error instanceof Error ? error.message : String(error)}`,
+              { cause: error },
+            );
+          }
+        }
+      }
+      continue;
+    }
     if (shot.type === 'scene-keyframes') {
       keyframeData[shot.id] = await Promise.all(
         shot.keyframes
@@ -107,6 +144,7 @@ async function compositionProps(
     template: plan.template,
     assetData,
     keyframeData,
+    sceneAssetData,
     ...(audioData ? { audioData } : {}),
     output: {
       width,
@@ -126,6 +164,13 @@ function serveUrl() {
 
 export async function render(plan: RenderPlan, options: RenderOptions): Promise<RenderOutput> {
   const kind = options.draft ? 'draft' : 'final';
+  const sceneValidation = await validateStoryboardScenes(plan.storyboard, plan.campaignFile);
+  if (!sceneValidation.valid) {
+    const issue = sceneValidation.issues[0]!;
+    throw new RendererError(
+      `Campaign '${plan.campaign.id}', shot '${issue.shotId}', layer/effect '${issue.itemId}', renderer '${issue.renderer}': ${issue.cause}`,
+    );
+  }
   const inputProps = await compositionProps(plan, options.draft ?? false);
   try {
     const url = await serveUrl();
@@ -151,8 +196,9 @@ export async function render(plan: RenderPlan, options: RenderOptions): Promise<
             pixelFormat: 'yuv420p' as const,
           }),
       outputLocation: options.outputPath,
+      ...(options.frameRange ? { frameRange: options.frameRange } : {}),
       inputProps,
-      chromiumOptions: { enableMultiProcessOnLinux: true },
+      chromiumOptions: { enableMultiProcessOnLinux: true, gl: 'angle' },
       onProgress: ({ progress }) => options.onProgress?.(progress),
     });
   } catch (error) {

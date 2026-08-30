@@ -16,6 +16,9 @@ import { loadCampaign } from './domain/io.js';
 import { CodexImageProvider } from './providers/codex-image.js';
 import { FakeImageProvider } from './providers/fake-image.js';
 import { ProviderRegistry } from './providers/contracts.js';
+import { inspectScenes, inspectShotVideo, renderShot } from './application/scenes.js';
+import { effectBundleNames, effectPresetNames } from './vfx/registry.js';
+import { particlePresetNames } from './particles/presets.js';
 
 interface Envelope {
   version: 1;
@@ -225,6 +228,32 @@ program
 
 const shot = program.command('shot').description('selective shot operations');
 shot
+  .command('render')
+  .argument('<campaign>')
+  .argument('<shot-id>')
+  .option('--preview', 'render at preview resolution')
+  .option('--from <seconds>', 'start within the shot', Number.parseFloat)
+  .option('--to <seconds>', 'end within the shot', Number.parseFloat)
+  .option('--output <path>', 'output MP4 path')
+  .description('render one shot or a short range for visual iteration')
+  .action(async function (
+    p,
+    shotId,
+    options: { preview?: boolean; from?: number; to?: number; output?: string },
+  ) {
+    const data = await renderShot(p, shotId, options);
+    output(this, 'shot.render', data, (d) => `✓ ${d.shotId} ${d.from}s–${d.to}s → ${d.path}`);
+  });
+shot
+  .command('inspect')
+  .argument('<video>')
+  .option('--output <directory>', 'deterministic frame output directory')
+  .description('extract 0/25/50/75/100% frames and a contact sheet from a shot render')
+  .action(async function (p, options: { output?: string }) {
+    const data = await inspectShotVideo(p, options.output);
+    output(this, 'shot.inspect', data, (d) => `✓ ${d.frames.length} frames → ${d.contactSheet}`);
+  });
+shot
   .command('revise')
   .argument('<campaign>')
   .argument('<shot-id>')
@@ -250,6 +279,51 @@ shot
       data,
       (d) => `✓ ${d.shotId} revision ${d.revision}; changed ${d.changed.join(', ')}`,
     );
+  });
+
+const scene = program.command('scene').description('scene composition operations');
+scene
+  .command('validate')
+  .argument('<campaign>')
+  .description('validate scene assets, presets, timing, and renderer availability')
+  .action(async function (p) {
+    const data = await inspectScenes(p);
+    output(this, 'scene.validate', data, (d) =>
+      d.valid
+        ? `✓ ${d.scenes} scenes, ${d.layers} layers, ${d.effects} effects`
+        : `✗ ${d.issues.length} scene issues`,
+    );
+    if (!data.valid) process.exitCode = 2;
+  });
+scene
+  .command('inspect')
+  .argument('<campaign>')
+  .description('inspect sorted scene layers, depth, timing, and effects')
+  .action(async function (p) {
+    const data = await inspectScenes(p);
+    output(this, 'scene.inspect', data, () => JSON.stringify(data, null, 2));
+  });
+
+program
+  .command('vfx')
+  .command('list')
+  .description('list registered VFX presets and bundles')
+  .action(function () {
+    const data = { presets: effectPresetNames, bundles: effectBundleNames };
+    output(
+      this,
+      'vfx.list',
+      data,
+      (d) => `VFX presets:\n${d.presets.join('\n')}\n\nBundles:\n${d.bundles.join('\n')}`,
+    );
+  });
+program
+  .command('particles')
+  .command('list')
+  .description('list registered particle presets')
+  .action(function () {
+    const data = { presets: particlePresetNames };
+    output(this, 'particles.list', data, (d) => d.presets.join('\n'));
   });
 shot
   .command('regenerate')

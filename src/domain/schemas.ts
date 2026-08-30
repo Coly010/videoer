@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { motionPresets } from './motion.js';
+import { sceneSchema } from '../scene/model.js';
 
 const outputSchema = z
   .object({
@@ -48,6 +49,7 @@ const sourceSchema = z
   })
   .refine((v) => v.path || v.prompt, { message: 'source requires path or prompt' });
 export const shotRenderModes = [
+  'scene',
   'image-motion',
   'scene-keyframes',
   'image-to-video',
@@ -176,6 +178,7 @@ const sceneKeyframeShotSchema = baseShot
   });
 
 const shotSchema = z.discriminatedUnion('type', [
+  baseShot.extend({ type: z.literal('scene'), scene: sceneSchema }),
   baseShot.extend({ type: z.literal('kinetic-text') }),
   baseShot.extend({ type: z.literal('image-motion') }),
   sceneKeyframeShotSchema,

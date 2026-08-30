@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "campaignId": "scene-vfx-cinematic",
+  "title": "Cinematic scene VFX fixture",
+  "durationSeconds": 4,
+  "style": "cinematic-fantasy",
+  "shots": [
+    {
+      "id": "castle-awakens",
+      "type": "scene",
+      "startSeconds": 0,
+      "durationSeconds": 4,
+      "transition": "cut",
+      "scene": {
+        "camera": {
+          "preset": "slow-push-in",
+          "intensity": 1.15,
+          "easing": "ease-in-out",
+          "focusDepth": "midground"
+        },
+        "layers": [
+          {
+            "id": "night",
+            "type": "shape",
+            "shape": "gradient",
+            "gradient": ["#05070d", "#15101b", "#321713"],
+            "width": 760,
+            "height": 1120,
+            "depth": "background"
+          },
+          {
+            "id": "castle",
+            "type": "image",
+            "asset": "assets/castle.svg",
+            "depth": 8,
+            "opacity": 0.96
+          },
+          {
+            "id": "distant-embers",
+            "type": "particle-system",
+            "preset": "embers",
+            "seed": "castle-bg",
+            "params": { "intensity": 0.36, "wind": 0.1 },
+            "depth": 15,
+            "opacity": 0.45,
+            "blendMode": "screen"
+          },
+          {
+            "id": "fog",
+            "type": "effect",
+            "preset": "low-fog",
+            "seed": 22,
+            "params": { "intensity": 0.85 },
+            "depth": 25,
+            "opacity": 0.9,
+            "blendMode": "screen"
+          },
+          {
+            "id": "figure",
+            "type": "image",
+            "asset": "assets/figure.svg",
+            "depth": 52,
+            "transform": { "y": 2 },
+            "filters": [{ "type": "glow", "value": 8 }]
+          },
+          {
+            "id": "embers",
+            "type": "particle-system",
+            "preset": "embers",
+            "seed": "castle-fg",
+            "params": { "intensity": 0.75, "wind": 0.22 },
+            "depth": 72,
+            "blendMode": "screen"
+          },
+          {
+            "id": "rubble",
+            "type": "image",
+            "asset": "assets/rubble.svg",
+            "depth": 90,
+            "transform": { "scale": 1.04 },
+            "filters": [{ "type": "blur", "value": 0.7 }]
+          },
+          {
+            "id": "grain",
+            "type": "effect",
+            "preset": "film-grain",
+            "params": { "intensity": 0.32 },
+            "depth": "screen",
+            "opacity": 0.65,
+            "blendMode": "soft-light"
+          },
+          {
+            "id": "vignette",
+            "type": "effect",
+            "preset": "vignette",
+            "params": { "intensity": 0.78 },
+            "depth": "screen"
+          },
+          {
+            "id": "title",
+            "type": "text",
+            "text": "THE GATE AWAKENS",
+            "color": "#f4dcc0",
+            "fontSize": 42,
+            "fontWeight": 700,
+            "align": "center",
+            "depth": "screen",
+            "transform": { "y": 31 },
+            "motion": { "preset": "drift", "intensity": 0.12, "easing": "ease-in-out" },
+            "filters": [{ "type": "glow", "value": 5 }]
+          }
+        ],
+        "effects": [
+          {
+            "id": "warm-flicker",
+            "type": "flicker",
+            "intensity": 0.22,
+            "depth": "screen",
+            "blendMode": "screen"
+          }
+        ]
+      }
+    }
+  ]
+}

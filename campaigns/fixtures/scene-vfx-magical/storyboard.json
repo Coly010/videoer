@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "campaignId": "scene-vfx-magical",
+  "title": "Magical reveal",
+  "durationSeconds": 4,
+  "style": "cinematic-fantasy",
+  "shots": [
+    {
+      "id": "reveal",
+      "type": "scene",
+      "startSeconds": 0,
+      "durationSeconds": 4,
+      "scene": {
+        "camera": { "preset": "drift", "intensity": 0.35 },
+        "layers": [
+          {
+            "id": "void",
+            "type": "shape",
+            "shape": "gradient",
+            "gradient": ["#060411", "#15113b", "#351c50"],
+            "width": 700,
+            "height": 1100,
+            "depth": "background"
+          },
+          {
+            "id": "warp",
+            "type": "effect",
+            "preset": "magical-warping",
+            "params": { "intensity": 0.8, "color": "#7047ff" },
+            "depth": 22,
+            "start": 0.6,
+            "end": 3.5,
+            "blendMode": "screen"
+          },
+          {
+            "id": "relic",
+            "type": "image",
+            "asset": "assets/relic.svg",
+            "depth": 50,
+            "motion": { "preset": "punch", "intensity": 0.2, "easing": "ease-out" },
+            "filters": [{ "type": "glow", "value": 16 }]
+          },
+          {
+            "id": "magic",
+            "type": "particle-system",
+            "preset": "magical-particles",
+            "seed": 404,
+            "params": { "intensity": 1.1 },
+            "depth": 70,
+            "start": 0.25,
+            "end": 3.75,
+            "blendMode": "screen"
+          },
+          {
+            "id": "sparkle",
+            "type": "particle-system",
+            "preset": "sparkle",
+            "seed": 405,
+            "params": { "intensity": 0.8 },
+            "depth": 82,
+            "start": 1.25,
+            "blendMode": "screen"
+          },
+          {
+            "id": "flash",
+            "type": "effect",
+            "preset": "flash",
+            "params": { "intensity": 0.7, "at": 0.58 },
+            "depth": "screen",
+            "blendMode": "screen"
+          },
+          {
+            "id": "vignette",
+            "type": "effect",
+            "preset": "vignette",
+            "params": { "intensity": 0.5 },
+            "depth": "screen"
+          },
+          {
+            "id": "copy",
+            "type": "text",
+            "text": "POWER, REVEALED",
+            "fontSize": 40,
+            "color": "#eee6ff",
+            "depth": "screen",
+            "transform": { "y": 32 },
+            "motion": { "preset": "scale-pop", "intensity": 0.25 }
+          }
+        ],
+        "effects": [
+          {
+            "id": "pulse",
+            "type": "pulse",
+            "intensity": 0.45,
+            "start": 0.8,
+            "end": 3.2,
+            "blendMode": "screen"
+          }
+        ]
+      }
+    }
+  ]
+}

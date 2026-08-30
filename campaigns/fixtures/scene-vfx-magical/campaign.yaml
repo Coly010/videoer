@@ -1,0 +1,11 @@
+schemaVersion: 1
+id: scene-vfx-magical
+title: Magical reveal VFX fixture
+type: project
+style: cinematic-fantasy
+durationSeconds: 4
+targetAudience: fantasy audiences
+description: Deterministic magical reveal interaction fixture
+tone: [mysterious, luminous]
+cta: Reveal
+output: { width: 540, height: 960, fps: 30, format: mp4 }

@@ -1,0 +1,11 @@
+schemaVersion: 1
+id: scene-vfx-cinematic
+title: Cinematic scene VFX fixture
+type: book
+style: cinematic-fantasy
+durationSeconds: 4
+targetAudience: fantasy readers
+description: Deterministic layered castle scene verification fixture
+tone: [ominous, cinematic]
+cta: Enter the darkness
+output: { width: 540, height: 960, fps: 30, format: mp4 }

@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "campaignId": "scene-vfx-product",
+  "title": "Product scene",
+  "durationSeconds": 4,
+  "style": "saas-promo",
+  "shots": [
+    {
+      "id": "dashboard",
+      "type": "scene",
+      "startSeconds": 0,
+      "durationSeconds": 4,
+      "scene": {
+        "camera": { "preset": "static" },
+        "layers": [
+          {
+            "id": "brand-gradient",
+            "type": "shape",
+            "shape": "gradient",
+            "gradient": ["#0b1025", "#18224b", "#3d2a78"],
+            "width": 700,
+            "height": 1100,
+            "depth": "background",
+            "motion": { "preset": "drift", "intensity": 0.3 }
+          },
+          {
+            "id": "accents",
+            "type": "particle-system",
+            "preset": "subtle-accent-particles",
+            "seed": "tutarium",
+            "params": { "intensity": 0.75, "color": "#55d6be" },
+            "depth": 18,
+            "blendMode": "screen"
+          },
+          {
+            "id": "dashboard-card",
+            "type": "image",
+            "asset": "assets/dashboard.svg",
+            "depth": 48,
+            "transform": { "scale": 0.88, "y": -5 },
+            "motion": { "preset": "push-in", "intensity": 0.28, "easing": "ease-out" },
+            "filters": [{ "type": "glow", "value": 18 }]
+          },
+          {
+            "id": "sparkles",
+            "type": "particle-system",
+            "preset": "sparkle",
+            "seed": "launch",
+            "params": { "intensity": 0.45, "color": "#ffffff" },
+            "depth": 68,
+            "start": 0.8,
+            "blendMode": "screen"
+          },
+          {
+            "id": "confetti",
+            "type": "particle-system",
+            "preset": "confetti",
+            "seed": "celebrate",
+            "params": { "intensity": 0.35, "color": "#55d6be" },
+            "depth": 76,
+            "start": 2.25,
+            "end": 4,
+            "blendMode": "screen"
+          },
+          {
+            "id": "headline",
+            "type": "text",
+            "text": "MORE TIME TO TEACH",
+            "fontSize": 45,
+            "fontWeight": 800,
+            "color": "#ffffff",
+            "depth": "screen",
+            "transform": { "y": 33 },
+            "motion": { "preset": "scale-pop", "intensity": 0.5 }
+          },
+          {
+            "id": "vignette",
+            "type": "effect",
+            "preset": "vignette",
+            "params": { "intensity": 0.18 },
+            "depth": "screen"
+          }
+        ],
+        "effects": [
+          {
+            "id": "clean-pulse",
+            "type": "pulse",
+            "intensity": 0.15,
+            "start": 1.4,
+            "end": 2.8,
+            "blendMode": "screen"
+          }
+        ]
+      }
+    }
+  ]
+}

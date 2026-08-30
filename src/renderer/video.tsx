@@ -12,6 +12,7 @@ import {
 } from 'remotion';
 import type { Shot, Storyboard } from '../domain/schemas.js';
 import type { StyleTemplate } from '../templates/index.js';
+import { SceneView } from '../renderers/scene-view.js';
 
 export interface VideoerCompositionProps extends Record<string, unknown> {
   storyboard: Storyboard;
@@ -21,6 +22,7 @@ export interface VideoerCompositionProps extends Record<string, unknown> {
     string,
     Array<{ id: string; timeOffset: number; role: string; data: string }>
   >;
+  sceneAssetData: Record<string, Record<string, string>>;
   audioData?: string;
   output: { width: number; height: number; fps: number };
 }
@@ -135,11 +137,13 @@ function ShotView({
   template,
   asset,
   keyframes = [],
+  sceneAssets = {},
 }: {
   shot: Shot;
   template: StyleTemplate;
   asset?: string;
   keyframes?: Array<{ id: string; timeOffset: number; role: string; data: string }>;
+  sceneAssets?: Record<string, string>;
 }) {
   const frame = useCurrentFrame();
   const { fps, durationInFrames, width } = useVideoConfig();
@@ -167,7 +171,9 @@ function ShotView({
         fontFamily: `${template.typography.body}, Arial, sans-serif`,
       }}
     >
-      {shot.type === 'scene-keyframes' && keyframes.length ? (
+      {shot.type === 'scene' ? (
+        <SceneView scene={shot.scene} assets={sceneAssets} />
+      ) : shot.type === 'scene-keyframes' && keyframes.length ? (
         <SceneKeyframesView shot={shot} frames={keyframes} />
       ) : asset ? (
         <AbsoluteFill
@@ -325,6 +331,7 @@ export const VideoerCampaign: React.FC<VideoerCompositionProps> = ({
   template,
   assetData,
   keyframeData,
+  sceneAssetData,
   audioData,
 }) => {
   const { fps } = useVideoConfig();
@@ -343,6 +350,7 @@ export const VideoerCampaign: React.FC<VideoerCompositionProps> = ({
             template={template}
             {...(assetData[shot.id] ? { asset: assetData[shot.id] } : {})}
             keyframes={keyframeData[shot.id] ?? []}
+            sceneAssets={sceneAssetData[shot.id] ?? {}}
           />
         </Sequence>
       ))}
@@ -394,6 +402,7 @@ export const VideoerRoot: React.FC = () => (
       },
       assetData: {},
       keyframeData: {},
+      sceneAssetData: {},
       output: { width: 1080, height: 1920, fps: 60 },
     }}
     calculateMetadata={({ props }) => ({
