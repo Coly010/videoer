@@ -14,7 +14,7 @@ describe('schemas', () => {
       tone: ['epic'],
       cta: 'Read',
     });
-    expect(c.output.fps).toBe(30);
+    expect(c.output.fps).toBe(60);
     expect(c.providers).toEqual({});
   });
   it('rejects duplicate shot ids', () => {

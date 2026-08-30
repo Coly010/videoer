@@ -5,10 +5,10 @@ const outputSchema = z
   .object({
     width: z.number().int().positive().default(1080),
     height: z.number().int().positive().default(1920),
-    fps: z.number().int().positive().default(30),
+    fps: z.number().int().positive().default(60),
     format: z.literal('mp4').default('mp4'),
   })
-  .default({ width: 1080, height: 1920, fps: 30, format: 'mp4' });
+  .default({ width: 1080, height: 1920, fps: 60, format: 'mp4' });
 export const campaignSchema = z.object({
   schemaVersion: z.literal(1),
   id: z.string().regex(/^[a-z0-9-]+$/),

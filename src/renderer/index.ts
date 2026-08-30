@@ -107,6 +107,15 @@ export async function render(plan: RenderPlan, options: RenderOptions): Promise<
       composition,
       codec: 'h264',
       audioCodec: 'aac',
+      // Final renders are source masters that will commonly be transcoded again by
+      // delivery platforms. Avoid a lossy JPEG intermediate and leave ample quality
+      // headroom for that subsequent encode. Drafts retain the faster defaults.
+      ...(options.draft ? {} : {
+        imageFormat: 'png' as const,
+        crf: 15,
+        x264Preset: 'slow' as const,
+        pixelFormat: 'yuv420p' as const,
+      }),
       outputLocation: options.outputPath,
       inputProps,
       chromiumOptions: { enableMultiProcessOnLinux: true },

@@ -64,9 +64,9 @@ export const VideoerRoot: React.FC = () => <Composition
   id="VideoerCampaign"
   component={VideoerCampaign}
   durationInFrames={30}
-  fps={30}
+  fps={60}
   width={1080}
   height={1920}
-  defaultProps={{ storyboard: { schemaVersion: 1, campaignId: 'preview', title: 'Preview', durationSeconds: 1, style: 'saas-promo', shots: [{ id: 'preview', type: 'cta', startSeconds: 0, durationSeconds: 1, text: 'VIDEOER', motion: 'static', transition: 'cut', sources: [], metadata: {}, generation: { revision: 0, stale: false } }] }, template: { id: 'saas-promo', typography: { heading: 'Inter', body: 'Inter' }, palette: ['#10172A','#7C5CFC','#FFFFFF'], pacing: 'energetic', defaultMotion: 'scale-pop', transition: 'swipe', captions: 'bold', cta: 'card', preferredAssets: [] }, assetData: {}, output: { width: 1080, height: 1920, fps: 30 } }}
+  defaultProps={{ storyboard: { schemaVersion: 1, campaignId: 'preview', title: 'Preview', durationSeconds: 1, style: 'saas-promo', shots: [{ id: 'preview', type: 'cta', startSeconds: 0, durationSeconds: 1, text: 'VIDEOER', motion: 'static', transition: 'cut', sources: [], metadata: {}, generation: { revision: 0, stale: false } }] }, template: { id: 'saas-promo', typography: { heading: 'Inter', body: 'Inter' }, palette: ['#10172A','#7C5CFC','#FFFFFF'], pacing: 'energetic', defaultMotion: 'scale-pop', transition: 'swipe', captions: 'bold', cta: 'card', preferredAssets: [] }, assetData: {}, output: { width: 1080, height: 1920, fps: 60 } }}
   calculateMetadata={({ props }) => ({ durationInFrames: Math.round(props.storyboard.durationSeconds * props.output.fps), fps: props.output.fps, width: props.output.width, height: props.output.height })}
 />;

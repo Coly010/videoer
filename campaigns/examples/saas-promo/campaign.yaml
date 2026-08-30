@@ -8,6 +8,6 @@ targetAudience: Independent tutors
 description: Plan lessons and keep every learner moving.
 tone: [clear, energetic, confident]
 cta: Teach with less admin
-output: { width: 1080, height: 1920, fps: 30, format: mp4 }
+output: { width: 1080, height: 1920, fps: 60, format: mp4 }
 assets: { dashboard: assets/dashboard-placeholder.svg }
 brand: { name: Tutarium, colors: ['#7C5CFC', '#34D9C5'] }
