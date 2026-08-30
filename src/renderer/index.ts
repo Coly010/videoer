@@ -62,15 +62,43 @@ function mime(path: string) {
   return 'image/jpeg';
 }
 
-async function compositionProps(plan: RenderPlan, draft: boolean): Promise<VideoerCompositionProps> {
+async function compositionProps(
+  plan: RenderPlan,
+  draft: boolean,
+): Promise<VideoerCompositionProps> {
   const root = dirname(plan.campaignFile);
   const assetData: Record<string, string> = {};
+  const keyframeData: VideoerCompositionProps['keyframeData'] = {};
   for (const shot of plan.storyboard.shots) {
+    if (shot.type === 'scene-keyframes') {
+      keyframeData[shot.id] = await Promise.all(
+        shot.keyframes
+          .filter((keyframe) => keyframe.assetPath)
+          .map(async (keyframe) => {
+            const path = resolve(root, keyframe.assetPath!);
+            const data = await readFile(path);
+            return {
+              id: keyframe.id,
+              timeOffset: keyframe.timeOffset,
+              role: keyframe.role,
+              data: `data:${mime(path)};base64,${data.toString('base64')}`,
+            };
+          }),
+      );
+      continue;
+    }
     const source = shot.sources.find((candidate) => candidate.path)?.path;
     if (!source) continue;
     const path = resolve(root, source);
     const data = await readFile(path);
     assetData[shot.id] = `data:${mime(path)};base64,${data.toString('base64')}`;
+  }
+  let audioData: string | undefined;
+  const soundtrack = plan.campaign.assets.soundtrack;
+  if (soundtrack) {
+    const audioPath = resolve(root, soundtrack);
+    const audio = await readFile(audioPath);
+    audioData = `data:audio/wav;base64,${audio.toString('base64')}`;
   }
   const requested = plan.campaign.output;
   const width = draft ? Math.min(requested.width, 540) : requested.width;
@@ -78,6 +106,8 @@ async function compositionProps(plan: RenderPlan, draft: boolean): Promise<Video
     storyboard: plan.storyboard,
     template: plan.template,
     assetData,
+    keyframeData,
+    ...(audioData ? { audioData } : {}),
     output: {
       width,
       height: Math.round((width / requested.width) * requested.height),
@@ -88,7 +118,9 @@ async function compositionProps(plan: RenderPlan, draft: boolean): Promise<Video
 
 let bundled: Promise<string> | undefined;
 function serveUrl() {
-  bundled ??= bundle({ entryPoint: resolve(dirname(new URL(import.meta.url).pathname), 'entry.js') });
+  bundled ??= bundle({
+    entryPoint: resolve(dirname(new URL(import.meta.url).pathname), 'entry.js'),
+  });
   return bundled;
 }
 
@@ -110,12 +142,14 @@ export async function render(plan: RenderPlan, options: RenderOptions): Promise<
       // Final renders are source masters that will commonly be transcoded again by
       // delivery platforms. Avoid a lossy JPEG intermediate and leave ample quality
       // headroom for that subsequent encode. Drafts retain the faster defaults.
-      ...(options.draft ? {} : {
-        imageFormat: 'png' as const,
-        crf: 15,
-        x264Preset: 'slow' as const,
-        pixelFormat: 'yuv420p' as const,
-      }),
+      ...(options.draft
+        ? {}
+        : {
+            imageFormat: 'png' as const,
+            crf: 15,
+            x264Preset: 'slow' as const,
+            pixelFormat: 'yuv420p' as const,
+          }),
       outputLocation: options.outputPath,
       inputProps,
       chromiumOptions: { enableMultiProcessOnLinux: true },

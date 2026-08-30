@@ -7,13 +7,41 @@
   "shots": [
     {
       "id": "world",
-      "type": "image-motion",
+      "type": "scene-keyframes",
       "startSeconds": 0,
       "durationSeconds": 5,
       "text": "A kingdom forgot its fire",
-      "motion": "push-in",
       "transition": "crossfade",
-      "sources": [{ "kind": "supplied", "path": "assets/landscape-placeholder.svg" }]
+      "prompt": "The same ruined mountain kingdom awakens as fire returns to its towers",
+      "keyframes": [
+        {
+          "id": "dormant",
+          "role": "anchor",
+          "timeOffset": 0,
+          "description": "The cold kingdom lies dormant beneath the mountain",
+          "assetPath": "assets/landscape-placeholder.svg"
+        },
+        {
+          "id": "fire-returns",
+          "role": "reveal",
+          "timeOffset": 3,
+          "description": "Ember light returns to the same towers",
+          "assetPath": "assets/landscape-fire-placeholder.svg"
+        }
+      ],
+      "continuity": {
+        "lockBackground": true,
+        "lockCharacterIdentity": true,
+        "lockCostume": true,
+        "lockLightingFamily": true,
+        "lockCreatureDesign": true
+      },
+      "sceneMotion": {
+        "blend": "parallax-blend",
+        "camera": "push-in",
+        "atmosphere": ["snow", "embers"],
+        "blendSeconds": 0.5
+      }
     },
     {
       "id": "oath",

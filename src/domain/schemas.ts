@@ -47,6 +47,19 @@ const sourceSchema = z
     cacheKey: z.string().optional(),
   })
   .refine((v) => v.path || v.prompt, { message: 'source requires path or prompt' });
+export const shotRenderModes = [
+  'image-motion',
+  'scene-keyframes',
+  'image-to-video',
+  'screenshot',
+  'slideshow',
+  'kinetic-text',
+  'ui-demo',
+  'static',
+  'custom',
+] as const;
+export type ShotRenderMode = (typeof shotRenderModes)[number];
+
 const baseShot = z.object({
   id: z.string().regex(/^[a-z0-9-]+$/),
   startSeconds: z.number().nonnegative(),
@@ -65,11 +78,113 @@ const baseShot = z.object({
     })
     .default({ revision: 0, stale: false }),
 });
+
+const keyframeSchema = z.object({
+  id: z.string().regex(/^[a-z0-9-]+$/),
+  timeOffset: z.number().nonnegative(),
+  description: z.string().min(1),
+  prompt: z.string().min(1).optional(),
+  assetPath: z.string().min(1).optional(),
+  role: z.enum(['anchor', 'continuation', 'reveal']).default('continuation'),
+  generation: z
+    .object({
+      revision: z.number().int().nonnegative().default(0),
+      stale: z.boolean().default(false),
+    })
+    .default({ revision: 0, stale: false }),
+});
+
+const sceneKeyframeShotSchema = baseShot
+  .extend({
+    type: z.literal('scene-keyframes'),
+    prompt: z.string().min(1),
+    keyframes: z.array(keyframeSchema).min(2).max(4),
+    continuity: z
+      .object({
+        lockBackground: z.boolean().default(true),
+        lockCharacterIdentity: z.boolean().default(true),
+        lockCostume: z.boolean().default(true),
+        lockLightingFamily: z.boolean().default(true),
+        lockCreatureDesign: z.boolean().default(true),
+      })
+      .default({
+        lockBackground: true,
+        lockCharacterIdentity: true,
+        lockCostume: true,
+        lockLightingFamily: true,
+        lockCreatureDesign: true,
+      }),
+    sceneMotion: z
+      .object({
+        blend: z
+          .enum(['crossfade', 'mask-blend', 'parallax-blend', 'depth-blend'])
+          .default('crossfade'),
+        camera: z
+          .enum([
+            'push-in',
+            'pull-out',
+            'track-left',
+            'track-right',
+            'pan-up',
+            'pan-down',
+            'static',
+          ])
+          .default('push-in'),
+        atmosphere: z.array(z.string()).default([]),
+        blendSeconds: z.number().positive().max(1.5).default(0.45),
+      })
+      .default({ blend: 'crossfade', camera: 'push-in', atmosphere: [], blendSeconds: 0.45 }),
+    sfx: z.array(z.string()).default([]),
+  })
+  .superRefine((shot, ctx) => {
+    const ids = new Set<string>();
+    let anchors = 0;
+    for (const [index, keyframe] of shot.keyframes.entries()) {
+      if (ids.has(keyframe.id))
+        ctx.addIssue({
+          code: 'custom',
+          path: ['keyframes', index, 'id'],
+          message: `duplicate keyframe id: ${keyframe.id}`,
+        });
+      ids.add(keyframe.id);
+      if (keyframe.role === 'anchor') anchors++;
+      if (keyframe.timeOffset >= shot.durationSeconds)
+        ctx.addIssue({
+          code: 'custom',
+          path: ['keyframes', index, 'timeOffset'],
+          message: 'keyframe must begin within shot duration',
+        });
+      if (index > 0 && keyframe.timeOffset <= shot.keyframes[index - 1]!.timeOffset)
+        ctx.addIssue({
+          code: 'custom',
+          path: ['keyframes', index, 'timeOffset'],
+          message: 'keyframe offsets must be strictly increasing',
+        });
+    }
+    if (shot.keyframes[0]?.timeOffset !== 0)
+      ctx.addIssue({
+        code: 'custom',
+        path: ['keyframes', 0, 'timeOffset'],
+        message: 'first keyframe must begin at 0',
+      });
+    if (shot.keyframes[0]?.role !== 'anchor' || anchors !== 1)
+      ctx.addIssue({
+        code: 'custom',
+        path: ['keyframes'],
+        message: 'scene-keyframes requires exactly one anchor as its first keyframe',
+      });
+  });
+
 const shotSchema = z.discriminatedUnion('type', [
   baseShot.extend({ type: z.literal('kinetic-text') }),
   baseShot.extend({ type: z.literal('image-motion') }),
+  sceneKeyframeShotSchema,
+  baseShot.extend({ type: z.literal('image-to-video') }),
   baseShot.extend({ type: z.literal('screenshot') }),
   baseShot.extend({ type: z.literal('slideshow') }),
+  baseShot.extend({ type: z.literal('ui-demo') }),
+  baseShot.extend({ type: z.literal('static') }),
+  baseShot.extend({ type: z.literal('custom') }),
   baseShot.extend({ type: z.literal('cover-reveal') }),
   baseShot.extend({ type: z.literal('cta') }),
 ]);
@@ -103,3 +218,5 @@ export const storyboardSchema = z
 export type Campaign = z.infer<typeof campaignSchema>;
 export type Storyboard = z.infer<typeof storyboardSchema>;
 export type Shot = Storyboard['shots'][number];
+export type SceneKeyframeShot = Extract<Shot, { type: 'scene-keyframes' }>;
+export type SceneKeyframe = SceneKeyframeShot['keyframes'][number];

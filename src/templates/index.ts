@@ -1,4 +1,5 @@
 import type { MotionPreset } from '../domain/motion.js';
+import type { ShotRenderMode } from '../domain/schemas.js';
 export interface StyleTemplate {
   id: 'cinematic-fantasy' | 'saas-promo';
   typography: { heading: string; body: string };
@@ -9,6 +10,7 @@ export interface StyleTemplate {
   captions: 'subtle' | 'bold';
   cta: 'reveal' | 'card';
   preferredAssets: string[];
+  preferredShotModes: ShotRenderMode[];
 }
 export const templates: Record<StyleTemplate['id'], StyleTemplate> = {
   'cinematic-fantasy': {
@@ -21,6 +23,7 @@ export const templates: Record<StyleTemplate['id'], StyleTemplate> = {
     captions: 'subtle',
     cta: 'reveal',
     preferredAssets: ['illustration', 'cover'],
+    preferredShotModes: ['scene-keyframes', 'kinetic-text', 'image-motion', 'image-to-video'],
   },
   'saas-promo': {
     id: 'saas-promo',
@@ -32,6 +35,7 @@ export const templates: Record<StyleTemplate['id'], StyleTemplate> = {
     captions: 'bold',
     cta: 'card',
     preferredAssets: ['screenshot', 'logo', 'card'],
+    preferredShotModes: ['screenshot', 'ui-demo', 'kinetic-text', 'slideshow'],
   },
 };
 export function resolveTemplate(id: StyleTemplate['id']) {

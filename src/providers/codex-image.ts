@@ -7,7 +7,10 @@ export class CodexImageProvider implements ImageProvider {
   readonly capabilities = ['image'] as const;
   constructor(private retries = 1) {}
   async generate(r: ImageGenerationRequest): Promise<GeneratedAsset> {
-    const prompt = `Generate one ${r.width}x${r.height} image: ${r.prompt}. Save it exactly to ${r.outputPath}.`;
+    const referenceInstruction = r.references?.length
+      ? `Use these local files as strict visual references, inspecting them before generation: ${r.references.join(', ')}.`
+      : '';
+    const prompt = `Generate one ${r.width}x${r.height} image: ${r.prompt}. ${referenceInstruction} Save it exactly to ${r.outputPath}.`;
     for (let attempt = 0; attempt <= this.retries; attempt++) {
       const code = await new Promise<number>((resolve, reject) => {
         const p = spawn('codex', ['exec', '--ephemeral', '--skip-git-repo-check', prompt], {

@@ -1,0 +1,17 @@
+schemaVersion: 1
+id: rise-of-demons-cinematic-trailer
+title: The Rise of Demons — Cinematic Trailer
+type: book
+style: cinematic-fantasy
+durationSeconds: 15
+targetAudience: Adult epic and dark-fantasy readers on TikTok, Instagram Reels, and YouTube Shorts
+description: An ominous teaser for the return of the Dolgrim and the ancient threat Mordeutzel in Onaem.
+tone: [dark, cinematic, ominous, epic, mysterious, high-fantasy]
+cta: https://tutarium.com/b/the-rise-of-demons-kindle-ebook
+output: { width: 1080, height: 1920, fps: 30, format: mp4 }
+assets:
+  cover: assets/the-rise-of-demons-cover.png
+  soundtrack: generated/audio/cinematic-trailer.wav
+brand:
+  name: The Rise of Demons
+  colors: ['#080B12', '#8D70BE', '#D7B56D', '#F4EBDD']

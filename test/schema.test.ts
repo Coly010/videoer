@@ -48,4 +48,60 @@ describe('schemas', () => {
         shots: [{ id: 'a', type: 'cta', startSeconds: 0, durationSeconds: 2 }],
       }),
     ).toThrow(/beyond/));
+  it('accepts a continuity-aware scene-keyframes shot', () => {
+    const storyboard = storyboardSchema.parse({
+      schemaVersion: 1,
+      campaignId: 'x',
+      title: 'scene',
+      durationSeconds: 4,
+      style: 'cinematic-fantasy',
+      shots: [
+        {
+          id: 'ritual',
+          type: 'scene-keyframes',
+          startSeconds: 0,
+          durationSeconds: 4,
+          prompt: 'A mage completes a forbidden ritual',
+          keyframes: [
+            { id: 'anchor', role: 'anchor', timeOffset: 0, description: 'The mage raises a staff' },
+            {
+              id: 'reveal',
+              role: 'reveal',
+              timeOffset: 2.5,
+              description: 'Black fire reveals a demon',
+            },
+          ],
+        },
+      ],
+    });
+    expect(storyboard.shots[0]).toMatchObject({
+      type: 'scene-keyframes',
+      continuity: { lockBackground: true, lockCharacterIdentity: true },
+      sceneMotion: { blend: 'crossfade', camera: 'push-in' },
+    });
+  });
+  it('rejects unordered scene keyframes and anchors that do not start the shot', () => {
+    expect(() =>
+      storyboardSchema.parse({
+        schemaVersion: 1,
+        campaignId: 'x',
+        title: 'bad scene',
+        durationSeconds: 4,
+        style: 'cinematic-fantasy',
+        shots: [
+          {
+            id: 'ritual',
+            type: 'scene-keyframes',
+            startSeconds: 0,
+            durationSeconds: 4,
+            prompt: 'Ritual',
+            keyframes: [
+              { id: 'later', role: 'continuation', timeOffset: 1, description: 'Later' },
+              { id: 'anchor', role: 'anchor', timeOffset: 0.5, description: 'Earlier' },
+            ],
+          },
+        ],
+      }),
+    ).toThrow(/first keyframe|strictly increasing|exactly one anchor/);
+  });
 });

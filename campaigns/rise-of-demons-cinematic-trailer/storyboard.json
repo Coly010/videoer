@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 1,
+  "campaignId": "rise-of-demons-cinematic-trailer",
+  "title": "The Rise of Demons — Scene Keyframes Trailer",
+  "durationSeconds": 15,
+  "style": "cinematic-fantasy",
+  "shots": [
+    {
+      "id": "onaem",
+      "type": "scene-keyframes",
+      "startSeconds": 0,
+      "durationSeconds": 3.4,
+      "text": "They thought the demons were gone.",
+      "transition": "crossfade",
+      "prompt": "One continuous storm-dark overlook of Onaem as an unnatural threat gathers above the distant fortress",
+      "keyframes": [
+        {
+          "id": "anchor",
+          "role": "anchor",
+          "timeOffset": 0,
+          "description": "A lone cloaked traveller watches Onaem beneath an ordinary violent storm",
+          "assetPath": "generated/images/01-onaem-unease.png"
+        },
+        {
+          "id": "storm-builds",
+          "role": "reveal",
+          "timeOffset": 1.9,
+          "description": "The traveller steps forward as violet-black light gathers above the same fortress",
+          "assetPath": "generated/images/onaem/storm-builds.r0.png"
+        }
+      ],
+      "continuity": {
+        "lockBackground": true,
+        "lockCharacterIdentity": true,
+        "lockCostume": true,
+        "lockLightingFamily": true,
+        "lockCreatureDesign": true
+      },
+      "sceneMotion": {
+        "blend": "parallax-blend",
+        "camera": "push-in",
+        "atmosphere": ["storm", "rising wind"],
+        "blendSeconds": 0.55
+      },
+      "sfx": ["distant thunder", "wind rise"]
+    },
+    {
+      "id": "black-fire",
+      "type": "scene-keyframes",
+      "startSeconds": 3.4,
+      "durationSeconds": 3.8,
+      "text": "They were wrong.",
+      "transition": "crossfade",
+      "prompt": "One continuous ruined ritual-court scene where black fire opens and Daerites emerge before the same mage",
+      "keyframes": [
+        {
+          "id": "anchor",
+          "role": "anchor",
+          "timeOffset": 0,
+          "description": "A hooded mage discovers violet-black fire igniting in the rain-soaked ritual circle",
+          "assetPath": "generated/images/02-black-fire-discovery.png"
+        },
+        {
+          "id": "daerites-emerge",
+          "role": "reveal",
+          "timeOffset": 2,
+          "description": "The same fire spreads as two Daerites emerge and the mage raises a defensive arm",
+          "assetPath": "generated/images/black-fire/daerites-emerge.r0.png"
+        }
+      ],
+      "continuity": {
+        "lockBackground": true,
+        "lockCharacterIdentity": true,
+        "lockCostume": true,
+        "lockLightingFamily": true,
+        "lockCreatureDesign": true
+      },
+      "sceneMotion": {
+        "blend": "depth-blend",
+        "camera": "track-right",
+        "atmosphere": ["rain", "black fire", "violet sparks"],
+        "blendSeconds": 0.48
+      },
+      "sfx": ["black-fire ignition", "Daerite breath"]
+    },
+    {
+      "id": "mordeutzel",
+      "type": "scene-keyframes",
+      "startSeconds": 7.2,
+      "durationSeconds": 3.8,
+      "text": "Something ancient has returned.",
+      "transition": "crossfade",
+      "prompt": "One continuous ruined-city confrontation as the same colossal Mordeutzel bears down on five defenders",
+      "keyframes": [
+        {
+          "id": "anchor",
+          "role": "anchor",
+          "timeOffset": 0,
+          "description": "Mordeutzel towers motionless over five defenders among the burning ruins",
+          "assetPath": "generated/images/04-mordeutzel-reveal.png"
+        },
+        {
+          "id": "reaches",
+          "role": "reveal",
+          "timeOffset": 2,
+          "description": "The same Mordeutzel leans forward, eyes and chest flare, and one hand reaches down as the defenders brace",
+          "assetPath": "generated/images/mordeutzel/reaches.r0.png"
+        }
+      ],
+      "continuity": {
+        "lockBackground": true,
+        "lockCharacterIdentity": true,
+        "lockCostume": true,
+        "lockLightingFamily": true,
+        "lockCreatureDesign": true
+      },
+      "sceneMotion": {
+        "blend": "parallax-blend",
+        "camera": "pull-out",
+        "atmosphere": ["violet ash", "embers", "storm energy"],
+        "blendSeconds": 0.5
+      },
+      "sfx": ["low impact", "stone fracture", "creature rumble"]
+    },
+    {
+      "id": "available-now",
+      "type": "cta",
+      "startSeconds": 11,
+      "durationSeconds": 4,
+      "text": "THE RISE OF DEMONS",
+      "caption": "By Colum Ferry",
+      "motion": "static",
+      "transition": "crossfade",
+      "metadata": {
+        "ctaLabel": "Available now",
+        "displayUrl": "tutarium.com",
+        "destinationUrl": "https://tutarium.com/b/the-rise-of-demons-kindle-ebook"
+      },
+      "sources": [{ "kind": "supplied", "path": "assets/the-rise-of-demons-cover.png" }]
+    }
+  ]
+}

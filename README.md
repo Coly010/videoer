@@ -2,7 +2,9 @@
 
 Videoer is a composable, local-first marketing-video toolkit designed to be operated interactively by Codex or directly by a human. Codex is the conversational orchestrator outside this repository; Videoer provides inspectable TypeScript operations and a stable CLI for campaign loading, validation, inspection, verification, generation boundaries, and deterministic rendering.
 
-The repository includes validated campaign/storyboard contracts, two style templates, a deterministic Remotion renderer, reusable application operations, provider boundaries, filesystem state and provenance, sampled-frame/contact-sheet inspection, objective campaign/image/video verification, selective shot revision, examples, and a thin CLI.
+The repository includes validated campaign/storyboard contracts, two style templates, a deterministic Remotion renderer, reusable application operations, provider boundaries, filesystem state and provenance, sampled-frame/contact-sheet inspection, objective campaign/image/video verification, selective shot revision and scene-keyframe regeneration, examples, and a thin CLI.
+
+`scene-keyframes` is the cinematic scene mode: one shot contains an anchor plus one to three related later frames, explicit continuity locks, and blend/camera instructions. It exists to create motivated intra-shot progression instead of treating every cinematic beat as a disconnected still. See [Scene keyframes](docs/scene-keyframes.md) and [Using scene keyframes from Codex](docs/codex/using-scene-keyframes.md).
 
 ## System requirements
 
@@ -71,6 +73,8 @@ npm run video -- --json validate campaigns/examples/cinematic-book/campaign.yaml
 npm run video -- inspect campaigns/examples/saas-promo/campaign.yaml
 npm run video -- verify campaigns/examples/saas-promo/campaign.yaml
 npm run video -- storyboard validate campaigns/examples/saas-promo/storyboard.json
+npm run video -- generate-assets campaigns/my-trailer/campaign.yaml --shot ritual
+npm run video -- shot regenerate campaigns/my-trailer/campaign.yaml ritual --keyframe reveal
 npm run video -- render campaigns/examples/saas-promo/campaign.yaml --draft --change initial-draft
 npm run video -- inspect-render campaigns/examples/saas-promo/campaign.yaml latest
 npm run video -- verify-render campaigns/examples/saas-promo/campaign.yaml latest
@@ -101,7 +105,7 @@ Directories are created as operations need them. Existing examples retain their 
 
 ## Codex usage example
 
-Open Codex, attach or identify reference material, and ask for a trailer. Codex can create/update campaign files, invoke granular toolkit operations, produce a versioned draft, inspect its sampled frames and contact sheet, run objective verification, revise one weak shot, and render a versioned final without invoking providers. Automated storyboard generation, audio authoring/mixing, and production generative-provider adapters remain future capabilities.
+Open Codex, attach or identify reference material, and ask for a trailer. Codex can create/update campaign files, choose scene-based or still-based shot strategies, generate an anchor and dependent scene keyframes through the provider boundary, produce a versioned draft, inspect its sampled frames and contact sheet, run objective verification, regenerate one weak keyframe, and render a versioned final. Rendering and verification never invoke providers. See [the cinematic trailer workflow](docs/codex/trailer-workflow.md). Full automatic creative storyboard authoring, audio authoring/mixing, and production provider adapters beyond the experimental boundary remain future capabilities.
 
 ## Source boundaries
 

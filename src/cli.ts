@@ -10,7 +10,12 @@ import { ValidationError } from './domain/io.js';
 import { checkMediaDependencies } from './media/dependencies.js';
 import { inspectImage, inspectVideo } from './media/inspection.js';
 import { inspectRender, renderCampaign, reviseShot, verifyRender } from './application/workflow.js';
+import { generateSceneKeyframes, regenerateSceneKeyframe } from './application/generation.js';
 import { motionPresets, type MotionPreset } from './domain/motion.js';
+import { loadCampaign } from './domain/io.js';
+import { CodexImageProvider } from './providers/codex-image.js';
+import { FakeImageProvider } from './providers/fake-image.js';
+import { ProviderRegistry } from './providers/contracts.js';
 
 interface Envelope {
   version: 1;
@@ -25,6 +30,16 @@ const envelope = (command: string, data: unknown): Envelope => ({
   command,
   data,
 });
+async function imageProvider(campaignFile: string, requested?: string) {
+  const campaign = await loadCampaign(campaignFile);
+  const id = requested ?? campaign.providers.image;
+  if (!id)
+    throw new Error('No image provider selected; set campaign.providers.image or pass --provider');
+  const registry = new ProviderRegistry()
+    .registerImage(new FakeImageProvider())
+    .registerImage(new CodexImageProvider());
+  return registry.image(id);
+}
 function output<T>(command: Command, name: string, data: T, human: (data: T) => string) {
   console.log(
     command.optsWithGlobals().json ? JSON.stringify(envelope(name, data), null, 2) : human(data),
@@ -95,6 +110,33 @@ storyboard
     );
   });
 
+program
+  .command('generate-assets')
+  .argument('<campaign>')
+  .option('--shot <shot-id>', 'generate only one scene-keyframes shot')
+  .option('--keyframe <keyframe-id>', 'generate only one keyframe (requires its anchor)')
+  .option('--provider <provider-id>', 'override campaign.providers.image')
+  .option('--force', 'ignore matching cached assets')
+  .description('generate missing scene-keyframes assets with continuity references')
+  .action(async function (
+    p,
+    options: { shot?: string; keyframe?: string; provider?: string; force?: boolean },
+  ) {
+    if (options.keyframe && !options.shot) throw new Error('--keyframe requires --shot');
+    const provider = await imageProvider(p, options.provider);
+    const data = await generateSceneKeyframes(p, provider, {
+      ...(options.shot ? { shotId: options.shot } : {}),
+      ...(options.keyframe ? { keyframeId: options.keyframe } : {}),
+      ...(options.force ? { force: true } : {}),
+    });
+    output(
+      this,
+      'assets.generate',
+      data,
+      (d) => `✓ ${d.generated.length} scene keyframe assets handled by ${d.provider}`,
+    );
+  });
+
 const media = program.command('media').description('media inspection operations');
 media
   .command('image')
@@ -138,8 +180,16 @@ program
   .option('--change <message...>', 'record what changed since the parent render')
   .action(async function (p, options: { draft?: boolean; final?: boolean; change?: string[] }) {
     if (options.draft && options.final) throw new Error('Choose either --draft or --final');
-    const data = await renderCampaign(p, { kind: options.final ? 'final' : 'draft', ...(options.change ? { changes: options.change } : {}) });
-    output(this, 'render.create', data, (d) => `✓ ${d.revision.id} (${d.revision.kind}) → ${d.output.path}`);
+    const data = await renderCampaign(p, {
+      kind: options.final ? 'final' : 'draft',
+      ...(options.change ? { changes: options.change } : {}),
+    });
+    output(
+      this,
+      'render.create',
+      data,
+      (d) => `✓ ${d.revision.id} (${d.revision.kind}) → ${d.output.path}`,
+    );
   });
 
 program
@@ -149,7 +199,12 @@ program
   .description('extract sampled frames, metadata, and a contact sheet')
   .action(async function (p, renderId) {
     const data = await inspectRender(p, renderId);
-    output(this, 'render.inspect', data, (d) => `✓ ${d.revision.id}: ${d.frames.length} sampled frames → ${d.contactSheet}`);
+    output(
+      this,
+      'render.inspect',
+      data,
+      (d) => `✓ ${d.revision.id}: ${d.frames.length} sampled frames → ${d.contactSheet}`,
+    );
   });
 
 program
@@ -159,7 +214,12 @@ program
   .description('verify video delivery properties and persist a report')
   .action(async function (p, renderId) {
     const data = await verifyRender(p, renderId);
-    output(this, 'render.verify', data, (d) => `${d.status.toUpperCase()}: ${d.revision.id} → ${d.reportPath}`);
+    output(
+      this,
+      'render.verify',
+      data,
+      (d) => `${d.status.toUpperCase()}: ${d.revision.id} → ${d.reportPath}`,
+    );
     if (data.status === 'fail') process.exitCode = 2;
   });
 
@@ -172,10 +232,41 @@ shot
   .option('--caption <caption>')
   .option('--motion <preset>', `one of: ${motionPresets.join(', ')}`)
   .description('revise only one shot without regenerating unrelated assets')
-  .action(async function (p, shotId, options: { text?: string; caption?: string; motion?: string }) {
-    if (options.motion && !motionPresets.includes(options.motion as MotionPreset)) throw new Error(`Unknown motion preset '${options.motion}'`);
-    const data = await reviseShot(p, shotId, { ...(options.text ? { text: options.text } : {}), ...(options.caption ? { caption: options.caption } : {}), ...(options.motion ? { motion: options.motion as MotionPreset } : {}) });
-    output(this, 'shot.revise', data, (d) => `✓ ${d.shotId} revision ${d.revision}; changed ${d.changed.join(', ')}`);
+  .action(async function (
+    p,
+    shotId,
+    options: { text?: string; caption?: string; motion?: string },
+  ) {
+    if (options.motion && !motionPresets.includes(options.motion as MotionPreset))
+      throw new Error(`Unknown motion preset '${options.motion}'`);
+    const data = await reviseShot(p, shotId, {
+      ...(options.text ? { text: options.text } : {}),
+      ...(options.caption ? { caption: options.caption } : {}),
+      ...(options.motion ? { motion: options.motion as MotionPreset } : {}),
+    });
+    output(
+      this,
+      'shot.revise',
+      data,
+      (d) => `✓ ${d.shotId} revision ${d.revision}; changed ${d.changed.join(', ')}`,
+    );
+  });
+shot
+  .command('regenerate')
+  .argument('<campaign>')
+  .argument('<shot-id>')
+  .option('--keyframe <keyframe-id>', 'regenerate only one weak keyframe')
+  .option('--provider <provider-id>', 'override campaign.providers.image')
+  .description('regenerate one scene-keyframes shot or a selected keyframe')
+  .action(async function (p, shotId, options: { keyframe?: string; provider?: string }) {
+    const provider = await imageProvider(p, options.provider);
+    const data = await regenerateSceneKeyframe(p, provider, shotId, options.keyframe);
+    output(
+      this,
+      'shot.regenerate',
+      data,
+      (d) => `✓ ${shotId}: ${d.generated.length} keyframe assets regenerated by ${d.provider}`,
+    );
   });
 
 program.parseAsync().catch((error) => {
