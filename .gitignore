@@ -9,3 +9,4 @@ campaigns/**/reports/
 campaigns/**/campaign-state.json
 *.log
 .DS_Store
+misc-images/
