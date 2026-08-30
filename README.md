@@ -2,16 +2,50 @@
 
 Videoer is a composable, local-first marketing-video toolkit designed to be operated interactively by Codex or directly by a human. Codex is the conversational orchestrator outside this repository; Videoer provides inspectable TypeScript operations and a stable CLI for campaign loading, validation, inspection, verification, generation boundaries, and deterministic rendering.
 
-The renderer is not implemented yet. Today the repository provides validated campaign/storyboard contracts, two style templates, reusable application operations, provider boundaries, filesystem state and provenance models, deterministic verification, image/video metadata inspection primitives, contact-sheet command construction, examples, and a thin CLI.
+The repository includes validated campaign/storyboard contracts, two style templates, a deterministic Remotion renderer, reusable application operations, provider boundaries, filesystem state and provenance, sampled-frame/contact-sheet inspection, objective campaign/image/video verification, selective shot revision, examples, and a thin CLI.
 
-## Setup
+## System requirements
 
 - Node.js 22+
 - npm 11
-- FFmpeg and ffprobe for video inspection and future rendering (`video doctor` diagnoses them)
+- FFmpeg 9+ and ffprobe with the capabilities used by the renderer and inspection pipeline:
+  - `drawtext`, `xfade`, `zoompan`, `xstack`, and `subtitles` filters
+  - H.264 (`libx264`) and AAC encoders
+  - PNG and JPEG decoding
+
+The small/default FFmpeg package supplied by some package managers omits required text and subtitle support. Install a full build rather than working around missing filters.
+
+### macOS (Homebrew)
+
+```bash
+brew install ffmpeg-full
+brew unlink ffmpeg            # only when the minimal formula is currently linked
+brew link --overwrite ffmpeg-full
+```
+
+`ffmpeg-full` is keg-only. If linking is unsuitable for your machine, put it first on `PATH` instead:
+
+```bash
+export PATH="$(brew --prefix ffmpeg-full)/bin:$PATH"
+```
+
+### Debian/Ubuntu
+
+Distribution FFmpeg builds commonly include these capabilities:
+
+```bash
+sudo apt-get update
+sudo apt-get install ffmpeg fontconfig fonts-dejavu-core
+```
+
+Run the capability check after installation. A binary merely existing on `PATH` is not sufficient.
+
+## Setup
 
 ```bash
 npm install
+npx remotion browser ensure
+npm run video -- doctor
 npm run check
 npm run video -- --help
 ```
@@ -37,10 +71,15 @@ npm run video -- --json validate campaigns/examples/cinematic-book/campaign.yaml
 npm run video -- inspect campaigns/examples/saas-promo/campaign.yaml
 npm run video -- verify campaigns/examples/saas-promo/campaign.yaml
 npm run video -- storyboard validate campaigns/examples/saas-promo/storyboard.json
+npm run video -- render campaigns/examples/saas-promo/campaign.yaml --draft --change initial-draft
+npm run video -- inspect-render campaigns/examples/saas-promo/campaign.yaml latest
+npm run video -- verify-render campaigns/examples/saas-promo/campaign.yaml latest
+npm run video -- shot revise campaigns/examples/saas-promo/campaign.yaml hook --text "MORE TIME TO TEACH"
+npm run video -- render campaigns/examples/saas-promo/campaign.yaml --final --change revised-hook
 npm run video -- doctor
 ```
 
-`inspect` and `verify` are deliberately different. Inspection exposes metadata and future previews/contact sheets for judgement; verification runs known mechanical checks and can fail a workflow.
+`inspect` and `verify` are deliberately different. Inspection extracts metadata, midpoint frames, and a contact sheet for judgement; verification runs known mechanical checks, persists a structured report, and can fail a workflow.
 
 ## Campaign workspace
 
@@ -62,17 +101,17 @@ Directories are created as operations need them. Existing examples retain their 
 
 ## Codex usage example
 
-Open Codex, attach or identify reference material, and ask for a trailer. Codex can create/update campaign files, invoke granular toolkit operations, inspect generated assets, regenerate a weak shot only, produce a draft, inspect and verify it, revise, and then render a final version. The application and verification foundations work today; automated storyboard generation, production rendering, sampled-frame generation, and a complete autonomous review loop remain future work.
+Open Codex, attach or identify reference material, and ask for a trailer. Codex can create/update campaign files, invoke granular toolkit operations, produce a versioned draft, inspect its sampled frames and contact sheet, run objective verification, revise one weak shot, and render a versioned final without invoking providers. Automated storyboard generation, audio authoring/mixing, and production generative-provider adapters remain future capabilities.
 
 ## Source boundaries
 
 - `src/domain`: schemas, persisted state, and loaders
 - `src/application`: reusable use cases called by all interfaces
 - `src/providers`: optional non-deterministic adapters and provenance contracts
-- `src/renderer`: deterministic render-plan boundary
+- `src/renderer`: deterministic Remotion compositions and renderer adapter
 - `src/verification`: checks, evaluator composition, result aggregation
 - `src/media`: dependency diagnostics and reusable inspection utilities
 - `src/assets`: workspace paths, cache keys, revisioned filenames
 - `src/cli.ts`: argument parsing, presentation, JSON envelopes, exit codes
 
-The next goal should implement the first end-to-end local-asset draft/review/revise loop with a deterministic renderer, inspection artifacts, verification reports, selective shot revision, and rerendering without unrelated regeneration.
+Remotion downloads a pinned Chrome Headless Shell into `node_modules/.remotion`; run `npx remotion browser ensure` during setup or whenever the Remotion version changes. Rendering may bind a temporary loopback port for the local browser bundle. All Remotion packages and Zod are exact-version pinned because Remotion treats version alignment as a runtime requirement.

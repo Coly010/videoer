@@ -65,6 +65,10 @@ export async function verifyCampaign(
         ? 'Storyboard belongs to campaign'
         : 'Storyboard campaign ID does not match',
   });
+  for (const [capability, provider] of Object.entries(campaign.providers)) {
+    if (!provider) continue;
+    checks.push({ id: 'campaign.provider.configured', status: 'warning', actual: provider, message: `${capability} provider '${provider}' is selected; availability is checked when that explicit generative operation runs`, remediation: 'Register the provider in the application operation before generation' });
+  }
   checks.push({
     id: 'campaign.storyboard.duration',
     status:
@@ -88,5 +92,14 @@ export async function verifyCampaign(
       });
     }
   }
+  const ordered = [...storyboard.shots].sort((a, b) => a.startSeconds - b.startSeconds);
+  for (let index = 1; index < ordered.length; index++) {
+    const previous = ordered[index - 1]!;
+    const current = ordered[index]!;
+    const overlap = previous.startSeconds + previous.durationSeconds - current.startSeconds;
+    checks.push({ id: 'storyboard.timing.overlap', status: overlap <= .001 ? 'pass' : 'fail', shotId: current.id, expected: '<= 0', actual: overlap, message: overlap <= .001 ? 'Shot timing does not overlap' : 'Shot overlaps the previous shot' });
+  }
+  const hasCta = storyboard.shots.some((shot) => shot.type === 'cta' && Boolean(shot.text?.trim()));
+  checks.push({ id: 'storyboard.cta', status: hasCta ? 'pass' : 'warning', expected: campaign.cta, actual: hasCta, message: hasCta ? 'Storyboard includes a visible CTA shot' : 'Storyboard has no visible CTA shot', ...(!hasCta ? { remediation: 'Add a CTA shot containing the campaign call to action' } : {}) });
   return aggregateChecks(checks);
 }

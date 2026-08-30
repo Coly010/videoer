@@ -1,4 +1,5 @@
-import { readFile, stat } from 'node:fs/promises';
+import { mkdir, readFile, stat } from 'node:fs/promises';
+import { dirname } from 'node:path';
 import { spawn } from 'node:child_process';
 
 export interface ImageInspection {
@@ -53,11 +54,18 @@ export async function inspectImage(path: string): Promise<ImageInspection> {
 
 export function contactSheetArgs(inputs: string[], output: string, columns = 3): string[] {
   if (!inputs.length) throw new Error('Contact sheet requires at least one input');
-  const rows = Math.ceil(inputs.length / columns);
+  const actualColumns = Math.min(columns, inputs.length);
+  const layout = inputs.map((_, index) => {
+    const column = index % actualColumns;
+    const row = Math.floor(index / actualColumns);
+    const x = column === 0 ? '0' : Array.from({ length: column }, (_, i) => `w${i}`).join('+');
+    const y = row === 0 ? '0' : Array.from({ length: row }, (_, i) => `h${i * actualColumns}`).join('+');
+    return `${x}_${y}`;
+  }).join('|');
   return [
     ...inputs.flatMap((input) => ['-i', input]),
     '-filter_complex',
-    `xstack=inputs=${inputs.length}:grid=${columns}x${rows}:fill=black`,
+    `xstack=inputs=${inputs.length}:layout=${layout}:fill=black`,
     '-frames:v',
     '1',
     '-y',
@@ -84,4 +92,26 @@ export async function inspectVideo(path: string): Promise<Record<string, unknown
         : reject(new Error(`ffprobe failed (${code}): ${error}`)),
     );
   });
+}
+
+async function runFfmpeg(args: string[]): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const child = spawn('ffmpeg', args);
+    let error = '';
+    child.stderr.on('data', (data) => { error += String(data); });
+    child.on('error', reject);
+    child.on('close', (code) => code === 0 ? resolve() : reject(new Error(`ffmpeg failed (${code}): ${error.trim()}`)));
+  });
+}
+
+export async function extractVideoFrame(video: string, seconds: number, output: string) {
+  await mkdir(dirname(output), { recursive: true });
+  await runFfmpeg(['-v', 'error', '-ss', String(seconds), '-i', video, '-frames:v', '1', '-q:v', '2', '-y', output]);
+  return inspectImage(output);
+}
+
+export async function createContactSheet(inputs: string[], output: string, columns = 3) {
+  await mkdir(dirname(output), { recursive: true });
+  await runFfmpeg(['-v', 'error', ...contactSheetArgs(inputs, output, columns)]);
+  return inspectImage(output);
 }

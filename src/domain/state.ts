@@ -1,4 +1,5 @@
-import { readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { dirname } from 'node:path';
 import { z } from 'zod';
 import type { GeneratedAsset } from '../providers/contracts.js';
 
@@ -53,6 +54,7 @@ export async function loadCampaignState(path: string): Promise<CampaignState> {
 
 export async function saveCampaignState(path: string, state: CampaignState): Promise<void> {
   const valid = campaignStateSchema.parse(state);
+  await mkdir(dirname(path), { recursive: true });
   await writeFile(path, `${JSON.stringify(valid, null, 2)}\n`, 'utf8');
 }
 

@@ -1,8 +1,11 @@
 node_modules/
 dist/
 coverage/
-campaigns/*/generated/
-campaigns/*/output/
-!campaigns/examples/**
+campaigns/**/generated/
+campaigns/**/output/
+campaigns/**/renders/
+campaigns/**/inspection/
+campaigns/**/reports/
+campaigns/**/campaign-state.json
 *.log
 .DS_Store

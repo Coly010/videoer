@@ -1,16 +1,128 @@
-import type { Storyboard } from '../domain/schemas.js';
+import { readFile } from 'node:fs/promises';
+import { dirname, resolve } from 'node:path';
+import { bundle } from '@remotion/bundler';
+import { renderMedia, selectComposition } from '@remotion/renderer';
+import type { Campaign, Storyboard } from '../domain/schemas.js';
 import { resolveTemplate } from '../templates/index.js';
+import type { VideoerCompositionProps } from './video.js';
+
 export interface RenderPlan {
+  campaign: Campaign;
   storyboard: Storyboard;
+  campaignFile: string;
   template: ReturnType<typeof resolveTemplate>;
   requiresGeneration: false;
 }
-export function createRenderPlan(storyboard: Storyboard): RenderPlan {
-  return { storyboard, template: resolveTemplate(storyboard.style), requiresGeneration: false };
+
+export interface RenderOptions {
+  outputPath: string;
+  draft?: boolean;
+  onProgress?: (progress: number) => void;
 }
-export async function render(plan: RenderPlan): Promise<never> {
-  void plan;
-  throw new Error(
-    'Renderer adapter is not implemented yet; install Remotion in the next milestone. No generative provider is required by this boundary.',
-  );
+
+export interface RenderOutput {
+  path: string;
+  width: number;
+  height: number;
+  fps: number;
+  durationSeconds: number;
+  shots: number;
+  kind: 'draft' | 'final';
+}
+
+export class RendererError extends Error {
+  constructor(message: string, options?: ErrorOptions) {
+    super(message, options);
+    this.name = 'RendererError';
+  }
+}
+
+export function createRenderPlan(
+  campaign: Campaign,
+  storyboard: Storyboard,
+  campaignFile: string,
+): RenderPlan {
+  if (campaign.id !== storyboard.campaignId)
+    throw new RendererError('Storyboard campaign ID does not match campaign');
+  if (campaign.style !== storyboard.style)
+    throw new RendererError('Storyboard style does not match campaign style');
+  return {
+    campaign,
+    storyboard,
+    campaignFile: resolve(campaignFile),
+    template: resolveTemplate(storyboard.style),
+    requiresGeneration: false,
+  };
+}
+
+function mime(path: string) {
+  if (path.endsWith('.svg')) return 'image/svg+xml';
+  if (path.endsWith('.png')) return 'image/png';
+  if (path.endsWith('.webp')) return 'image/webp';
+  return 'image/jpeg';
+}
+
+async function compositionProps(plan: RenderPlan, draft: boolean): Promise<VideoerCompositionProps> {
+  const root = dirname(plan.campaignFile);
+  const assetData: Record<string, string> = {};
+  for (const shot of plan.storyboard.shots) {
+    const source = shot.sources.find((candidate) => candidate.path)?.path;
+    if (!source) continue;
+    const path = resolve(root, source);
+    const data = await readFile(path);
+    assetData[shot.id] = `data:${mime(path)};base64,${data.toString('base64')}`;
+  }
+  const requested = plan.campaign.output;
+  const width = draft ? Math.min(requested.width, 540) : requested.width;
+  return {
+    storyboard: plan.storyboard,
+    template: plan.template,
+    assetData,
+    output: {
+      width,
+      height: Math.round((width / requested.width) * requested.height),
+      fps: requested.fps,
+    },
+  };
+}
+
+let bundled: Promise<string> | undefined;
+function serveUrl() {
+  bundled ??= bundle({ entryPoint: resolve(dirname(new URL(import.meta.url).pathname), 'entry.js') });
+  return bundled;
+}
+
+export async function render(plan: RenderPlan, options: RenderOptions): Promise<RenderOutput> {
+  const kind = options.draft ? 'draft' : 'final';
+  const inputProps = await compositionProps(plan, options.draft ?? false);
+  try {
+    const url = await serveUrl();
+    const composition = await selectComposition({
+      serveUrl: url,
+      id: 'VideoerCampaign',
+      inputProps,
+    });
+    await renderMedia({
+      serveUrl: url,
+      composition,
+      codec: 'h264',
+      audioCodec: 'aac',
+      outputLocation: options.outputPath,
+      inputProps,
+      chromiumOptions: { enableMultiProcessOnLinux: true },
+      onProgress: ({ progress }) => options.onProgress?.(progress),
+    });
+  } catch (error) {
+    throw new RendererError(
+      `Could not render ${kind} video: ${error instanceof Error ? error.message : String(error)}`,
+      { cause: error },
+    );
+  }
+  return {
+    path: options.outputPath,
+    ...inputProps.output,
+    durationSeconds: plan.storyboard.durationSeconds,
+    shots: plan.storyboard.shots.length,
+    kind,
+  };
 }

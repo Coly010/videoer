@@ -9,6 +9,8 @@ import {
 import { ValidationError } from './domain/io.js';
 import { checkMediaDependencies } from './media/dependencies.js';
 import { inspectImage, inspectVideo } from './media/inspection.js';
+import { inspectRender, renderCampaign, reviseShot, verifyRender } from './application/workflow.js';
+import { motionPresets, type MotionPreset } from './domain/motion.js';
 
 interface Envelope {
   version: 1;
@@ -125,6 +127,55 @@ program
       checks.map((c) => `${c.available ? '✓' : '✗'} ${c.name}: ${c.detail}`).join('\n'),
     );
     if (data.some((c) => !c.available)) process.exitCode = 3;
+  });
+
+program
+  .command('render')
+  .argument('<campaign>')
+  .description('deterministically render a versioned campaign MP4')
+  .option('--draft', 'render a faster half-width inspection draft')
+  .option('--final', 'render at campaign delivery settings')
+  .option('--change <message...>', 'record what changed since the parent render')
+  .action(async function (p, options: { draft?: boolean; final?: boolean; change?: string[] }) {
+    if (options.draft && options.final) throw new Error('Choose either --draft or --final');
+    const data = await renderCampaign(p, { kind: options.final ? 'final' : 'draft', ...(options.change ? { changes: options.change } : {}) });
+    output(this, 'render.create', data, (d) => `✓ ${d.revision.id} (${d.revision.kind}) → ${d.output.path}`);
+  });
+
+program
+  .command('inspect-render')
+  .argument('<campaign>')
+  .argument('[render]', 'render ID or latest', 'latest')
+  .description('extract sampled frames, metadata, and a contact sheet')
+  .action(async function (p, renderId) {
+    const data = await inspectRender(p, renderId);
+    output(this, 'render.inspect', data, (d) => `✓ ${d.revision.id}: ${d.frames.length} sampled frames → ${d.contactSheet}`);
+  });
+
+program
+  .command('verify-render')
+  .argument('<campaign>')
+  .argument('[render]', 'render ID or latest', 'latest')
+  .description('verify video delivery properties and persist a report')
+  .action(async function (p, renderId) {
+    const data = await verifyRender(p, renderId);
+    output(this, 'render.verify', data, (d) => `${d.status.toUpperCase()}: ${d.revision.id} → ${d.reportPath}`);
+    if (data.status === 'fail') process.exitCode = 2;
+  });
+
+const shot = program.command('shot').description('selective shot operations');
+shot
+  .command('revise')
+  .argument('<campaign>')
+  .argument('<shot-id>')
+  .option('--text <text>')
+  .option('--caption <caption>')
+  .option('--motion <preset>', `one of: ${motionPresets.join(', ')}`)
+  .description('revise only one shot without regenerating unrelated assets')
+  .action(async function (p, shotId, options: { text?: string; caption?: string; motion?: string }) {
+    if (options.motion && !motionPresets.includes(options.motion as MotionPreset)) throw new Error(`Unknown motion preset '${options.motion}'`);
+    const data = await reviseShot(p, shotId, { ...(options.text ? { text: options.text } : {}), ...(options.caption ? { caption: options.caption } : {}), ...(options.motion ? { motion: options.motion as MotionPreset } : {}) });
+    output(this, 'shot.revise', data, (d) => `✓ ${d.shotId} revision ${d.revision}; changed ${d.changed.join(', ')}`);
   });
 
 program.parseAsync().catch((error) => {

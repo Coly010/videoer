@@ -25,7 +25,7 @@ describe('media inspection', () => {
   });
   it('builds reusable contact-sheet arguments', () => {
     expect(contactSheetArgs(['a.png', 'b.png'], 'sheet.jpg', 2)).toContain(
-      'xstack=inputs=2:grid=2x1:fill=black',
+      'xstack=inputs=2:layout=0_0|w0_0:fill=black',
     );
   });
 });
