@@ -1,0 +1,13 @@
+schemaVersion: 1
+id: ember-crown
+title: The Ember Crown
+type: book
+style: cinematic-fantasy
+durationSeconds: 18
+targetAudience: Adult fantasy readers
+description: An exiled heir must wake a forgotten fire.
+tone: [epic, mysterious, restrained]
+cta: Read The Ember Crown
+output: { width: 1080, height: 1920, fps: 30, format: mp4 }
+assets: { cover: assets/cover-placeholder.svg }
+brand: { name: The Ember Crown, colors: ['#080B12', '#D7B56D'] }

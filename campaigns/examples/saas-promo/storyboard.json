@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "campaignId": "tutarium-focus",
+  "title": "Tutarium Focus",
+  "durationSeconds": 14,
+  "style": "saas-promo",
+  "shots": [
+    {
+      "id": "hook",
+      "type": "kinetic-text",
+      "startSeconds": 0,
+      "durationSeconds": 2,
+      "text": "LESS ADMIN.",
+      "motion": "scale-pop",
+      "transition": "swipe"
+    },
+    {
+      "id": "dashboard",
+      "type": "screenshot",
+      "startSeconds": 2,
+      "durationSeconds": 4,
+      "text": "Everything in one view",
+      "motion": "slide-in",
+      "transition": "swipe",
+      "sources": [{ "kind": "supplied", "path": "assets/dashboard-placeholder.svg" }]
+    },
+    {
+      "id": "features",
+      "type": "slideshow",
+      "startSeconds": 6,
+      "durationSeconds": 5,
+      "text": "Plan • Track • Grow",
+      "motion": "track-left",
+      "transition": "swipe",
+      "sources": [{ "kind": "supplied", "path": "assets/dashboard-placeholder.svg" }]
+    },
+    {
+      "id": "start",
+      "type": "cta",
+      "startSeconds": 11,
+      "durationSeconds": 3,
+      "text": "TEACH WITH LESS ADMIN",
+      "motion": "scale-pop",
+      "transition": "cut"
+    }
+  ]
+}

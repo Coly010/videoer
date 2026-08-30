@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "campaignId": "ember-crown",
+  "title": "The Ember Crown",
+  "durationSeconds": 18,
+  "style": "cinematic-fantasy",
+  "shots": [
+    {
+      "id": "world",
+      "type": "image-motion",
+      "startSeconds": 0,
+      "durationSeconds": 5,
+      "text": "A kingdom forgot its fire",
+      "motion": "push-in",
+      "transition": "crossfade",
+      "sources": [{ "kind": "supplied", "path": "assets/landscape-placeholder.svg" }]
+    },
+    {
+      "id": "oath",
+      "type": "kinetic-text",
+      "startSeconds": 5,
+      "durationSeconds": 4,
+      "text": "One heir remembers",
+      "voiceover": "One heir remembers.",
+      "motion": "pan-up",
+      "transition": "crossfade"
+    },
+    {
+      "id": "cover",
+      "type": "cover-reveal",
+      "startSeconds": 9,
+      "durationSeconds": 6,
+      "text": "THE EMBER CROWN",
+      "motion": "pull-out",
+      "transition": "crossfade",
+      "sources": [{ "kind": "supplied", "path": "assets/cover-placeholder.svg" }]
+    },
+    {
+      "id": "read",
+      "type": "cta",
+      "startSeconds": 15,
+      "durationSeconds": 3,
+      "text": "READ NOW",
+      "motion": "static",
+      "transition": "cut"
+    }
+  ]
+}
