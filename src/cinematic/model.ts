@@ -28,6 +28,7 @@ export const cinematicSceneEntitySchema = z.object({
   role: z.enum(['environment', 'character', 'prop', 'set-dressing']),
   geometryPath: z.string().min(1),
   productionRigProfilePath: z.string().min(1).optional(),
+  productionCharacterBindingPath: z.string().min(1).optional(),
   fixturePath: z.string().min(1).optional(),
   transform: sceneTransformSchema.default({
     position: [0, 0, 0],

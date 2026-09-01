@@ -9,6 +9,8 @@ import {
   loadProductionRigProfile,
   verifyProductionRigProfileSkeleton,
 } from '../characters/rig-profile.js';
+import { loadProductionCharacterBinding } from '../characters/production-binding.js';
+import { sha256File } from '../assets/library.js';
 
 export interface CinematicQualityCheck {
   id: string;
@@ -34,6 +36,46 @@ function worldVector(
 export async function verifyCinematicScene(scene: CinematicScene, sceneFile: string) {
   const sourceDirectory = dirname(resolve(sceneFile));
   const checks: CinematicQualityCheck[] = [];
+  for (const entity of scene.entities.filter(
+    (candidate) => candidate.productionCharacterBindingPath,
+  )) {
+    const bindingPath = resolve(sourceDirectory, entity.productionCharacterBindingPath!);
+    const binding = await loadProductionCharacterBinding(bindingPath);
+    const geometryPath = resolve(sourceDirectory, entity.geometryPath);
+    const geometry = await loadGeometry(geometryPath);
+    const bodySha256 = await sha256File(geometryPath);
+    const profilePath = entity.productionRigProfilePath
+      ? resolve(sourceDirectory, entity.productionRigProfilePath)
+      : undefined;
+    const profileSha256 = profilePath ? await sha256File(profilePath) : undefined;
+    const valid =
+      entity.role === 'character' &&
+      Boolean(entity.motion) &&
+      binding.body.sha256 === bodySha256 &&
+      binding.body.asset.id === geometry.id &&
+      binding.rigProfile.sha256 === profileSha256 &&
+      binding.compatibility.bodyTopology === geometry.metadata.topology;
+    checks.push({
+      id: `${entity.id}.production-character-binding`,
+      status: valid ? 'pass' : 'fail',
+      message: valid
+        ? `Character '${entity.id}' has a complete content-addressed production assembly`
+        : `Character '${entity.id}' has an invalid production assembly binding`,
+      measurements: {
+        bindingId: binding.id,
+        character: binding.character,
+        body: binding.body.asset,
+        bodyHashMatched: binding.body.sha256 === bodySha256,
+        bodyIdentityMatched: binding.body.asset.id === geometry.id,
+        rigProfileHashMatched: binding.rigProfile.sha256 === profileSha256,
+        topologyMatched: binding.compatibility.bodyTopology === geometry.metadata.topology,
+        materialBindings: binding.materialBindings.length,
+        hairBound: Boolean(binding.hair),
+        wardrobeItems: binding.wardrobe.length,
+        qualityTier: binding.qualityTier,
+      },
+    });
+  }
   for (const entity of scene.entities.filter((candidate) => candidate.productionRigProfilePath)) {
     const profile = await loadProductionRigProfile(
       resolve(sourceDirectory, entity.productionRigProfilePath!),

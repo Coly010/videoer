@@ -2,6 +2,10 @@ import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { loadCinematicScene } from './io.js';
+import {
+  loadProductionCharacterBinding,
+  productionCharacterBindingArtifacts,
+} from '../characters/production-binding.js';
 
 async function fileSha256(path: string) {
   return createHash('sha256')
@@ -22,6 +26,27 @@ export async function fingerprintCinematicScene(sceneFile: string) {
   const source = resolve(sceneFile);
   const directory = dirname(source);
   const scene = await loadCinematicScene(source);
+  const productionCharacterDependencies = (
+    await Promise.all(
+      scene.entities.flatMap((entity) =>
+        entity.productionCharacterBindingPath
+          ? [
+              (async () => {
+                const bindingPath = resolve(directory, entity.productionCharacterBindingPath!);
+                const binding = await loadProductionCharacterBinding(bindingPath);
+                return [
+                  { role: `production-character-binding:${entity.id}`, path: bindingPath },
+                  ...productionCharacterBindingArtifacts(bindingPath, binding).map((artifact) => ({
+                    role: `production-character:${entity.id}:${artifact.role}`,
+                    path: artifact.path,
+                  })),
+                ];
+              })(),
+            ]
+          : [],
+      ),
+    )
+  ).flat();
   const dependencies = [
     ...scene.entities.flatMap((entity) => [
       { role: `geometry:${entity.id}`, path: resolve(directory, entity.geometryPath) },
@@ -44,6 +69,7 @@ export async function fingerprintCinematicScene(sceneFile: string) {
     ...(scene.finishProfilePath
       ? [{ role: 'finish-profile', path: resolve(directory, scene.finishProfilePath) }]
       : []),
+    ...productionCharacterDependencies,
   ];
   const artifacts = await Promise.all(
     dependencies.map(async (dependency) => ({
@@ -67,6 +93,11 @@ export async function fingerprintCinematicScene(sceneFile: string) {
       geometryPath: `artifact:geometry:${entity.id}`,
       ...(entity.productionRigProfilePath
         ? { productionRigProfilePath: `artifact:production-rig-profile:${entity.id}` }
+        : {}),
+      ...(entity.productionCharacterBindingPath
+        ? {
+            productionCharacterBindingPath: `artifact:production-character-binding:${entity.id}`,
+          }
         : {}),
       ...(entity.motion
         ? {

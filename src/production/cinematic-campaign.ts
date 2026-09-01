@@ -532,6 +532,7 @@ const geometrySourceSchema = z
     id: localIdSchema,
     path: relativePathSchema.optional(),
     productionRigProfilePath: relativePathSchema.optional(),
+    productionCharacterBindingPath: relativePathSchema.optional(),
     library: libraryRequirementSchema.optional(),
     adaptation: geometryAdaptationSchema.optional(),
     materialBindings: z
@@ -556,6 +557,12 @@ const geometrySourceSchema = z
   .superRefine((source, ctx) => {
     if (source.recipe && source.library)
       ctx.addIssue({ code: 'custom', path: [], message: 'geometry cannot use recipe and library' });
+    if (source.productionRigProfilePath && source.productionCharacterBindingPath)
+      ctx.addIssue({
+        code: 'custom',
+        path: ['productionCharacterBindingPath'],
+        message: 'production-character binding owns its rig profile; do not declare both paths',
+      });
     if (source.recipe && source.adaptation)
       ctx.addIssue({
         code: 'custom',

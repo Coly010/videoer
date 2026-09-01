@@ -32,6 +32,8 @@ export interface WallWithOpeningsOptions {
   backZ: number;
   materialId: string;
   openings: WallOpening[];
+  /** Non-structural finish bands may terminate at an opening head. */
+  allowOpeningsAtTopBoundary?: boolean;
 }
 
 /**
@@ -40,7 +42,17 @@ export interface WallWithOpeningsOptions {
  * pretend an opaque wall behind them has been cut.
  */
 export function wallWithRectangularOpeningsParts(options: WallWithOpeningsOptions): MeshPart[] {
-  const { minimumX, maximumX, minimumY, maximumY, frontZ, backZ, materialId, openings } = options;
+  const {
+    minimumX,
+    maximumX,
+    minimumY,
+    maximumY,
+    frontZ,
+    backZ,
+    materialId,
+    openings,
+    allowOpeningsAtTopBoundary = false,
+  } = options;
   if (maximumX <= minimumX || maximumY <= minimumY || backZ <= frontZ)
     throw new Error('Wall bounds must have positive extent');
   const ids = new Set<string>();
@@ -54,7 +66,7 @@ export function wallWithRectangularOpeningsParts(options: WallWithOpeningsOption
       opening.minimumX <= minimumX ||
       opening.maximumX >= maximumX ||
       opening.minimumY < minimumY ||
-      opening.maximumY >= maximumY
+      (allowOpeningsAtTopBoundary ? opening.maximumY > maximumY : opening.maximumY >= maximumY)
     )
       throw new Error(
         `Wall opening '${opening.id}' must have positive extent strictly inside the wall`,

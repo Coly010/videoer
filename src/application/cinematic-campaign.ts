@@ -77,6 +77,7 @@ import {
   loadProductionRigProfile,
   verifyProductionRigProfileSkeleton,
 } from '../characters/rig-profile.js';
+import { loadProductionCharacterBinding } from '../characters/production-binding.js';
 
 function portablePath(fromDirectory: string, target: string) {
   const value = relative(fromDirectory, target);
@@ -341,7 +342,12 @@ export async function buildDeclarativeCinematicCampaign(
 
   const geometry = new Map<
     string,
-    { path: string; asset: GeometryAsset; productionRigProfilePath?: string }
+    {
+      path: string;
+      asset: GeometryAsset;
+      productionRigProfilePath?: string;
+      productionCharacterBindingPath?: string;
+    }
   >();
   const geometryAdaptationReports = new Map<
     string,
@@ -512,7 +518,71 @@ export async function buildDeclarativeCinematicCampaign(
           : 'Campaign supplies an existing local persisted asset.',
       });
     let productionRigProfilePath: string | undefined;
-    if (source.productionRigProfilePath) {
+    let productionCharacterBindingPath: string | undefined;
+    if (source.productionCharacterBindingPath) {
+      productionCharacterBindingPath = resolve(root, source.productionCharacterBindingPath);
+      const binding = await loadProductionCharacterBinding(productionCharacterBindingPath);
+      const boundComponents = [
+        binding.body,
+        ...binding.materialBindings.map((item) => item.material),
+        ...(binding.hair ? [binding.hair] : []),
+        ...binding.wardrobe,
+      ];
+      for (const component of boundComponents) {
+        const libraryAsset = await findAsset(libraryRoot, component.asset);
+        if (!libraryAsset || libraryAsset.status !== 'verified')
+          throw new Error(
+            `Production-character binding for geometry '${source.id}' requires verified ${component.asset.id}@${component.asset.version}`,
+          );
+        const integrity = await validateLibraryAsset(libraryAsset);
+        if (!integrity.valid)
+          throw new Error(
+            `Production-character component ${component.asset.id}@${component.asset.version} is invalid: ${integrity.issues.join('; ')}`,
+          );
+        const artifact = libraryAsset.artifacts.find(
+          (candidate) => candidate.role === component.artifactRole,
+        );
+        if (!artifact?.sha256 || artifact.sha256 !== component.sha256)
+          throw new Error(
+            `Production-character component ${component.asset.id}@${component.asset.version} does not match its bound ${component.artifactRole} hash`,
+          );
+      }
+      const bodySha256 = await sha256File(path);
+      if (binding.body.sha256 !== bodySha256)
+        throw new Error(
+          `Production-character binding for geometry '${source.id}' names a different body artifact`,
+        );
+      if (binding.body.asset.id !== asset.id)
+        throw new Error(
+          `Production-character binding for geometry '${source.id}' names a different body identity`,
+        );
+      if (binding.compatibility.bodyTopology !== asset.metadata.topology)
+        throw new Error(
+          `Production-character binding for geometry '${source.id}' names an incompatible body topology`,
+        );
+      if (
+        resolvedLibrary &&
+        (binding.body.asset.id !== resolvedLibrary.asset.id ||
+          binding.body.asset.version !== resolvedLibrary.asset.version)
+      )
+        throw new Error(
+          `Production-character binding for geometry '${source.id}' names a different body asset version`,
+        );
+      productionRigProfilePath = resolve(
+        dirname(productionCharacterBindingPath),
+        binding.rigProfile.path,
+      );
+      const profile = await loadProductionRigProfile(productionRigProfilePath);
+      if (profile.id !== binding.rigProfile.id || profile.version !== binding.rigProfile.version)
+        throw new Error(
+          `Production-character binding for geometry '${source.id}' names a different rig profile identity`,
+        );
+      const verification = verifyProductionRigProfileSkeleton(profile, asset.skeleton);
+      if (!verification.valid)
+        throw new Error(
+          `Production-character binding for geometry '${source.id}' is incompatible: ${verification.issues.join('; ')}`,
+        );
+    } else if (source.productionRigProfilePath) {
       productionRigProfilePath = resolve(root, source.productionRigProfilePath);
       const profile = await loadProductionRigProfile(productionRigProfilePath);
       const verification = verifyProductionRigProfileSkeleton(profile, asset.skeleton);
@@ -525,6 +595,7 @@ export async function buildDeclarativeCinematicCampaign(
       path,
       asset,
       ...(productionRigProfilePath ? { productionRigProfilePath } : {}),
+      ...(productionCharacterBindingPath ? { productionCharacterBindingPath } : {}),
     });
   }
 
@@ -1832,6 +1903,14 @@ export async function buildDeclarativeCinematicCampaign(
               productionRigProfilePath: portablePath(
                 sceneDirectory,
                 source.productionRigProfilePath,
+              ),
+            }
+          : {}),
+        ...(source.productionCharacterBindingPath
+          ? {
+              productionCharacterBindingPath: portablePath(
+                sceneDirectory,
+                source.productionCharacterBindingPath,
               ),
             }
           : {}),

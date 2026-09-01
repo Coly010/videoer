@@ -68,6 +68,14 @@ async function prepareCinematicRender(sceneFile: string, outputDirectory: string
       ...(entity.productionRigProfilePath
         ? { productionRigProfilePath: resolve(sourceDirectory, entity.productionRigProfilePath) }
         : {}),
+      ...(entity.productionCharacterBindingPath
+        ? {
+            productionCharacterBindingPath: resolve(
+              sourceDirectory,
+              entity.productionCharacterBindingPath,
+            ),
+          }
+        : {}),
       ...(entity.fixturePath ? { fixturePath: resolve(sourceDirectory, entity.fixturePath) } : {}),
       ...(entity.motion
         ? { motion: { ...entity.motion, path: resolve(sourceDirectory, entity.motion.path) } }
