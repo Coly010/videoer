@@ -14,6 +14,10 @@ import { loadProductionCharacterBinding } from '../characters/production-binding
 import { sha256File } from '../assets/library.js';
 import { geometryTextureDependencies } from '../materials/texture-maps.js';
 import { verifyStaticSurfaceWaterField } from '../environments/surface-water.js';
+import {
+  reconstructSurfaceWaterOpticalSurface,
+  verifySurfaceWaterOpticalSurface,
+} from '../environments/surface-water-surface.js';
 
 export interface CinematicQualityCheck {
   id: string;
@@ -97,7 +101,8 @@ export async function verifyCinematicScene(scene: CinematicScene, sceneFile: str
             verification.field.receiver.geometryId === geometry.id &&
             verification.field.receiver.geometrySha256 === geometrySha256,
           receiverTransformMatched:
-            JSON.stringify(verification.field.receiver.transform) === JSON.stringify(entity.transform),
+            JSON.stringify(verification.field.receiver.transform) ===
+            JSON.stringify(entity.transform),
           activeCellCount: verification.field.grid.activeCellCount,
           splashEligibleCellCount: verification.field.cells.filter((cell) => cell.splashEligible)
             .length,
@@ -110,6 +115,75 @@ export async function verifyCinematicScene(scene: CinematicScene, sceneFile: str
         id: `${entity.id}.surface-water-field`,
         status: 'fail',
         message: `Entity '${entity.id}' surface-water field could not be verified`,
+        measurements: { error: error instanceof Error ? error.message : String(error) },
+      });
+    }
+  }
+  for (const entity of scene.entities.filter(
+    (candidate) => candidate.surfaceWaterOpticalSurfacePath,
+  )) {
+    const geometryPath = resolve(sourceDirectory, entity.geometryPath);
+    const fieldPath = resolve(sourceDirectory, entity.surfaceWaterFieldPath!);
+    const opticalPath = resolve(sourceDirectory, entity.surfaceWaterOpticalSurfacePath!);
+    try {
+      const fieldVerification = verifyStaticSurfaceWaterField(
+        JSON.parse(await readFile(fieldPath, 'utf8')),
+      );
+      const opticalVerification = verifySurfaceWaterOpticalSurface(
+        JSON.parse(await readFile(opticalPath, 'utf8')),
+      );
+      const geometry = await loadGeometry(geometryPath);
+      const geometrySha256 = await sha256File(geometryPath);
+      const expectedOptical = reconstructSurfaceWaterOpticalSurface(fieldVerification.field, {
+        schemaVersion: 1,
+        id: opticalVerification.surface.id,
+        ...opticalVerification.surface.options,
+      });
+      const sourceFieldMatched =
+        opticalVerification.surface.sourceFieldId === fieldVerification.field.id &&
+        opticalVerification.surface.sourceFieldSha256 === fieldVerification.field.fieldSha256;
+      const reconstructionMatched =
+        opticalVerification.surface.reconstructionSha256 === expectedOptical.reconstructionSha256;
+      const receiverGeometryMatched =
+        fieldVerification.field.receiver.geometryId === geometry.id &&
+        fieldVerification.field.receiver.geometrySha256 === geometrySha256;
+      const receiverTransformMatched =
+        JSON.stringify(fieldVerification.field.receiver.transform) ===
+        JSON.stringify(entity.transform);
+      const valid =
+        entity.role === 'environment' &&
+        fieldVerification.valid &&
+        opticalVerification.valid &&
+        sourceFieldMatched &&
+        reconstructionMatched &&
+        receiverGeometryMatched &&
+        receiverTransformMatched;
+      checks.push({
+        id: `${entity.id}.surface-water-optical-surface`,
+        status: valid ? 'pass' : 'fail',
+        message: valid
+          ? `Environment '${entity.id}' has an exact field-bound optical water surface`
+          : `Entity '${entity.id}' has an invalid or mismatched optical water surface`,
+        measurements: {
+          opticalSurfaceId: opticalVerification.surface.id,
+          opticalSurfacePath: opticalPath,
+          sourceFieldId: fieldVerification.field.id,
+          sourceFieldMatched,
+          reconstructionMatched,
+          receiverGeometryMatched,
+          receiverTransformMatched,
+          opticalIssues: opticalVerification.issues,
+          fieldIssues: fieldVerification.issues,
+          triangleCount: opticalVerification.surface.report.triangleCount,
+          reconstructedVolumeCubicMeters:
+            opticalVerification.surface.report.reconstructedVolumeCubicMeters,
+        },
+      });
+    } catch (error) {
+      checks.push({
+        id: `${entity.id}.surface-water-optical-surface`,
+        status: 'fail',
+        message: `Entity '${entity.id}' optical water surface could not be verified`,
         measurements: { error: error instanceof Error ? error.message : String(error) },
       });
     }
@@ -160,7 +234,8 @@ export async function verifyCinematicScene(scene: CinematicScene, sceneFile: str
     );
     const geometry = await loadGeometry(resolve(sourceDirectory, entity.geometryPath));
     const profileVerification = verifyProductionRigProfileSkeleton(profile, geometry.skeleton);
-    const valid = entity.role === 'character' && Boolean(entity.motion) && profileVerification.valid;
+    const valid =
+      entity.role === 'character' && Boolean(entity.motion) && profileVerification.valid;
     checks.push({
       id: `${entity.id}.production-rig-profile`,
       status: valid ? 'pass' : 'fail',

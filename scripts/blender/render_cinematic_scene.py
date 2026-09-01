@@ -663,6 +663,180 @@ def transform_canonical_point(point, transform):
     )
 
 
+def create_surface_water_optical_surface(definition, field_report):
+    """Create the conserved optical top surface; the receiver wet-film remains separate."""
+    surface = load_json(definition["surfaceWaterOpticalSurfacePath"])
+    entity_id = definition["id"]
+    if surface.get("schemaVersion") != 1:
+        raise RuntimeError(f"Entity '{entity_id}' optical water surface schema is unsupported")
+    if surface.get("generator") != "videoer.surface-water-optical-surface.v1":
+        raise RuntimeError(
+            f"Entity '{entity_id}' optical water surface has an unsupported generator"
+        )
+    if surface.get("sourceFieldId") != field_report["fieldId"]:
+        raise RuntimeError(
+            f"Entity '{entity_id}' optical water surface source field identity does not match"
+        )
+    if surface.get("sourceFieldSha256") != field_report["fieldSha256"]:
+        raise RuntimeError(
+            f"Entity '{entity_id}' optical water surface source field hash does not match"
+        )
+
+    positions = surface.get("positions")
+    ground_heights = surface.get("groundHeightsMeters")
+    depths = surface.get("depthsMeters")
+    indices = surface.get("indices")
+    report = surface.get("report")
+    options = surface.get("options")
+    if not all(isinstance(value, list) for value in (positions, ground_heights, depths, indices)):
+        raise RuntimeError(f"Entity '{entity_id}' optical water surface arrays are missing")
+    if not isinstance(report, dict) or not isinstance(options, dict):
+        raise RuntimeError(f"Entity '{entity_id}' optical water surface metadata is missing")
+    if len(positions) != len(ground_heights) or len(positions) != len(depths):
+        raise RuntimeError(
+            f"Entity '{entity_id}' optical water surface vertex attribute lengths differ"
+        )
+    if len(indices) % 3 != 0:
+        raise RuntimeError(
+            f"Entity '{entity_id}' optical water surface indices do not describe triangles"
+        )
+    if report.get("vertexCount") != len(positions) or report.get("triangleCount") != len(indices) // 3:
+        raise RuntimeError(f"Entity '{entity_id}' optical water surface counts do not match its report")
+    reconstruction_hash = surface.get("reconstructionSha256")
+    if (
+        not isinstance(reconstruction_hash, str)
+        or len(reconstruction_hash) != 64
+        or any(character not in "0123456789abcdef" for character in reconstruction_hash)
+    ):
+        raise RuntimeError(f"Entity '{entity_id}' optical water surface lacks a reconstruction hash")
+    optical_offset = options.get("opticalOffsetMeters")
+    if not isinstance(optical_offset, (int, float)) or not math.isfinite(optical_offset):
+        raise RuntimeError(f"Entity '{entity_id}' optical water surface offset is invalid")
+
+    vertices = []
+    for vertex_index, (position, ground_height, depth) in enumerate(
+        zip(positions, ground_heights, depths)
+    ):
+        if (
+            not isinstance(position, list)
+            or len(position) != 3
+            or not all(isinstance(value, (int, float)) and math.isfinite(value) for value in position)
+            or not isinstance(ground_height, (int, float))
+            or not math.isfinite(ground_height)
+            or not isinstance(depth, (int, float))
+            or not math.isfinite(depth)
+            or depth < 0
+        ):
+            raise RuntimeError(
+                f"Entity '{entity_id}' optical water vertex {vertex_index} is invalid"
+            )
+        expected_y = ground_height + optical_offset + depth
+        if abs(position[1] - expected_y) > 1e-9:
+            raise RuntimeError(
+                f"Entity '{entity_id}' optical water vertex {vertex_index} violates depth semantics"
+            )
+        vertices.append(geometry_probe.to_blender(position))
+
+    faces = []
+    reconstructed_volume = 0.0
+    projected_area = 0.0
+    for offset in range(0, len(indices), 3):
+        triangle = indices[offset : offset + 3]
+        if any(not isinstance(index, int) or index < 0 or index >= len(positions) for index in triangle):
+            raise RuntimeError(
+                f"Entity '{entity_id}' optical water triangle {offset // 3} has an invalid index"
+            )
+        if len(set(triangle)) != 3:
+            raise RuntimeError(
+                f"Entity '{entity_id}' optical water triangle {offset // 3} repeats a vertex"
+            )
+        a, b, c = [positions[index] for index in triangle]
+        signed_twice_area = (
+            (b[0] - a[0]) * (c[2] - a[2])
+            - (b[2] - a[2]) * (c[0] - a[0])
+        )
+        area = abs(signed_twice_area) * 0.5
+        if area <= 1e-12:
+            raise RuntimeError(
+                f"Entity '{entity_id}' optical water triangle {offset // 3} is degenerate"
+            )
+        # Videoer is Y-up. A negative signed XZ area maps to Blender's upward +Z normal.
+        if signed_twice_area >= 0:
+            raise RuntimeError(
+                f"Entity '{entity_id}' optical water triangle {offset // 3} is not upward-facing"
+            )
+        projected_area += area
+        reconstructed_volume += area * sum(depths[index] for index in triangle) / 3
+        faces.append(tuple(triangle))
+
+    declared_volume = report.get("reconstructedVolumeCubicMeters")
+    source_volume = report.get("sourcePuddleVolumeCubicMeters")
+    if not all(
+        isinstance(value, (int, float)) and math.isfinite(value) and value >= 0
+        for value in (declared_volume, source_volume)
+    ):
+        raise RuntimeError(f"Entity '{entity_id}' optical water volume report is invalid")
+    volume_tolerance = max(1e-12, source_volume * 1e-9)
+    if (
+        abs(reconstructed_volume - declared_volume) > volume_tolerance
+        or abs(reconstructed_volume - source_volume) > volume_tolerance
+    ):
+        raise RuntimeError(f"Entity '{entity_id}' optical water surface does not conserve volume")
+
+    mesh_data = bpy.data.meshes.new(f"{entity_id}-optical-water-surface")
+    mesh_data.from_pydata(vertices, [], faces)
+    mesh_data.update(calc_edges=True)
+    water = bpy.data.objects.new(f"{entity_id}-optical-water-surface", mesh_data)
+    bpy.context.collection.objects.link(water)
+    for polygon in mesh_data.polygons:
+        polygon.use_smooth = True
+
+    material = bpy.data.materials.new(f"{entity_id}-optical-water")
+    material.diffuse_color = (0.025, 0.035, 0.045, 0.28)
+    material.use_nodes = True
+    principled = material.node_tree.nodes.get("Principled BSDF")
+    if principled is None:
+        raise RuntimeError(f"Entity '{entity_id}' optical water material lacks Principled BSDF")
+    principled.label = "Conserved shallow-water dielectric"
+    # Shallow clean water is nearly colourless; darkening belongs to the wet receiver below.
+    principled.inputs["Base Color"].default_value = (0.055, 0.07, 0.08, 1)
+    principled.inputs["Metallic"].default_value = 0.0
+    principled.inputs["Roughness"].default_value = 0.045
+    if principled.inputs.get("IOR"):
+        principled.inputs["IOR"].default_value = 1.333
+    transmission = principled.inputs.get("Transmission Weight")
+    alpha = principled.inputs.get("Alpha")
+    cycles = bpy.context.scene.render.engine == "CYCLES"
+    if transmission:
+        transmission.default_value = 0.94 if cycles else 0.0
+    if alpha:
+        alpha.default_value = 1.0 if cycles else 0.28
+    if not cycles and hasattr(material, "surface_render_method"):
+        material.surface_render_method = "DITHERED"
+    if principled.inputs.get("Coat Weight"):
+        principled.inputs["Coat Weight"].default_value = 0.18 if cycles else 1.0
+    if principled.inputs.get("Coat Roughness"):
+        principled.inputs["Coat Roughness"].default_value = 0.025
+    mesh_data.materials.append(material)
+    water.hide_render = not definition.get("visible", True)
+    return {
+        "id": surface.get("id"),
+        "reconstructionSha256": surface["reconstructionSha256"],
+        "objectName": water.name,
+        "vertexCount": len(vertices),
+        "triangleCount": len(faces),
+        "projectedAreaSquareMeters": projected_area,
+        "reconstructedVolumeCubicMeters": reconstructed_volume,
+        "sourcePuddleVolumeCubicMeters": source_volume,
+        "materialModel": (
+            "shallow-water-dielectric-cycles-v1"
+            if cycles
+            else "thin-reflective-water-film-eevee-v1"
+        ),
+        "separateContinuousReceiverFilmPreserved": True,
+    }
+
+
 def create_surface_water(definition, receiver_asset, receiver_mesh):
     field = load_json(definition["surfaceWaterFieldPath"])
     if field.get("generator") != "videoer.static-surface-water.v1":
@@ -1426,7 +1600,16 @@ def main():
         asset, armature, mesh = create_entity(entity, manifest["fps"], manifest["durationSeconds"])
         entity_meshes[entity["id"]] = mesh
         if entity.get("surfaceWaterFieldPath"):
-            surface_water_fields.append(create_surface_water(entity, asset, mesh))
+            field_report = create_surface_water(entity, asset, mesh)
+            if entity.get("surfaceWaterOpticalSurfacePath"):
+                field_report["opticalSurface"] = create_surface_water_optical_surface(
+                    entity, field_report
+                )
+            surface_water_fields.append(field_report)
+        elif entity.get("surfaceWaterOpticalSurfacePath"):
+            raise RuntimeError(
+                f"Entity '{entity['id']}' cannot render an optical water surface without its source field"
+            )
         if entity.get("fixturePath"):
             create_fixture_lights(entity, entity["id"], asset, armature, mesh)
     with open(

@@ -64,6 +64,7 @@ import {
 } from './application/paving-material-assembly.js';
 import {
   createPavingSurfaceWaterField,
+  createSurfaceWaterOpticalSurface,
   loadSurfaceWaterAssemblyProfile,
   rebindCinematicSurfaceWaterReceiver,
 } from './application/surface-water.js';
@@ -1148,6 +1149,7 @@ environment
   .argument('<surface-water-field>')
   .argument('<output-scene>')
   .requiredOption('--id <scene-id>', 'stable identity for the derived transfer scene')
+  .option('--optical-surface <path>', 'exact smooth optical surface derived from the water field')
   .description('derive a scene with an exact geometry/transform-bound surface-water receiver')
   .action(async function (
     sourceScene: string,
@@ -1155,13 +1157,14 @@ environment
     pavingGeometry: string,
     surfaceWaterField: string,
     outputScene: string,
-    options: { id: string },
+    options: { id: string; opticalSurface?: string },
   ) {
     const data = await rebindCinematicSurfaceWaterReceiver({
       sourceScenePath: sourceScene,
       receiverEntityId,
       pavingGeometryPath: pavingGeometry,
       surfaceWaterFieldPath: surfaceWaterField,
+      ...(options.opticalSurface ? { surfaceWaterOpticalSurfacePath: options.opticalSurface } : {}),
       outputScenePath: outputScene,
       sceneId: options.id,
     });
@@ -1203,6 +1206,59 @@ environment
       data,
       (result) =>
         `✓ ${result.field.grid.activeCellCount} receiver cells solved with mass-balance error ${result.field.massBalance.errorCubicMeters} → ${result.path}`,
+    );
+  });
+environment
+  .command('create-surface-water-optical-surface')
+  .argument('<surface-water-field>')
+  .argument('<output-surface>')
+  .requiredOption('--id <surface-id>', 'stable optical surface identity')
+  .option(
+    '--contour-depth <meters>',
+    'dry-boundary contour depth in metres',
+    Number.parseFloat,
+    0.00001,
+  )
+  .option(
+    '--optical-offset <meters>',
+    'surface offset above the receiver in metres',
+    Number.parseFloat,
+    0.0002,
+  )
+  .option(
+    '--maximum-volume-correction <factor>',
+    'maximum bounded reconstruction volume correction',
+    Number.parseFloat,
+    20,
+  )
+  .description('derive a verified, mass-conserving optical surface from an exact water field')
+  .action(async function (
+    surfaceWaterField: string,
+    outputSurface: string,
+    options: {
+      id: string;
+      contourDepth: number;
+      opticalOffset: number;
+      maximumVolumeCorrection: number;
+    },
+  ) {
+    const data = await createSurfaceWaterOpticalSurface({
+      surfaceWaterFieldPath: surfaceWaterField,
+      outputPath: outputSurface,
+      surface: {
+        schemaVersion: 1,
+        id: options.id,
+        contourDepthMeters: options.contourDepth,
+        opticalOffsetMeters: options.opticalOffset,
+        maximumVolumeCorrectionFactor: options.maximumVolumeCorrection,
+      },
+    });
+    output(
+      this,
+      'environment.create-surface-water-optical-surface',
+      data,
+      (result) =>
+        `✓ ${result.surface.report.triangleCount} mass-conserving optical water triangles → ${result.path}`,
     );
   });
 environment

@@ -82,6 +82,14 @@ export async function fingerprintCinematicScene(sceneFile: string) {
             },
           ]
         : []),
+      ...(entity.surfaceWaterOpticalSurfacePath
+        ? [
+            {
+              role: `surface-water-optical:${entity.id}`,
+              path: resolve(directory, entity.surfaceWaterOpticalSurfacePath),
+            },
+          ]
+        : []),
     ]),
     ...scene.overlays.map((overlay, index) => ({
       role: `overlay:${index}`,
@@ -131,6 +139,11 @@ export async function fingerprintCinematicScene(sceneFile: string) {
         : {}),
       ...(entity.surfaceWaterFieldPath
         ? { surfaceWaterFieldPath: `artifact:surface-water:${entity.id}` }
+        : {}),
+      ...(entity.surfaceWaterOpticalSurfacePath
+        ? {
+            surfaceWaterOpticalSurfacePath: `artifact:surface-water-optical:${entity.id}`,
+          }
         : {}),
     })),
     camera: scene.camera,

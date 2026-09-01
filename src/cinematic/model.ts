@@ -23,22 +23,38 @@ const motionBindingSchema = z.object({
   sourceEndSeconds: z.number().positive().optional(),
 });
 
-export const cinematicSceneEntitySchema = z.object({
-  id: cinematicIdentifierSchema,
-  role: z.enum(['environment', 'character', 'prop', 'set-dressing']),
-  geometryPath: z.string().min(1),
-  productionRigProfilePath: z.string().min(1).optional(),
-  productionCharacterBindingPath: z.string().min(1).optional(),
-  surfaceWaterFieldPath: z.string().min(1).optional(),
-  fixturePath: z.string().min(1).optional(),
-  transform: sceneTransformSchema.default({
-    position: [0, 0, 0],
-    rotation: [0, 0, 0],
-    scale: [1, 1, 1],
-  }),
-  motion: motionBindingSchema.optional(),
-  visible: z.boolean().default(true),
-});
+export const cinematicSceneEntitySchema = z
+  .object({
+    id: cinematicIdentifierSchema,
+    role: z.enum(['environment', 'character', 'prop', 'set-dressing']),
+    geometryPath: z.string().min(1),
+    productionRigProfilePath: z.string().min(1).optional(),
+    productionCharacterBindingPath: z.string().min(1).optional(),
+    surfaceWaterFieldPath: z.string().min(1).optional(),
+    surfaceWaterOpticalSurfacePath: z.string().min(1).optional(),
+    fixturePath: z.string().min(1).optional(),
+    transform: sceneTransformSchema.default({
+      position: [0, 0, 0],
+      rotation: [0, 0, 0],
+      scale: [1, 1, 1],
+    }),
+    motion: motionBindingSchema.optional(),
+    visible: z.boolean().default(true),
+  })
+  .superRefine((entity, context) => {
+    if (entity.surfaceWaterOpticalSurfacePath && !entity.surfaceWaterFieldPath)
+      context.addIssue({
+        code: 'custom',
+        path: ['surfaceWaterOpticalSurfacePath'],
+        message: 'surface-water optical surfaces require an exact source field path',
+      });
+    if (entity.surfaceWaterOpticalSurfacePath && entity.role !== 'environment')
+      context.addIssue({
+        code: 'custom',
+        path: ['surfaceWaterOpticalSurfacePath'],
+        message: 'surface-water optical surfaces may only bind environment entities',
+      });
+  });
 
 export const cinematicCameraKeyframeSchema = z.object({
   time: z.number().nonnegative(),

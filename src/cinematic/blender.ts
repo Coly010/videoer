@@ -79,6 +79,14 @@ async function prepareCinematicRender(sceneFile: string, outputDirectory: string
       ...(entity.surfaceWaterFieldPath
         ? { surfaceWaterFieldPath: resolve(sourceDirectory, entity.surfaceWaterFieldPath) }
         : {}),
+      ...(entity.surfaceWaterOpticalSurfacePath
+        ? {
+            surfaceWaterOpticalSurfacePath: resolve(
+              sourceDirectory,
+              entity.surfaceWaterOpticalSurfacePath,
+            ),
+          }
+        : {}),
       ...(entity.fixturePath ? { fixturePath: resolve(sourceDirectory, entity.fixturePath) } : {}),
       ...(entity.motion
         ? { motion: { ...entity.motion, path: resolve(sourceDirectory, entity.motion.path) } }

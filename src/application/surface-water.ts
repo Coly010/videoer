@@ -6,8 +6,15 @@ import {
   compileStaticSurfaceWater,
   surfaceWaterFieldSchema,
   surfaceWaterMaterialResponseSchema,
+  verifyStaticSurfaceWaterField,
   type SurfaceWaterField,
 } from '../environments/surface-water.js';
+import {
+  reconstructSurfaceWaterOpticalSurface,
+  surfaceWaterOpticalSurfaceOptionsSchema,
+  verifySurfaceWaterOpticalSurface,
+  type SurfaceWaterOpticalSurfaceOptions,
+} from '../environments/surface-water-surface.js';
 import { loadCinematicScene, saveCinematicScene } from '../cinematic/io.js';
 import {
   irregularPavingDefinitionSchema,
@@ -242,11 +249,44 @@ export async function loadSurfaceWaterAssemblyProfile(path: string) {
   return surfaceWaterAssemblyProfileSchema.parse(JSON.parse(await readFile(resolve(path), 'utf8')));
 }
 
+export async function createSurfaceWaterOpticalSurface(options: {
+  surfaceWaterFieldPath: string;
+  outputPath: string;
+  surface: SurfaceWaterOpticalSurfaceOptions;
+}) {
+  const fieldPath = resolve(options.surfaceWaterFieldPath);
+  const fieldValue = JSON.parse(await readFile(fieldPath, 'utf8'));
+  const fieldVerification = verifyStaticSurfaceWaterField(fieldValue);
+  if (!fieldVerification.valid)
+    throw new Error(
+      `surface-water optical source field is invalid: ${fieldVerification.issues.join('; ')}`,
+    );
+  const surfaceOptions = surfaceWaterOpticalSurfaceOptionsSchema.parse(options.surface);
+  const surface = reconstructSurfaceWaterOpticalSurface(fieldVerification.field, surfaceOptions);
+  const verification = verifySurfaceWaterOpticalSurface(surface);
+  if (!verification.valid)
+    throw new Error(`surface-water optical surface is invalid: ${verification.issues.join('; ')}`);
+  if (
+    surface.sourceFieldId !== fieldVerification.field.id ||
+    surface.sourceFieldSha256 !== fieldVerification.field.fieldSha256
+  )
+    throw new Error('surface-water optical surface does not preserve its exact source field');
+  const path = await writeJsonAtomically(options.outputPath, surface);
+  return {
+    surface,
+    path,
+    sourceFieldPath: fieldPath,
+    sourceFieldSha256: fieldVerification.field.fieldSha256,
+    sourceFieldFileSha256: await sha256File(fieldPath),
+  };
+}
+
 export async function rebindCinematicSurfaceWaterReceiver(options: {
   sourceScenePath: string;
   receiverEntityId: string;
   pavingGeometryPath: string;
   surfaceWaterFieldPath: string;
+  surfaceWaterOpticalSurfacePath?: string;
   outputScenePath: string;
   sceneId?: string;
 }) {
@@ -268,6 +308,22 @@ export async function rebindCinematicSurfaceWaterReceiver(options: {
     );
   entity.geometryPath = geometryPath;
   entity.surfaceWaterFieldPath = fieldPath;
+  if (options.surfaceWaterOpticalSurfacePath) {
+    const opticalPath = resolve(options.surfaceWaterOpticalSurfacePath);
+    const verification = verifySurfaceWaterOpticalSurface(
+      JSON.parse(await readFile(opticalPath, 'utf8')),
+    );
+    if (!verification.valid)
+      throw new Error(
+        `surface-water optical surface is invalid: ${verification.issues.join('; ')}`,
+      );
+    if (
+      verification.surface.sourceFieldId !== field.id ||
+      verification.surface.sourceFieldSha256 !== field.fieldSha256
+    )
+      throw new Error('surface-water optical surface does not bind the requested field');
+    entity.surfaceWaterOpticalSurfacePath = opticalPath;
+  } else delete entity.surfaceWaterOpticalSurfacePath;
   if (options.sceneId) scene.id = options.sceneId;
   const path = await saveCinematicScene(options.outputScenePath, scene);
   return {
