@@ -1,0 +1,495 @@
+{
+  "schemaVersion": 1,
+  "source": "/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/environments/street-storage-family-v7/family/verification/old-city-alley/scene.json",
+  "manifest": "/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/environments/street-storage-family-v7/family/verification/old-city-alley/resolved-scene.json",
+  "video": "/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/environments/street-storage-family-v7/family/verification/old-city-alley/street-storage-old-city-alley-transfer.mp4",
+  "blend": "/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/environments/street-storage-family-v7/family/verification/old-city-alley/street-storage-old-city-alley-transfer.blend",
+  "frames": [
+    {
+      "id": "right-context",
+      "progress": 0,
+      "description": "Right context and edge placement",
+      "path": "/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/environments/street-storage-family-v7/family/verification/old-city-alley/000-right-context.png"
+    },
+    {
+      "id": "frontal-layout",
+      "progress": 0.5,
+      "description": "Frontal family distribution and navigation opening",
+      "path": "/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/environments/street-storage-family-v7/family/verification/old-city-alley/050-frontal-layout.png"
+    },
+    {
+      "id": "left-context",
+      "progress": 1,
+      "description": "Left context and cross-variant silhouette",
+      "path": "/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/environments/street-storage-family-v7/family/verification/old-city-alley/100-left-context.png"
+    }
+  ],
+  "contactSheet": "/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/environments/street-storage-family-v7/family/verification/old-city-alley/contact-sheet.png",
+  "media": {
+    "streams": [
+      {
+        "index": 0,
+        "codec_name": "h264",
+        "codec_long_name": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+        "profile": "High",
+        "codec_type": "video",
+        "codec_tag_string": "avc1",
+        "codec_tag": "0x31637661",
+        "mime_codec_string": "avc1.64001e",
+        "width": 720,
+        "height": 406,
+        "coded_width": 720,
+        "coded_height": 406,
+        "has_b_frames": 2,
+        "sample_aspect_ratio": "1:1",
+        "display_aspect_ratio": "360:203",
+        "pix_fmt": "yuv420p",
+        "level": 30,
+        "chroma_location": "left",
+        "field_order": "progressive",
+        "is_avc": "true",
+        "nal_length_size": "4",
+        "id": "0x1",
+        "r_frame_rate": "24/1",
+        "avg_frame_rate": "24/1",
+        "time_base": "1/12288",
+        "start_pts": 0,
+        "start_time": "0.000000",
+        "duration_ts": 1536,
+        "duration": "0.125000",
+        "bit_rate": "812352",
+        "bits_per_raw_sample": "8",
+        "nb_frames": "3",
+        "extradata_size": 47,
+        "disposition": {
+          "default": 1,
+          "dub": 0,
+          "original": 0,
+          "comment": 0,
+          "lyrics": 0,
+          "karaoke": 0,
+          "forced": 0,
+          "hearing_impaired": 0,
+          "visual_impaired": 0,
+          "clean_effects": 0,
+          "attached_pic": 0,
+          "timed_thumbnails": 0,
+          "non_diegetic": 0,
+          "captions": 0,
+          "descriptions": 0,
+          "metadata": 0,
+          "dependent": 0,
+          "still_image": 0,
+          "multilayer": 0
+        },
+        "tags": {
+          "language": "und",
+          "handler_name": "VideoHandler",
+          "encoder": "Lavc libx264"
+        }
+      }
+    ],
+    "format": {
+      "filename": "/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/environments/street-storage-family-v7/family/verification/old-city-alley/street-storage-old-city-alley-transfer.mp4",
+      "nb_streams": 1,
+      "nb_programs": 0,
+      "nb_stream_groups": 0,
+      "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+      "format_long_name": "QuickTime / MOV",
+      "start_time": "0.000000",
+      "duration": "0.125000",
+      "size": "13588",
+      "bit_rate": "869632",
+      "probe_score": 100,
+      "tags": {
+        "major_brand": "isom",
+        "minor_version": "512",
+        "compatible_brands": "isomiso2avc1mp41",
+        "encoder": "Lavf63.1.101"
+      }
+    }
+  },
+  "verification": {
+    "schemaVersion": 1,
+    "status": "pass",
+    "checks": []
+  },
+  "evidenceRefresh": "existing-pixels",
+  "renderProfile": {
+    "engine": "cycles-cpu",
+    "samples": 128,
+    "seed": 1729,
+    "denoise": true,
+    "intent": "deterministic-final"
+  },
+  "deterministicEvidence": {
+    "boundary": "cycles-cpu-fixed-seed-to-lossless-png-to-single-thread-x264",
+    "expected": "byte-identical-on-matching-runtime-and-input-fingerprint"
+  },
+  "renderChecks": [
+    {
+      "id": "renderer-camera-contract",
+      "status": "pass",
+      "message": "Renderer camera position, semantic target, lens, and tracking contract match the declarative path",
+      "measurements": {
+        "valid": true,
+        "trackingConstraint": "TRACK_TO",
+        "trackAxis": "TRACK_NEGATIVE_Z",
+        "upAxis": "UP_Y",
+        "interpolationImplementation": "frame-baked-declarative-v1",
+        "maximumPositionErrorMeters": 0,
+        "maximumTargetErrorMeters": 0,
+        "maximumLensErrorMillimeters": 0,
+        "positionToleranceMeters": 0.00001,
+        "targetToleranceMeters": 0.00001,
+        "lensToleranceMillimeters": 0.005,
+        "samples": [
+          {
+            "landmarkId": "right-context",
+            "frame": 1,
+            "positionErrorMeters": 0,
+            "targetErrorMeters": 0,
+            "lensErrorMillimeters": 0,
+            "actualLensMillimeters": 30,
+            "expectedLensMillimeters": 30
+          },
+          {
+            "landmarkId": "frontal-layout",
+            "frame": 2,
+            "positionErrorMeters": 0,
+            "targetErrorMeters": 0,
+            "lensErrorMillimeters": 0,
+            "actualLensMillimeters": 31,
+            "expectedLensMillimeters": 31
+          },
+          {
+            "landmarkId": "left-context",
+            "frame": 3,
+            "positionErrorMeters": 0,
+            "targetErrorMeters": 0,
+            "lensErrorMillimeters": 0,
+            "actualLensMillimeters": 30,
+            "expectedLensMillimeters": 30
+          }
+        ]
+      }
+    },
+    {
+      "id": "dressing-visible",
+      "status": "pass",
+      "message": "Semantic frames retain the required visible image coverage",
+      "measurements": {
+        "maximumBlackPercentage": 20,
+        "allowedBlackPercentage": 68,
+        "perFrameBlackPercentage": [
+          20,
+          15,
+          20
+        ]
+      }
+    },
+    {
+      "id": "dressing-highlight-detail",
+      "status": "pass",
+      "message": "Semantic frames retain highlight detail within the declared limit",
+      "measurements": {
+        "maximumWhitePercentage": 0,
+        "allowedWhitePercentage": 5,
+        "perFrameWhitePercentage": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "dressing-entity-inspection-coverage",
+      "status": "pass",
+      "message": "Every declared entity is inspectable in at least one semantic landmark",
+      "measurements": {
+        "minimumVisibleAreaPercentage": 98,
+        "minimumScreenHeightPercentage": 5,
+        "maximumScreenHeightPercentage": 40,
+        "marginPercentage": 1,
+        "uncoveredEntityIds": [],
+        "entities": [
+          {
+            "entityId": "layout.old-city-alley-street-storage.cluster-001.member-01",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 11.800435185432434,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-layout",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 11.411768198013306,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 9.39740240573883,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "entityId": "layout.old-city-alley-street-storage.cluster-001.member-02",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 10.614478588104248,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-layout",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 10.046243667602539,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 8.085393905639648,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "entityId": "layout.old-city-alley-street-storage.cluster-002.member-01",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 8.314108848571777,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-layout",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 10.622069239616394,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 11.920985579490662,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "entityId": "layout.old-city-alley-street-storage.cluster-002.member-02",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 8.467429876327515,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-layout",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 10.549232363700867,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 9.899014234542847,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "entityId": "layout.old-city-alley-street-storage.cluster-003.member-01",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 13.382533192634583,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-layout",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 13.455906510353088,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 10.334086418151855,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "entityId": "layout.old-city-alley-street-storage.cluster-003.member-02",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 13.27882707118988,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-layout",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 13.012441992759705,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 9.965124726295471,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "entityId": "layout.old-city-alley-street-storage.cluster-004.member-01",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 8.047762513160706,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-layout",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 8.581182360649109,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 8.11607539653778,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "entityId": "layout.old-city-alley-street-storage.cluster-004.member-02",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 9.257343411445618,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-layout",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 9.537094831466675,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 8.312371373176575,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "entityId": "layout.old-city-alley-street-storage.cluster-005.member-01",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 9.110486507415771,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-layout",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 10.934868454933167,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 11.285573244094849,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "entityId": "layout.old-city-alley-street-storage.cluster-005.member-02",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 6.612715125083923,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-layout",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 7.410314679145813,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 7.478484511375427,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "blender": {
+    "mode": "inspect-only",
+    "stdout": "Blender 4.5.13 LTS (hash daeeeca98fb0 built 2026-08-25 01:30:50)\n\nBlender quit\n",
+    "stderr": ""
+  }
+}

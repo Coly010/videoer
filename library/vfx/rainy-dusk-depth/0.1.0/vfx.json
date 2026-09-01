@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "id": "vfx.rainy-dusk-depth",
+  "placement": "camera-relative",
+  "worldColor": [
+    0.006,
+    0.012,
+    0.025
+  ],
+  "fog": {
+    "density": 0.008,
+    "color": [
+      0.16,
+      0.2,
+      0.28
+    ]
+  },
+  "rain": {
+    "enabled": true,
+    "layers": [
+      {
+        "id": "foreground",
+        "count": 52,
+        "seed": 1701,
+        "depthMinimumMeters": 0.45,
+        "depthMaximumMeters": 2.2,
+        "horizontalSpanMeters": 6.4,
+        "verticalSpanMeters": 5.2,
+        "streakLengthMeters": 0.24,
+        "streakRadiusMeters": 0.0055,
+        "fallSpeedMetersPerSecond": 10.5,
+        "opacity": 0.72,
+        "color": [
+          0.42,
+          0.62,
+          0.86
+        ]
+      },
+      {
+        "id": "midground",
+        "count": 118,
+        "seed": 1702,
+        "depthMinimumMeters": 2.2,
+        "depthMaximumMeters": 6.5,
+        "horizontalSpanMeters": 10,
+        "verticalSpanMeters": 6.5,
+        "streakLengthMeters": 0.17,
+        "streakRadiusMeters": 0.0035,
+        "fallSpeedMetersPerSecond": 8.5,
+        "opacity": 0.5,
+        "color": [
+          0.35,
+          0.55,
+          0.8
+        ]
+      },
+      {
+        "id": "background",
+        "count": 190,
+        "seed": 1703,
+        "depthMinimumMeters": 6.5,
+        "depthMaximumMeters": 16,
+        "horizontalSpanMeters": 18,
+        "verticalSpanMeters": 9,
+        "streakLengthMeters": 0.11,
+        "streakRadiusMeters": 0.002,
+        "fallSpeedMetersPerSecond": 7,
+        "opacity": 0.3,
+        "color": [
+          0.3,
+          0.48,
+          0.72
+        ]
+      }
+    ]
+  },
+  "metadata": {
+    "generator": "videoer.camera-depth-rain.v1",
+    "deterministicSeeds": [
+      1701,
+      1702,
+      1703
+    ],
+    "separation": "foreground-midground-background"
+  }
+}

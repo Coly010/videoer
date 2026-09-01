@@ -1,0 +1,102 @@
+schemaVersion: 1
+id: motion.walk-casual
+version: 0.1.0
+type: motion
+title: Canonical casual walk
+description: Deterministic one-second humanoid walk cycle with root motion,
+  planted-foot targets, swing clearance, and analytic two-bone leg solving.
+status: verified
+tags:
+  - humanoid
+  - walk
+  - locomotion
+  - procedural
+  - project-owned
+capabilities:
+  - canonical-humanoid-motion
+  - loopable-root-motion
+  - planted-foot-contact
+  - swing-foot-clearance
+  - analytic-two-bone-ik
+source:
+  kind: procedural
+  generator: videoer.procedural-walk.v2
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: motion
+    path: motion.json
+    mediaType: application/vnd.videoer.motion+json
+    sha256: b604fb006bb8a496f33eb94551a98e8e22259f26738e89a4139e75bee326ca91
+  - role: preview
+    path: verification/walk.mp4
+    mediaType: video/mp4
+    sha256: def6a71711834649fa17be4d0f0dc6950af43a146dcdb39c0f9a8537a8f7ced1
+  - role: blender-source
+    path: verification/walk.blend
+    mediaType: application/x-blender
+    sha256: ddc3faf0d03dfa75918bd2ce677f8154e0f3486e8e129f8e34843490782e9d3d
+  - role: verification-verification-walk-000
+    path: verification/walk-000.png
+    mediaType: image/png
+    sha256: 535ee51a3f9ff607ec00dff9c952e5161745eea8aec6b085bd159b4542e433b8
+  - role: verification-verification-walk-025
+    path: verification/walk-025.png
+    mediaType: image/png
+    sha256: 46ecd2eb930101597832b122374190fc2f3762746861f3278561d2301a74aa2d
+  - role: verification-verification-walk-050
+    path: verification/walk-050.png
+    mediaType: image/png
+    sha256: 55952f636324acf1125d373f952af3c6bbdffc5639844c1d43b6dd6e2c2c7b87
+  - role: verification-verification-walk-075
+    path: verification/walk-075.png
+    mediaType: image/png
+    sha256: 0fc568005a36a6e854461d95ce6ecaddbbc931b8c3543230c83a015964f67001
+  - role: verification-verification-walk-100
+    path: verification/walk-100.png
+    mediaType: image/png
+    sha256: 8b3e7931765cd7e776657eb85275dff89e3bdfefbf8d4861be35b3e6df657ba3
+  - role: verification-verification-contact-sheet
+    path: verification/contact-sheet.png
+    mediaType: image/png
+    sha256: 076b3af15375485f9d6655fef56554908be373c309e67ae461620d842844a588
+  - role: verification-verification-motion-probe
+    path: verification/motion-probe.json
+    mediaType: application/json
+    sha256: 924d71e03d66438066acfd623498997f86496ef982aa859e75ac5c9b2cd9d25e
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  skeleton: videoer.canonical-humanoid.v1
+  renderers:
+    - three-3d
+    - blender-headless
+  requires:
+    - id: character.humanoid-mannequin
+      version: 0.2.0
+verification:
+  checks:
+    - motion.schema
+    - motion.track-timing
+    - skeleton.compatibility
+    - motion.canonical-forward-direction
+    - motion.anatomical-knee-polarity
+    - motion.planted-foot-drift
+    - motion.planted-foot-height
+    - motion.swing-clearance
+    - visual.limb-continuity
+    - visual.foot-contact
+    - visual.swing-clearance
+  artifacts:
+    - verification/walk-000.png
+    - verification/walk-025.png
+    - verification/walk-050.png
+    - verification/walk-075.png
+    - verification/walk-100.png
+    - verification/contact-sheet.png
+    - verification/motion-probe.json
+  verifiedAt: 2026-08-30T20:25:00.000Z

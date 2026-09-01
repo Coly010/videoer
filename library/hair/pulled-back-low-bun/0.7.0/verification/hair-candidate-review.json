@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "assetId": "hair.pulled-back-low-bun",
+  "decision": "accepted",
+  "reviewer": "codex-visual-review",
+  "reviewedAt": "2026-09-01T14:25:00.000Z",
+  "intendedShotDistance": "medium",
+  "evidence": [
+    "verification/isolated/contact-sheet.png",
+    "verification/fitted/contact-sheet.png",
+    "verification/fitted/pulled-back-hair-fit-probe.mp4",
+    "verification/fitted/scene-render.json"
+  ],
+  "assessments": {
+    "silhouette": "pass",
+    "hairlineAndScalpCoverage": "pass",
+    "crownToNapeFlow": "pass",
+    "bunIntegration": "pass",
+    "materialResponse": "pass",
+    "unrelatedTargetTransfer": "pass"
+  },
+  "strengths": [
+    "Continuous fitted scalp coverage removes the exposed crown and helmet-band failures seen in rejected v7-v13 probes.",
+    "Fine continuous strand-group cards follow crown-to-nape great-circle paths and converge coherently into the low bun.",
+    "The same generator fits both the stable CC0 production template and the unrelated project-owned articulated human without target-specific coordinates."
+  ],
+  "limitations": [
+    "Accepted only for medium and more distant shots; this mesh-card representation does not claim hero-close strand fidelity.",
+    "The bun and scalp are rigidly head-owned and do not yet provide secondary motion, flyaways, collision simulation, or wet-hair response.",
+    "The deliberately stylized flow groups can read as graphic highlights under hard close lighting and should not be framed as individual hair strands."
+  ],
+  "notes": "V14 is accepted as reusable medium-shot pulled-back hair inventory. Earlier wide-card, striped, exposed-scalp, wire-bun, and dashed-card iterations remain rejected evidence and are not publication candidates."
+}

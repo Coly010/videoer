@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "familyId": "environment.potted-vegetation-family",
+  "memberAssetId": "prop.potted-shrub",
+  "acceptedAt": "2026-09-01T08:40:11.000Z",
+  "transferSummaries": [
+    {
+      "kind": "historic-courtyard",
+      "requestId": "layout.historic-courtyard-potted-vegetation",
+      "surfaceAssetId": "environment.historic-courtyard-planting-surface",
+      "landmarkHashes": [
+        "dcc70f3a19f25f3e75c85119c138e20592352c670651c385d2b49237e0e39799",
+        "0ebed28a507c865de6428d2638fb3bf2581924504f148a4f2b53a37067b6d961",
+        "8f48f19fcf4fa2a53269d4c0ca8befdfb54603123dc73339404d27cb9dbb9f4f"
+      ]
+    },
+    {
+      "kind": "contemporary-rooftop",
+      "requestId": "layout.contemporary-rooftop-potted-vegetation",
+      "surfaceAssetId": "environment.contemporary-rooftop-planting-surface",
+      "landmarkHashes": [
+        "8764a1113b1b80551b194a8049ffdc86fbca428ad6a882086dbb728ce787b18a",
+        "98fea9f3fc74b7b926b936a9cd18f197877fa14b3dd35663684009e035e3d154",
+        "15dc4a2b1b5a9ef12c95f44751f4d3e978e2a296e6ea5e2b2f204df3ecdedaae"
+      ]
+    }
+  ],
+  "intendedShotDistance": "medium",
+  "limitations": [
+    "The procedural species are designed for medium/background habitation and are not botanically exact hero-close plant scans.",
+    "Leaves do not yet include translucency, vein normals, damage, seasonal states, growth variation or wind animation.",
+    "Current surface querying supports static geometry and chooses the highest upward-facing hit; animated ground and soil-suitability semantics remain future work."
+  ]
+}

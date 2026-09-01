@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "id": "lighting.historic-forge-workroom-workstation",
+  "exposure": {
+    "look": "AgX - Medium High Contrast",
+    "coherentAcrossShots": true
+  },
+  "worldColor": [
+    0.012,
+    0.006,
+    0.003
+  ],
+  "lights": [
+    {
+      "id": "warm-reading-key",
+      "type": "area",
+      "position": [
+        -2.438829219266402,
+        3.35,
+        1.840522180551376
+      ],
+      "target": [
+        0.2292173845053975,
+        1.686,
+        0.9745295015397315
+      ],
+      "color": [
+        1,
+        0.574,
+        0.2944
+      ],
+      "energy": 655.75,
+      "sizeMeters": 1.6,
+      "angleDegrees": 45,
+      "purpose": "key"
+    },
+    {
+      "id": "cool-window-fill",
+      "type": "area",
+      "position": [
+        2.244871205227709,
+        2.7739999999999996,
+        2.1425790189008525
+      ],
+      "target": [
+        0.2292173845053975,
+        1.686,
+        0.9745295015397315
+      ],
+      "color": [
+        0.34,
+        0.4673999999999999,
+        0.64
+      ],
+      "energy": 263.52,
+      "sizeMeters": 3.7119999999999997,
+      "angleDegrees": 45,
+      "purpose": "fill"
+    },
+    {
+      "id": "shelf-rim",
+      "type": "spot",
+      "position": [
+        0.6104916073602714,
+        3.67,
+        -0.5846414214146478
+      ],
+      "target": [
+        0.208824654058774,
+        1.75,
+        1.100894593811812
+      ],
+      "color": [
+        1,
+        0.5084,
+        0.21760000000000002
+      ],
+      "energy": 331.10799999999995,
+      "sizeMeters": 1.28,
+      "angleDegrees": 42,
+      "purpose": "rim"
+    }
+  ],
+  "metadata": {
+    "context": "historic-forge-workroom",
+    "faceKey": "warm-reading-key",
+    "windowFill": "cool-window-fill",
+    "balanceStrategy": "off-axis-warm-key-plus-camera-side-cool-fill-and-rear-shelf-rim",
+    "purpose": "portable-workstation-material-and-silhouette-separation",
+    "derivedFrom": "lighting.bookshop-warm-interior",
+    "lightingAdaptation": "lighting-rig-transform-v1"
+  }
+}

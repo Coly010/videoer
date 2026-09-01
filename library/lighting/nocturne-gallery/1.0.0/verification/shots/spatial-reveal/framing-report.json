@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "samples": [
+    {
+      "landmarkId": "cobalt-room",
+      "progress": 0,
+      "frame": 1,
+      "entities": {
+        "gallery": {
+          "minimumX": -1.1991888284683228,
+          "maximumX": 2.362661600112915,
+          "minimumY": -0.9175020456314087,
+          "maximumY": 1.7239665985107422,
+          "widthPercentage": 356.1850428581238,
+          "heightPercentage": 264.1468644142151
+        }
+      }
+    },
+    {
+      "landmarkId": "central-axis",
+      "progress": 0.5,
+      "frame": 49,
+      "entities": {
+        "gallery": {
+          "minimumX": -1.2539403438568115,
+          "maximumX": 3.2495203018188477,
+          "minimumY": -1.3468756675720215,
+          "maximumY": 2.165574789047241,
+          "widthPercentage": 450.3460645675659,
+          "heightPercentage": 351.24504566192627
+        }
+      }
+    },
+    {
+      "landmarkId": "amber-room",
+      "progress": 1,
+      "frame": 96,
+      "entities": {
+        "gallery": {
+          "minimumX": -1.4925315380096436,
+          "maximumX": 4.972266674041748,
+          "minimumY": -1.8144917488098145,
+          "maximumY": 3.1554887294769287,
+          "widthPercentage": 646.4798212051392,
+          "heightPercentage": 496.9980478286743
+        }
+      }
+    }
+  ]
+}

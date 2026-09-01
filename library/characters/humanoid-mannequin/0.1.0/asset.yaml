@@ -1,0 +1,96 @@
+schemaVersion: 1
+id: character.humanoid-mannequin
+version: 0.1.0
+type: character
+title: Parametric humanoid mannequin
+description: Project-owned procedural humanoid foundation with continuous
+  proportions, canonical skeleton, skin weights, and interaction attachments.
+status: verified
+tags:
+  - humanoid
+  - mannequin
+  - procedural
+  - project-owned
+capabilities:
+  - canonical-humanoid-rig
+  - skinned-mesh
+  - continuous-body-parameters
+  - hand-attachments
+  - foot-contact-points
+  - gaze-target
+source:
+  kind: procedural
+  generator: videoer.parametric-humanoid.v1
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: geometry
+    path: geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: 0a11f3d1de934be420365be25af00bd1df88e704b5797b89fa369ac5c138e4b4
+  - role: validation
+    path: validation.json
+    mediaType: application/json
+    sha256: 6cad5e255170227714635d7165f0bd4142e63f4e7623b23c301d81ea2f13a345
+  - role: blender-source
+    path: verification/mannequin.blend
+    mediaType: application/x-blender
+    sha256: 4dab9aefaa0de4b085ae75709a6f540d504fdd89bf39b5ed356972d9a43de235
+  - role: turntable
+    path: verification/turntable.mp4
+    mediaType: video/mp4
+    sha256: 14382cbd54cf8f984fb497d340a8369c66d382e3a70b5ae714d3861894e4c983
+  - role: verification-verification-front
+    path: verification/front.png
+    mediaType: image/png
+    sha256: e848a06ddae93dda978352fd173f613c2a2a507129c96c7197e3f43dbdce21f5
+  - role: verification-verification-three-quarter
+    path: verification/three-quarter.png
+    mediaType: image/png
+    sha256: d1af326762153c0d05e88276432eb530bf2874c6ab23da0b197980d3a3417be8
+  - role: verification-verification-side
+    path: verification/side.png
+    mediaType: image/png
+    sha256: 649f21911f00e0c8d6e64a3c7df5ef29ee90e4296abf36e2f6d162b06fe4a5e5
+  - role: verification-verification-back
+    path: verification/back.png
+    mediaType: image/png
+    sha256: 6389e2c4e16877b9dd186d6c66e11c7c92a6ae5db1aa732d8406c6ea75a4114d
+  - role: verification-verification-contact-sheet
+    path: verification/contact-sheet.png
+    mediaType: image/png
+    sha256: 87a54d76f1a5ede8dec9ba3beb9d3b3d14510cf2ffc5355f20d843c701aa312e
+  - role: verification-verification-probe
+    path: verification/probe.json
+    mediaType: application/json
+    sha256: 3b04b72c453e7ea843febc19b0157baf1a31344c7744055cacb8db68ff800969
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  skeleton: videoer.canonical-humanoid.v1
+  renderers:
+    - three-3d
+    - blender-headless
+  requires: []
+verification:
+  checks:
+    - geometry.indices
+    - geometry.degenerate-triangles
+    - geometry.bounds
+    - skeleton.hierarchy
+    - skin.weights-normalized
+    - visual.canonical-views
+    - visual.turntable
+  artifacts:
+    - verification/front.png
+    - verification/three-quarter.png
+    - verification/side.png
+    - verification/back.png
+    - verification/contact-sheet.png
+    - verification/turntable.mp4
+    - verification/probe.json
+  verifiedAt: 2026-08-30T18:59:52.224Z

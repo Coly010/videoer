@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "id": "lighting.bookshop-warm-interior",
+  "exposure": {
+    "look": "AgX - Medium High Contrast",
+    "coherentAcrossShots": true
+  },
+  "worldColor": [
+    0.009,
+    0.006,
+    0.004
+  ],
+  "lights": [
+    {
+      "id": "warm-reading-key",
+      "type": "area",
+      "position": [
+        -1.5,
+        2.5,
+        3.4
+      ],
+      "target": [
+        0.45,
+        1.2,
+        2.4
+      ],
+      "color": [
+        1,
+        0.7,
+        0.46
+      ],
+      "energy": 430,
+      "sizeMeters": 1.25,
+      "angleDegrees": 45,
+      "purpose": "key"
+    },
+    {
+      "id": "cool-window-fill",
+      "type": "area",
+      "position": [
+        2.15,
+        2.05,
+        3.05
+      ],
+      "target": [
+        0.45,
+        1.2,
+        2.4
+      ],
+      "color": [
+        0.34,
+        0.57,
+        1
+      ],
+      "energy": 300,
+      "sizeMeters": 2.9,
+      "angleDegrees": 45,
+      "purpose": "fill"
+    },
+    {
+      "id": "shelf-rim",
+      "type": "spot",
+      "position": [
+        0.55,
+        2.75,
+        1.15
+      ],
+      "target": [
+        0.45,
+        1.25,
+        2.5
+      ],
+      "color": [
+        1,
+        0.62,
+        0.34
+      ],
+      "energy": 230,
+      "sizeMeters": 1,
+      "angleDegrees": 42,
+      "purpose": "rim"
+    }
+  ],
+  "metadata": {
+    "context": "warm-bookshop-interior",
+    "faceKey": "warm-reading-key",
+    "windowFill": "cool-window-fill",
+    "balanceStrategy": "off-axis-warm-key-plus-camera-side-cool-fill-and-rear-shelf-rim"
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "id": "interaction.open-bookshop-door",
+  "type": "open-door",
+  "actor": "character.elara-vale",
+  "target": "prop.bookshop-door",
+  "hand": "right",
+  "phases": [
+    {
+      "id": "approach",
+      "start": 0,
+      "end": 0.18,
+      "constraint": "approach"
+    },
+    {
+      "id": "reach",
+      "start": 0.18,
+      "end": 0.36,
+      "constraint": "point",
+      "actorEffector": "right-hand-grip",
+      "targetAttachment": "handle-grip"
+    },
+    {
+      "id": "grasp",
+      "start": 0.36,
+      "end": 0.48,
+      "constraint": "attach",
+      "actorEffector": "right-hand-grip",
+      "targetAttachment": "handle-grip"
+    },
+    {
+      "id": "turn-handle",
+      "start": 0.48,
+      "end": 0.58,
+      "constraint": "pivot",
+      "actorEffector": "right-hand-grip",
+      "targetAttachment": "handle-grip"
+    },
+    {
+      "id": "open",
+      "start": 0.58,
+      "end": 0.84,
+      "constraint": "attach",
+      "actorEffector": "right-hand-grip",
+      "targetAttachment": "handle-grip"
+    },
+    {
+      "id": "release",
+      "start": 0.84,
+      "end": 0.92,
+      "constraint": "release"
+    },
+    {
+      "id": "pass-through",
+      "start": 0.92,
+      "end": 1,
+      "constraint": "approach"
+    }
+  ],
+  "invariants": [
+    "contact",
+    "joint-limits",
+    "root-continuity"
+  ],
+  "metadata": {}
+}

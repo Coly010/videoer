@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "samples": [
+    {
+      "landmarkId": "dark-arrival",
+      "progress": 0,
+      "frame": 1,
+      "entities": {
+        "beacon": {
+          "minimumX": 0.18103772401809692,
+          "maximumX": 0.8007698059082031,
+          "minimumY": 0.22391724586486816,
+          "maximumY": 0.8899229168891907,
+          "widthPercentage": 61.97320818901062,
+          "heightPercentage": 66.60056710243225
+        }
+      }
+    },
+    {
+      "landmarkId": "signal-edge",
+      "progress": 0.5,
+      "frame": 37,
+      "entities": {
+        "beacon": {
+          "minimumX": 0.13719309866428375,
+          "maximumX": 0.845180869102478,
+          "minimumY": 0.1863570511341095,
+          "maximumY": 0.9454631805419922,
+          "widthPercentage": 70.79877704381943,
+          "heightPercentage": 75.91061294078827
+        }
+      }
+    },
+    {
+      "landmarkId": "identity-read",
+      "progress": 1,
+      "frame": 72,
+      "entities": {
+        "beacon": {
+          "minimumX": 0.08328007906675339,
+          "maximumX": 0.8906078934669495,
+          "minimumY": 0.14235803484916687,
+          "maximumY": 1.005865454673767,
+          "widthPercentage": 80.73278144001961,
+          "heightPercentage": 86.35074198246002
+        }
+      }
+    }
+  ]
+}

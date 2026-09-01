@@ -1,0 +1,99 @@
+schemaVersion: 1
+id: editorial.nocturne-event-lockup
+version: 1.0.0
+type: editorial
+title: Nocturne exhibition identity lockup
+description: Deterministic 16:9 event identity derived from a verified
+  restrained threshold-line treatment, preserving the exact OFL font and motif
+  while replacing copy, palette, canvas, and safe-area layout through bounded
+  semantics.
+status: verified
+tags:
+  - editorial
+  - event-identity
+  - exhibition
+  - deterministic
+  - safe-area
+capabilities:
+  - event-identity-lockup
+  - deterministic-render
+  - measured-safe-area
+  - contrast-verified
+  - threshold-lines
+source:
+  kind: procedural
+  generator: videoer.editorial-treatment.v1
+  sourceAsset: material.rise-of-demons-title-treatment@0.1.1
+  references:
+    - provenance/cinematic-campaign.yaml
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: transparent-overlay
+    path: transparent-overlay.png
+    mediaType: image/png
+    sha256: d839d50dde64615d863d112997a2cc1b08cc997f768347471b3ed765a488eb86
+  - role: source-campaign
+    path: provenance/cinematic-campaign.yaml
+    mediaType: application/yaml
+    sha256: 4c9bf6e38da221286f8f8effbbf0706535fd056a59ecb2ecd881ba846e2efa8d
+  - role: editorial-treatment
+    path: verification/adaptation/editorial-treatment.json
+    mediaType: application/vnd.videoer.title+json
+    sha256: ed9b2a6f429af7ba3da5d5f3f678fbba6db2885f2368afe62c5544386ab712a1
+  - role: verification-editorial-adaptation-compatibility
+    path: verification/adaptation/verification-editorial-adaptation-compatibility.json
+    mediaType: application/json
+    sha256: 8da6f19ff5b72d36274a9887b17d383caf081d60d3ff5f9b72071ba296406ab1
+  - role: verification-threshold-scene-render
+    path: verification/shots/threshold/scene-render.json
+    mediaType: application/json
+    sha256: 603baabc6a72b784e27d51a48855fb82337a92e0e406a5f848a43114d332174f
+  - role: verification-threshold-contact-sheet
+    path: verification/shots/threshold/contact-sheet.png
+    mediaType: image/png
+    sha256: 21e4c4f765e88e0de0d0b30c7aa9d866e34cfc22a88a9655407dc4d13d730dc0
+  - role: verification-threshold-framing-report
+    path: verification/shots/threshold/framing-report.json
+    mediaType: application/json
+    sha256: a5f1b5d41a267bc3bf7118760d71fd63a181562a781e85bfbe250ddb6a0594ec
+  - role: verification-campaign-delivery
+    path: verification/campaign-delivery-report.json
+    mediaType: application/json
+    sha256: 770c704bf7a855bf60217621ee560c37f7f6aedec02c8b625f3a9f957fad36ff
+  - role: verification-approval
+    path: verification/approval.json
+    mediaType: application/json
+    sha256: a2aa340233813751480fce34bde88d7f470af84a5fd801c8d07e154f22ab08d7
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - ffmpeg-full
+    - remotion
+  requires:
+    - id: material.rise-of-demons-title-treatment
+      version: 0.1.1
+verification:
+  checks:
+    - editorial.parent-hash
+    - editorial.output-hash
+    - editorial.font-preserved
+    - editorial.motif-preserved
+    - editorial.safe-area
+    - editorial.contrast
+    - editorial.deterministic-rerender
+    - campaign.delivery.verified
+    - review.operator-approved
+  artifacts:
+    - verification/adaptation/editorial-treatment.json
+    - verification/adaptation/verification-editorial-adaptation-compatibility.json
+    - verification/shots/threshold/scene-render.json
+    - verification/shots/threshold/contact-sheet.png
+    - verification/shots/threshold/framing-report.json
+    - verification/campaign-delivery-report.json
+    - verification/approval.json
+  verifiedAt: 2026-08-31T06:47:11.043Z

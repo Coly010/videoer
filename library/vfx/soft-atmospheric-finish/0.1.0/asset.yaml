@@ -1,0 +1,84 @@
+schemaVersion: 1
+id: vfx.soft-atmospheric-finish
+version: 0.1.0
+type: vfx
+title: Restrained soft-atmospheric cinematic finish
+description: Renderer-independent deterministic display-referred finish with
+  bounded tonal treatment, thresholded bloom, vignette and seeded temporal
+  grain.
+status: verified
+tags:
+  - cinematic-finish
+  - grading
+  - bloom
+  - vignette
+  - grain
+capabilities:
+  - renderer-independent-finish-profile
+  - deterministic-ffmpeg-reconstruction
+  - post-editorial-compositing
+  - warm-cool-source-transfer
+source:
+  kind: procedural
+  generator: videoer.cinematic-finish.v1
+  sourceAssets:
+    - material.warm-lime-plaster-interior@0.2.0
+    - vfx.rainy-dusk-depth@0.2.0
+  references:
+    - /Users/colum/dev/personal/videoer/library/materials/warm-lime-plaster-interior/0.2.0/verification/turntable.mp4
+    - /Users/colum/dev/personal/videoer/library/vfx/rainy-dusk-depth/0.2.0/verification/rainy-dusk-vfx-probe.mp4
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: finish-profile
+    path: finish-profile.json
+    mediaType: application/vnd.videoer.cinematic-finish+json
+    sha256: 336d37f4ca4993926bbc628d3d462483a718f37651949cb469b01f6ec12076ef
+  - role: warm-finished-preview
+    path: verification/warm-interior/warm-interior-finished.mp4
+    mediaType: video/mp4
+    sha256: 970c7762710fb4024f17ab085b7a65390d79da9aaffd23c57775dfd7e32ed69a
+  - role: warm-finish-report
+    path: verification/warm-interior/finish-report.json
+    mediaType: application/json
+    sha256: 5bece815ab0b0a8dd20c87eb0561cdaaaf2c71541d97752d0a5edd06db728fdf
+  - role: cool-finished-preview
+    path: verification/cool-interior/cool-interior-finished.mp4
+    mediaType: video/mp4
+    sha256: f96357da09650b6a5acabdb5672a31e1205c645b5ac614cb2bacb399097dcc38
+  - role: cool-finish-report
+    path: verification/cool-interior/finish-report.json
+    mediaType: application/json
+    sha256: e8df9900ad5f3a971e0d32339e5aa7985669539446387b789471726bf5854d94
+  - role: cross-source-contact-sheet
+    path: verification/contact-sheet.png
+    mediaType: image/png
+    sha256: 1253e901e77ea7bb89d2238c77a149f52b9a24fae98959c2be8a1f42456491d0
+  - role: qualitative-review
+    path: verification/finish-candidate-review.json
+    mediaType: application/json
+    sha256: 270cff864efc9b0b52780d9dc92c763604e6cc23198c47a8bc05c438ffb55180
+compatibility:
+  coordinateSystem: screen-space-display-referred
+  renderers:
+    - ffmpeg
+  requires: []
+verification:
+  checks:
+    - finish.schema-and-bounds
+    - finish.delivery-topology-preserved
+    - finish.measurable-pixel-change
+    - finish.black-and-highlight-detail-preserved
+    - finish.warm-cool-transfer-accepted
+    - finish.independent-byte-identical-rerender
+    - finish.qualitative-restraint-accepted
+  artifacts:
+    - verification/warm-interior/finish-report.json
+    - verification/cool-interior/finish-report.json
+    - verification/contact-sheet.png
+    - verification/finish-candidate-review.json
+  verifiedAt: 2026-09-01T10:36:14Z

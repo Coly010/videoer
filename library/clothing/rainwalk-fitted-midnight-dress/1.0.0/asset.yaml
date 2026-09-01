@@ -1,0 +1,90 @@
+schemaVersion: 1
+id: clothing.rainwalk-fitted-midnight-dress
+version: 1.0.0
+type: clothing
+title: Rainwalk fitted midnight dress
+description: Canonical long dress fitted to the parametric mannequin with
+  explicit surface clearance and pelvis-dominant drape weights.
+status: verified
+tags:
+  - long-dress
+  - dark
+  - fitted
+  - drape
+capabilities:
+  - canonical-humanoid-fit
+  - walk-deformation
+  - reusable-material
+  - target-character-fit
+  - long-dress-drape
+source:
+  kind: procedural
+  generator: videoer.canonical-clothing-fit.v1
+  sourceAsset: clothing.elara-midnight-dress@0.1.0
+  references:
+    - provenance/cinematic-campaign.yaml
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: geometry
+    path: geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: d4e886c3d831aedac1126f50626c7a6984568d5c6c96cc77fde36f013de574cd
+  - role: source-campaign
+    path: provenance/cinematic-campaign.yaml
+    mediaType: application/yaml
+    sha256: 025a6b7d4e0b955d13508ff8323a831dd5c9397b612226185c71974bdc4db199
+  - role: verification-clothing-adaptation-compatibility
+    path: verification/adaptation/verification-clothing-adaptation-compatibility.json
+    mediaType: application/json
+    sha256: a8742c695804d30257e8930533acb1eae48f978a5d761b4b8c41dbc6057beb6b
+  - role: verification-rainwalk-scene-render
+    path: verification/shots/rainwalk/scene-render.json
+    mediaType: application/json
+    sha256: b28f0b3e8c20e7648afacc1335ad0a631c52baccc1ecf41f349758ea545c98a1
+  - role: verification-rainwalk-contact-sheet
+    path: verification/shots/rainwalk/contact-sheet.png
+    mediaType: image/png
+    sha256: 547ca4116b142f29390e6b9e220810879de82a5a0f5f9110c143526957b5b809
+  - role: verification-rainwalk-framing-report
+    path: verification/shots/rainwalk/framing-report.json
+    mediaType: application/json
+    sha256: ab5eb29f6e6a39e227721c1d3433a2a1d0bcbc55223e45985129bb3b7b5f4a17
+  - role: verification-campaign-delivery
+    path: verification/campaign-delivery-report.json
+    mediaType: application/json
+    sha256: 934cbeba6eafabe551b27490babe70951292cd14a45c211628b0a54c41a5d99d
+  - role: verification-approval
+    path: verification/approval.json
+    mediaType: application/json
+    sha256: f97ddb0c0675ff6f76a0bca4b4ad4d18de67f0aedbe9383c3303422cb123e790
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - blender-headless
+  requires:
+    - id: clothing.elara-midnight-dress
+      version: 0.1.0
+    - id: character.humanoid-mannequin
+      version: 0.4.0
+verification:
+  checks:
+    - clothing.topology-preserved
+    - clothing.target-skeleton
+    - clothing.surface-clearance
+    - clothing.hem-weight-bound
+    - visual.walk-deformation
+    - campaign.delivery.verified
+    - review.operator-approved
+  artifacts:
+    - verification/adaptation/verification-clothing-adaptation-compatibility.json
+    - verification/shots/rainwalk/scene-render.json
+    - verification/shots/rainwalk/contact-sheet.png
+    - verification/shots/rainwalk/framing-report.json
+    - verification/campaign-delivery-report.json
+    - verification/approval.json
+  verifiedAt: 2026-08-31T02:55:25.430Z

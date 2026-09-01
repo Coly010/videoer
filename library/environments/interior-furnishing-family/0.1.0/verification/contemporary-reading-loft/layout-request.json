@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "id": "layout.contemporary-reading-loft-interior-furnishing",
+  "familyId": "environment.interior-furnishing-family",
+  "seed": 12691,
+  "clusterCount": 1,
+  "requiredVariantIds": [
+    "reading-chair",
+    "pedestal-table",
+    "vessel-set"
+  ],
+  "requiredRecipeIds": [
+    "complete-reading-corner"
+  ],
+  "zone": {
+    "minimum": [
+      -5.3,
+      -3.35
+    ],
+    "maximum": [
+      5.3,
+      3.35
+    ],
+    "groundY": 0
+  },
+  "exclusions": [
+    {
+      "id": "central-reading-circulation",
+      "kind": "corridor",
+      "start": [
+        -5,
+        -2.35
+      ],
+      "end": [
+        5,
+        -2.35
+      ],
+      "halfWidthMeters": 0.52,
+      "clearanceMeters": 0.16
+    }
+  ],
+  "maximumAttemptsPerInstance": 1800
+}

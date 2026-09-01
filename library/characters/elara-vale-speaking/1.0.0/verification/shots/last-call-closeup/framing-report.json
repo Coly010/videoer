@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "samples": [
+    {
+      "landmarkId": "breath-before-line",
+      "progress": 0,
+      "frame": 1,
+      "entities": {
+        "platform": {
+          "minimumX": -1.7177003622055054,
+          "maximumX": 3.2721245288848877,
+          "minimumY": -0.2265452891588211,
+          "maximumY": 1.8978806734085083,
+          "widthPercentage": 498.9824891090393,
+          "heightPercentage": 212.44259625673294
+        },
+        "elara": {
+          "minimumX": -0.4853065013885498,
+          "maximumX": 1.4853065013885498,
+          "minimumY": -2.5232560634613037,
+          "maximumY": 0.6809599995613098,
+          "widthPercentage": 197.06130027770996,
+          "heightPercentage": 320.42160630226135
+        }
+      }
+    },
+    {
+      "landmarkId": "aa-peak",
+      "progress": 0.0972222222,
+      "frame": 8,
+      "entities": {
+        "platform": {
+          "minimumX": -1.7243280410766602,
+          "maximumX": 3.275540590286255,
+          "minimumY": -0.22846609354019165,
+          "maximumY": 1.901607871055603,
+          "widthPercentage": 499.9868631362915,
+          "heightPercentage": 213.00739645957947
+        },
+        "elara": {
+          "minimumX": -0.4890114963054657,
+          "maximumX": 1.4884313344955444,
+          "minimumY": -2.5346906185150146,
+          "maximumY": 0.6811239123344421,
+          "widthPercentage": 197.744283080101,
+          "heightPercentage": 321.5814530849457
+        }
+      }
+    },
+    {
+      "landmarkId": "ee-peak",
+      "progress": 0.1805555556,
+      "frame": 14,
+      "entities": {
+        "platform": {
+          "minimumX": -1.7392354011535645,
+          "maximumX": 3.283189296722412,
+          "minimumY": -0.23278672993183136,
+          "maximumY": 1.909988522529602,
+          "widthPercentage": 502.24246978759766,
+          "heightPercentage": 214.27752524614334
+        },
+        "elara": {
+          "minimumX": -0.49735793471336365,
+          "maximumX": 1.4954817295074463,
+          "minimumY": -2.560490369796753,
+          "maximumY": 0.6814855337142944,
+          "widthPercentage": 199.283966422081,
+          "heightPercentage": 324.19759035110474
+        }
+      }
+    },
+    {
+      "landmarkId": "mbp-peak",
+      "progress": 0.5972222222,
+      "frame": 43,
+      "entities": {
+        "platform": {
+          "minimumX": -1.8764547109603882,
+          "maximumX": 3.3512377738952637,
+          "minimumY": -0.2725631892681122,
+          "maximumY": 1.9869098663330078,
+          "widthPercentage": 522.7692484855652,
+          "heightPercentage": 225.947305560112
+        },
+        "elara": {
+          "minimumX": -0.5750203132629395,
+          "maximumX": 1.561722993850708,
+          "minimumY": -2.803061008453369,
+          "maximumY": 0.684329628944397,
+          "widthPercentage": 213.67433071136475,
+          "heightPercentage": 348.7390637397766
+        }
+      }
+    },
+    {
+      "landmarkId": "line-resolves",
+      "progress": 1,
+      "frame": 72,
+      "entities": {
+        "platform": {
+          "minimumX": -1.9713853597640991,
+          "maximumX": 3.395982265472412,
+          "minimumY": -0.30009520053863525,
+          "maximumY": 2.039907217025757,
+          "widthPercentage": 536.7367625236511,
+          "heightPercentage": 234.0002417564392
+        },
+        "elara": {
+          "minimumX": -0.6296588182449341,
+          "maximumX": 1.6090141534805298,
+          "minimumY": -2.9764339923858643,
+          "maximumY": 0.6857866048812866,
+          "widthPercentage": 223.8672971725464,
+          "heightPercentage": 366.2220597267151
+        }
+      }
+    }
+  ]
+}

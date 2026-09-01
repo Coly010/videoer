@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 1,
+  "id": "lighting.transit-dusk-exterior-v1-transfer",
+  "exposure": {
+    "look": "AgX - Medium High Contrast",
+    "coherentAcrossShots": true
+  },
+  "worldColor": [
+    0.004,
+    0.008,
+    0.02
+  ],
+  "lights": [
+    {
+      "id": "rainy-exterior-key",
+      "type": "area",
+      "position": [
+        -2.4,
+        3.4,
+        -3.4
+      ],
+      "target": [
+        0,
+        1,
+        -0.8
+      ],
+      "color": [
+        0.33599999999999997,
+        0.539,
+        1
+      ],
+      "energy": 369.6,
+      "sizeMeters": 4.2,
+      "angleDegrees": 45,
+      "purpose": "environment"
+    },
+    {
+      "id": "rainy-sky-fill",
+      "type": "area",
+      "position": [
+        2.2,
+        6.8,
+        -2.7
+      ],
+      "target": [
+        0,
+        1.5,
+        -1.7999999999999998
+      ],
+      "color": [
+        0.2112,
+        0.3332,
+        0.62
+      ],
+      "energy": 166.32000000000002,
+      "sizeMeters": 6,
+      "angleDegrees": 45,
+      "purpose": "fill"
+    },
+    {
+      "id": "bookshop-interior-glow",
+      "type": "area",
+      "position": [
+        0.2,
+        2.5,
+        1.6
+      ],
+      "target": [
+        0,
+        1,
+        -0.6
+      ],
+      "color": [
+        0.96,
+        0.4214,
+        0.16
+      ],
+      "energy": 570.24,
+      "sizeMeters": 2.4,
+      "angleDegrees": 45,
+      "purpose": "practical"
+    },
+    {
+      "id": "threshold-rim",
+      "type": "spot",
+      "position": [
+        1.4,
+        2.4,
+        -1.2
+      ],
+      "target": [
+        0,
+        1,
+        -0.44999999999999996
+      ],
+      "color": [
+        0.5952,
+        0.735,
+        1
+      ],
+      "energy": 264,
+      "sizeMeters": 1,
+      "angleDegrees": 58,
+      "purpose": "rim"
+    },
+    {
+      "id": "shop-window-character-key",
+      "type": "area",
+      "position": [
+        2.5,
+        2.7,
+        -0.85
+      ],
+      "target": [
+        2,
+        1.05,
+        -1.9
+      ],
+      "color": [
+        0.96,
+        0.5683999999999999,
+        0.3
+      ],
+      "energy": 316.8,
+      "sizeMeters": 2.4,
+      "angleDegrees": 45,
+      "purpose": "key"
+    }
+  ],
+  "metadata": {
+    "context": "unrelated-night-transit-platform-transfer",
+    "practicalColorContrast": "warm-window-cool-dusk",
+    "balanceStrategy": "soft-environment-key-plus-large-sky-fill-with-local-practicals",
+    "sourceCandidate": "lighting.bookshop-dusk-exterior@0.1.0",
+    "derivedFrom": "lighting.bookshop-dusk-exterior",
+    "lightingAdaptation": "lighting-rig-transform-v1"
+  }
+}

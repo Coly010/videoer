@@ -1,0 +1,205 @@
+{
+  "schemaVersion": 1,
+  "cueId": "last-call-dialogue",
+  "engine": "espeak-ng",
+  "text": "The next train leaves at midnight.",
+  "voice": {
+    "voice": "en+f3",
+    "rate": 150,
+    "pitch": 45
+  },
+  "durationSeconds": 2.403129,
+  "events": [
+    {
+      "type": "word",
+      "audioPositionMs": 0,
+      "textPosition": 1,
+      "length": 3
+    },
+    {
+      "type": "phoneme",
+      "phoneme": "D",
+      "audioPositionMs": 12,
+      "textPosition": 1
+    },
+    {
+      "type": "phoneme",
+      "phoneme": "@",
+      "audioPositionMs": 71,
+      "textPosition": 1
+    },
+    {
+      "type": "word",
+      "audioPositionMs": 155,
+      "textPosition": 5,
+      "length": 4
+    },
+    {
+      "type": "phoneme",
+      "phoneme": "n",
+      "audioPositionMs": 166,
+      "textPosition": 5
+    },
+    {
+      "type": "phoneme",
+      "phoneme": "'E",
+      "audioPositionMs": 253,
+      "textPosition": 5
+    },
+    {
+      "type": "phoneme",
+      "phoneme": "k",
+      "audioPositionMs": 369,
+      "textPosition": 5
+    },
+    {
+      "type": "phoneme",
+      "phoneme": "s",
+      "audioPositionMs": 420,
+      "textPosition": 5
+    },
+    {
+      "type": "phoneme",
+      "phoneme": "t",
+      "audioPositionMs": 498,
+      "textPosition": 5
+    },
+    {
+      "type": "word",
+      "audioPositionMs": 549,
+      "textPosition": 10,
+      "length": 5
+    },
+    {
+      "type": "phoneme",
+      "phoneme": "t",
+      "audioPositionMs": 604,
+      "textPosition": 10
+    },
+    {
+      "type": "phoneme",
+      "phoneme": "r",
+      "audioPositionMs": 683,
+      "textPosition": 10
+    },
+    {
+      "type": "phoneme",
+      "phoneme": "'eI",
+      "audioPositionMs": 747,
+      "textPosition": 10
+    },
+    {
+      "type": "phoneme",
+      "phoneme": "n",
+      "audioPositionMs": 866,
+      "textPosition": 10
+    },
+    {
+      "type": "word",
+      "audioPositionMs": 950,
+      "textPosition": 16,
+      "length": 6
+    },
+    {
+      "type": "phoneme",
+      "phoneme": "l",
+      "audioPositionMs": 950,
+      "textPosition": 16
+    },
+    {
+      "type": "phoneme",
+      "phoneme": "'i:",
+      "audioPositionMs": 1037,
+      "textPosition": 16
+    },
+    {
+      "type": "phoneme",
+      "phoneme": "v",
+      "audioPositionMs": 1156,
+      "textPosition": 16
+    },
+    {
+      "type": "phoneme",
+      "phoneme": "z",
+      "audioPositionMs": 1226,
+      "textPosition": 16
+    },
+    {
+      "type": "word",
+      "audioPositionMs": 1287,
+      "textPosition": 23,
+      "length": 2
+    },
+    {
+      "type": "phoneme",
+      "phoneme": "a",
+      "audioPositionMs": 1287,
+      "textPosition": 23
+    },
+    {
+      "type": "phoneme",
+      "phoneme": "t",
+      "audioPositionMs": 1435,
+      "textPosition": 23
+    },
+    {
+      "type": "word",
+      "audioPositionMs": 1486,
+      "textPosition": 26,
+      "length": 8
+    },
+    {
+      "type": "phoneme",
+      "phoneme": "m",
+      "audioPositionMs": 1486,
+      "textPosition": 26
+    },
+    {
+      "type": "phoneme",
+      "phoneme": "'I",
+      "audioPositionMs": 1588,
+      "textPosition": 26
+    },
+    {
+      "type": "phoneme",
+      "phoneme": "d",
+      "audioPositionMs": 1666,
+      "textPosition": 26
+    },
+    {
+      "type": "phoneme",
+      "phoneme": "n",
+      "audioPositionMs": 1742,
+      "textPosition": 26
+    },
+    {
+      "type": "phoneme",
+      "phoneme": "aI",
+      "audioPositionMs": 1814,
+      "textPosition": 26
+    },
+    {
+      "type": "phoneme",
+      "phoneme": "t",
+      "audioPositionMs": 1963,
+      "textPosition": 26
+    },
+    {
+      "type": "phoneme",
+      "phoneme": "_:",
+      "audioPositionMs": 2014,
+      "textPosition": 35
+    },
+    {
+      "type": "phoneme",
+      "phoneme": "_",
+      "audioPositionMs": 2403,
+      "textPosition": 35
+    },
+    {
+      "type": "end",
+      "audioPositionMs": 2403,
+      "textPosition": 34
+    }
+  ]
+}

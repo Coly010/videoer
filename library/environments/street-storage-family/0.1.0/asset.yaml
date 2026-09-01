@@ -1,0 +1,107 @@
+schemaVersion: 1
+id: environment.street-storage-family
+version: 0.1.0
+type: environment
+title: Portable street storage and edge dressing
+description: Renderer-independent explicit-version set-dressing family with
+  deterministic weighted variation, edge-aware placement, overlap rejection, and
+  mandatory actor/camera navigation clearance.
+status: verified
+tags:
+  - street
+  - storage
+  - crate
+  - barrel
+  - inhabited-environment
+capabilities:
+  - portable-set-dressing-family
+  - explicit-member-versions
+  - deterministic-seeded-layout
+  - weighted-variation
+  - overlap-free-placement
+  - navigation-clearance-preservation
+  - cross-environment-transfer
+  - medium-background-quality-tier
+source:
+  kind: procedural
+  generator: videoer.environment-dressing-family.v1
+  sourceAssets:
+    - prop.storage-barrel@0.1.0
+    - prop.slatted-storage-crate@0.1.0
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: dressing-family
+    path: family.json
+    mediaType: application/json
+    sha256: 53b448c1076df9e8a5710c0faa216760e54517e255e518c9b64716ccd4e483d7
+  - role: old-city-alley-layout-request
+    path: verification/old-city-alley/layout-request.json
+    mediaType: application/json
+    sha256: 21a68bcae13c516f49c6bc49b2446d481ab0fa21658abba95cc8d9898fb45d05
+  - role: old-city-alley-layout-report
+    path: verification/old-city-alley/layout-report.json
+    mediaType: application/json
+    sha256: 5d25a46c5ab240fb52cdce67944d29b8d5a3deebdf7f445c1ec00883d0a3c522
+  - role: old-city-alley-contact-sheet
+    path: verification/old-city-alley/contact-sheet.png
+    mediaType: image/png
+    sha256: 0107a4be7eb8a3251c502867a084cbd0b5ea24123c6c44ae01b3b41cd78cbc56
+  - role: old-city-alley-render-report
+    path: verification/old-city-alley/scene-render.json
+    mediaType: application/json
+    sha256: bf2e41061341af28c36d287b74113753034b395b44830b18add8d16268e0b2e0
+  - role: contemporary-loading-dock-layout-request
+    path: verification/contemporary-loading-dock/layout-request.json
+    mediaType: application/json
+    sha256: e4e8a54aa40d02313518aa75b2a7bb3efd21ef56c5fe30efc3ea45e0c56d828b
+  - role: contemporary-loading-dock-layout-report
+    path: verification/contemporary-loading-dock/layout-report.json
+    mediaType: application/json
+    sha256: d4d452450989e7ac8ec70c47e6c3ec48c1febcb3af8b49754f573491d98ea83a
+  - role: contemporary-loading-dock-contact-sheet
+    path: verification/contemporary-loading-dock/contact-sheet.png
+    mediaType: image/png
+    sha256: 7e5878715e6cd4c86e082e42cf1eb4cc238d53d8529ba2fc0418a1f7afc7eaad
+  - role: contemporary-loading-dock-render-report
+    path: verification/contemporary-loading-dock/scene-render.json
+    mediaType: application/json
+    sha256: 5460a786c029a243e03da58e246034599c73fb1593c4fa0a4a624c8829269aa4
+  - role: qualitative-review
+    path: verification/family-candidate-review.json
+    mediaType: application/json
+    sha256: 2e77c74565252d103b936c1ebbf702a04612a71737f6a6d7daf985d4b1b91884
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - three-3d
+    - blender-headless
+  requires:
+    - id: prop.storage-barrel
+      version: 0.1.0
+    - id: prop.slatted-storage-crate
+      version: 0.1.0
+verification:
+  checks:
+    - family.schema-and-explicit-versions
+    - layout.deterministic-seed
+    - layout.overlap-free
+    - layout.navigation-clearance
+    - visual.old-city-transfer-accepted
+    - visual.contemporary-transfer-accepted
+    - layout.every-entity-inspectable
+    - family.medium-background-shot-distance-accepted
+  artifacts:
+    - verification/old-city-alley/layout-report.json
+    - verification/old-city-alley/contact-sheet.png
+    - verification/old-city-alley/scene-render.json
+    - verification/contemporary-loading-dock/layout-report.json
+    - verification/contemporary-loading-dock/contact-sheet.png
+    - verification/contemporary-loading-dock/scene-render.json
+    - verification/family-candidate-review.json
+  verifiedAt: 2026-09-01T05:52:00.000Z

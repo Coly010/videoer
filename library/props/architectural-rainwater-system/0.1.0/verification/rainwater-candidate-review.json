@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "assetId": "prop.architectural-rainwater-system",
+  "decision": "accepted",
+  "reviewer": "codex-visual-review",
+  "reviewedAt": "2026-09-01T07:09:37.000Z",
+  "intendedShotDistance": "medium",
+  "evidence": [
+    "verification/old-city-plaster/contact-sheet.png",
+    "verification/old-city-plaster/scene-render.json",
+    "verification/old-city-plaster/host-contract-report.json",
+    "verification/contemporary-concrete/contact-sheet.png",
+    "verification/contemporary-concrete/scene-render.json",
+    "verification/contemporary-concrete/host-contract-report.json"
+  ],
+  "strengths": [
+    "The exact same portable geometry integrates with unrelated old-city plaster and contemporary concrete hosts without host-specific mesh edits.",
+    "The elevated evidence exposes two rolled lips and the dark open channel; frontal and glancing views retain the complete gutter, tapered collector, wall-clipped downpipe and discharge shoe.",
+    "The restrained green-brown metallic variation remains legible under both cool/warm lighting topologies without clipping or reading as emissive paint.",
+    "Visible eave brackets and three pipe clips prevent the assembly from reading as unsupported facade decoration."
+  ],
+  "limitations": [
+    "Accepted for background and medium architectural use only; seams, fasteners, soldering, dents and manufacturer-specific profiles are insufficient for close or hero-close inspection.",
+    "The asset defines a physically open collection path and discharge attachment but does not simulate water flow, blockage, overflow or fluid interaction.",
+    "The canonical mesh is level and does not yet model installation fall, thermal expansion joints or connected multi-span drainage calculations.",
+    "Host compatibility currently assumes a straight continuous facade/eave plane with adequate span and ground clearance."
+  ],
+  "notes": "Accepted at the medium/background quality tier after rejecting V1 for framing, V2 for an insufficiently legible opening and blockout-like stepped hopper, and V3 for a sub-2% discharge-shoe frame margin. Acceptance must independently prove the open trough, embedded surface contract, named mounts, exact geometry reuse, host compatibility and all render gates."
+}

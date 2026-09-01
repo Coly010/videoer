@@ -1,0 +1,72 @@
+schemaVersion: 1
+id: prop.joiners-workbench
+version: 0.1.0
+type: prop
+title: Joiner's workbench with physical vise
+description: Project-owned timber trestle workbench with a physical front vise,
+  bench dogs, loose hammer and named work/interaction anchors.
+status: verified
+tags:
+  - workbench
+  - vise
+  - craft
+  - workshop
+  - portable
+  - inhabited-environment
+capabilities:
+  - portable-geometry
+  - ground-placement
+  - named-workstation-attachments
+  - medium-background-quality-tier
+source:
+  kind: procedural
+  generator: videoer.workshop-assets.v1
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: geometry
+    path: geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: 03e4e630e0fbb74558270e3d1eeae26c2b6425b896abe9cb1c6084cbbdbe3a79
+  - role: validation
+    path: validation.json
+    mediaType: application/json
+    sha256: 8578ba29bc26389c127bb95774cc21ea921172e020e18cd777baa0ad32801f47
+  - role: historic-forge-workroom-family-contact-sheet
+    path: verification/historic-forge-workroom-family-contact-sheet.png
+    mediaType: image/png
+    sha256: 06e4d9e9a3c16d3c797c3be2faa5980d40aea8c1ab3dbb034f655bc8ebfc5274
+  - role: contemporary-maker-lab-family-contact-sheet
+    path: verification/contemporary-maker-lab-family-contact-sheet.png
+    mediaType: image/png
+    sha256: 9561be25d3d5aaa2e822d8f3eb9de9315984f5aaacd6d47dd60b716d298fb2c0
+  - role: family-transfer-summary
+    path: verification/family-transfer-summary.json
+    mediaType: application/json
+    sha256: 6ee8e249c9a69e2d1c267159254facb9df82c2326387e7fab20806925df4a8a9
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - three-3d
+    - blender-headless
+  requires: []
+verification:
+  checks:
+    - geometry.topology
+    - geometry.material-groups
+    - attachments.workbench-semantic
+    - prop.physical-vise-and-work-surface
+    - visual.historic-forge-workroom-workstation-transfer-accepted
+    - visual.contemporary-maker-lab-workstation-transfer-accepted
+    - prop.physical-workstation-semantics-accepted
+    - prop.medium-background-shot-distance-accepted
+  artifacts:
+    - verification/historic-forge-workroom-family-contact-sheet.png
+    - verification/contemporary-maker-lab-family-contact-sheet.png
+    - verification/family-transfer-summary.json
+  verifiedAt: 2026-09-01T11:05:00.000Z

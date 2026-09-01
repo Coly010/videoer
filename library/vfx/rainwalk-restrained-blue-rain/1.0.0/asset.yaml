@@ -1,0 +1,86 @@
+schemaVersion: 1
+id: vfx.rainwalk-restrained-blue-rain
+version: 1.0.0
+type: vfx
+title: Rainwalk restrained blue rain
+description: Deterministic restrained blue rain and fog treatment preserving the
+  verified three-band camera-depth topology.
+status: verified
+tags:
+  - rain
+  - fog
+  - restrained
+  - cold-blue
+capabilities:
+  - camera-depth
+  - deterministic-seed
+  - foreground-background
+  - restrained-rain
+source:
+  kind: procedural
+  generator: videoer.atmospheric-treatment.v1
+  sourceAsset: vfx.rainy-dusk-depth@0.1.0
+  references:
+    - provenance/cinematic-campaign.yaml
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: vfx
+    path: vfx.json
+    mediaType: application/vnd.videoer.atmospheric-vfx+json
+    sha256: 1dd00d1cbd0eb2354c6553968f5735f1b2637a16e795517eac11f10a5edd5afb
+  - role: source-campaign
+    path: provenance/cinematic-campaign.yaml
+    mediaType: application/yaml
+    sha256: 025a6b7d4e0b955d13508ff8323a831dd5c9397b612226185c71974bdc4db199
+  - role: verification-vfx-adaptation-compatibility
+    path: verification/adaptation/verification-vfx-adaptation-compatibility.json
+    mediaType: application/json
+    sha256: 9e9e63d190d496b6c769b6d8f7d3fd21535f2e29736b345b84338aa551689f44
+  - role: verification-rainwalk-scene-render
+    path: verification/shots/rainwalk/scene-render.json
+    mediaType: application/json
+    sha256: b28f0b3e8c20e7648afacc1335ad0a631c52baccc1ecf41f349758ea545c98a1
+  - role: verification-rainwalk-contact-sheet
+    path: verification/shots/rainwalk/contact-sheet.png
+    mediaType: image/png
+    sha256: 547ca4116b142f29390e6b9e220810879de82a5a0f5f9110c143526957b5b809
+  - role: verification-rainwalk-framing-report
+    path: verification/shots/rainwalk/framing-report.json
+    mediaType: application/json
+    sha256: ab5eb29f6e6a39e227721c1d3433a2a1d0bcbc55223e45985129bb3b7b5f4a17
+  - role: verification-campaign-delivery
+    path: verification/campaign-delivery-report.json
+    mediaType: application/json
+    sha256: 934cbeba6eafabe551b27490babe70951292cd14a45c211628b0a54c41a5d99d
+  - role: verification-approval
+    path: verification/approval.json
+    mediaType: application/json
+    sha256: e85fbe069c6708c49ebd8d95f6ba097a6cea4de692e9d807803811cbd104b610
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - blender-headless
+  requires:
+    - id: vfx.rainy-dusk-depth
+      version: 0.1.0
+verification:
+  checks:
+    - vfx.schema
+    - vfx.seed-topology-preserved
+    - vfx.camera-relative-placement
+    - visual.depth-separation
+    - campaign.delivery.verified
+    - review.operator-approved
+  artifacts:
+    - verification/adaptation/verification-vfx-adaptation-compatibility.json
+    - verification/shots/rainwalk/scene-render.json
+    - verification/shots/rainwalk/contact-sheet.png
+    - verification/shots/rainwalk/framing-report.json
+    - verification/campaign-delivery-report.json
+    - verification/approval.json
+  verifiedAt: 2026-08-31T02:55:25.519Z

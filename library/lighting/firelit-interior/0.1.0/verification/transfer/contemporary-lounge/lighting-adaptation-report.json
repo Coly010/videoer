@@ -1,0 +1,59 @@
+{
+  "valid": true,
+  "issues": [],
+  "adaptation": {
+    "kind": "lighting-rig-transform-v1",
+    "assetId": "lighting.firelit-interior.contemporary-lounge-transfer",
+    "transform": {
+      "translation": [
+        0,
+        0.08,
+        0
+      ],
+      "yawRadians": 0.04,
+      "uniformScale": 1
+    },
+    "energyScale": 0.9,
+    "purposeEnergyScale": {
+      "key": 1.04,
+      "fill": 1.08,
+      "rim": 0.92,
+      "practical": 0.94,
+      "environment": 1.15
+    },
+    "colorMultiply": [
+      0.98,
+      0.98,
+      1
+    ],
+    "worldColor": [
+      0.0025,
+      0.002,
+      0.0025
+    ],
+    "metadata": {
+      "context": "unrelated-contemporary-fire-lounge-transfer",
+      "sourceCandidate": "lighting.firelit-interior@0.1.0"
+    }
+  },
+  "topologyPreserved": true,
+  "exposurePreserved": true,
+  "spatialTransformMatched": true,
+  "energyTransformMatched": true,
+  "colorTransformMatched": true,
+  "sizeTransformMatched": true,
+  "nonBlackWorld": true,
+  "roleCoverage": {
+    "key": 1,
+    "fill": 1,
+    "rim": 1,
+    "practical": 1,
+    "environment": 1
+  },
+  "baseLightCount": 5,
+  "adaptedLightCount": 5,
+  "energyRange": {
+    "minimum": 31.104000000000003,
+    "maximum": 253.575
+  }
+}

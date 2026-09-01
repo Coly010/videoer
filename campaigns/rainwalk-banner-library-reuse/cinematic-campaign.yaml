@@ -1,0 +1,187 @@
+schemaVersion: 1
+id: campaign.rainwalk-banner-library-reuse
+fps: 24
+resolution: { width: 640, height: 360, percentage: 100 }
+assetLibrary: ../../library
+
+materialSources:
+  - id: blue-cobble
+    library:
+      type: material
+      query: Rainwalk blue cobble surface
+      tags: [stone, cobble, cold-blue]
+      capabilities: [procedural, albedo, normal, roughness, cold-blue-treatment]
+      preferredAsset: { id: material.rainwalk-blue-cobble, version: 1.0.0 }
+      artifactRole: material
+
+vfxSources:
+  - id: blue-rain
+    library:
+      type: vfx
+      query: Rainwalk restrained blue rain
+      tags: [rain, fog, restrained, cold-blue]
+      capabilities: [camera-depth, deterministic-seed, foreground-background, restrained-rain]
+      preferredAsset: { id: vfx.rainwalk-restrained-blue-rain, version: 1.0.0 }
+      artifactRole: vfx
+
+geometry:
+  - id: ground
+    path: work/geometry/ground.json
+    materialBindings:
+      - { targetMaterialId: ground, material: blue-cobble }
+    recipe:
+      assetId: environment.rainwalk-banner-ground
+      primitives:
+        - { kind: box, minimum: [-5, -0.12, -4], maximum: [5, 0, 3], materialId: ground }
+      materials:
+        - id: ground
+          baseColor: [0.04, 0.06, 0.08, 1]
+          roughness: 0.4
+          metallic: 0
+          emission: [0, 0, 0]
+          emissionStrength: 0
+      attachments: {}
+      metadata: { purpose: direct reuse stage }
+  - id: walker
+    library:
+      type: character
+      query: parametric humanoid mannequin
+      tags: [humanoid, mannequin, procedural]
+      capabilities: [canonical-humanoid-rig, skinned-mesh]
+      preferredAsset: { id: character.humanoid-mannequin, version: 0.4.0 }
+      artifactRole: geometry
+
+clothingSources:
+  - id: midnight-dress
+    library:
+      type: clothing
+      query: Rainwalk fitted midnight dress
+      tags: [long-dress, fitted, drape]
+      capabilities: [canonical-humanoid-fit, target-character-fit, long-dress-drape]
+      preferredAsset: { id: clothing.rainwalk-fitted-midnight-dress, version: 1.0.0 }
+      artifactRole: geometry
+
+motions:
+  - id: neutral-walk
+    library:
+      type: motion
+      query: natural neutral walk
+      tags: [humanoid, walk, naturalistic, neutral]
+      capabilities: [canonical-humanoid-motion, phase-based-locomotion, heel-toe-foot-mechanics]
+      preferredAsset: { id: motion.walk-natural-neutral, version: 1.1.1 }
+      artifactRole: motion
+
+motionTimelines:
+  - id: banner-walk
+    clipId: motion.rainwalk-banner
+    path: work/motions/banner-walk.json
+    frames: 48
+    layers:
+      - id: gait
+        motion: neutral-walk
+        mode: base
+        startFrame: 0
+        endFrame: 48
+        playback: loop
+        weight: 1
+    metadata: { purpose: direct reuse banner walk }
+
+overlays: []
+soundtrackPath: work/audio/soundtrack.wav
+soundtrack:
+  schemaVersion: 1
+  id: audio.rainwalk-banner
+  durationSeconds: 2
+  sampleRate: 48000
+  channels: 2
+  cues:
+    - id: low-bed
+      kind: tone-bed
+      startSeconds: 0
+      endSeconds: 2
+      gain: 0.05
+      frequencyHz: 96
+      purpose: compact horizontal ambience
+
+shots:
+  - id: banner-walk
+    frames: 48
+    entities:
+      - { id: stage, geometry: ground, role: environment }
+      - id: walker
+        geometry: walker
+        role: character
+        transform: { position: [0, 0, 0.7], rotation: [0, 0, 0], scale: [1, 1, 1] }
+        motion: { source: banner-walk, startFrame: 0, endFrame: 48 }
+        wardrobe: [{ clothing: midnight-dress }]
+    camera:
+      keyframes:
+        - time: 0
+          position: { world: [5.8, 1.65, 3.4] }
+          target: { world: [0, 0.9, -0.1] }
+          lensMillimeters: 52
+        - time: 2
+          position: { world: [5.8, 1.65, 1.53] }
+          target: { world: [0, 0.9, -1.97] }
+          lensMillimeters: 52
+    lights:
+      - {
+          id: cold-key,
+          type: area,
+          position: [2.8, 4.2, 2.2],
+          target: [0, 0.9, -0.6],
+          color: [0.42, 0.62, 1],
+          energy: 760,
+          sizeMeters: 3,
+        }
+      - {
+          id: soft-rim,
+          type: area,
+          position: [-3, 2.8, -1.5],
+          target: [0, 1, -0.6],
+          color: [0.28, 0.48, 0.86],
+          energy: 520,
+          sizeMeters: 2.2,
+        }
+    vfx: blue-rain
+    renderGates:
+      - { id: banner-visible, type: frame-visibility, maximumBlackPercentage: 82 }
+      - {
+          id: walker-framed,
+          type: subject-framing,
+          entityId: walker,
+          minimumScreenHeightPercentage: 35,
+          maximumScreenHeightPercentage: 90,
+          marginPercentage: 2,
+        }
+      - {
+          id: walker-highlight,
+          type: subject-overexposure,
+          entityId: walker,
+          maximumWhitePercentage: 10,
+        }
+    qualityGates:
+      - {
+          id: walker-forward,
+          type: directional-motion,
+          entityId: walker,
+          minimumDistanceMeters: 1.5,
+          minimumForwardDot: 0.9,
+        }
+    landmarks:
+      - { id: banner-start, progress: 0, description: direct library reuse begins }
+      - { id: banner-mid, progress: 0.5, description: fitted garment remains synchronised }
+      - { id: banner-end, progress: 1, description: direct reuse completes }
+    metadata:
+      { campaignClass: horizontal banner vignette, reuseOnlyDomains: [material, vfx, clothing] }
+
+delivery:
+  id: edit.rainwalk-banner
+  directory: delivery
+  codec: h264
+  pixelFormat: yuv420p
+  fastStart: true
+
+metadata:
+  campaignClass: horizontal banner vignette
+  conformancePurpose: downstream direct reuse of published VFX material and clothing assets

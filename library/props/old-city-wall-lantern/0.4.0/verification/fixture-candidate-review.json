@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "assetId": "prop.old-city-wall-lantern",
+  "fixtureId": "fixture.old-city-wall-lantern",
+  "decision": "accepted",
+  "reviewer": "Codex visual review",
+  "reviewedAt": "2026-09-01T04:46:36.000Z",
+  "intendedShotDistance": "medium",
+  "evidence": [
+    "verification/facade/contact-sheet.png",
+    "verification/facade/scene-probe.json",
+    "verification/warehouse/contact-sheet.png",
+    "verification/warehouse/scene-probe.json"
+  ],
+  "strengths": [
+    "Geometry, physical 8 mm glazing, candle source, and inverse-square practical light transfer as one placed renderer-independent asset.",
+    "Iron frame, bracket load path, candle flame, glass, and restrained local wall pool remain readable in cool and warm environments.",
+    "The same fixture definition follows model placement without duplicated world-space lights.",
+    "Final witnesses retain 0% clipped whites while façade and warehouse black coverage remain within the unchanged 72% contract."
+  ],
+  "limitations": [
+    "Accepted for background and medium-distance set dressing, not hero close-up product inspection.",
+    "The project-owned procedural iron and glazing lack the micro-scratches, fasteners, soot, and handcrafted asymmetry required for a close hero prop.",
+    "The candle is static; animated flame shape and photometric flicker remain a separate secondary-motion capability."
+  ],
+  "notes": "Geometry v1 was rejected for an oversized clipped source, v2 for repeated white-disc reflections, and v3 for exposing an 85 mm emitter-radius semantic error. Geometry v4 corrects the source radius to 6 mm. Its first evidence set was subsequently rejected by fail-closed acceptance because whole-frame black coverage exceeded the declared limit; v5 improves only witness illumination and passes that unchanged gate."
+}

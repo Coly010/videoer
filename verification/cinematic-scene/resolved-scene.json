@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 1,
+  "id": "scene.threshold",
+  "durationSeconds": 4,
+  "fps": 24,
+  "resolution": {
+    "width": 480,
+    "height": 270,
+    "percentage": 100
+  },
+  "entities": [
+    {
+      "id": "gallery",
+      "role": "environment",
+      "geometryPath": "/Users/colum/dev/personal/videoer/campaigns/nocturne-exhibition-conformance/work/gallery/geometry.json",
+      "transform": {
+        "position": [0, 0, 0],
+        "rotation": [0, 0, 0],
+        "scale": [1, 1, 1]
+      },
+      "visible": true
+    }
+  ],
+  "camera": {
+    "keyframes": [
+      {
+        "time": 0,
+        "position": [0, 2.25, -8.6],
+        "target": [0, 1.45, 0.4],
+        "lensMillimeters": 43,
+        "easing": "ease-in-out"
+      },
+      {
+        "time": 4,
+        "position": [0, 2.13, -7.1],
+        "target": [0, 1.45, 0.4],
+        "lensMillimeters": 48,
+        "easing": "ease-in-out"
+      }
+    ]
+  },
+  "lights": [
+    {
+      "id": "warm-reading-key",
+      "type": "area",
+      "position": [-0.8, 2.9499999999999997, 1.1],
+      "target": [0.45, 1.3499999999999999, 0],
+      "color": [0.92, 0.43119999999999997, 0.2],
+      "energy": 719.4399999999999,
+      "sizeMeters": 2.2,
+      "angleDegrees": 45
+    },
+    {
+      "id": "cool-window-fill",
+      "type": "area",
+      "position": [2.3, 2.25, -2.1999999999999997],
+      "target": [0.45, 1.3499999999999999, 0],
+      "color": [0.276, 0.4576, 0.92],
+      "energy": 281.52000000000004,
+      "sizeMeters": 2.6,
+      "angleDegrees": 45
+    },
+    {
+      "id": "shelf-rim",
+      "type": "spot",
+      "position": [0, 2.85, 1.6999999999999997],
+      "target": [0.45, 1.4, 0.10000000000000009],
+      "color": [0.92, 0.5720000000000001, 0.35],
+      "energy": 368.00000000000006,
+      "sizeMeters": 1,
+      "angleDegrees": 48
+    }
+  ],
+  "atmosphere": {
+    "worldColor": [0.002, 0.004, 0.012],
+    "fogDensity": 0.006,
+    "fogColor": [0.025, 0.035, 0.07],
+    "rain": {
+      "enabled": false,
+      "layers": [],
+      "count": 0,
+      "seed": 1,
+      "boundsMinimum": [-5, 0, -5],
+      "boundsMaximum": [5, 5, 5],
+      "streakLengthMeters": 0.14,
+      "fallSpeedMetersPerSecond": 8
+    }
+  },
+  "overlays": [
+    {
+      "imagePath": "/Users/colum/dev/personal/videoer/campaigns/nocturne-exhibition-conformance/work/editorial/opening-title.png",
+      "startSeconds": 0.25,
+      "endSeconds": 3.75,
+      "opacity": 1,
+      "fadeInSeconds": 0.5,
+      "fadeOutSeconds": 0.65
+    }
+  ],
+  "renderGates": [
+    {
+      "id": "venue-visible",
+      "type": "frame-visibility",
+      "maximumBlackPercentage": 84,
+      "blackThreshold": 32
+    }
+  ],
+  "qualityGates": [
+    {
+      "id": "camera-clears-gallery",
+      "type": "camera-path-clearance",
+      "obstacleEntityIds": ["gallery"],
+      "sampleCount": 49,
+      "minimumCameraClearanceMeters": 0.15,
+      "targetOcclusionToleranceMeters": 0.5
+    }
+  ],
+  "landmarks": [
+    {
+      "id": "name-arrival",
+      "progress": 0,
+      "description": "Event identity opens before the gallery threshold"
+    },
+    {
+      "id": "architecture-emerges",
+      "progress": 0.55,
+      "description": "The central luminous installation separates from the hall"
+    },
+    {
+      "id": "crossing-threshold",
+      "progress": 1,
+      "description": "Forward movement commits the viewer to the exhibition"
+    }
+  ],
+  "metadata": {
+    "declarativeCampaign": "campaign.nocturne-exhibition",
+    "templateSource": "../../../cinematic-campaign.yaml",
+    "template": "exhibition-threshold"
+  }
+}

@@ -1,0 +1,126 @@
+schemaVersion: 1
+id: audio.beacon-one-product-pulse
+version: 1.0.0
+type: audio
+title: Beacon One restrained product pulse
+description: Deterministic nine-second cinematic treatment derived from a
+  verified provider-free score with exact interval, preserved temporal envelope,
+  48 kHz stereo PCM, controlled dynamics, and independent approval-time
+  re-rendering.
+status: verified
+tags:
+  - cinematic-score
+  - product-launch
+  - restrained
+  - deterministic
+  - provider-free
+capabilities:
+  - provider-free
+  - exact-duration
+  - stereo-48khz
+  - deterministic-treatment
+  - temporal-envelope-preserved
+  - frame-synchronized-accents
+  - product-launch-pulse
+source:
+  kind: procedural
+  generator: videoer.cinematic-audio-treatment.v1
+  sourceAsset: audio.rainy-bookshop-score@0.1.0
+  references:
+    - provenance/cinematic-campaign.yaml
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: audio
+    path: audio.wav
+    mediaType: audio/wav
+    sha256: b549b6ac541b830938394930eb7a040e356e2a83f7a89684af987024d17c43a5
+  - role: source-campaign
+    path: provenance/cinematic-campaign.yaml
+    mediaType: application/yaml
+    sha256: 40565f78a0b6be799531dd4e978488de336d54da800caeaec2122de99a2943e8
+  - role: verification-audio-adaptation-compatibility
+    path: verification/adaptation/verification-audio-adaptation-compatibility.json
+    mediaType: application/json
+    sha256: 352a45bad4965055c1a66a12128cfa21c36cfaaacba307c15a9f91de56fc6cb8
+  - role: verification-signal-silhouette-scene-render
+    path: verification/shots/signal-silhouette/scene-render.json
+    mediaType: application/json
+    sha256: c5acb9093f3f2f7ac69d003bf8ff5b8fe923e9954b18d2de4f834303c936bb25
+  - role: verification-signal-silhouette-contact-sheet
+    path: verification/shots/signal-silhouette/contact-sheet.png
+    mediaType: image/png
+    sha256: 199ed6e4bdd4e7d051a8b93aaa9161ae1b9611cdb1b77a7b93e4a7152cc160c0
+  - role: verification-signal-silhouette-framing-report
+    path: verification/shots/signal-silhouette/framing-report.json
+    mediaType: application/json
+    sha256: bfd962ae0430f020ab5cf265ba60fb3498fbf5c54d60a317f10cab4f0b024117
+  - role: verification-interface-detail-scene-render
+    path: verification/shots/interface-detail/scene-render.json
+    mediaType: application/json
+    sha256: 1b0163782f4c073cdde40b0938180309cb34b884eecf7cc977bfd01d41f1800c
+  - role: verification-interface-detail-contact-sheet
+    path: verification/shots/interface-detail/contact-sheet.png
+    mediaType: image/png
+    sha256: fa128e7c0ecacc820e84c0d75447746f8d38ca5620337f51c35811acfe29cede
+  - role: verification-interface-detail-framing-report
+    path: verification/shots/interface-detail/framing-report.json
+    mediaType: application/json
+    sha256: dc596b845b8c2ce69bf5a8809e7b3678d4301fed0be9c92acdce6a541ee9fc55
+  - role: verification-beacon-end-frame-scene-render
+    path: verification/shots/beacon-end-frame/scene-render.json
+    mediaType: application/json
+    sha256: a8c4074cfea50ca8332b27c005991876ac10b956cdea370a63291679d7d99276
+  - role: verification-beacon-end-frame-contact-sheet
+    path: verification/shots/beacon-end-frame/contact-sheet.png
+    mediaType: image/png
+    sha256: c92f675976e400f1bff94f6154d442ee15e012eeb4eee92f0244bf5696316b34
+  - role: verification-beacon-end-frame-framing-report
+    path: verification/shots/beacon-end-frame/framing-report.json
+    mediaType: application/json
+    sha256: 15d4a55944c63ca892fe479c68303da88381beb7eacc3fefb2fd585d822b83bf
+  - role: verification-campaign-delivery
+    path: verification/campaign-delivery-report.json
+    mediaType: application/json
+    sha256: e5a6de2da9eae1b969d66ade9fc8e830b711a49ef92bcce7a10abd5a9d67a67d
+  - role: verification-approval
+    path: verification/approval.json
+    mediaType: application/json
+    sha256: 060bca1ab6d320d3fba554501c6b102aa6be66907108aac19b8d5b3215babfb1
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - ffmpeg-full
+    - remotion
+  requires:
+    - id: audio.rainy-bookshop-score
+      version: 0.1.0
+verification:
+  checks:
+    - audio.parent-hash
+    - audio.output-hash
+    - audio.exact-duration
+    - audio.stereo-48000hz
+    - audio.temporal-envelope-preserved
+    - audio.frame-synchronized-accents
+    - audio.deterministic-rerender
+    - campaign.delivery.verified
+    - review.operator-approved
+  artifacts:
+    - verification/adaptation/verification-audio-adaptation-compatibility.json
+    - verification/shots/signal-silhouette/scene-render.json
+    - verification/shots/signal-silhouette/contact-sheet.png
+    - verification/shots/signal-silhouette/framing-report.json
+    - verification/shots/interface-detail/scene-render.json
+    - verification/shots/interface-detail/contact-sheet.png
+    - verification/shots/interface-detail/framing-report.json
+    - verification/shots/beacon-end-frame/scene-render.json
+    - verification/shots/beacon-end-frame/contact-sheet.png
+    - verification/shots/beacon-end-frame/framing-report.json
+    - verification/campaign-delivery-report.json
+    - verification/approval.json
+  verifiedAt: 2026-08-31T05:15:24.590Z

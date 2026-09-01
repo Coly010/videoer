@@ -1,0 +1,495 @@
+{
+  "schemaVersion": 1,
+  "source": "/Users/colum/dev/personal/videoer/work/environments/market-world-family-v3/family/verification/historic-market-square/scene.json",
+  "manifest": "/Users/colum/dev/personal/videoer/work/environments/market-world-family-v3/family/verification/historic-market-square/resolved-scene.json",
+  "video": "/Users/colum/dev/personal/videoer/work/environments/market-world-family-v3/family/verification/historic-market-square/market-world-historic-market-square-transfer.mp4",
+  "blend": "/Users/colum/dev/personal/videoer/work/environments/market-world-family-v3/family/verification/historic-market-square/market-world-historic-market-square-transfer.blend",
+  "frames": [
+    {
+      "id": "right-context",
+      "progress": 0,
+      "description": "Right host and market silhouette",
+      "path": "/Users/colum/dev/personal/videoer/work/environments/market-world-family-v3/family/verification/historic-market-square/000-right-context.png"
+    },
+    {
+      "id": "frontal-layout",
+      "progress": 0.5,
+      "description": "Canopy, display inventory and circulation",
+      "path": "/Users/colum/dev/personal/videoer/work/environments/market-world-family-v3/family/verification/historic-market-square/050-frontal-layout.png"
+    },
+    {
+      "id": "left-context",
+      "progress": 1,
+      "description": "Left host and material separation",
+      "path": "/Users/colum/dev/personal/videoer/work/environments/market-world-family-v3/family/verification/historic-market-square/100-left-context.png"
+    }
+  ],
+  "contactSheet": "/Users/colum/dev/personal/videoer/work/environments/market-world-family-v3/family/verification/historic-market-square/contact-sheet.png",
+  "media": {
+    "streams": [
+      {
+        "index": 0,
+        "codec_name": "h264",
+        "codec_long_name": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+        "profile": "High",
+        "codec_type": "video",
+        "codec_tag_string": "avc1",
+        "codec_tag": "0x31637661",
+        "mime_codec_string": "avc1.64001e",
+        "width": 720,
+        "height": 406,
+        "coded_width": 720,
+        "coded_height": 406,
+        "has_b_frames": 2,
+        "sample_aspect_ratio": "1:1",
+        "display_aspect_ratio": "360:203",
+        "pix_fmt": "yuv420p",
+        "level": 30,
+        "chroma_location": "left",
+        "field_order": "progressive",
+        "is_avc": "true",
+        "nal_length_size": "4",
+        "id": "0x1",
+        "r_frame_rate": "24/1",
+        "avg_frame_rate": "24/1",
+        "time_base": "1/12288",
+        "start_pts": 0,
+        "start_time": "0.000000",
+        "duration_ts": 1536,
+        "duration": "0.125000",
+        "bit_rate": "920320",
+        "bits_per_raw_sample": "8",
+        "nb_frames": "3",
+        "extradata_size": 47,
+        "disposition": {
+          "default": 1,
+          "dub": 0,
+          "original": 0,
+          "comment": 0,
+          "lyrics": 0,
+          "karaoke": 0,
+          "forced": 0,
+          "hearing_impaired": 0,
+          "visual_impaired": 0,
+          "clean_effects": 0,
+          "attached_pic": 0,
+          "timed_thumbnails": 0,
+          "non_diegetic": 0,
+          "captions": 0,
+          "descriptions": 0,
+          "metadata": 0,
+          "dependent": 0,
+          "still_image": 0,
+          "multilayer": 0
+        },
+        "tags": {
+          "language": "und",
+          "handler_name": "VideoHandler",
+          "encoder": "Lavc libx264"
+        }
+      }
+    ],
+    "format": {
+      "filename": "/Users/colum/dev/personal/videoer/work/environments/market-world-family-v3/family/verification/historic-market-square/market-world-historic-market-square-transfer.mp4",
+      "nb_streams": 1,
+      "nb_programs": 0,
+      "nb_stream_groups": 0,
+      "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+      "format_long_name": "QuickTime / MOV",
+      "start_time": "0.000000",
+      "duration": "0.125000",
+      "size": "15275",
+      "bit_rate": "977600",
+      "probe_score": 100,
+      "tags": {
+        "major_brand": "isom",
+        "minor_version": "512",
+        "compatible_brands": "isomiso2avc1mp41",
+        "encoder": "Lavf63.1.101"
+      }
+    }
+  },
+  "verification": {
+    "schemaVersion": 1,
+    "status": "pass",
+    "checks": []
+  },
+  "evidenceRefresh": "new-pixel-render",
+  "renderProfile": {
+    "engine": "cycles-cpu",
+    "samples": 128,
+    "seed": 1729,
+    "denoise": true,
+    "intent": "deterministic-final"
+  },
+  "deterministicEvidence": {
+    "boundary": "cycles-cpu-fixed-seed-to-lossless-png-to-single-thread-x264",
+    "expected": "byte-identical-on-matching-runtime-and-input-fingerprint"
+  },
+  "renderChecks": [
+    {
+      "id": "renderer-camera-contract",
+      "status": "pass",
+      "message": "Renderer camera position, semantic target, lens, and tracking contract match the declarative path",
+      "measurements": {
+        "valid": true,
+        "trackingConstraint": "TRACK_TO",
+        "trackAxis": "TRACK_NEGATIVE_Z",
+        "upAxis": "UP_Y",
+        "interpolationImplementation": "frame-baked-declarative-v1",
+        "maximumPositionErrorMeters": 0,
+        "maximumTargetErrorMeters": 0,
+        "maximumLensErrorMillimeters": 0,
+        "positionToleranceMeters": 0.00001,
+        "targetToleranceMeters": 0.00001,
+        "lensToleranceMillimeters": 0.005,
+        "samples": [
+          {
+            "landmarkId": "right-context",
+            "frame": 1,
+            "positionErrorMeters": 0,
+            "targetErrorMeters": 0,
+            "lensErrorMillimeters": 0,
+            "actualLensMillimeters": 32,
+            "expectedLensMillimeters": 32
+          },
+          {
+            "landmarkId": "frontal-layout",
+            "frame": 2,
+            "positionErrorMeters": 0,
+            "targetErrorMeters": 0,
+            "lensErrorMillimeters": 0,
+            "actualLensMillimeters": 34,
+            "expectedLensMillimeters": 34
+          },
+          {
+            "landmarkId": "left-context",
+            "frame": 3,
+            "positionErrorMeters": 0,
+            "targetErrorMeters": 0,
+            "lensErrorMillimeters": 0,
+            "actualLensMillimeters": 32,
+            "expectedLensMillimeters": 32
+          }
+        ]
+      }
+    },
+    {
+      "id": "market-visible",
+      "status": "pass",
+      "message": "Semantic frames retain the required visible image coverage",
+      "measurements": {
+        "maximumBlackPercentage": 33,
+        "allowedBlackPercentage": 70,
+        "perFrameBlackPercentage": [
+          33,
+          25,
+          32
+        ]
+      }
+    },
+    {
+      "id": "market-highlight-detail",
+      "status": "pass",
+      "message": "Semantic frames retain highlight detail within the declared limit",
+      "measurements": {
+        "maximumWhitePercentage": 0,
+        "allowedWhitePercentage": 5,
+        "perFrameWhitePercentage": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "market-entity-inspection-coverage",
+      "status": "pass",
+      "message": "Every declared entity is inspectable in at least one semantic landmark",
+      "measurements": {
+        "minimumVisibleAreaPercentage": 96,
+        "minimumScreenHeightPercentage": 4,
+        "maximumScreenHeightPercentage": 58,
+        "marginPercentage": 1,
+        "uncoveredEntityIds": [],
+        "entities": [
+          {
+            "entityId": "layout.historic-market-square-market-world.cluster-001.member-01",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 26.582714915275574,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-layout",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 34.00034010410309,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 35.81451177597046,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "entityId": "layout.historic-market-square-market-world.cluster-001.member-02",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 5.0599634647369385,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-layout",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 6.975847482681274,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 7.19599723815918,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "entityId": "layout.historic-market-square-market-world.cluster-001.member-03",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 5.137676000595093,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-layout",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 6.755924224853516,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 6.5648674964904785,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "entityId": "layout.historic-market-square-market-world.cluster-001.member-04",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 5.4300010204315186,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-layout",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 7.4479639530181885,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 7.776695489883423,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "entityId": "layout.historic-market-square-market-world.cluster-001.member-05",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 5.689516663551331,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-layout",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 7.375311851501465,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 7.179087400436401,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "entityId": "layout.historic-market-square-market-world.cluster-002.member-01",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 10.800114274024963,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-layout",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 10.908886790275574,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 8.34764540195465,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "entityId": "layout.historic-market-square-market-world.cluster-002.member-02",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 9.67695415019989,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-layout",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 9.506022930145264,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 7.128772139549255,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "entityId": "layout.historic-market-square-market-world.cluster-003.member-01",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 8.2588791847229,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-layout",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 9.419423341751099,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 7.807448506355286,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "entityId": "layout.historic-market-square-market-world.cluster-003.member-02",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 7.793641090393066,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-layout",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 8.722057938575745,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 7.081392407417297,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "entityId": "layout.historic-market-square-market-world.cluster-003.member-03",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 7.613137364387512,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-layout",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 8.337387442588806,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 6.6842347383499146,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "blender": {
+    "mode": "render",
+    "stdout": "Blender 4.5.13 LTS (hash daeeeca98fb0 built 2026-08-25 01:30:50)\nFra:1 Mem:30.59M (Peak 30.59M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | market-host-mesh\nFra:1 Mem:30.59M (Peak 30.59M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.historic-market-square-market-world.cluster-001.member-\nFra:1 Mem:30.60M (Peak 30.60M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.historic-market-square-market-world.cluster-001.memb.003\nFra:1 Mem:30.63M (Peak 30.63M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.historic-market-square-market-world.cluster-001.memb.005\nFra:1 Mem:30.73M (Peak 30.73M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.historic-market-square-market-world.cluster-002.member-\nFra:1 Mem:30.91M (Peak 30.91M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | merchandise-warm-edge\nFra:1 Mem:31.09M (Peak 31.09M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.historic-market-square-market-world.cluster-002.membe\nFra:1 Mem:31.14M (Peak 31.14M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | market-sky-key\nFra:1 Mem:31.24M (Peak 31.24M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.historic-market-square-market-world.cluster-003.membe\nFra:1 Mem:31.30M (Peak 31.30M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.historic-market-square-market-world.cluster-003.memb.001\nFra:1 Mem:32.02M (Peak 32.02M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing\nFra:1 Mem:24.17M (Peak 32.02M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Waiting for render to start\nFra:1 Mem:24.17M (Peak 32.02M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene\nFra:1 Mem:24.17M (Peak 32.02M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Shaders\nFra:1 Mem:24.17M (Peak 32.02M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)\nFra:1 Mem:24.51M (Peak 32.02M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Procedurals\nFra:1 Mem:24.51M (Peak 32.02M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Background\nFra:1 Mem:24.51M (Peak 32.02M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Camera\nFra:1 Mem:24.51M (Peak 32.02M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Meshes Flags\nFra:1 Mem:24.51M (Peak 32.02M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Objects\nFra:1 Mem:24.51M (Peak 32.02M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Objects | Copying Transformations to device\nFra:1 Mem:24.52M (Peak 32.02M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Particle Systems\nFra:1 Mem:24.52M (Peak 32.02M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device\nFra:1 Mem:24.52M (Peak 32.02M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Meshes\nFra:1 Mem:24.52M (Peak 32.02M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Objects | Applying Static Transformations\nFra:1 Mem:24.52M (Peak 32.02M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Mesh | Computing attributes\nFra:1 Mem:24.63M (Peak 32.02M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device\nFra:1 Mem:24.63M (Peak 32.02M) | Time:00:00.00 | Mem:0.37M, Peak:0.37M | Scene, ViewLayer | Updating Scene BVH | Building\nFra:1 Mem:24.63M (Peak 32.02M) | Time:00:00.00 | Mem:0.37M, Peak:0.37M | Scene, ViewLayer | Updating Scene BVH | Building BVH\nFra:1 Mem:24.63M (Peak 32.02M) | Time:00:00.00 | Mem:0.84M, Peak:0.84M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%\nFra:1 Mem:24.63M (Peak 32.02M) | Time:00:00.01 | Mem:1.35M, Peak:1.82M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device\nFra:1 Mem:24.63M (Peak 32.02M) | Time:00:00.01 | Mem:1.35M, Peak:1.82M | Scene, ViewLayer | Updating Mesh | Computing normals\nFra:1 Mem:25.08M (Peak 32.02M) | Time:00:00.01 | Mem:1.35M, Peak:1.82M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device\nFra:1 Mem:25.08M (Peak 32.02M) | Time:00:00.01 | Mem:1.81M, Peak:1.82M | Scene, ViewLayer | Updating Objects Flags\nFra:1 Mem:25.08M (Peak 32.02M) | Time:00:00.01 | Mem:1.81M, Peak:1.82M | Scene, ViewLayer | Updating Primitive Offsets\nFra:1 Mem:25.08M (Peak 32.02M) | Time:00:00.01 | Mem:1.81M, Peak:1.82M | Scene, ViewLayer | Updating Images\nFra:1 Mem:25.08M (Peak 32.02M) | Time:00:00.01 | Mem:1.81M, Peak:1.82M | Scene, ViewLayer | Updating Camera Volume\nFra:1 Mem:25.08M (Peak 32.02M) | Time:00:00.01 | Mem:1.81M, Peak:1.82M | Scene, ViewLayer | Updating Lookup Tables\nFra:1 Mem:25.08M (Peak 32.02M) | Time:00:00.01 | Mem:1.89M, Peak:1.89M | Scene, ViewLayer | Updating Lights\nFra:1 Mem:25.08M (Peak 32.02M) | Time:00:00.01 | Mem:1.89M, Peak:1.89M | Scene, ViewLayer | Updating Lights | Computing tree\nFra:1 Mem:25.08M (Peak 32.02M) | Time:00:00.01 | Mem:1.89M, Peak:1.89M | Scene, ViewLayer | Updating Integrator\nFra:1 Mem:25.08M (Peak 32.02M) | Time:00:00.01 | Mem:1.89M, Peak:1.89M | Scene, ViewLayer | Updating Film\nFra:1 Mem:25.09M (Peak 32.02M) | Time:00:00.01 | Mem:1.81M, Peak:1.89M | Scene, ViewLayer | Updating Lookup Tables\nFra:1 Mem:25.09M (Peak 32.02M) | Time:00:00.01 | Mem:1.89M, Peak:1.89M | Scene, ViewLayer | Updating Baking\nFra:1 Mem:25.09M (Peak 32.02M) | Time:00:00.01 | Mem:1.89M, Peak:1.89M | Scene, ViewLayer | Updating Device | Writing constant memory\nFra:1 Mem:25.09M (Peak 32.02M) | Time:00:00.01 | Mem:1.89M, Peak:1.89M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)\nFra:1 Mem:25.09M (Peak 32.02M) | Time:00:00.01 | Mem:1.89M, Peak:1.89M | Scene, ViewLayer | Sample 0/128\nFra:1 Mem:40.86M (Peak 40.86M) | Time:00:00.11 | Remaining:00:12.88 | Mem:17.50M, Peak:17.50M | Scene, ViewLayer | Sample 1/128\nFra:1 Mem:49.78M (Peak 63.17M) | Time:00:10.98 | Mem:17.50M, Peak:17.50M | Scene, ViewLayer | Sample 128/128\nFra:1 Mem:49.78M (Peak 63.17M) | Time:00:10.99 | Mem:17.50M, Peak:17.50M | Scene, ViewLayer | Finished\nSaved: '/Users/colum/dev/personal/videoer/work/environments/market-world-family-v3/family/verification/historic-market-square/lossless-frames/market-world-historic-market-square-transfer-0001.png'\nTime: 00:11.04 (Saving: 00:00.05)\n\nFra:2 Mem:30.87M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | market-host-mesh\nFra:2 Mem:30.87M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.historic-market-square-market-world.cluster-001.member-\nFra:2 Mem:30.88M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.historic-market-square-market-world.cluster-002.member-\nFra:2 Mem:30.90M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.historic-market-square-market-world.cluster-002.membe\nFra:2 Mem:30.93M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | merchandise-warm-edge\nFra:2 Mem:31.02M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.historic-market-square-market-world.cluster-003.member-\nFra:2 Mem:31.09M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.historic-market-square-market-world.cluster-003.membe\nFra:2 Mem:31.23M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.historic-market-square-market-world.cluster-003.memb.001\nFra:2 Mem:32.02M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing\nFra:2 Mem:24.17M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Waiting for render to start\nFra:2 Mem:24.17M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene\nFra:2 Mem:24.17M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Shaders\nFra:2 Mem:24.17M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)\nFra:2 Mem:24.51M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Procedurals\nFra:2 Mem:24.51M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Background\nFra:2 Mem:24.51M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Camera\nFra:2 Mem:24.51M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Meshes Flags\nFra:2 Mem:24.51M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Objects\nFra:2 Mem:24.51M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Objects | Copying Transformations to device\nFra:2 Mem:24.52M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Particle Systems\nFra:2 Mem:24.52M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device\nFra:2 Mem:24.52M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Meshes\nFra:2 Mem:24.52M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Objects | Applying Static Transformations\nFra:2 Mem:24.52M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Mesh | Computing attributes\nFra:2 Mem:24.63M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device\nFra:2 Mem:24.63M (Peak 63.17M) | Time:00:00.00 | Mem:0.37M, Peak:0.37M | Scene, ViewLayer | Updating Scene BVH | Building\nFra:2 Mem:24.63M (Peak 63.17M) | Time:00:00.00 | Mem:0.37M, Peak:0.37M | Scene, ViewLayer | Updating Scene BVH | Building BVH\nFra:2 Mem:24.63M (Peak 63.17M) | Time:00:00.00 | Mem:0.84M, Peak:0.84M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%\nFra:2 Mem:24.63M (Peak 63.17M) | Time:00:00.00 | Mem:1.35M, Peak:1.82M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device\nFra:2 Mem:24.63M (Peak 63.17M) | Time:00:00.00 | Mem:1.35M, Peak:1.82M | Scene, ViewLayer | Updating Mesh | Computing normals\nFra:2 Mem:25.08M (Peak 63.17M) | Time:00:00.00 | Mem:1.35M, Peak:1.82M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device\nFra:2 Mem:25.08M (Peak 63.17M) | Time:00:00.00 | Mem:1.81M, Peak:1.82M | Scene, ViewLayer | Updating Objects Flags\nFra:2 Mem:25.08M (Peak 63.17M) | Time:00:00.00 | Mem:1.81M, Peak:1.82M | Scene, ViewLayer | Updating Primitive Offsets\nFra:2 Mem:25.08M (Peak 63.17M) | Time:00:00.00 | Mem:1.81M, Peak:1.82M | Scene, ViewLayer | Updating Images\nFra:2 Mem:25.08M (Peak 63.17M) | Time:00:00.00 | Mem:1.81M, Peak:1.82M | Scene, ViewLayer | Updating Camera Volume\nFra:2 Mem:25.08M (Peak 63.17M) | Time:00:00.00 | Mem:1.81M, Peak:1.82M | Scene, ViewLayer | Updating Lookup Tables\nFra:2 Mem:25.08M (Peak 63.17M) | Time:00:00.00 | Mem:1.89M, Peak:1.89M | Scene, ViewLayer | Updating Lights\nFra:2 Mem:25.08M (Peak 63.17M) | Time:00:00.00 | Mem:1.89M, Peak:1.89M | Scene, ViewLayer | Updating Lights | Computing tree\nFra:2 Mem:25.08M (Peak 63.17M) | Time:00:00.00 | Mem:1.89M, Peak:1.89M | Scene, ViewLayer | Updating Integrator\nFra:2 Mem:25.08M (Peak 63.17M) | Time:00:00.00 | Mem:1.89M, Peak:1.89M | Scene, ViewLayer | Updating Film\nFra:2 Mem:25.09M (Peak 63.17M) | Time:00:00.00 | Mem:1.81M, Peak:1.89M | Scene, ViewLayer | Updating Lookup Tables\nFra:2 Mem:25.09M (Peak 63.17M) | Time:00:00.00 | Mem:1.89M, Peak:1.89M | Scene, ViewLayer | Updating Baking\nFra:2 Mem:25.09M (Peak 63.17M) | Time:00:00.00 | Mem:1.89M, Peak:1.89M | Scene, ViewLayer | Updating Device | Writing constant memory\nFra:2 Mem:25.09M (Peak 63.17M) | Time:00:00.00 | Mem:1.89M, Peak:1.89M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)\nFra:2 Mem:25.09M (Peak 63.17M) | Time:00:00.00 | Mem:1.89M, Peak:1.89M | Scene, ViewLayer | Sample 0/128\nFra:2 Mem:40.86M (Peak 63.17M) | Time:00:00.09 | Remaining:00:11.24 | Mem:17.50M, Peak:17.50M | Scene, ViewLayer | Sample 1/128\nFra:2 Mem:49.78M (Peak 63.17M) | Time:00:12.20 | Mem:17.50M, Peak:17.50M | Scene, ViewLayer | Sample 128/128\nFra:2 Mem:49.78M (Peak 63.17M) | Time:00:12.20 | Mem:17.50M, Peak:17.50M | Scene, ViewLayer | Finished\nSaved: '/Users/colum/dev/personal/videoer/work/environments/market-world-family-v3/family/verification/historic-market-square/lossless-frames/market-world-historic-market-square-transfer-0002.png'\nTime: 00:12.21 (Saving: 00:00.00)\n\nFra:3 Mem:30.87M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | market-host-mesh\nFra:3 Mem:30.87M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.historic-market-square-market-world.cluster-001.member-\nFra:3 Mem:30.88M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.historic-market-square-market-world.cluster-001.memb.001\nFra:3 Mem:30.90M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.historic-market-square-market-world.cluster-001.memb.005\nFra:3 Mem:31.08M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | merchandise-warm-edge\nFra:3 Mem:31.20M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.historic-market-square-market-world.cluster-003.membe\nFra:3 Mem:31.24M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.historic-market-square-market-world.cluster-003.memb.001\nFra:3 Mem:31.60M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | market-sky-key\nFra:3 Mem:32.02M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing\nFra:3 Mem:24.17M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Waiting for render to start\nFra:3 Mem:24.17M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene\nFra:3 Mem:24.17M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Shaders\nFra:3 Mem:24.17M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)\nFra:3 Mem:24.51M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Procedurals\nFra:3 Mem:24.51M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Background\nFra:3 Mem:24.51M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Camera\nFra:3 Mem:24.51M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Meshes Flags\nFra:3 Mem:24.51M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Objects\nFra:3 Mem:24.51M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Objects | Copying Transformations to device\nFra:3 Mem:24.52M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Particle Systems\nFra:3 Mem:24.52M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device\nFra:3 Mem:24.52M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Meshes\nFra:3 Mem:24.52M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Objects | Applying Static Transformations\nFra:3 Mem:24.52M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Mesh | Computing attributes\nFra:3 Mem:24.63M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device\nFra:3 Mem:24.63M (Peak 63.17M) | Time:00:00.00 | Mem:0.37M, Peak:0.37M | Scene, ViewLayer | Updating Scene BVH | Building\nFra:3 Mem:24.63M (Peak 63.17M) | Time:00:00.00 | Mem:0.37M, Peak:0.37M | Scene, ViewLayer | Updating Scene BVH | Building BVH\nFra:3 Mem:24.63M (Peak 63.17M) | Time:00:00.00 | Mem:0.84M, Peak:0.84M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%\nFra:3 Mem:24.63M (Peak 63.17M) | Time:00:00.00 | Mem:1.35M, Peak:1.82M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device\nFra:3 Mem:24.63M (Peak 63.17M) | Time:00:00.00 | Mem:1.35M, Peak:1.82M | Scene, ViewLayer | Updating Mesh | Computing normals\nFra:3 Mem:25.08M (Peak 63.17M) | Time:00:00.00 | Mem:1.35M, Peak:1.82M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device\nFra:3 Mem:25.08M (Peak 63.17M) | Time:00:00.00 | Mem:1.81M, Peak:1.82M | Scene, ViewLayer | Updating Objects Flags\nFra:3 Mem:25.08M (Peak 63.17M) | Time:00:00.00 | Mem:1.81M, Peak:1.82M | Scene, ViewLayer | Updating Primitive Offsets\nFra:3 Mem:25.08M (Peak 63.17M) | Time:00:00.00 | Mem:1.81M, Peak:1.82M | Scene, ViewLayer | Updating Images\nFra:3 Mem:25.08M (Peak 63.17M) | Time:00:00.00 | Mem:1.81M, Peak:1.82M | Scene, ViewLayer | Updating Camera Volume\nFra:3 Mem:25.08M (Peak 63.17M) | Time:00:00.00 | Mem:1.81M, Peak:1.82M | Scene, ViewLayer | Updating Lookup Tables\nFra:3 Mem:25.08M (Peak 63.17M) | Time:00:00.00 | Mem:1.89M, Peak:1.89M | Scene, ViewLayer | Updating Lights\nFra:3 Mem:25.08M (Peak 63.17M) | Time:00:00.00 | Mem:1.89M, Peak:1.89M | Scene, ViewLayer | Updating Lights | Computing tree\nFra:3 Mem:25.08M (Peak 63.17M) | Time:00:00.00 | Mem:1.89M, Peak:1.89M | Scene, ViewLayer | Updating Integrator\nFra:3 Mem:25.08M (Peak 63.17M) | Time:00:00.00 | Mem:1.89M, Peak:1.89M | Scene, ViewLayer | Updating Film\nFra:3 Mem:25.09M (Peak 63.17M) | Time:00:00.00 | Mem:1.81M, Peak:1.89M | Scene, ViewLayer | Updating Lookup Tables\nFra:3 Mem:25.09M (Peak 63.17M) | Time:00:00.00 | Mem:1.89M, Peak:1.89M | Scene, ViewLayer | Updating Baking\nFra:3 Mem:25.09M (Peak 63.17M) | Time:00:00.00 | Mem:1.89M, Peak:1.89M | Scene, ViewLayer | Updating Device | Writing constant memory\nFra:3 Mem:25.09M (Peak 63.17M) | Time:00:00.00 | Mem:1.89M, Peak:1.89M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)\nFra:3 Mem:25.09M (Peak 63.17M) | Time:00:00.00 | Mem:1.89M, Peak:1.89M | Scene, ViewLayer | Sample 0/128\nFra:3 Mem:40.86M (Peak 63.17M) | Time:00:00.08 | Remaining:00:10.32 | Mem:17.50M, Peak:17.50M | Scene, ViewLayer | Sample 1/128\nFra:3 Mem:49.78M (Peak 63.17M) | Time:00:11.40 | Mem:17.50M, Peak:17.50M | Scene, ViewLayer | Sample 128/128\nFra:3 Mem:49.78M (Peak 63.17M) | Time:00:11.40 | Mem:17.50M, Peak:17.50M | Scene, ViewLayer | Finished\nSaved: '/Users/colum/dev/personal/videoer/work/environments/market-world-family-v3/family/verification/historic-market-square/lossless-frames/market-world-historic-market-square-transfer-0003.png'\nTime: 00:11.41 (Saving: 00:00.00)\n\nInfo: Saved as \"market-world-historic-market-square-transfer.blend\"\n\nBlender quit\n",
+    "stderr": ""
+  }
+}

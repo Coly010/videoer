@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "speaking-elara",
+  "baseAsset": {
+    "id": "character.elara-vale",
+    "version": "0.1.2"
+  },
+  "baseArtifact": "/Users/colum/dev/personal/videoer/library/characters/elara-vale/0.1.2/geometry.json",
+  "baseGeometrySha256": "b0e614f69c4bb73fc283f954550b15b094fb9c11bdacb62fc44a920a6a60727a",
+  "adaptedAssetId": "character.elara-vale-speaking",
+  "adaptedArtifact": "/Users/colum/dev/personal/videoer/campaigns/last-call-dialogue-conformance/work/characters/speaking-elara.json",
+  "adaptedGeometrySha256": "906c496decf366395be06a017ad04ccc01de79d1a9f69cfb8572d753b5b833ec",
+  "requestedCapabilities": [
+    "canonical-humanoid-rig",
+    "gaze-target",
+    "identity-reference"
+  ],
+  "missingBaseCapabilities": [],
+  "providedCapabilities": [
+    "canonical-english-visemes",
+    "mouth-only-morph-deformation",
+    "speech-performance-binding"
+  ],
+  "operations": {
+    "addedAttachments": [],
+    "materialOverrides": [],
+    "addedMorphTargets": [
+      "viseme-aa",
+      "viseme-ee",
+      "viseme-oh",
+      "viseme-fv",
+      "viseme-mbp"
+    ],
+    "topologyChanged": false,
+    "skeletonChanged": false
+  },
+  "compatibility": {
+    "coordinateSystemPreserved": true,
+    "vertexCountBefore": 4247,
+    "vertexCountAfter": 4247,
+    "triangleCountBefore": 7840,
+    "triangleCountAfter": 7840,
+    "skeletonJointsBefore": [
+      "root",
+      "hips",
+      "spine",
+      "chest",
+      "neck",
+      "head",
+      "left-clavicle",
+      "left-upper-arm",
+      "left-forearm",
+      "left-hand",
+      "right-clavicle",
+      "right-upper-arm",
+      "right-forearm",
+      "right-hand",
+      "left-thigh",
+      "left-shin",
+      "left-foot",
+      "left-toe",
+      "right-thigh",
+      "right-shin",
+      "right-foot",
+      "right-toe"
+    ],
+    "skeletonJointsAfter": [
+      "root",
+      "hips",
+      "spine",
+      "chest",
+      "neck",
+      "head",
+      "left-clavicle",
+      "left-upper-arm",
+      "left-forearm",
+      "left-hand",
+      "right-clavicle",
+      "right-upper-arm",
+      "right-forearm",
+      "right-hand",
+      "left-thigh",
+      "left-shin",
+      "left-foot",
+      "left-toe",
+      "right-thigh",
+      "right-shin",
+      "right-foot",
+      "right-toe"
+    ],
+    "morphTargetsBefore": [],
+    "morphTargetsAfter": [
+      "viseme-aa",
+      "viseme-ee",
+      "viseme-oh",
+      "viseme-fv",
+      "viseme-mbp"
+    ]
+  },
+  "validation": {
+    "valid": true,
+    "issues": [],
+    "stats": {
+      "vertices": 4247,
+      "triangles": 7840,
+      "joints": 22,
+      "skinned": true,
+      "morphTargets": 5
+    }
+  },
+  "speechMorphValidation": {
+    "valid": true,
+    "issues": [],
+    "checks": {
+      "targets": [
+        "viseme-aa",
+        "viseme-ee",
+        "viseme-oh",
+        "viseme-fv",
+        "viseme-mbp"
+      ],
+      "affectedVertices": 138,
+      "mouthOnly": true,
+      "measurable": true
+    }
+  }
+}

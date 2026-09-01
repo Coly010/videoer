@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "id": "lighting-probe.firelit-contemporary-lounge",
+  "sourceRigPath": "../../../lighting-rig.json",
+  "environmentGeometryPath": "contemporary-lounge-host.json",
+  "visibleSourceBindings": {
+    "primary-fire": {
+      "entityId": "transfer-environment",
+      "materialId": "hearth-embers"
+    }
+  },
+  "adaptation": {
+    "kind": "lighting-rig-transform-v1",
+    "assetId": "lighting.firelit-interior.contemporary-lounge-transfer",
+    "transform": {
+      "translation": [
+        0,
+        0.08,
+        0
+      ],
+      "yawRadians": 0.04,
+      "uniformScale": 1
+    },
+    "energyScale": 0.9,
+    "purposeEnergyScale": {
+      "key": 1.04,
+      "fill": 1.08,
+      "rim": 0.92,
+      "practical": 0.94,
+      "environment": 1.15
+    },
+    "colorMultiply": [
+      0.98,
+      0.98,
+      1
+    ],
+    "worldColor": [
+      0.0025,
+      0.002,
+      0.0025
+    ],
+    "metadata": {
+      "context": "unrelated-contemporary-fire-lounge-transfer",
+      "sourceCandidate": "lighting.firelit-interior@0.1.0"
+    }
+  },
+  "witnessTransform": {
+    "position": [
+      1.72,
+      0.54,
+      2.02
+    ],
+    "rotation": [
+      0,
+      -0.1,
+      0
+    ],
+    "scale": [
+      1,
+      1,
+      1
+    ]
+  },
+  "camera": {
+    "start": {
+      "position": [
+        5.2,
+        2.5,
+        -5.75
+      ],
+      "target": [
+        0.2,
+        1.2,
+        2.52
+      ],
+      "lensMillimeters": 43
+    },
+    "end": {
+      "position": [
+        -4.85,
+        2.42,
+        -5.55
+      ],
+      "target": [
+        0.15,
+        1.18,
+        2.5
+      ],
+      "lensMillimeters": 46
+    }
+  },
+  "resolution": {
+    "width": 480,
+    "height": 480,
+    "percentage": 100
+  },
+  "exposureRegion": {
+    "x": 0.4,
+    "y": 0.2,
+    "width": 0.44,
+    "height": 0.66,
+    "maximumBlackPercentage": 64,
+    "maximumWhitePercentage": 5,
+    "minimumMidtonePercentage": 28
+  },
+  "metadata": {
+    "campaignClass": "temporal-lighting-transfer-conformance",
+    "environmentFamily": "contemporary-fire-lounge",
+    "sourceEnvironmentFamily": "historic-stone-chamber"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "campaign": "campaign.last-call-dialogue",
+  "sourceFile": "/Users/colum/dev/personal/videoer/campaigns/last-call-dialogue-conformance/cinematic-campaign.yaml",
+  "sourceLines": 151,
+  "bespokeOrchestrationSourceFiles": 0,
+  "generatedGeometry": 0,
+  "adaptedGeometry": 1,
+  "generatedMotionSources": 1,
+  "adaptedMotionSources": 0,
+  "generatedMotionTimelines": 0,
+  "derivedMotionTimelines": 0,
+  "motionReport": "/Users/colum/dev/personal/videoer/campaigns/last-call-dialogue-conformance/work/motions/motion-build-report.json",
+  "assetManifestFile": "/Users/colum/dev/personal/videoer/campaigns/last-call-dialogue-conformance/work/asset-manifest.yaml",
+  "publicationCandidatesDeclared": 3,
+  "publicationCandidatesFile": "/Users/colum/dev/personal/videoer/campaigns/last-call-dialogue-conformance/work/publication-candidates/manifest.yaml",
+  "scenes": ["scene.last-call-closeup"],
+  "editPlanFile": "/Users/colum/dev/personal/videoer/campaigns/last-call-dialogue-conformance/work/edit/edit-plan.json",
+  "delivery": "/Users/colum/dev/personal/videoer/campaigns/last-call-dialogue-conformance/delivery/last-call-dialogue.mp4"
+}

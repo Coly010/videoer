@@ -1,0 +1,14 @@
+{
+  "valid": true,
+  "issues": [],
+  "stats": {
+    "vertices": 4814,
+    "triangles": 5292,
+    "joints": 52,
+    "skinned": true,
+    "morphTargets": 0
+  },
+  "headBone": 5,
+  "ownedHeadVertices": 19813,
+  "targetSha256": "5670fea14de4569e1cb8bac5aa2cb9f19f0f568590b77454c5e7384059cf938a"
+}

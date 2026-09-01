@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "familyAssetId": "environment.workshop-world-family",
+  "memberAssetIds": [
+    "prop.joiners-workbench",
+    "prop.freestanding-tool-board",
+    "prop.rolling-parts-cabinet"
+  ],
+  "decision": "accepted",
+  "reviewer": "Codex visual production review",
+  "reviewedAt": "2026-09-01T11:05:00.000Z",
+  "intendedShotDistance": "medium",
+  "evidence": [
+    "verification/historic-forge-workroom/contact-sheet.png",
+    "verification/historic-forge-workroom/scene-render.json",
+    "verification/contemporary-maker-lab/contact-sheet.png",
+    "verification/contemporary-maker-lab/scene-render.json"
+  ],
+  "strengths": [
+    "A complete workstation retains a coherent bench, populated tool board and rolling storage silhouette in both unrelated interiors.",
+    "The physical vise, bench dogs, drawer handles, castors, loose surface items and hanging-tool silhouettes provide readable inhabited-world detail without texture or renderer lock-in.",
+    "Warm historic and cool contemporary treatments preserve wood, steel, painted metal and brass separation through bounded reuse of the verified warm-interior lighting rig.",
+    "All three assets remain fully visible through three materially different camera landmarks while the declared operator corridor stays clear."
+  ],
+  "limitations": [
+    "The hand tools and peg pattern are simplified medium-distance silhouettes and are not accepted for close-up or hero insert photography.",
+    "The verification hosts intentionally prove transfer and lighting response; they are not publishable finished room environments.",
+    "Drawers, wheels, vise and loose tools are static geometry in this release; no animated interaction or physics behavior is claimed."
+  ],
+  "notes": "V1 was rejected because distant cameras made the physical details too small to judge. V2 established the accepted closer composition but exposed a camera outside the contemporary host, producing a 79% black semantic frame. V3 clamps all cameras inside host walls, retains the stricter eight-percent entity-height gate, and is accepted only at medium/background shot distance."
+}

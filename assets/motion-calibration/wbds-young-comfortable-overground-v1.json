@@ -1,0 +1,197 @@
+{
+  "schemaVersion": 1,
+  "id": "motion-calibration.wbds-young-comfortable-overground-v1",
+  "source": {
+    "title": "A public data set of overground and treadmill walking kinematics and kinetics of healthy individuals",
+    "authors": ["Claudiane A. Fukuchi", "Reginaldo K. Fukuchi", "Marcos Duarte"],
+    "paperDoi": "10.7717/peerj.4640",
+    "datasetDoi": "10.6084/m9.figshare.5722711.v5",
+    "figshareFileId": 10058986,
+    "publishedArchiveMd5": "ad9e6311d9b84b53acaf58d114d51c6d",
+    "licence": "CC BY 4.0",
+    "attribution": "Fukuchi CA, Fukuchi RK, Duarte M (2018), A public dataset of overground and treadmill walking kinematics and kinetics in healthy individuals, PeerJ 6:e4640."
+  },
+  "population": {
+    "subjects": 24,
+    "ageGroup": "young adults",
+    "condition": "overground walking at self-selected comfortable speed",
+    "side": "right",
+    "samplesPerCycle": 101,
+    "aggregation": "pointwise population median followed by periodic harmonic projection"
+  },
+  "representation": {
+    "maximumHarmonic": 6,
+    "formula": "offsetDegrees + sum(cosineDegrees[h-1] * cos(2*pi*h*phase) + sineDegrees[h-1] * sin(2*pi*h*phase))",
+    "runtimeProviderFree": true
+  },
+  "channels": {
+    "pelvisRotation": {
+      "column": "RPelvisAngleX",
+      "semantic": "pelvis transverse rotation",
+      "kind": "segment-angle",
+      "unit": "degrees",
+      "phaseOrigin": "right initial contact",
+      "positiveConvention": "as published by the Visual3D WBDS pipeline",
+      "harmonics": {
+        "offsetDegrees": -0.23942789449999993,
+        "cosineDegrees": [
+          2.7558969432957396, 0.02083114983645565, -1.4055507233436526, 0.025123867636104576,
+          -0.1772243235983441, 0.04118826216481351
+        ],
+        "sineDegrees": [
+          3.197699313476986, 0.026914877101949494, -0.0850026462928541, 0.03604324806660431,
+          -0.13455226356891595, -0.09437064591650733
+        ]
+      },
+      "populationRangeDegrees": {
+        "p10": 6.915805000000001,
+        "median": 11.504750000000001,
+        "p90": 15.092035999999998
+      }
+    },
+    "pelvisObliquity": {
+      "column": "RPelvisAngleY",
+      "semantic": "pelvis frontal obliquity",
+      "kind": "segment-angle",
+      "unit": "degrees",
+      "phaseOrigin": "right initial contact",
+      "positiveConvention": "as published by the Visual3D WBDS pipeline",
+      "harmonics": {
+        "offsetDegrees": -0.08709169000000055,
+        "cosineDegrees": [
+          5.446678217870184, 0.14580393094872052, 0.8311187002585111, -0.04886730241781351,
+          0.31645276823776886, 0.07219407816164335
+        ],
+        "sineDegrees": [
+          2.6602546840835206, -0.0162668832052983, -0.3822925218467757, -0.00895145646813901,
+          0.3943982672123692, 0.15167517940435502
+        ]
+      },
+      "populationRangeDegrees": {
+        "p10": 9.630271,
+        "median": 12.380395,
+        "p90": 19.305999
+      }
+    },
+    "pelvisTilt": {
+      "column": "RPelvisAngleZ",
+      "semantic": "pelvis sagittal tilt",
+      "kind": "segment-angle",
+      "unit": "degrees",
+      "phaseOrigin": "right initial contact",
+      "positiveConvention": "as published by the Visual3D WBDS pipeline",
+      "harmonics": {
+        "offsetDegrees": 10.47110925,
+        "cosineDegrees": [
+          0.5248061413786259, 0.730428038384235, -0.22650531382680822, 0.1924152201202679,
+          -0.0806359605465705, -0.03973011488779566
+        ],
+        "sineDegrees": [
+          0.32091026110689297, -0.2738452202099068, 0.059332581659386374, -0.1093071034156452,
+          -0.05273737030193153, 0.00039728188102101215
+        ]
+      },
+      "populationRangeDegrees": {
+        "p10": 2.192040000000001,
+        "median": 3.1678999999999995,
+        "p90": 4.545526000000001
+      }
+    },
+    "hipFlexion": {
+      "column": "RHipAngleZ",
+      "semantic": "right hip sagittal flexion/extension",
+      "kind": "joint-angle",
+      "unit": "degrees",
+      "phaseOrigin": "right initial contact",
+      "positiveConvention": "as published by the Visual3D WBDS pipeline",
+      "harmonics": {
+        "offsetDegrees": 16.01061605350001,
+        "cosineDegrees": [
+          18.998379876270842, -3.0863674390322995, -0.4594869430727928, 0.12036498070606455,
+          -0.43659690681598307, 0.040961583358980536
+        ],
+        "sineDegrees": [
+          -2.136760626143504, -0.8972690703324993, 1.889034628104308, -0.368521410869267,
+          0.1995390859200766, -0.009547747912202524
+        ]
+      },
+      "populationRangeDegrees": {
+        "p10": 37.633458999999995,
+        "median": 39.8262575,
+        "p90": 43.99535
+      }
+    },
+    "kneeFlexion": {
+      "column": "RKneeAngleZ",
+      "semantic": "right knee sagittal flexion/extension",
+      "kind": "joint-angle",
+      "unit": "degrees",
+      "phaseOrigin": "right initial contact",
+      "positiveConvention": "as published by the Visual3D WBDS pipeline",
+      "harmonics": {
+        "offsetDegrees": 21.115169960000003,
+        "cosineDegrees": [
+          -1.984274581568411, -15.866042222221681, -1.5459827197472362, -1.01139193263363,
+          -0.8351308918841159, 0.17367681784404693
+        ],
+        "sineDegrees": [
+          -21.64875780809249, 5.6591725866156075, 5.165921456103057, 0.7130203393155041,
+          1.0024246674146513, 0.28354023264801026
+        ]
+      },
+      "populationRangeDegrees": {
+        "p10": 62.189547,
+        "median": 63.93448,
+        "p90": 69.454459
+      }
+    },
+    "ankleDorsiflexion": {
+      "column": "RAnkleAngleZ",
+      "semantic": "right ankle sagittal dorsiflexion/plantarflexion",
+      "kind": "joint-angle",
+      "unit": "degrees",
+      "phaseOrigin": "right initial contact",
+      "positiveConvention": "as published by the Visual3D WBDS pipeline",
+      "harmonics": {
+        "offsetDegrees": 3.470694642349999,
+        "cosineDegrees": [
+          -2.590962237351176, 0.8302598692136499, -4.131894514382639, 2.165426770874971,
+          -0.14935318627390826, 0.2108531393364707
+        ],
+        "sineDegrees": [
+          4.2388748958495315, -6.595659710071393, 0.3676828618529898, 0.15270223549602824,
+          -1.134765935448119, 0.5300521484072381
+        ]
+      },
+      "populationRangeDegrees": {
+        "p10": 24.029034,
+        "median": 27.54668,
+        "p90": 33.714369999999995
+      }
+    },
+    "footPitch": {
+      "column": "RFootAngleZ",
+      "semantic": "right foot segment sagittal dorsiflexion/plantarflexion",
+      "kind": "segment-angle",
+      "unit": "degrees",
+      "phaseOrigin": "right initial contact",
+      "positiveConvention": "as published by the Visual3D WBDS pipeline",
+      "harmonics": {
+        "offsetDegrees": -12.0244572985,
+        "cosineDegrees": [
+          17.850483436765693, 14.292848098800924, -3.2657470235978723, 3.013645979344474,
+          0.8369358983220688, 0.23791093514849046
+        ],
+        "sineDegrees": [
+          21.58822152213101, -13.247875816374108, -3.466986191713427, 0.6348855002681292,
+          -1.9752490063902477, 0.5677459657459718
+        ]
+      },
+      "populationRangeDegrees": {
+        "p10": 81.65983,
+        "median": 91.90815,
+        "p90": 98.93573
+      }
+    }
+  }
+}

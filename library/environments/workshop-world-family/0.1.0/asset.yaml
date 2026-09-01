@@ -1,0 +1,142 @@
+schemaVersion: 1
+id: environment.workshop-world-family
+version: 0.1.0
+type: environment
+title: Portable workshop workstation and tool-storage family
+description: Renderer-independent workshop family combining a portable
+  interaction-ready bench, populated physical tool display and rolling parts
+  storage into authored workstations across unrelated interiors.
+status: verified
+tags:
+  - workshop
+  - workbench
+  - tools
+  - craft
+  - inhabited-interior
+capabilities:
+  - portable-set-dressing-family
+  - explicit-member-versions
+  - deterministic-seeded-layout
+  - authored-physical-workstations
+  - navigation-clearance-preservation
+  - cross-environment-transfer
+  - verified-lighting-rig-reuse
+  - medium-background-quality-tier
+source:
+  kind: procedural
+  generator: videoer.workshop-world-family.v1
+  sourceAssets:
+    - prop.joiners-workbench@0.1.0
+    - prop.freestanding-tool-board@0.1.0
+    - prop.rolling-parts-cabinet@0.1.0
+    - lighting.bookshop-warm-interior@0.1.0
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: dressing-family
+    path: family.json
+    mediaType: application/json
+    sha256: 9b58cfd3959075ed3c5f3d324f4e183d3fd8e1260bfa234b6ba16f77b8dbd4bb
+  - role: historic-forge-workroom-host
+    path: verification/historic-forge-workroom/host-geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: 7dde92e18046d0c8fc2fd883f15456d6fd2f72b458aa05a4c979a7687b1d10e8
+  - role: historic-forge-workroom-layout-request
+    path: verification/historic-forge-workroom/layout-request.json
+    mediaType: application/json
+    sha256: 4fac80960f64c2e9452dcbb827a5e20a9f45e4baae876f426d62a0e5410728c1
+  - role: historic-forge-workroom-layout-report
+    path: verification/historic-forge-workroom/layout-report.json
+    mediaType: application/json
+    sha256: edf207f8dbed7c91cdd667c51c5b03ebdac5a965dd853c5c2565060e66cc96fa
+  - role: historic-forge-workroom-lighting-rig
+    path: verification/historic-forge-workroom/adapted-lighting-rig.json
+    mediaType: application/vnd.videoer.lighting+json
+    sha256: e575676912be3d84c0954e6a74460b075d4bd9f6b364e3d6f4138feac78abb97
+  - role: historic-forge-workroom-lighting-report
+    path: verification/historic-forge-workroom/lighting-adaptation-report.json
+    mediaType: application/json
+    sha256: 4290600e19b29a4695b8e6b479f661a183463e7afe7052010935fb44d3b91434
+  - role: historic-forge-workroom-contact-sheet
+    path: verification/historic-forge-workroom/contact-sheet.png
+    mediaType: image/png
+    sha256: 06e4d9e9a3c16d3c797c3be2faa5980d40aea8c1ab3dbb034f655bc8ebfc5274
+  - role: historic-forge-workroom-render-report
+    path: verification/historic-forge-workroom/scene-render.json
+    mediaType: application/json
+    sha256: 63f84f6e88e2022ea0cc693a42185b4f2f0b81c0d42d7f3b45061831c9131d9a
+  - role: contemporary-maker-lab-host
+    path: verification/contemporary-maker-lab/host-geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: 54816ed4ff326d73f0acf9cc58eb820d9d8d880a22a14024aabc12f43fa586de
+  - role: contemporary-maker-lab-layout-request
+    path: verification/contemporary-maker-lab/layout-request.json
+    mediaType: application/json
+    sha256: 50667eca0be19388478349a1575de7fa48030d71c68a77d3ea776cbfe83329a6
+  - role: contemporary-maker-lab-layout-report
+    path: verification/contemporary-maker-lab/layout-report.json
+    mediaType: application/json
+    sha256: bae929bc11f7be2ea9d52ccacad8d81c2bd412cb1b47eb1d4738eed4ef005478
+  - role: contemporary-maker-lab-lighting-rig
+    path: verification/contemporary-maker-lab/adapted-lighting-rig.json
+    mediaType: application/vnd.videoer.lighting+json
+    sha256: 87bba5e58f3f22607170385ab17b40f218ef73d5dc0bfac3f2a6e65dd2bb76b8
+  - role: contemporary-maker-lab-lighting-report
+    path: verification/contemporary-maker-lab/lighting-adaptation-report.json
+    mediaType: application/json
+    sha256: ec641920e4fb88628bb4ecedde74f07ff7b20f306386f682a79a254906b5c379
+  - role: contemporary-maker-lab-contact-sheet
+    path: verification/contemporary-maker-lab/contact-sheet.png
+    mediaType: image/png
+    sha256: 9561be25d3d5aaa2e822d8f3eb9de9315984f5aaacd6d47dd60b716d298fb2c0
+  - role: contemporary-maker-lab-render-report
+    path: verification/contemporary-maker-lab/scene-render.json
+    mediaType: application/json
+    sha256: d00554519a6931b67a0d991cd08ecb3fb91c38630ee67a27383dc10cde98feb4
+  - role: qualitative-review
+    path: verification/family-candidate-review.json
+    mediaType: application/json
+    sha256: aae49d4757af5fe8daf0bcbfdf249bf7bef4576ef2b7e1d5d01cbaedba2977a9
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - three-3d
+    - blender-headless
+  requires:
+    - id: prop.joiners-workbench
+      version: 0.1.0
+    - id: prop.freestanding-tool-board
+      version: 0.1.0
+    - id: prop.rolling-parts-cabinet
+      version: 0.1.0
+verification:
+  checks:
+    - family.schema-and-explicit-versions
+    - layout.deterministic-seed
+    - layout.required-variant-coverage
+    - layout.navigation-clearance
+    - workstation.complete-physical-inventory
+    - lighting.verified-parent-bounded-adaptation
+    - visual.historic-forge-workroom-accepted
+    - visual.contemporary-maker-lab-accepted
+    - layout.required-variant-coverage-accepted
+    - layout.every-entity-inspectable
+    - workstation.complete-physical-cluster-accepted
+    - lighting.verified-parent-bounded-adaptation-accepted
+    - family.medium-background-shot-distance-accepted
+  artifacts:
+    - verification/historic-forge-workroom/layout-report.json
+    - verification/historic-forge-workroom/lighting-adaptation-report.json
+    - verification/historic-forge-workroom/contact-sheet.png
+    - verification/historic-forge-workroom/scene-render.json
+    - verification/contemporary-maker-lab/layout-report.json
+    - verification/contemporary-maker-lab/lighting-adaptation-report.json
+    - verification/contemporary-maker-lab/contact-sheet.png
+    - verification/contemporary-maker-lab/scene-render.json
+    - verification/family-candidate-review.json
+  verifiedAt: 2026-09-01T11:05:00.000Z

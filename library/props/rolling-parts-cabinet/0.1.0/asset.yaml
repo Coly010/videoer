@@ -1,0 +1,72 @@
+schemaVersion: 1
+id: prop.rolling-parts-cabinet
+version: 0.1.0
+type: prop
+title: Rolling workshop parts cabinet
+description: Project-owned five-drawer parts cabinet with physical handles,
+  castors, push handle, hardwood top and loose parts.
+status: verified
+tags:
+  - cabinet
+  - drawers
+  - rolling-storage
+  - workshop
+  - portable
+  - inhabited-environment
+capabilities:
+  - portable-geometry
+  - ground-placement
+  - named-workstation-attachments
+  - medium-background-quality-tier
+source:
+  kind: procedural
+  generator: videoer.workshop-assets.v1
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: geometry
+    path: geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: 30dfde625e4b3a92047cdbf5b0bdc8bcbb3aa3e7b5cba74620b58f762af75503
+  - role: validation
+    path: validation.json
+    mediaType: application/json
+    sha256: d2911a1fed194697ea5ccac046507db30071355d19f1d20cb28cdbf2fcaed3f0
+  - role: historic-forge-workroom-family-contact-sheet
+    path: verification/historic-forge-workroom-family-contact-sheet.png
+    mediaType: image/png
+    sha256: 06e4d9e9a3c16d3c797c3be2faa5980d40aea8c1ab3dbb034f655bc8ebfc5274
+  - role: contemporary-maker-lab-family-contact-sheet
+    path: verification/contemporary-maker-lab-family-contact-sheet.png
+    mediaType: image/png
+    sha256: 9561be25d3d5aaa2e822d8f3eb9de9315984f5aaacd6d47dd60b716d298fb2c0
+  - role: family-transfer-summary
+    path: verification/family-transfer-summary.json
+    mediaType: application/json
+    sha256: fd96bf9b6549504985d123f76692922a0d86781aca14ed722ed45159d302d903
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - three-3d
+    - blender-headless
+  requires: []
+verification:
+  checks:
+    - geometry.topology
+    - geometry.material-groups
+    - attachments.parts-storage-semantic
+    - prop.physical-drawers-and-castors
+    - visual.historic-forge-workroom-workstation-transfer-accepted
+    - visual.contemporary-maker-lab-workstation-transfer-accepted
+    - prop.physical-workstation-semantics-accepted
+    - prop.medium-background-shot-distance-accepted
+  artifacts:
+    - verification/historic-forge-workroom-family-contact-sheet.png
+    - verification/contemporary-maker-lab-family-contact-sheet.png
+    - verification/family-transfer-summary.json
+  verifiedAt: 2026-09-01T11:05:00.000Z

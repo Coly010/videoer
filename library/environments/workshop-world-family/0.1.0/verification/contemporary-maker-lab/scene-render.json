@@ -1,0 +1,306 @@
+{
+  "schemaVersion": 1,
+  "source": "/Users/colum/dev/personal/videoer/work/environments/workshop-world-family-v3/family/verification/contemporary-maker-lab/scene.json",
+  "manifest": "/Users/colum/dev/personal/videoer/work/environments/workshop-world-family-v3/family/verification/contemporary-maker-lab/resolved-scene.json",
+  "video": "/Users/colum/dev/personal/videoer/work/environments/workshop-world-family-v3/family/verification/contemporary-maker-lab/workshop-world-contemporary-maker-lab-transfer.mp4",
+  "blend": "/Users/colum/dev/personal/videoer/work/environments/workshop-world-family-v3/family/verification/contemporary-maker-lab/workshop-world-contemporary-maker-lab-transfer.blend",
+  "frames": [
+    {
+      "id": "right-context",
+      "progress": 0,
+      "description": "Right host and workstation silhouette",
+      "path": "/Users/colum/dev/personal/videoer/work/environments/workshop-world-family-v3/family/verification/contemporary-maker-lab/000-right-context.png"
+    },
+    {
+      "id": "frontal-workstations",
+      "progress": 0.5,
+      "description": "Complete bench, tool display, storage and circulation",
+      "path": "/Users/colum/dev/personal/videoer/work/environments/workshop-world-family-v3/family/verification/contemporary-maker-lab/050-frontal-workstations.png"
+    },
+    {
+      "id": "left-context",
+      "progress": 1,
+      "description": "Left host and material separation",
+      "path": "/Users/colum/dev/personal/videoer/work/environments/workshop-world-family-v3/family/verification/contemporary-maker-lab/100-left-context.png"
+    }
+  ],
+  "contactSheet": "/Users/colum/dev/personal/videoer/work/environments/workshop-world-family-v3/family/verification/contemporary-maker-lab/contact-sheet.png",
+  "media": {
+    "streams": [
+      {
+        "index": 0,
+        "codec_name": "h264",
+        "codec_long_name": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+        "profile": "High",
+        "codec_type": "video",
+        "codec_tag_string": "avc1",
+        "codec_tag": "0x31637661",
+        "mime_codec_string": "avc1.64001e",
+        "width": 720,
+        "height": 406,
+        "coded_width": 720,
+        "coded_height": 406,
+        "has_b_frames": 2,
+        "sample_aspect_ratio": "1:1",
+        "display_aspect_ratio": "360:203",
+        "pix_fmt": "yuv420p",
+        "level": 30,
+        "chroma_location": "left",
+        "field_order": "progressive",
+        "is_avc": "true",
+        "nal_length_size": "4",
+        "id": "0x1",
+        "r_frame_rate": "24/1",
+        "avg_frame_rate": "24/1",
+        "time_base": "1/12288",
+        "start_pts": 0,
+        "start_time": "0.000000",
+        "duration_ts": 1536,
+        "duration": "0.125000",
+        "bit_rate": "1095168",
+        "bits_per_raw_sample": "8",
+        "nb_frames": "3",
+        "extradata_size": 47,
+        "disposition": {
+          "default": 1,
+          "dub": 0,
+          "original": 0,
+          "comment": 0,
+          "lyrics": 0,
+          "karaoke": 0,
+          "forced": 0,
+          "hearing_impaired": 0,
+          "visual_impaired": 0,
+          "clean_effects": 0,
+          "attached_pic": 0,
+          "timed_thumbnails": 0,
+          "non_diegetic": 0,
+          "captions": 0,
+          "descriptions": 0,
+          "metadata": 0,
+          "dependent": 0,
+          "still_image": 0,
+          "multilayer": 0
+        },
+        "tags": {
+          "language": "und",
+          "handler_name": "VideoHandler",
+          "encoder": "Lavc libx264"
+        }
+      }
+    ],
+    "format": {
+      "filename": "/Users/colum/dev/personal/videoer/work/environments/workshop-world-family-v3/family/verification/contemporary-maker-lab/workshop-world-contemporary-maker-lab-transfer.mp4",
+      "nb_streams": 1,
+      "nb_programs": 0,
+      "nb_stream_groups": 0,
+      "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+      "format_long_name": "QuickTime / MOV",
+      "start_time": "0.000000",
+      "duration": "0.125000",
+      "size": "18007",
+      "bit_rate": "1152448",
+      "probe_score": 100,
+      "tags": {
+        "major_brand": "isom",
+        "minor_version": "512",
+        "compatible_brands": "isomiso2avc1mp41",
+        "encoder": "Lavf63.1.101"
+      }
+    }
+  },
+  "verification": {
+    "schemaVersion": 1,
+    "status": "pass",
+    "checks": []
+  },
+  "evidenceRefresh": "new-pixel-render",
+  "renderProfile": {
+    "engine": "cycles-cpu",
+    "samples": 128,
+    "seed": 1729,
+    "denoise": true,
+    "intent": "deterministic-final"
+  },
+  "deterministicEvidence": {
+    "boundary": "cycles-cpu-fixed-seed-to-lossless-png-to-single-thread-x264",
+    "expected": "byte-identical-on-matching-runtime-and-input-fingerprint"
+  },
+  "renderChecks": [
+    {
+      "id": "renderer-camera-contract",
+      "status": "pass",
+      "message": "Renderer camera position, semantic target, lens, and tracking contract match the declarative path",
+      "measurements": {
+        "valid": true,
+        "trackingConstraint": "TRACK_TO",
+        "trackAxis": "TRACK_NEGATIVE_Z",
+        "upAxis": "UP_Y",
+        "interpolationImplementation": "frame-baked-declarative-v1",
+        "maximumPositionErrorMeters": 0,
+        "maximumTargetErrorMeters": 0,
+        "maximumLensErrorMillimeters": 0,
+        "positionToleranceMeters": 0.00001,
+        "targetToleranceMeters": 0.00001,
+        "lensToleranceMillimeters": 0.005,
+        "samples": [
+          {
+            "landmarkId": "right-context",
+            "frame": 1,
+            "positionErrorMeters": 0,
+            "targetErrorMeters": 0,
+            "lensErrorMillimeters": 0,
+            "actualLensMillimeters": 42,
+            "expectedLensMillimeters": 42
+          },
+          {
+            "landmarkId": "frontal-workstations",
+            "frame": 2,
+            "positionErrorMeters": 0,
+            "targetErrorMeters": 0,
+            "lensErrorMillimeters": 0,
+            "actualLensMillimeters": 46,
+            "expectedLensMillimeters": 46
+          },
+          {
+            "landmarkId": "left-context",
+            "frame": 3,
+            "positionErrorMeters": 0,
+            "targetErrorMeters": 0,
+            "lensErrorMillimeters": 0,
+            "actualLensMillimeters": 42,
+            "expectedLensMillimeters": 42
+          }
+        ]
+      }
+    },
+    {
+      "id": "workshop-visible",
+      "status": "pass",
+      "message": "Semantic frames retain the required visible image coverage",
+      "measurements": {
+        "maximumBlackPercentage": 19,
+        "allowedBlackPercentage": 70,
+        "perFrameBlackPercentage": [
+          19,
+          15,
+          7
+        ]
+      }
+    },
+    {
+      "id": "workshop-highlight-detail",
+      "status": "pass",
+      "message": "Semantic frames retain highlight detail within the declared limit",
+      "measurements": {
+        "maximumWhitePercentage": 0,
+        "allowedWhitePercentage": 5,
+        "perFrameWhitePercentage": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "workshop-entity-inspection-coverage",
+      "status": "pass",
+      "message": "Every declared entity is inspectable in at least one semantic landmark",
+      "measurements": {
+        "minimumVisibleAreaPercentage": 94,
+        "minimumScreenHeightPercentage": 8,
+        "maximumScreenHeightPercentage": 62,
+        "marginPercentage": 1,
+        "uncoveredEntityIds": [],
+        "entities": [
+          {
+            "entityId": "layout.contemporary-maker-lab-workshop-world.cluster-001.member-01",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 32.52091705799103,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-workstations",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 31.691713631153107,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 28.08215022087097,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "entityId": "layout.contemporary-maker-lab-workshop-world.cluster-001.member-02",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 50.35091936588287,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-workstations",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 53.94137799739838,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 45.044103264808655,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "entityId": "layout.contemporary-maker-lab-workshop-world.cluster-001.member-03",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 29.63046431541443,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-workstations",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 29.549002647399902,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 22.30023443698883,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "blender": {
+    "mode": "render",
+    "stdout": "Blender 4.5.13 LTS (hash daeeeca98fb0 built 2026-08-25 01:30:50)\nFra:1 Mem:14.31M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | workshop-host-mesh\nFra:1 Mem:14.31M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.contemporary-maker-lab-workshop-world.cluster-001.mem\nFra:1 Mem:14.32M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | shelf-rim\nFra:1 Mem:14.57M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing\nFra:1 Mem:12.37M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Waiting for render to start\nFra:1 Mem:12.37M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene\nFra:1 Mem:12.37M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Shaders\nFra:1 Mem:12.37M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)\nFra:1 Mem:12.52M (Peak 22.20M) | Time:00:00.00 | Mem:0.07M, Peak:0.07M | Scene, ViewLayer | Updating Procedurals\nFra:1 Mem:12.52M (Peak 22.20M) | Time:00:00.00 | Mem:0.07M, Peak:0.07M | Scene, ViewLayer | Updating Background\nFra:1 Mem:12.52M (Peak 22.20M) | Time:00:00.00 | Mem:0.07M, Peak:0.07M | Scene, ViewLayer | Updating Camera\nFra:1 Mem:12.52M (Peak 22.20M) | Time:00:00.00 | Mem:0.07M, Peak:0.07M | Scene, ViewLayer | Updating Meshes Flags\nFra:1 Mem:12.52M (Peak 22.20M) | Time:00:00.00 | Mem:0.07M, Peak:0.07M | Scene, ViewLayer | Updating Objects\nFra:1 Mem:12.52M (Peak 22.20M) | Time:00:00.00 | Mem:0.07M, Peak:0.07M | Scene, ViewLayer | Updating Objects | Copying Transformations to device\nFra:1 Mem:12.52M (Peak 22.20M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Particle Systems\nFra:1 Mem:12.52M (Peak 22.20M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device\nFra:1 Mem:12.52M (Peak 22.20M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Meshes\nFra:1 Mem:12.52M (Peak 22.20M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Objects | Applying Static Transformations\nFra:1 Mem:12.52M (Peak 22.20M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Mesh | Computing attributes\nFra:1 Mem:12.55M (Peak 22.20M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device\nFra:1 Mem:12.55M (Peak 22.20M) | Time:00:00.00 | Mem:0.10M, Peak:0.10M | Scene, ViewLayer | Updating Scene BVH | Building\nFra:1 Mem:12.55M (Peak 22.20M) | Time:00:00.00 | Mem:0.10M, Peak:0.10M | Scene, ViewLayer | Updating Scene BVH | Building BVH\nFra:1 Mem:12.55M (Peak 22.20M) | Time:00:00.00 | Mem:0.18M, Peak:0.18M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%\nFra:1 Mem:12.55M (Peak 22.20M) | Time:00:00.00 | Mem:0.26M, Peak:0.33M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device\nFra:1 Mem:12.55M (Peak 22.20M) | Time:00:00.00 | Mem:0.26M, Peak:0.33M | Scene, ViewLayer | Updating Mesh | Computing normals\nFra:1 Mem:12.64M (Peak 22.20M) | Time:00:00.00 | Mem:0.26M, Peak:0.33M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device\nFra:1 Mem:12.64M (Peak 22.20M) | Time:00:00.00 | Mem:0.34M, Peak:0.34M | Scene, ViewLayer | Updating Objects Flags\nFra:1 Mem:12.64M (Peak 22.20M) | Time:00:00.00 | Mem:0.34M, Peak:0.34M | Scene, ViewLayer | Updating Primitive Offsets\nFra:1 Mem:12.64M (Peak 22.20M) | Time:00:00.00 | Mem:0.34M, Peak:0.34M | Scene, ViewLayer | Updating Images\nFra:1 Mem:12.64M (Peak 22.20M) | Time:00:00.00 | Mem:0.34M, Peak:0.34M | Scene, ViewLayer | Updating Camera Volume\nFra:1 Mem:12.64M (Peak 22.20M) | Time:00:00.00 | Mem:0.34M, Peak:0.34M | Scene, ViewLayer | Updating Lookup Tables\nFra:1 Mem:12.64M (Peak 22.20M) | Time:00:00.00 | Mem:0.42M, Peak:0.42M | Scene, ViewLayer | Updating Lights\nFra:1 Mem:12.64M (Peak 22.20M) | Time:00:00.00 | Mem:0.42M, Peak:0.42M | Scene, ViewLayer | Updating Lights | Computing tree\nFra:1 Mem:12.64M (Peak 22.20M) | Time:00:00.00 | Mem:0.43M, Peak:0.43M | Scene, ViewLayer | Updating Integrator\nFra:1 Mem:12.64M (Peak 22.20M) | Time:00:00.00 | Mem:0.43M, Peak:0.43M | Scene, ViewLayer | Updating Film\nFra:1 Mem:12.64M (Peak 22.20M) | Time:00:00.00 | Mem:0.34M, Peak:0.43M | Scene, ViewLayer | Updating Lookup Tables\nFra:1 Mem:12.64M (Peak 22.20M) | Time:00:00.00 | Mem:0.43M, Peak:0.43M | Scene, ViewLayer | Updating Baking\nFra:1 Mem:12.64M (Peak 22.20M) | Time:00:00.00 | Mem:0.43M, Peak:0.43M | Scene, ViewLayer | Updating Device | Writing constant memory\nFra:1 Mem:12.64M (Peak 22.20M) | Time:00:00.00 | Mem:0.43M, Peak:0.43M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)\nFra:1 Mem:12.64M (Peak 22.20M) | Time:00:00.00 | Mem:0.43M, Peak:0.43M | Scene, ViewLayer | Sample 0/128\nFra:1 Mem:28.41M (Peak 28.41M) | Time:00:00.12 | Remaining:00:15.33 | Mem:16.04M, Peak:16.04M | Scene, ViewLayer | Sample 1/128\nFra:1 Mem:37.34M (Peak 50.72M) | Time:00:15.46 | Mem:16.04M, Peak:16.04M | Scene, ViewLayer | Sample 128/128\nFra:1 Mem:37.34M (Peak 50.72M) | Time:00:15.46 | Mem:16.04M, Peak:16.04M | Scene, ViewLayer | Finished\nSaved: '/Users/colum/dev/personal/videoer/work/environments/workshop-world-family-v3/family/verification/contemporary-maker-lab/lossless-frames/workshop-world-contemporary-maker-lab-transfer-0001.png'\nTime: 00:15.51 (Saving: 00:00.04)\n\nFra:2 Mem:14.35M (Peak 50.72M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | workshop-host-mesh\nFra:2 Mem:14.37M (Peak 50.72M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | shelf-rim\nFra:2 Mem:14.37M (Peak 50.72M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.contemporary-maker-lab-workshop-world.cluster-001.mem\nFra:2 Mem:14.38M (Peak 50.72M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | cool-window-fill\nFra:2 Mem:14.57M (Peak 50.72M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing\nFra:2 Mem:12.37M (Peak 50.72M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Waiting for render to start\nFra:2 Mem:12.37M (Peak 50.72M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene\nFra:2 Mem:12.37M (Peak 50.72M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Shaders\nFra:2 Mem:12.37M (Peak 50.72M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)\nFra:2 Mem:12.52M (Peak 50.72M) | Time:00:00.00 | Mem:0.07M, Peak:0.07M | Scene, ViewLayer | Updating Procedurals\nFra:2 Mem:12.52M (Peak 50.72M) | Time:00:00.00 | Mem:0.07M, Peak:0.07M | Scene, ViewLayer | Updating Background\nFra:2 Mem:12.52M (Peak 50.72M) | Time:00:00.00 | Mem:0.07M, Peak:0.07M | Scene, ViewLayer | Updating Camera\nFra:2 Mem:12.52M (Peak 50.72M) | Time:00:00.00 | Mem:0.07M, Peak:0.07M | Scene, ViewLayer | Updating Meshes Flags\nFra:2 Mem:12.52M (Peak 50.72M) | Time:00:00.00 | Mem:0.07M, Peak:0.07M | Scene, ViewLayer | Updating Objects\nFra:2 Mem:12.52M (Peak 50.72M) | Time:00:00.00 | Mem:0.07M, Peak:0.07M | Scene, ViewLayer | Updating Objects | Copying Transformations to device\nFra:2 Mem:12.52M (Peak 50.72M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Particle Systems\nFra:2 Mem:12.52M (Peak 50.72M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device\nFra:2 Mem:12.52M (Peak 50.72M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Meshes\nFra:2 Mem:12.52M (Peak 50.72M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Objects | Applying Static Transformations\nFra:2 Mem:12.52M (Peak 50.72M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Mesh | Computing attributes\nFra:2 Mem:12.55M (Peak 50.72M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device\nFra:2 Mem:12.55M (Peak 50.72M) | Time:00:00.00 | Mem:0.10M, Peak:0.10M | Scene, ViewLayer | Updating Scene BVH | Building\nFra:2 Mem:12.55M (Peak 50.72M) | Time:00:00.00 | Mem:0.10M, Peak:0.10M | Scene, ViewLayer | Updating Scene BVH | Building BVH\nFra:2 Mem:12.55M (Peak 50.72M) | Time:00:00.00 | Mem:0.18M, Peak:0.18M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%\nFra:2 Mem:12.55M (Peak 50.72M) | Time:00:00.00 | Mem:0.26M, Peak:0.33M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device\nFra:2 Mem:12.55M (Peak 50.72M) | Time:00:00.00 | Mem:0.26M, Peak:0.33M | Scene, ViewLayer | Updating Mesh | Computing normals\nFra:2 Mem:12.64M (Peak 50.72M) | Time:00:00.00 | Mem:0.26M, Peak:0.33M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device\nFra:2 Mem:12.64M (Peak 50.72M) | Time:00:00.00 | Mem:0.34M, Peak:0.34M | Scene, ViewLayer | Updating Objects Flags\nFra:2 Mem:12.64M (Peak 50.72M) | Time:00:00.00 | Mem:0.34M, Peak:0.34M | Scene, ViewLayer | Updating Primitive Offsets\nFra:2 Mem:12.64M (Peak 50.72M) | Time:00:00.00 | Mem:0.34M, Peak:0.34M | Scene, ViewLayer | Updating Images\nFra:2 Mem:12.64M (Peak 50.72M) | Time:00:00.00 | Mem:0.34M, Peak:0.34M | Scene, ViewLayer | Updating Camera Volume\nFra:2 Mem:12.64M (Peak 50.72M) | Time:00:00.00 | Mem:0.34M, Peak:0.34M | Scene, ViewLayer | Updating Lookup Tables\nFra:2 Mem:12.64M (Peak 50.72M) | Time:00:00.00 | Mem:0.42M, Peak:0.42M | Scene, ViewLayer | Updating Lights\nFra:2 Mem:12.64M (Peak 50.72M) | Time:00:00.00 | Mem:0.42M, Peak:0.42M | Scene, ViewLayer | Updating Lights | Computing tree\nFra:2 Mem:12.64M (Peak 50.72M) | Time:00:00.00 | Mem:0.43M, Peak:0.43M | Scene, ViewLayer | Updating Integrator\nFra:2 Mem:12.64M (Peak 50.72M) | Time:00:00.00 | Mem:0.43M, Peak:0.43M | Scene, ViewLayer | Updating Film\nFra:2 Mem:12.64M (Peak 50.72M) | Time:00:00.00 | Mem:0.34M, Peak:0.43M | Scene, ViewLayer | Updating Lookup Tables\nFra:2 Mem:12.64M (Peak 50.72M) | Time:00:00.00 | Mem:0.43M, Peak:0.43M | Scene, ViewLayer | Updating Baking\nFra:2 Mem:12.64M (Peak 50.72M) | Time:00:00.00 | Mem:0.43M, Peak:0.43M | Scene, ViewLayer | Updating Device | Writing constant memory\nFra:2 Mem:12.64M (Peak 50.72M) | Time:00:00.00 | Mem:0.43M, Peak:0.43M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)\nFra:2 Mem:12.64M (Peak 50.72M) | Time:00:00.00 | Mem:0.43M, Peak:0.43M | Scene, ViewLayer | Sample 0/128\nFra:2 Mem:28.41M (Peak 50.72M) | Time:00:00.12 | Remaining:00:15.41 | Mem:16.04M, Peak:16.04M | Scene, ViewLayer | Sample 1/128\nFra:2 Mem:37.34M (Peak 50.72M) | Time:00:15.68 | Mem:16.04M, Peak:16.04M | Scene, ViewLayer | Sample 128/128\nFra:2 Mem:37.34M (Peak 50.72M) | Time:00:15.68 | Mem:16.04M, Peak:16.04M | Scene, ViewLayer | Finished\nSaved: '/Users/colum/dev/personal/videoer/work/environments/workshop-world-family-v3/family/verification/contemporary-maker-lab/lossless-frames/workshop-world-contemporary-maker-lab-transfer-0002.png'\nTime: 00:15.69 (Saving: 00:00.01)\n\nFra:3 Mem:14.35M (Peak 50.72M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | workshop-host-mesh\nFra:3 Mem:14.36M (Peak 50.72M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | shelf-rim\nFra:3 Mem:14.36M (Peak 50.72M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | cool-window-fill\nFra:3 Mem:14.36M (Peak 50.72M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | warm-reading-key\nFra:3 Mem:14.57M (Peak 50.72M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing\nFra:3 Mem:12.37M (Peak 50.72M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Waiting for render to start\nFra:3 Mem:12.37M (Peak 50.72M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene\nFra:3 Mem:12.37M (Peak 50.72M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Shaders\nFra:3 Mem:12.37M (Peak 50.72M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)\nFra:3 Mem:12.52M (Peak 50.72M) | Time:00:00.00 | Mem:0.07M, Peak:0.07M | Scene, ViewLayer | Updating Procedurals\nFra:3 Mem:12.52M (Peak 50.72M) | Time:00:00.00 | Mem:0.07M, Peak:0.07M | Scene, ViewLayer | Updating Background\nFra:3 Mem:12.52M (Peak 50.72M) | Time:00:00.00 | Mem:0.07M, Peak:0.07M | Scene, ViewLayer | Updating Camera\nFra:3 Mem:12.52M (Peak 50.72M) | Time:00:00.00 | Mem:0.07M, Peak:0.07M | Scene, ViewLayer | Updating Meshes Flags\nFra:3 Mem:12.52M (Peak 50.72M) | Time:00:00.00 | Mem:0.07M, Peak:0.07M | Scene, ViewLayer | Updating Objects\nFra:3 Mem:12.52M (Peak 50.72M) | Time:00:00.00 | Mem:0.07M, Peak:0.07M | Scene, ViewLayer | Updating Objects | Copying Transformations to device\nFra:3 Mem:12.52M (Peak 50.72M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Particle Systems\nFra:3 Mem:12.52M (Peak 50.72M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device\nFra:3 Mem:12.52M (Peak 50.72M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Meshes\nFra:3 Mem:12.52M (Peak 50.72M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Objects | Applying Static Transformations\nFra:3 Mem:12.52M (Peak 50.72M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Mesh | Computing attributes\nFra:3 Mem:12.55M (Peak 50.72M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device\nFra:3 Mem:12.55M (Peak 50.72M) | Time:00:00.00 | Mem:0.10M, Peak:0.10M | Scene, ViewLayer | Updating Scene BVH | Building\nFra:3 Mem:12.55M (Peak 50.72M) | Time:00:00.00 | Mem:0.10M, Peak:0.10M | Scene, ViewLayer | Updating Scene BVH | Building BVH\nFra:3 Mem:12.55M (Peak 50.72M) | Time:00:00.00 | Mem:0.18M, Peak:0.18M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%\nFra:3 Mem:12.55M (Peak 50.72M) | Time:00:00.00 | Mem:0.26M, Peak:0.33M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device\nFra:3 Mem:12.55M (Peak 50.72M) | Time:00:00.00 | Mem:0.26M, Peak:0.33M | Scene, ViewLayer | Updating Mesh | Computing normals\nFra:3 Mem:12.64M (Peak 50.72M) | Time:00:00.00 | Mem:0.26M, Peak:0.33M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device\nFra:3 Mem:12.64M (Peak 50.72M) | Time:00:00.00 | Mem:0.34M, Peak:0.34M | Scene, ViewLayer | Updating Objects Flags\nFra:3 Mem:12.64M (Peak 50.72M) | Time:00:00.00 | Mem:0.34M, Peak:0.34M | Scene, ViewLayer | Updating Primitive Offsets\nFra:3 Mem:12.64M (Peak 50.72M) | Time:00:00.00 | Mem:0.34M, Peak:0.34M | Scene, ViewLayer | Updating Images\nFra:3 Mem:12.64M (Peak 50.72M) | Time:00:00.00 | Mem:0.34M, Peak:0.34M | Scene, ViewLayer | Updating Camera Volume\nFra:3 Mem:12.64M (Peak 50.72M) | Time:00:00.00 | Mem:0.34M, Peak:0.34M | Scene, ViewLayer | Updating Lookup Tables\nFra:3 Mem:12.64M (Peak 50.72M) | Time:00:00.00 | Mem:0.42M, Peak:0.42M | Scene, ViewLayer | Updating Lights\nFra:3 Mem:12.64M (Peak 50.72M) | Time:00:00.00 | Mem:0.42M, Peak:0.42M | Scene, ViewLayer | Updating Lights | Computing tree\nFra:3 Mem:12.64M (Peak 50.72M) | Time:00:00.00 | Mem:0.43M, Peak:0.43M | Scene, ViewLayer | Updating Integrator\nFra:3 Mem:12.64M (Peak 50.72M) | Time:00:00.00 | Mem:0.43M, Peak:0.43M | Scene, ViewLayer | Updating Film\nFra:3 Mem:12.64M (Peak 50.72M) | Time:00:00.00 | Mem:0.34M, Peak:0.43M | Scene, ViewLayer | Updating Lookup Tables\nFra:3 Mem:12.64M (Peak 50.72M) | Time:00:00.00 | Mem:0.43M, Peak:0.43M | Scene, ViewLayer | Updating Baking\nFra:3 Mem:12.64M (Peak 50.72M) | Time:00:00.00 | Mem:0.43M, Peak:0.43M | Scene, ViewLayer | Updating Device | Writing constant memory\nFra:3 Mem:12.64M (Peak 50.72M) | Time:00:00.00 | Mem:0.43M, Peak:0.43M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)\nFra:3 Mem:12.64M (Peak 50.72M) | Time:00:00.00 | Mem:0.43M, Peak:0.43M | Scene, ViewLayer | Sample 0/128\nFra:3 Mem:28.41M (Peak 50.72M) | Time:00:00.12 | Remaining:00:15.56 | Mem:16.04M, Peak:16.04M | Scene, ViewLayer | Sample 1/128\nFra:3 Mem:37.34M (Peak 50.72M) | Time:00:14.89 | Mem:16.04M, Peak:16.04M | Scene, ViewLayer | Sample 128/128\nFra:3 Mem:37.34M (Peak 50.72M) | Time:00:14.89 | Mem:16.04M, Peak:16.04M | Scene, ViewLayer | Finished\nSaved: '/Users/colum/dev/personal/videoer/work/environments/workshop-world-family-v3/family/verification/contemporary-maker-lab/lossless-frames/workshop-world-contemporary-maker-lab-transfer-0003.png'\nTime: 00:14.90 (Saving: 00:00.01)\n\nInfo: Saved as \"workshop-world-contemporary-maker-lab-transfer.blend\"\n\nBlender quit\n",
+    "stderr": ""
+  }
+}

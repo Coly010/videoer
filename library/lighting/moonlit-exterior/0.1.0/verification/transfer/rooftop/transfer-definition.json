@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "id": "lighting-probe.moonlit-contemporary-rooftop",
+  "sourceRigPath": "../../../lighting-rig.json",
+  "environmentGeometryPath": "rooftop-host.json",
+  "adaptation": {
+    "kind": "lighting-rig-transform-v1",
+    "assetId": "lighting.moonlit-exterior.rooftop-transfer",
+    "transform": {
+      "translation": [
+        0,
+        0.75,
+        0.2
+      ],
+      "yawRadians": 0.12,
+      "uniformScale": 1
+    },
+    "energyScale": 0.94,
+    "purposeEnergyScale": {
+      "key": 1,
+      "fill": 1.12,
+      "rim": 0.92,
+      "practical": 0.88,
+      "environment": 1.08
+    },
+    "colorMultiply": [
+      0.94,
+      0.98,
+      1
+    ],
+    "worldColor": [
+      0.001,
+      0.003,
+      0.01
+    ],
+    "metadata": {
+      "context": "unrelated-contemporary-rooftop-transfer",
+      "sourceCandidate": "lighting.moonlit-exterior@0.1.0"
+    }
+  },
+  "witnessTransform": {
+    "position": [
+      0,
+      0.84,
+      1
+    ],
+    "rotation": [
+      0,
+      0,
+      0
+    ],
+    "scale": [
+      1,
+      1,
+      1
+    ]
+  },
+  "camera": {
+    "start": {
+      "position": [
+        5.2,
+        2.8,
+        -6.5
+      ],
+      "target": [
+        0,
+        1.52,
+        1.05
+      ],
+      "lensMillimeters": 45
+    },
+    "end": {
+      "position": [
+        -4.9,
+        2.65,
+        -6.25
+      ],
+      "target": [
+        0,
+        1.5,
+        1.1
+      ],
+      "lensMillimeters": 47
+    }
+  },
+  "resolution": {
+    "width": 480,
+    "height": 480,
+    "percentage": 100
+  },
+  "exposureRegion": {
+    "x": 0.28,
+    "y": 0.2,
+    "width": 0.44,
+    "height": 0.64,
+    "maximumBlackPercentage": 62,
+    "maximumWhitePercentage": 5,
+    "minimumMidtonePercentage": 28
+  },
+  "metadata": {
+    "campaignClass": "lighting-transfer-conformance",
+    "environmentFamily": "contemporary-rooftop",
+    "sourceEnvironmentFamily": "historic-courtyard"
+  }
+}

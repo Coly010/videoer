@@ -1,0 +1,11 @@
+{
+  "valid": true,
+  "issues": [],
+  "stats": {
+    "vertices": 648,
+    "triangles": 324,
+    "joints": 1,
+    "skinned": true,
+    "morphTargets": 0
+  }
+}

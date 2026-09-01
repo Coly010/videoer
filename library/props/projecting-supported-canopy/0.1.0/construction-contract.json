@@ -1,0 +1,24 @@
+{
+  "roofDrainage": {
+    "kind": "single-fall-projecting-roof",
+    "fallMeters": 0.17,
+    "runMeters": 0.98,
+    "gradient": 0.17346938775510207,
+    "dischargeEdge": "front",
+    "direction": [
+      0,
+      -0.17346938775510207,
+      -1
+    ]
+  },
+  "construction": {
+    "layeredRoof": true,
+    "covering": "slate",
+    "structuralDeck": "timber",
+    "flashing": "metal",
+    "soffitSlatCount": 7,
+    "roofTileCount": 50,
+    "roofTileRows": 4,
+    "bracketCount": 3
+  }
+}

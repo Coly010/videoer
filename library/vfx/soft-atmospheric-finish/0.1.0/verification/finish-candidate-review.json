@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "assetId": "vfx.soft-atmospheric-finish",
+  "decision": "accepted",
+  "reviewer": "Codex visual QA",
+  "reviewedAt": "2026-09-01T10:36:14Z",
+  "intendedUse": "medium",
+  "evidence": [
+    "verification/contact-sheet.png",
+    "verification/warm-interior/source-mid.png",
+    "verification/warm-interior/finished-mid.png",
+    "verification/warm-interior/finish-report.json",
+    "verification/cool-interior/source-mid.png",
+    "verification/cool-interior/finished-mid.png",
+    "verification/cool-interior/finish-report.json"
+  ],
+  "strengths": [
+    "The restrained contrast and saturation treatment improves material separation without replacing the source lighting design.",
+    "Warm plaster remains tonally differentiated while the cool rainy scene preserves its blue-orange practical-light relationship.",
+    "Thresholded bloom retains bright fixture shapes and does not create broad halos or erase highlight structure.",
+    "The corrected colour-channel treatment avoids the blue central island and shadow banding visible in the rejected colorbalance iteration.",
+    "The finish transfers across square warm-material and vertical dark-atmospheric sources without changing delivery topology."
+  ],
+  "limitations": [
+    "This is a display-referred medium-distance finishing profile, not a substitute for physically authored lighting, exposure, material response, depth grading, or shot-specific colour direction.",
+    "The deliberately subtle bloom, vignette, and grain may be nearly invisible after aggressive social-platform recompression and should not be intensified globally to compensate.",
+    "Hero close-ups and HDR mastering require separate profiles and dedicated skin-tone and highlight evidence."
+  ],
+  "notes": "Accepted on the third visual iteration. Iteration one crushed dark coverage and introduced a green-biased cast. Iteration two exposed that FFmpeg colorbalance on the selected planar path created severe shadow hue segmentation. The final implementation uses luminance-preserving color-channel gains and a reduced vignette while retaining fail-closed black/highlight gates."
+}

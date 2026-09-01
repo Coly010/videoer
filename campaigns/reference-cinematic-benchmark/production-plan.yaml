@@ -1,0 +1,211 @@
+schemaVersion: 1
+campaignId: reference-cinematic-benchmark
+title: Original rainy bookshop cinematic benchmark
+summary: >-
+  A recurring original character crosses a rain-darkened old-city street, notices a warmly lit
+  bookshop, enters through an interactive door, reads a significant book, and yields to a title and
+  cover reveal. The campaign exercises the supplied reference's technical grammar without copying
+  its characters, setting, typography, or book identity.
+shots:
+  - id: city-establish
+    purpose: Establish a narrow wet old-city street, distant tower, rain, and warm practical lights.
+    durationSeconds: 1.4
+    requirements: [street, wet-stone, rainy-dusk, exterior-lighting]
+    camera: { preset: high-angle-establish, movement: slow-push }
+    lighting: { rig: dusk-exterior, practicals: warm }
+    continuityGroup: bookshop-location
+  - id: character-approach
+    purpose: Introduce the recurring character walking past the bookshop in profile.
+    durationSeconds: 2.4
+    requirements: [street, heroine, dark-dress, walk, rainy-dusk, exterior-lighting]
+    actions:
+      - actor: heroine
+        motion: walk.cautious
+        durationSeconds: 2.4
+    camera: { preset: lateral-track, subject: heroine }
+    lighting: { rig: dusk-exterior, key: shop-window }
+    continuityGroup: bookshop-location
+  - id: window-attraction
+    purpose: Track closer as the character notices the warm bookshop window.
+    durationSeconds: 1.8
+    requirements: [street, heroine, dark-dress, turn, rainy-dusk, exterior-lighting]
+    actions:
+      - actor: heroine
+        motion: walk.cautious
+        durationSeconds: 1.8
+      - actor: heroine
+        motion: turn.head-left
+        target: shop-window
+        startSeconds: 0.8
+    camera: { preset: shoulder-height-track, framing: medium-profile }
+    lighting: { rig: dusk-exterior, key: shop-window }
+    continuityGroup: bookshop-location
+  - id: window-pause
+    purpose: Hold character identity while gaze and body orientation settle toward the window.
+    durationSeconds: 1.6
+    requirements: [street, heroine, dark-dress, turn, rainy-dusk, exterior-lighting]
+    actions:
+      - actor: heroine
+        motion: turn.body-left
+        target: shop-window
+        durationSeconds: 1.2
+    camera: { preset: slow-push, framing: medium-close-profile }
+    lighting: { rig: dusk-exterior, key: shop-window }
+    continuityGroup: bookshop-location
+  - id: enter-bookshop
+    purpose: Character reaches the actual handle, opens the door, and crosses the threshold.
+    durationSeconds: 1.8
+    requirements: [street, shop-door, heroine, dark-dress, open-door, rainy-dusk, exterior-lighting]
+    actions:
+      - actor: heroine
+        motion: open-door
+        target: shop-door.handle
+        durationSeconds: 1.8
+    camera: { preset: locked, framing: medium-rear-three-quarter }
+    lighting: { rig: threshold-mixed-light }
+    continuityGroup: bookshop-location
+  - id: discover-book
+    purpose: Preserve the character and wardrobe inside while she holds, opens, and reads a book.
+    durationSeconds: 2.2
+    requirements: [shop-interior, heroine, dark-dress, book, read-book, interior-lighting]
+    actions:
+      - actor: heroine
+        motion: hold-book
+        target: significant-book
+        durationSeconds: 2.2
+      - actor: heroine
+        motion: read-book
+        target: significant-book
+        startSeconds: 0.5
+        durationSeconds: 1.7
+    camera: { preset: slow-push, framing: medium-close }
+    lighting: { rig: warm-shop-interior, window-fill: cool }
+    continuityGroup: bookshop-location
+  - id: title-reveal
+    purpose: Return to the rainy city motif and reveal original campaign copy with editorial restraint.
+    durationSeconds: 1.8
+    requirements: [street, rainy-dusk, title-treatment]
+    camera: { preset: locked }
+    lighting: { rig: dusk-exterior }
+  - id: cover-reveal
+    purpose: Finish with the supplied campaign cover and a legible call to action.
+    durationSeconds: 2
+    requirements: [cover-art, title-treatment]
+    camera: { preset: product-studio-push }
+    lighting: { rig: product-studio }
+requirements:
+  - id: street
+    type: environment
+    description: Deterministic narrow old-city bookshop street with continuous exterior geometry.
+    requiredShots:
+      [
+        city-establish,
+        character-approach,
+        window-attraction,
+        window-pause,
+        enter-bookshop,
+        title-reveal,
+      ]
+    tags: [old-city, narrow-street, bookshop]
+    capabilities: [deterministic-seed, named-paths, promotable-asset]
+  - id: shop-interior
+    type: environment
+    description: Warm bookshop interior spatially consistent with the exterior window and door.
+    requiredShots: [discover-book]
+    tags: [bookshop, shelves, warm-interior]
+    capabilities: [deterministic-seed, exterior-continuity, named-interaction-points]
+  - id: heroine
+    type: character
+    description: Original recurring adult woman with stable face, proportions, hair, skeleton, and skinning.
+    requiredShots:
+      [character-approach, window-attraction, window-pause, enter-bookshop, discover-book]
+    tags: [adult, woman, dark-hair, recurring]
+    capabilities: [canonical-humanoid-rig, skinned-mesh, identity-reference, motion-retargeting]
+  - id: dark-dress
+    type: clothing
+    description: Long dark period-inspired dress fitted to the heroine and stable across exterior and interior shots.
+    requiredShots:
+      [character-approach, window-attraction, window-pause, enter-bookshop, discover-book]
+    tags: [long-dress, dark, period-inspired]
+    capabilities: [canonical-humanoid-fit, walk-deformation, reusable-material]
+  - id: shop-door
+    type: prop
+    description: Wooden glazed bookshop door aligned between exterior and interior scenes.
+    requiredShots: [enter-bookshop]
+    tags: [wooden, glazed, bookshop]
+    capabilities: [hinge, handle-interaction-point, collision-volume]
+  - id: book
+    type: prop
+    description: Original hardback book with openable cover and hand attachment points.
+    requiredShots: [discover-book]
+    tags: [book, hardback, significant]
+    capabilities: [openable-cover, left-hand-grip, right-hand-grip, gaze-target]
+  - id: wet-stone
+    type: material
+    description: Procedural wet stone and cobble material with readable roughness variation.
+    requiredShots: [city-establish]
+    tags: [stone, cobble, wet]
+    capabilities: [procedural, albedo, normal, roughness]
+  - id: walk
+    type: motion
+    description: Restrained cautious walking cycle with root motion and grounded feet.
+    requiredShots: [character-approach]
+    tags: [walk, cautious]
+    capabilities: [canonical-humanoid, root-motion, foot-contact]
+  - id: turn
+    type: motion
+    description: Blendable head and body turn toward a scene target while walking or pausing.
+    requiredShots: [window-attraction, window-pause]
+    tags: [turn, gaze]
+    capabilities: [canonical-humanoid, additive-blend, gaze-target]
+  - id: open-door
+    type: motion
+    description: Multi-phase door interaction resolving hand IK against the real handle transform.
+    requiredShots: [enter-bookshop]
+    tags: [door, reach, interaction]
+    capabilities: [hand-ik, target-resolution, phase-sequencing, root-motion]
+  - id: read-book
+    type: motion
+    description: Blendable hold-book and read-book actions with two-hand attachment and gaze.
+    requiredShots: [discover-book]
+    tags: [book, hold, read]
+    capabilities: [two-hand-ik, prop-attachment, gaze-target, additive-blend]
+  - id: rainy-dusk
+    type: vfx
+    description: Depth-aware rain, restrained fog, wet reflections, and atmospheric separation.
+    requiredShots:
+      [
+        city-establish,
+        character-approach,
+        window-attraction,
+        window-pause,
+        enter-bookshop,
+        title-reveal,
+      ]
+    tags: [rain, fog, dusk]
+    capabilities: [camera-depth, deterministic-seed, foreground-background]
+  - id: exterior-lighting
+    type: environment
+    description: Overcast dusk lighting rig with warm bookshop practicals and coherent exposure.
+    requiredShots:
+      [city-establish, character-approach, window-attraction, window-pause, enter-bookshop]
+    tags: [lighting-rig, dusk, warm-practicals]
+    capabilities: [reusable-rig, coherent-exposure]
+  - id: interior-lighting
+    type: environment
+    description: Warm bookshop interior rig with cool window fill and readable face lighting.
+    requiredShots: [discover-book]
+    tags: [lighting-rig, warm-interior, cool-fill]
+    capabilities: [reusable-rig, face-key, coherent-exposure]
+  - id: title-treatment
+    type: material
+    description: Original restrained serif typography and subtle magical motif for title and CTA.
+    requiredShots: [title-reveal, cover-reveal]
+    tags: [typography, title, editorial]
+    capabilities: [vertical-safe-area, deterministic-render]
+  - id: cover-art
+    type: prop
+    description: Campaign-owned cover artwork prepared for a dimensional final reveal.
+    requiredShots: [cover-reveal]
+    tags: [cover, campaign-supplied]
+    capabilities: [front-texture, dimensional-reveal]

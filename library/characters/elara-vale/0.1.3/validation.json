@@ -1,0 +1,17 @@
+{
+  "valid": true,
+  "issues": [],
+  "stats": {
+    "vertices": 4247,
+    "triangles": 7840,
+    "joints": 22,
+    "skinned": true,
+    "morphTargets": 0
+  },
+  "dressDrape": {
+    "valid": true,
+    "issues": [],
+    "hemVertexCount": 99,
+    "maximumHemNonPelvisWeight": 0.07864851609824634
+  }
+}

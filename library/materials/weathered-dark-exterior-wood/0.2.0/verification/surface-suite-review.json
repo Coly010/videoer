@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "materialAssetIds": [
+    "material.old-city-dark-brick",
+    "material.rain-aged-mineral-plaster",
+    "material.weathered-dark-exterior-wood",
+    "material.aged-limestone-trim",
+    "material.warm-lime-plaster-interior",
+    "material.oiled-dark-bookshop-wood",
+    "material.old-city-window-glazing"
+  ],
+  "decision": "accepted",
+  "reviewer": "codex-visual-review",
+  "reviewedAt": "2026-09-01T07:45:00.000Z",
+  "intendedShotDistance": "medium",
+  "strengths": [
+    "Brick bond, directional exterior and interior wood grain, glazing transmission, rain-aged plaster history and warm/cool material separation survive real architectural assemblies rather than only isolated swatches.",
+    "Exterior weathering is declared in real metre scales and remains independent from host-object bounds.",
+    "The same renderer-independent definitions remain legible under neutral overcast exterior and off-axis warm-key/cool-fill interior lighting."
+  ],
+  "limitations": [
+    "The suite is accepted for background and medium shots, not hero macro material photography.",
+    "Limestone and plaster structure is intentionally restrained and depends on grazing light; neither contains scanned displacement or unique damage decals.",
+    "The interior alcove is a verification fixture rather than a finished room and contains no populated shelf inventory.",
+    "Glazing dirt and scratches remain procedural and subtle; close-up condensation, fingerprints, chips and edge sealing are not claimed."
+  ],
+  "notes": "Accepted only when fail-closed verification binds every material to its relevant covered gallery entity, four diagnostic views, complete geometry/material identity, and the physical glazing or exterior-weathering semantics applicable to that surface."
+}

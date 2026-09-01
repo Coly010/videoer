@@ -1,0 +1,297 @@
+schemaVersion: 1
+id: campaign.voices-of-midnight-documentary
+fps: 24
+resolution: { width: 640, height: 360, percentage: 100 }
+assetLibrary: ../../library
+
+geometry:
+  - id: platform
+    library:
+      type: environment
+      query: night transit dialogue stage
+      tags: [transit, platform, dialogue]
+      capabilities:
+        [deterministic-geometry, dialogue-blocking-anchors, two-character-camera-anchors]
+      preferredAsset: { id: environment.night-transit-dialogue-stage, version: 1.0.0 }
+      artifactRole: geometry
+  - id: witness
+    library:
+      type: character
+      query: Elara Vale speaking rig
+      tags: [humanoid, woman, speech, facial-animation]
+      capabilities: [canonical-humanoid-rig, canonical-english-visemes, speech-performance-binding]
+      preferredAsset: { id: character.elara-vale-speaking, version: 1.0.0 }
+      artifactRole: geometry
+
+audioSources:
+  - id: witness-line-audio
+    library:
+      type: audio
+      query: Last Call provider-free dialogue
+      tags: [speech, dialogue, english, provider-free]
+      capabilities: [provider-free-speech, native-phoneme-events, deterministic-waveform]
+      preferredAsset: { id: audio.last-call-dialogue, version: 1.0.0 }
+      artifactRole: audio
+
+motions:
+  - id: witness-line-performance
+    library:
+      type: motion
+      query: Last Call spoken facial performance
+      tags: [speech, dialogue, viseme, facial-animation]
+      capabilities: [canonical-english-visemes, exact-frame-phoneme-timing, audiovisual-sync]
+      preferredAsset: { id: motion.last-call-line, version: 1.0.0 }
+      artifactRole: motion
+
+motionTimelines: []
+
+overlays:
+  - id: documentary-title
+    path: work/editorial/documentary-title.png
+    width: 640
+    height: 360
+    font: { family: Cormorant Garamond, licence: OFL-1.1 }
+    lines:
+      - {
+          text: VOICES OF MIDNIGHT,
+          y: 44,
+          fontSize: 45,
+          color: '0xf2efe8',
+          borderWidth: 2,
+          borderColor: '0x02050a@0.95',
+        }
+      - {
+          text: ONE PLATFORM. MANY DEPARTURES.,
+          y: 300,
+          fontSize: 18,
+          color: '0x72d8eb',
+          borderWidth: 2,
+          borderColor: '0x02050a@0.95',
+        }
+
+soundtrackPath: work/audio/soundtrack.wav
+soundtrack:
+  schemaVersion: 1
+  id: audio.voices-of-midnight-documentary
+  durationSeconds: 6
+  sampleRate: 48000
+  channels: 2
+  cues:
+    - {
+        id: station-room-tone,
+        kind: noise-bed,
+        startSeconds: 0,
+        endSeconds: 6,
+        gain: 0.02,
+        seed: 7714,
+        purpose: Continuous observational location tone,
+      }
+    - {
+        id: witness-line,
+        kind: audio-source,
+        source: witness-line-audio,
+        startSeconds: 0.25,
+        endSeconds: 2.75,
+        gain: 0.82,
+        purpose: Immutable verified testimony source,
+      }
+    - {
+        id: reflective-bed,
+        kind: tone-bed,
+        startSeconds: 2.75,
+        endSeconds: 6,
+        gain: 0.035,
+        frequencyHz: 98,
+        purpose: Carry the montage from testimony into place and title,
+      }
+  metadata: { providerFree: true, campaignClass: documentary-montage }
+
+speechPublications: []
+
+audiovisualBindings:
+  - id: witness-line-sync
+    motion: witness-line-performance
+    audioCue: witness-line
+    targetGeometry: witness
+    toleranceFrames: 1
+
+shots:
+  - id: witness-testimony
+    frames: 72
+    entities:
+      - { id: platform, geometry: platform, role: environment }
+      - id: witness
+        geometry: witness
+        role: character
+        placement: { entityId: platform, attachmentId: dialogue-a }
+        transform: { position: [0, 0, 0], rotation: [0, 1.5707963268, 0], scale: [1, 1, 1] }
+        motion: { source: witness-line-performance, startFrame: 6, endFrame: 66 }
+    camera:
+      keyframes:
+        - {
+            time: 0,
+            position: { world: [-3.05, 1.58, -1] },
+            target: { world: [-1.15, 1.52, -1] },
+            lensMillimeters: 68,
+          }
+        - {
+            time: 3,
+            position: { world: [-2.94, 1.59, -1.04] },
+            target: { world: [-1.15, 1.53, -1] },
+            lensMillimeters: 72,
+          }
+    lights: &documentary-lights
+      - {
+          id: available-cool-key,
+          type: area,
+          position: [-2.4, 2.2, -2.2],
+          target: [-1.15, 1.48, -1],
+          color: [0.72, 0.88, 1],
+          energy: 470,
+          sizeMeters: 2.4,
+        }
+      - {
+          id: practical-amber-rim,
+          type: area,
+          position: [0.2, 2.1, 0.4],
+          target: [-1.15, 1.4, -1],
+          color: [1, 0.3, 0.08],
+          energy: 320,
+          sizeMeters: 1.8,
+        }
+    atmosphere: &documentary-air
+      worldColor: [0.003, 0.006, 0.014]
+      fogColor: [0.035, 0.055, 0.09]
+      fogDensity: 0.004
+      rain: { enabled: false }
+    renderGates:
+      - { id: testimony-visible, type: frame-visibility, maximumBlackPercentage: 80 }
+      - { id: testimony-highlight-detail, type: frame-overexposure, maximumWhitePercentage: 14 }
+      - {
+          id: testimony-closeup,
+          type: subject-coverage,
+          entityId: witness,
+          minimumVisibleAreaPercentage: 8,
+          minimumVisibleScreenHeightPercentage: 60,
+          maximumVisibleScreenHeightPercentage: 100,
+        }
+    landmarks:
+      - {
+          id: witness-settles,
+          progress: 0,
+          description: Observational testimony begins from neutral rest,
+        }
+      - {
+          id: testimony-articulates,
+          progress: 0.18,
+          description: Published facial performance and audio articulate in sync,
+        }
+      - {
+          id: witness-finishes,
+          progress: 1,
+          description: Testimony resolves before the montage cutaway,
+        }
+    metadata: { campaignClass: documentary-montage, grammar: direct-testimony }
+
+  - id: platform-cutaway
+    frames: 36
+    entities:
+      - { id: platform, geometry: platform, role: environment }
+    camera:
+      keyframes:
+        - {
+            time: 0,
+            position:
+              { entityId: platform, attachmentId: dialogue-wide-camera, offset: [-1.4, -0.4, 1.2] },
+            target:
+              { entityId: platform, attachmentId: dialogue-wide-focus, offset: [0, -0.3, 1.6] },
+            lensMillimeters: 54,
+          }
+        - {
+            time: 1.5,
+            position:
+              {
+                entityId: platform,
+                attachmentId: dialogue-wide-camera,
+                offset: [-1.0, -0.32, 0.6],
+              },
+            target:
+              { entityId: platform, attachmentId: dialogue-wide-focus, offset: [0, -0.25, 1.1] },
+            lensMillimeters: 58,
+          }
+    lights: *documentary-lights
+    atmosphere: *documentary-air
+    renderGates:
+      - { id: cutaway-visible, type: frame-visibility, maximumBlackPercentage: 82 }
+      - { id: cutaway-highlight-detail, type: frame-overexposure, maximumWhitePercentage: 14 }
+    landmarks:
+      - {
+          id: empty-bench,
+          progress: 0,
+          description: Environmental detail carries meaning after testimony,
+        }
+      - {
+          id: platform-memory,
+          progress: 1,
+          description: Slow observational cutaway preserves place and tone,
+        }
+    metadata: { campaignClass: documentary-montage, grammar: environmental-cutaway }
+
+  - id: documentary-resolve
+    frames: 36
+    entities:
+      - { id: platform, geometry: platform, role: environment }
+    camera:
+      keyframes:
+        - {
+            time: 0,
+            position: { entityId: platform, attachmentId: dialogue-wide-camera },
+            target: { entityId: platform, attachmentId: dialogue-wide-focus },
+            lensMillimeters: 30,
+          }
+        - {
+            time: 1.5,
+            position:
+              { entityId: platform, attachmentId: dialogue-wide-camera, offset: [0, 0.05, 0.35] },
+            target: { entityId: platform, attachmentId: dialogue-wide-focus },
+            lensMillimeters: 32,
+          }
+    lights: *documentary-lights
+    atmosphere: *documentary-air
+    overlays:
+      [
+        {
+          overlay: documentary-title,
+          startSeconds: 0,
+          endSeconds: 1.5,
+          fadeInSeconds: 0.35,
+          fadeOutSeconds: 0,
+        },
+      ]
+    renderGates:
+      - { id: resolve-visible, type: frame-visibility, maximumBlackPercentage: 82 }
+      - { id: resolve-highlight-detail, type: frame-overexposure, maximumWhitePercentage: 14 }
+    landmarks:
+      - {
+          id: place-widens,
+          progress: 0,
+          description: The individual account opens into collective place,
+        }
+      - {
+          id: documentary-title-resolves,
+          progress: 1,
+          description: Editorial framing names the documentary series,
+        }
+    metadata: { campaignClass: documentary-montage, grammar: thematic-title-resolution }
+
+delivery:
+  id: edit.voices-of-midnight-documentary
+  directory: delivery
+  codec: h264
+  pixelFormat: yuv420p
+  fastStart: true
+
+metadata:
+  conformancePurpose: downstream-reuse-of-verified-speech-geometry-audio-and-motion
+  campaignClass: documentary-montage
+  bespokeOrchestrationSourceFiles: 0

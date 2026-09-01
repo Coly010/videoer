@@ -1,0 +1,72 @@
+schemaVersion: 1
+id: prop.potted-shrub
+version: 0.1.0
+type: prop
+title: Galvanized potted branching shrub
+description: Project-owned upright branching shrub with three-tone foliage,
+  visible branches, soil, galvanized planter and named placement/foliage
+  anchors.
+status: verified
+tags:
+  - vegetation
+  - planter
+  - set-dressing
+  - portable
+  - inhabited-environment
+capabilities:
+  - portable-geometry
+  - ground-placement
+  - surface-normal-alignment
+  - named-foliage-anchor
+  - medium-background-quality-tier
+source:
+  kind: procedural
+  generator: videoer.potted-vegetation.v1
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: geometry
+    path: geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: 129ea33ea4671e97494dc63d5c745227215eff23cfa33eae9de935961108784c
+  - role: validation
+    path: validation.json
+    mediaType: application/json
+    sha256: 31d8d8c6877d9ac57306eb595010c0f90e5d97aaefa3ed92ff63d24b8bf1ab9d
+  - role: historic-courtyard-family-contact-sheet
+    path: verification/historic-courtyard-family-contact-sheet.png
+    mediaType: image/png
+    sha256: e2710a1b845d31b7a736423e6c539707d36b6b964499a6a6b8750df883d159fd
+  - role: contemporary-rooftop-family-contact-sheet
+    path: verification/contemporary-rooftop-family-contact-sheet.png
+    mediaType: image/png
+    sha256: 690895f31b39b8f3f86ea430723328a9feb0d3a50de28191ff01bc47f0eacce3
+  - role: family-transfer-summary
+    path: verification/family-transfer-summary.json
+    mediaType: application/json
+    sha256: 34392d12e30aed3661f7638770b60ecf9e3207a953203f91d85045cecc79fce6
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - three-3d
+    - blender-headless
+  requires: []
+verification:
+  checks:
+    - geometry.topology
+    - geometry.material-groups
+    - attachments.ground-pot-and-foliage
+    - visual.historic-courtyard-family-transfer-accepted
+    - visual.contemporary-rooftop-family-transfer-accepted
+    - prop.non-flat-placement-accepted
+    - prop.medium-background-shot-distance-accepted
+  artifacts:
+    - verification/historic-courtyard-family-contact-sheet.png
+    - verification/contemporary-rooftop-family-contact-sheet.png
+    - verification/family-transfer-summary.json
+  verifiedAt: 2026-09-01T08:40:11.000Z

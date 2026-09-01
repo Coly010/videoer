@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "derivationKind": "speech-performance",
+  "derivedAssetId": "motion.last-call-line",
+  "derivedMotionSha256": "44df32625d70acdb66e422a33f2e959c9884d6ff11748f0a4759b9bca3c1609c",
+  "audio": {
+    "libraryAsset": {
+      "id": "audio.last-call-dialogue",
+      "version": "1.0.0"
+    },
+    "sha256": "c852a3bbb4c95573eb74e26021f6c7a1062abacb1f7907014b999f3020210de8",
+    "eventsSha256": "1b844d7406717497a6d964c1973c8052fc1680d22ed2ebaaf8f13762b6174aef"
+  },
+  "targetGeometry": {
+    "libraryAsset": {
+      "id": "character.elara-vale-speaking",
+      "version": "1.0.0"
+    },
+    "sha256": "906c496decf366395be06a017ad04ccc01de79d1a9f69cfb8572d753b5b833ec"
+  },
+  "visemeVerification": {
+    "valid": true,
+    "issues": [],
+    "checks": {
+      "phonemeCount": 25,
+      "activeVisemes": [
+        "viseme-aa",
+        "viseme-ee",
+        "viseme-fv",
+        "viseme-mbp"
+      ],
+      "maximumOnsetQuantizationSeconds": 0.019333333333333202,
+      "toleranceSeconds": 0.041666666666666664,
+      "exactFrameGrid": true
+    }
+  },
+  "targetCompatibility": {
+    "valid": true,
+    "issues": [],
+    "stats": {
+      "tracks": 0,
+      "morphTracks": 5,
+      "durationSeconds": 2.5,
+      "loop": false
+    }
+  },
+  "audiovisualSync": {
+    "valid": true,
+    "toleranceSeconds": 0.041666666666666664,
+    "cue": {
+      "startSeconds": 0.25,
+      "endSeconds": 2.75
+    },
+    "bindings": [
+      {
+        "shot": "last-call-closeup",
+        "startSeconds": 0.25,
+        "endSeconds": 2.75
+      }
+    ]
+  }
+}

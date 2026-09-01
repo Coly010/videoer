@@ -1,0 +1,117 @@
+schemaVersion: 1
+id: vfx.rainy-dusk-depth
+version: 0.2.0
+type: vfx
+title: Camera-depth rainy dusk atmosphere
+description: Deterministic wind-driven camera-depth rain, varied drop motion,
+  world-space ground splashes, and restrained volumetric dusk fog.
+status: verified
+tags:
+  - rain
+  - fog
+  - dusk
+  - wind
+  - ground-splashes
+capabilities:
+  - camera-depth
+  - deterministic-seed
+  - foreground-background
+  - wind-driven-streaks
+  - world-space-surface-response
+source:
+  kind: procedural
+  generator: videoer.camera-depth-rain.v1
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: vfx
+    path: vfx.json
+    mediaType: application/vnd.videoer.vfx+json
+    sha256: 8f17a0f3d58d738d133cd397b02279cfda5a3f0fd03af98ae62a0b38d65d9d6c
+  - role: preview
+    path: verification/rainy-dusk-vfx-probe.mp4
+    mediaType: video/mp4
+    sha256: 5260b39faa7ba18173b070b1d18c9837117f27f6737737ae1336ddbce4e3d530
+  - role: blender-source
+    path: verification/rainy-dusk-vfx-probe.blend
+    mediaType: application/x-blender
+    sha256: 51176dbf2e481935c853a48abab71b0820ea7f5bd13defbe3dae2c12259fe15c
+  - role: verification-verification-contact-sheet
+    path: verification/contact-sheet.png
+    mediaType: image/png
+    sha256: fd1da80575f721dcd258afc535761dd4e2996edde8ad6899a8b399f96c0b1827
+  - role: verification-verification-scene-render
+    path: verification/scene-render.json
+    mediaType: application/json
+    sha256: 02afee9c194771c90c6c3f77d2de6b1cfdc07e9ea3871dd283acda08403f362c
+  - role: ground-response-contact-sheet
+    path: verification/ground-response-final/contact-sheet.png
+    mediaType: image/png
+    sha256: 7bdba15b00cefe994bbf8b44b3b3bbd1734872ca2b4a7010116b76f48259b081
+  - role: ground-response-preview
+    path: verification/ground-response-final/atmospheric-ground-response-probe.mp4
+    mediaType: video/mp4
+    sha256: b614527c566d0eea450e9658b01344654db6a5531da9737c429e6354e5279bf6
+  - role: ground-response-render-report
+    path: verification/ground-response-final/scene-render.json
+    mediaType: application/json
+    sha256: e7cb4cb2856ea262d2d5fe6a492776086f9bf0b6658e22a256231fc883cb515c
+  - role: old-city-transfer-contact-sheet
+    path: verification/transfer/old-city-water-final/verification/contact-sheet.png
+    mediaType: image/png
+    sha256: 463e7a603856143549e124ef5a63a7ec223158d60cfadb352127f11662c53440
+  - role: old-city-transfer-report
+    path: verification/transfer/old-city-water-final/verification/scene-probe.json
+    mediaType: application/json
+    sha256: 1e8fb93905f8a0ad616a4c08f65cd6c51f9e6337c4d754579c0144ad5c806ca5
+  - role: night-transit-transfer-contact-sheet
+    path: verification/transfer/night-transit-water-final/verification/contact-sheet.png
+    mediaType: image/png
+    sha256: 3b9b61b72122de2dc617cd188a63ee14eb7a1384f2acfa0b0eac8bee2554f5c7
+  - role: night-transit-transfer-report
+    path: verification/transfer/night-transit-water-final/verification/scene-probe.json
+    mediaType: application/json
+    sha256: 485a026ace263ec07898a3a8e2606f3b169f47c8ba1e15b0b85ef43433651ecd
+  - role: night-transit-receiver-adaptation
+    path: verification/transfer/night-transit-water-final/adaptation-report.json
+    mediaType: application/json
+    sha256: acbc7c74c3e21f699fcf4fa491a5435850e1727cdeb64eadc8f12a9323abe7b4
+  - role: qualitative-review
+    path: verification/vfx-candidate-review.json
+    mediaType: application/json
+    sha256: ab2a499920d7c2007cdb14ec6a3a0f0a22e7ece61d1bedc4b4fa847d8bb0f3cb
+compatibility:
+  coordinateSystem: camera-relative-right-handed-metres
+  renderers:
+    - blender-headless
+  requires: []
+verification:
+  checks:
+    - vfx.three-depth-bands
+    - vfx.non-overlapping-depth-intervals
+    - vfx.unique-deterministic-seeds
+    - vfx.camera-relative-continuity
+    - vfx.bounded-length-and-speed-variation
+    - vfx.world-space-ground-splash-bounds
+    - visual.depth-separated-rain-and-restrained-fog-accepted
+    - visual.close-ground-response-accepted
+    - vfx.complete-temporal-ground-response
+    - visual.old-city-intended-camera-transfer-accepted
+    - vfx.receiver-bounds-only-adaptation
+    - visual.night-transit-transfer-accepted
+  artifacts:
+    - verification/ground-response-final/contact-sheet.png
+    - verification/ground-response-final/atmospheric-ground-response-probe.mp4
+    - verification/ground-response-final/scene-render.json
+    - verification/transfer/old-city-water-final/verification/contact-sheet.png
+    - verification/transfer/old-city-water-final/verification/scene-probe.json
+    - verification/transfer/night-transit-water-final/verification/contact-sheet.png
+    - verification/transfer/night-transit-water-final/verification/scene-probe.json
+    - verification/transfer/night-transit-water-final/adaptation-report.json
+    - verification/vfx-candidate-review.json
+  verifiedAt: 2026-09-01T04:46:36.000Z

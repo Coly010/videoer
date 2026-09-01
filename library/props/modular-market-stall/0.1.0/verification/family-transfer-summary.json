@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "familyId": "environment.market-world-family",
+  "memberAssetId": "prop.modular-market-stall",
+  "acceptedAt": "2026-09-01T10:03:00.000Z",
+  "transferSummaries": [
+    {
+      "kind": "historic-market-square",
+      "requestId": "layout.historic-market-square-market-world",
+      "hostAssetId": "environment.historic-market-square-market-host",
+      "completeMerchandisedClusterCount": 1,
+      "elevatedProduceBasketCount": 2,
+      "landmarkHashes": [
+        "98d45bd654f1256bf673311c5012b99d2757af3c3e65d6416affdf6ba870e254",
+        "df4ed898c23d50d96506d42b5b61a25fad32a742a24073e8bbaed5941ac118c6",
+        "c404ae9f715c41664136b73048eeec5ff94ae0900d8bc15a2ba432935c55e613"
+      ]
+    },
+    {
+      "kind": "contemporary-pop-up",
+      "requestId": "layout.contemporary-pop-up-market-world",
+      "hostAssetId": "environment.contemporary-pop-up-market-host",
+      "completeMerchandisedClusterCount": 1,
+      "elevatedProduceBasketCount": 2,
+      "landmarkHashes": [
+        "472e39b9fe192e55b9b4ba8691f577eb6be58bdbcec5d93596437b196f0fb570",
+        "591455dbc9612adeea7a459f134dc702f657f2411e86be9600b04aa2d40f1fb0",
+        "6f1ea1e7707802082c4d33d5b725149543525f7641f92acf0d472d16f6958aca"
+      ]
+    }
+  ],
+  "intendedShotDistance": "medium",
+  "limitations": [
+    "Accepted for background and medium shots only; basket weave and burlap fibres are procedural surface responses rather than close-up textile construction.",
+    "The provision sack uses deterministic gathered seams and a cinched profile rather than dynamic cloth simulation.",
+    "The host scenes prove transfer and circulation semantics but are verification fixtures, not publishable finished market environments."
+  ]
+}

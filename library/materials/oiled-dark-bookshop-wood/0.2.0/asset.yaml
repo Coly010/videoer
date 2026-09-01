@@ -1,0 +1,119 @@
+schemaVersion: 1
+id: material.oiled-dark-bookshop-wood
+version: 0.2.0
+type: material
+title: Oiled dark bookshop wood
+description: Warm dark shelving and counter wood with varied oil response and
+  close-range grain breakup.
+status: verified
+tags:
+  - wood
+  - interior
+  - shelving
+  - bookshop
+capabilities:
+  - procedural
+  - albedo
+  - normal
+  - roughness
+  - object-space-metre-scale
+  - deterministic-seed
+  - wet-coat
+  - medium-background-quality-tier
+source:
+  kind: procedural
+  generator: videoer.old-city-surface-library.v3
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: material
+    path: material.json
+    mediaType: application/vnd.videoer.material+json
+    sha256: 2b2412e2fe74894af2e4e286357713f2daed6781abc4cf078ba0955378d53cbb
+  - role: swatch-geometry
+    path: swatch-geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: 6b1954800dc5418aa72f04010d8db6b4b464f71404b62b53e56aa7050f11f708
+  - role: preview
+    path: verification/turntable.mp4
+    mediaType: video/mp4
+    sha256: 0ad17a652d06cb3c7243206a836873bc698f5779bd8d586cc1e23ef323ab75a2
+  - role: blender-source
+    path: verification/mannequin.blend
+    mediaType: application/x-blender
+    sha256: 0cf441baaf09bf2466edb6691fe9fe7ba371fc723805ed2afb29149e2f963e19
+  - role: verification-verification-top
+    path: verification/top.png
+    mediaType: image/png
+    sha256: 598a5f0e48597def4f21aa759ec34c3831dfca190b4e9f4d69b3fa93849591c8
+  - role: verification-verification-raking
+    path: verification/raking.png
+    mediaType: image/png
+    sha256: cec97016b8e147bd309b834ff0a4d78f156ce8db79231a95da0a72b7a31d0e52
+  - role: verification-verification-close
+    path: verification/close.png
+    mediaType: image/png
+    sha256: 1ae0bb42db7b2d74139a265decd03f23fa06d6e6f4334c251261099b7f6dd2b1
+  - role: verification-verification-glancing
+    path: verification/glancing.png
+    mediaType: image/png
+    sha256: f60a46edaba773e51a711f37868e798ec4e2acf7d89e435e8870e1cb8256ca3b
+  - role: verification-verification-contact-sheet
+    path: verification/contact-sheet.png
+    mediaType: image/png
+    sha256: aa487ed5b70b5f448a920fb6113b47db3d9fe625a8b69fa8f45959f2efb8f5b1
+  - role: exterior-architectural-transfer
+    path: verification/exterior-contact-sheet.png
+    mediaType: image/png
+    sha256: a92e9cb0d39c567dc4bc21dcf45878a9615427d2494e598d388cb6d3b28ca2d8
+  - role: exterior-transfer-report
+    path: verification/exterior-scene-render.json
+    mediaType: application/json
+    sha256: 5f0a6aa2d6e25071575ef5554552d41f21276b45c107eb012a7e86249c2919f1
+  - role: interior-architectural-transfer
+    path: verification/interior-contact-sheet.png
+    mediaType: image/png
+    sha256: d24ea4ce1738cff146ff73c0069dbc6a84af2cc6263a8b7df014a00b1a0ed468
+  - role: interior-transfer-report
+    path: verification/interior-scene-render.json
+    mediaType: application/json
+    sha256: ece12600d266cbed84fc328d8ff65c572d26b7e09e8493f0761fa8a4366bc7e5
+  - role: qualitative-suite-review
+    path: verification/surface-suite-review.json
+    mediaType: application/json
+    sha256: 7162568322f61a62f63afa3a4fd69fd027b6e36e8376d74ac75c5e98956827f2
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - three-3d
+    - blender-headless
+  requires: []
+verification:
+  checks:
+    - material.schema
+    - material.palette-variation
+    - material.object-space-metre-scale
+    - material.procedural-normal-relief
+    - material.roughness-range
+    - visual.material-diagnostic-views-accepted
+    - visual.architectural-transfer-accepted
+    - material.medium-background-shot-distance-accepted
+  artifacts:
+    - verification/top.png
+    - verification/raking.png
+    - verification/close.png
+    - verification/glancing.png
+    - verification/contact-sheet.png
+    - verification/turntable.mp4
+    - verification/mannequin.blend
+    - verification/exterior-contact-sheet.png
+    - verification/exterior-scene-render.json
+    - verification/interior-contact-sheet.png
+    - verification/interior-scene-render.json
+    - verification/surface-suite-review.json
+  verifiedAt: 2026-09-01T07:45:00.000Z

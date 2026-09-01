@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "kind": "contemporary-concrete",
+  "host": {
+    "facadePlaneZ": 0,
+    "clearSpanMeters": 6.8,
+    "eaveHeightMeters": 4.2,
+    "continuousMountingSurface": true
+  },
+  "asset": {
+    "kind": "facade-eave-span",
+    "facadePlaneZ": 0,
+    "minimumClearSpanMeters": 4.8,
+    "eaveHeightMeters": 4.2,
+    "minimumGroundClearanceMeters": 0.22,
+    "exteriorNormal": [
+      0,
+      0,
+      -1
+    ],
+    "requiresContinuousMountingSurface": true
+  },
+  "exactPortableGeometryReused": true
+}

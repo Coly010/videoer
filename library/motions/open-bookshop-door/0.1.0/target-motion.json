@@ -1,0 +1,621 @@
+{
+  "schemaVersion": 1,
+  "id": "interaction.open-bookshop-door.target",
+  "skeleton": "videoer.prop.bookshop-door.v1",
+  "durationSeconds": 4.8,
+  "loop": false,
+  "tracks": [
+    {
+      "joint": "door-leaf",
+      "property": "rotation-euler",
+      "space": "local-delta",
+      "keyframes": [
+        {
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 0.15,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 0.3,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 0.44999999999999996,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 0.6,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 0.75,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 0.8999999999999999,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 1.05,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 1.2,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 1.3499999999999999,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 1.5,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 1.65,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 1.7999999999999998,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 1.95,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 2.1,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 2.25,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 2.4,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 2.55,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 2.6999999999999997,
+          "value": [
+            0,
+            -0.00018543299016034192,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 2.85,
+          "value": [
+            0,
+            -0.031265584428525776,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 3,
+          "value": [
+            0,
+            -0.10658732689504355,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 3.15,
+          "value": [
+            0,
+            -0.2131384277343748,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 3.3,
+          "value": [
+            0,
+            -0.3379066542911805,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 3.4499999999999997,
+          "value": [
+            0,
+            -0.4678797739101218,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 3.5999999999999996,
+          "value": [
+            0,
+            -0.5900455539358598,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 3.75,
+          "value": [
+            0,
+            -0.6913917617130555,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 3.9,
+          "value": [
+            0,
+            -0.7589061645863702,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 4.05,
+          "value": [
+            0,
+            -0.78,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 4.2,
+          "value": [
+            0,
+            -0.78,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 4.35,
+          "value": [
+            0,
+            -0.78,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 4.5,
+          "value": [
+            0,
+            -0.78,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 4.6499999999999995,
+          "value": [
+            0,
+            -0.78,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 4.8,
+          "value": [
+            0,
+            -0.78,
+            0
+          ],
+          "easing": "linear"
+        }
+      ]
+    },
+    {
+      "joint": "handle",
+      "property": "rotation-euler",
+      "space": "local-delta",
+      "keyframes": [
+        {
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 0.15,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 0.3,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 0.44999999999999996,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 0.6,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 0.75,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 0.8999999999999999,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 1.05,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 1.2,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 1.3499999999999999,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 1.5,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 1.65,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 1.7999999999999998,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 1.95,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 2.1,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 2.25,
+          "value": [
+            -0.009084140624999959,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 2.4,
+          "value": [
+            -0.14783999999999983,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 2.55,
+          "value": [
+            -0.33581460937499985,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 2.6999999999999997,
+          "value": [
+            -0.42,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 2.85,
+          "value": [
+            -0.42,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 3,
+          "value": [
+            -0.42,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 3.15,
+          "value": [
+            -0.42,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 3.3,
+          "value": [
+            -0.42,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 3.4499999999999997,
+          "value": [
+            -0.42,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 3.5999999999999996,
+          "value": [
+            -0.42,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 3.75,
+          "value": [
+            -0.42,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 3.9,
+          "value": [
+            -0.42,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 4.05,
+          "value": [
+            -0.42,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 4.2,
+          "value": [
+            -0.42,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 4.35,
+          "value": [
+            -0.42,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 4.5,
+          "value": [
+            -0.42,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 4.6499999999999995,
+          "value": [
+            -0.42,
+            0,
+            0
+          ],
+          "easing": "linear"
+        },
+        {
+          "time": 4.8,
+          "value": [
+            -0.42,
+            0,
+            0
+          ],
+          "easing": "linear"
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "generator": "videoer.open-door-synthesis.v1",
+    "interaction": "interaction.open-bookshop-door"
+  }
+}

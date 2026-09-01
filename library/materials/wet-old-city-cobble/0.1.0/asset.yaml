@@ -1,0 +1,88 @@
+schemaVersion: 1
+id: material.wet-old-city-cobble
+version: 0.1.0
+type: material
+title: Procedural rain-darkened old-city cobble
+description: Renderer-independent wet cobble palette, relief-normal semantics,
+  and varied low roughness with a deterministic geometry swatch.
+status: verified
+tags:
+  - stone
+  - cobble
+  - wet
+  - old-city
+capabilities:
+  - procedural
+  - albedo
+  - normal
+  - roughness
+source:
+  kind: procedural
+  generator: videoer.wet-cobble-material.v1
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: material
+    path: material.json
+    mediaType: application/vnd.videoer.material+json
+    sha256: 8be86ea960244bd4f8a212a2879b6b5c92d8058109a1691578b02a25a61e2624
+  - role: swatch-geometry
+    path: swatch-geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: 6a0b397ff9de7e68e9ecd88bcffb7f1b675671b15ce8b0ef5836d20d051d74d5
+  - role: preview
+    path: verification/turntable.mp4
+    mediaType: video/mp4
+    sha256: 9babedf424df753daafccf91dbbcb586f40226e1fb2fc427a1b87eacda2d60dc
+  - role: blender-source
+    path: verification/mannequin.blend
+    mediaType: application/x-blender
+    sha256: 8f3f32c0989ba7294e2022cdd89f58e7740d6d7c63def19491ad6aa3288de741
+  - role: verification-verification-top
+    path: verification/top.png
+    mediaType: image/png
+    sha256: 8ef19bba9e8919125935cb43410eb766ea9bf5d37adc2a00c93af16933c0ad7d
+  - role: verification-verification-raking
+    path: verification/raking.png
+    mediaType: image/png
+    sha256: a9b93eddbfb72b6d05b47f7fe8abd4a874c2cd47f9d15576663b06158af60fa2
+  - role: verification-verification-close
+    path: verification/close.png
+    mediaType: image/png
+    sha256: 7608a87e41d39ee0a570d30c4ec63938349d30b734ffae5acd894eea606a14ab
+  - role: verification-verification-glancing
+    path: verification/glancing.png
+    mediaType: image/png
+    sha256: 0e0ac0e0512e24af652603bc041eba1d8bdb8baa0fbb4399a5c95b777698bfee
+  - role: verification-verification-contact-sheet
+    path: verification/contact-sheet.png
+    mediaType: image/png
+    sha256: 64d5bd8e98d24e0bb0aedc46899f6f67471c12c61930d495f7a8058ea142858e
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - three-3d
+    - blender-headless
+  requires: []
+verification:
+  checks:
+    - material.schema
+    - material.palette-variation
+    - material.geometry-normal-relief
+    - material.roughness-range
+    - visual.canonical-views
+    - visual.turntable
+  artifacts:
+    - verification/top.png
+    - verification/raking.png
+    - verification/close.png
+    - verification/glancing.png
+    - verification/contact-sheet.png
+    - verification/turntable.mp4
+    - verification/mannequin.blend
+  verifiedAt: 2026-08-30T22:11:46.372Z

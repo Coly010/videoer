@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "lighting-probe.gallery-interior-v03",
+  "sourceRigPath": "warm-interior/lighting-rig.json",
+  "environmentGeometryPath": "../../../../nocturne-exhibition-conformance/work/gallery/geometry.json",
+  "adaptation": {
+    "kind": "lighting-rig-transform-v1",
+    "assetId": "lighting.gallery-interior-v03-transfer",
+    "transform": { "translation": [-0.45, 0.15, -4.6], "yawRadians": 0, "uniformScale": 1 },
+    "energyScale": 0.92,
+    "purposeEnergyScale": { "key": 1.1, "fill": 1, "rim": 1.1, "practical": 1, "environment": 1 },
+    "colorMultiply": [0.96, 0.94, 1],
+    "worldColor": [0.004, 0.006, 0.014],
+    "metadata": {
+      "context": "unrelated-contemporary-gallery-transfer",
+      "sourceCandidate": "lighting.bookshop-warm-interior@0.1.0"
+    }
+  },
+  "witnessTransform": { "position": [0, 0, -2.2], "rotation": [0, 0, 0], "scale": [1, 1, 1] },
+  "camera": {
+    "start": { "position": [-0.95, 1.45, -5.35], "target": [0, 0.88, -2.2], "lensMillimeters": 44 },
+    "end": { "position": [-0.65, 1.48, -5.1], "target": [0, 0.9, -2.18], "lensMillimeters": 48 }
+  },
+  "resolution": { "width": 480, "height": 480, "percentage": 100 },
+  "exposureRegion": {
+    "x": 0.18,
+    "y": 0.12,
+    "width": 0.64,
+    "height": 0.78,
+    "maximumBlackPercentage": 55,
+    "maximumWhitePercentage": 10,
+    "minimumMidtonePercentage": 38
+  },
+  "metadata": {
+    "campaignClass": "lighting-transfer-conformance",
+    "environmentFamily": "contemporary-gallery",
+    "sourceEnvironmentFamily": "old-city-bookshop"
+  }
+}

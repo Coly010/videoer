@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "id": "audio.rainy-bookshop-score",
+  "durationSeconds": 15,
+  "sampleRate": 48000,
+  "channels": 2,
+  "cues": [
+    {
+      "id": "rain-bed",
+      "kind": "noise-bed",
+      "startSeconds": 0,
+      "endSeconds": 15,
+      "gain": 0.12,
+      "seed": 1847,
+      "purpose": "Continuous exterior rain and atmospheric continuity"
+    },
+    {
+      "id": "low-drone",
+      "kind": "tone-bed",
+      "startSeconds": 0,
+      "endSeconds": 15,
+      "gain": 0.025,
+      "frequencyHz": 55,
+      "purpose": "Low restrained dramatic foundation"
+    },
+    {
+      "id": "upper-drone",
+      "kind": "tone-bed",
+      "startSeconds": 0,
+      "endSeconds": 15,
+      "gain": 0.018,
+      "frequencyHz": 82.41,
+      "purpose": "Minor-color harmonic body"
+    },
+    {
+      "id": "door-foley",
+      "kind": "foley-noise",
+      "startSeconds": 7.82,
+      "endSeconds": 8.32,
+      "gain": 0.16,
+      "seed": 1848,
+      "purpose": "Short wooden handle and threshold accent"
+    },
+    {
+      "id": "page-foley",
+      "kind": "foley-noise",
+      "startSeconds": 9.72,
+      "endSeconds": 10.12,
+      "gain": 0.09,
+      "seed": 1849,
+      "purpose": "Soft page movement during book discovery"
+    },
+    {
+      "id": "title-rise",
+      "kind": "tonal-accent",
+      "startSeconds": 11.208333333333334,
+      "endSeconds": 13,
+      "gain": 0.045,
+      "frequencyHz": 220,
+      "purpose": "Editorial lift into title reveal"
+    },
+    {
+      "id": "cover-resolve",
+      "kind": "tonal-accent",
+      "startSeconds": 13,
+      "endSeconds": 15,
+      "gain": 0.05,
+      "frequencyHz": 110,
+      "purpose": "Stable tonal resolution under final cover"
+    }
+  ],
+  "metadata": {
+    "generator": "videoer.deterministic-soundtrack.v1",
+    "frameRate": 24,
+    "totalFrames": 360,
+    "providerFree": true
+  }
+}

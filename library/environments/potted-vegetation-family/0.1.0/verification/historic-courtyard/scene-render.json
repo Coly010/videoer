@@ -1,0 +1,360 @@
+{
+  "schemaVersion": 1,
+  "source": "/Users/colum/dev/personal/videoer/work/environments/potted-vegetation-family-v3/family/verification/historic-courtyard/scene.json",
+  "manifest": "/Users/colum/dev/personal/videoer/work/environments/potted-vegetation-family-v3/family/verification/historic-courtyard/resolved-scene.json",
+  "video": "/Users/colum/dev/personal/videoer/work/environments/potted-vegetation-family-v3/family/verification/historic-courtyard/potted-vegetation-historic-courtyard-transfer.mp4",
+  "blend": "/Users/colum/dev/personal/videoer/work/environments/potted-vegetation-family-v3/family/verification/historic-courtyard/potted-vegetation-historic-courtyard-transfer.blend",
+  "frames": [
+    {
+      "id": "right-context",
+      "progress": 0,
+      "description": "Right host context and sloped placement",
+      "path": "/Users/colum/dev/personal/videoer/work/environments/potted-vegetation-family-v3/family/verification/historic-courtyard/000-right-context.png"
+    },
+    {
+      "id": "frontal-layout",
+      "progress": 0.5,
+      "description": "Family silhouettes and clear circulation",
+      "path": "/Users/colum/dev/personal/videoer/work/environments/potted-vegetation-family-v3/family/verification/historic-courtyard/050-frontal-layout.png"
+    },
+    {
+      "id": "left-context",
+      "progress": 1,
+      "description": "Left host context and cross-variant material response",
+      "path": "/Users/colum/dev/personal/videoer/work/environments/potted-vegetation-family-v3/family/verification/historic-courtyard/100-left-context.png"
+    }
+  ],
+  "contactSheet": "/Users/colum/dev/personal/videoer/work/environments/potted-vegetation-family-v3/family/verification/historic-courtyard/contact-sheet.png",
+  "media": {
+    "streams": [
+      {
+        "index": 0,
+        "codec_name": "h264",
+        "codec_long_name": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+        "profile": "High",
+        "codec_type": "video",
+        "codec_tag_string": "avc1",
+        "codec_tag": "0x31637661",
+        "mime_codec_string": "avc1.64001e",
+        "width": 720,
+        "height": 406,
+        "coded_width": 720,
+        "coded_height": 406,
+        "has_b_frames": 2,
+        "sample_aspect_ratio": "1:1",
+        "display_aspect_ratio": "360:203",
+        "pix_fmt": "yuv420p",
+        "level": 30,
+        "chroma_location": "left",
+        "field_order": "progressive",
+        "is_avc": "true",
+        "nal_length_size": "4",
+        "id": "0x1",
+        "r_frame_rate": "24/1",
+        "avg_frame_rate": "24/1",
+        "time_base": "1/12288",
+        "start_pts": 0,
+        "start_time": "0.000000",
+        "duration_ts": 1536,
+        "duration": "0.125000",
+        "bit_rate": "900032",
+        "bits_per_raw_sample": "8",
+        "nb_frames": "3",
+        "extradata_size": 47,
+        "disposition": {
+          "default": 1,
+          "dub": 0,
+          "original": 0,
+          "comment": 0,
+          "lyrics": 0,
+          "karaoke": 0,
+          "forced": 0,
+          "hearing_impaired": 0,
+          "visual_impaired": 0,
+          "clean_effects": 0,
+          "attached_pic": 0,
+          "timed_thumbnails": 0,
+          "non_diegetic": 0,
+          "captions": 0,
+          "descriptions": 0,
+          "metadata": 0,
+          "dependent": 0,
+          "still_image": 0,
+          "multilayer": 0
+        },
+        "tags": {
+          "language": "und",
+          "handler_name": "VideoHandler",
+          "encoder": "Lavc libx264"
+        }
+      }
+    ],
+    "format": {
+      "filename": "/Users/colum/dev/personal/videoer/work/environments/potted-vegetation-family-v3/family/verification/historic-courtyard/potted-vegetation-historic-courtyard-transfer.mp4",
+      "nb_streams": 1,
+      "nb_programs": 0,
+      "nb_stream_groups": 0,
+      "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+      "format_long_name": "QuickTime / MOV",
+      "start_time": "0.000000",
+      "duration": "0.125000",
+      "size": "14958",
+      "bit_rate": "957312",
+      "probe_score": 100,
+      "tags": {
+        "major_brand": "isom",
+        "minor_version": "512",
+        "compatible_brands": "isomiso2avc1mp41",
+        "encoder": "Lavf63.1.101"
+      }
+    }
+  },
+  "verification": {
+    "schemaVersion": 1,
+    "status": "pass",
+    "checks": []
+  },
+  "evidenceRefresh": "new-pixel-render",
+  "renderProfile": {
+    "engine": "cycles-cpu",
+    "samples": 128,
+    "seed": 1729,
+    "denoise": true,
+    "intent": "deterministic-final"
+  },
+  "deterministicEvidence": {
+    "boundary": "cycles-cpu-fixed-seed-to-lossless-png-to-single-thread-x264",
+    "expected": "byte-identical-on-matching-runtime-and-input-fingerprint"
+  },
+  "renderChecks": [
+    {
+      "id": "renderer-camera-contract",
+      "status": "pass",
+      "message": "Renderer camera position, semantic target, lens, and tracking contract match the declarative path",
+      "measurements": {
+        "valid": true,
+        "trackingConstraint": "TRACK_TO",
+        "trackAxis": "TRACK_NEGATIVE_Z",
+        "upAxis": "UP_Y",
+        "interpolationImplementation": "frame-baked-declarative-v1",
+        "maximumPositionErrorMeters": 0,
+        "maximumTargetErrorMeters": 0,
+        "maximumLensErrorMillimeters": 0,
+        "positionToleranceMeters": 0.00001,
+        "targetToleranceMeters": 0.00001,
+        "lensToleranceMillimeters": 0.005,
+        "samples": [
+          {
+            "landmarkId": "right-context",
+            "frame": 1,
+            "positionErrorMeters": 0,
+            "targetErrorMeters": 0,
+            "lensErrorMillimeters": 0,
+            "actualLensMillimeters": 34,
+            "expectedLensMillimeters": 34
+          },
+          {
+            "landmarkId": "frontal-layout",
+            "frame": 2,
+            "positionErrorMeters": 0,
+            "targetErrorMeters": 0,
+            "lensErrorMillimeters": 0,
+            "actualLensMillimeters": 36,
+            "expectedLensMillimeters": 36
+          },
+          {
+            "landmarkId": "left-context",
+            "frame": 3,
+            "positionErrorMeters": 0,
+            "targetErrorMeters": 0,
+            "lensErrorMillimeters": 0,
+            "actualLensMillimeters": 34,
+            "expectedLensMillimeters": 34
+          }
+        ]
+      }
+    },
+    {
+      "id": "vegetation-visible",
+      "status": "pass",
+      "message": "Semantic frames retain the required visible image coverage",
+      "measurements": {
+        "maximumBlackPercentage": 45,
+        "allowedBlackPercentage": 72,
+        "perFrameBlackPercentage": [
+          45,
+          19,
+          38
+        ]
+      }
+    },
+    {
+      "id": "vegetation-highlight-detail",
+      "status": "pass",
+      "message": "Semantic frames retain highlight detail within the declared limit",
+      "measurements": {
+        "maximumWhitePercentage": 0,
+        "allowedWhitePercentage": 5,
+        "perFrameWhitePercentage": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "vegetation-entity-inspection-coverage",
+      "status": "pass",
+      "message": "Every declared entity is inspectable in at least one semantic landmark",
+      "measurements": {
+        "minimumVisibleAreaPercentage": 96,
+        "minimumScreenHeightPercentage": 6,
+        "maximumScreenHeightPercentage": 42,
+        "marginPercentage": 1,
+        "uncoveredEntityIds": [],
+        "entities": [
+          {
+            "entityId": "layout.historic-courtyard-potted-vegetation.cluster-001.member-01",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 15.936675667762756,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-layout",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 20.588600635528564,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 20.94036340713501,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "entityId": "layout.historic-courtyard-potted-vegetation.cluster-001.member-02",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 12.956541776657104,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-layout",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 16.123679280281067,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 15.79568088054657,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "entityId": "layout.historic-courtyard-potted-vegetation.cluster-002.member-01",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 24.31974709033966,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-layout",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 27.001282572746277,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 19.21887695789337,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "entityId": "layout.historic-courtyard-potted-vegetation.cluster-003.member-01",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 19.18548345565796,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-layout",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 20.499110221862793,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 16.57358705997467,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "entityId": "layout.historic-courtyard-potted-vegetation.cluster-003.member-02",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 20.288601517677307,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-layout",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 20.752832293510437,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 16.310837864875793,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "blender": {
+    "mode": "render",
+    "stdout": "Blender 4.5.13 LTS (hash daeeeca98fb0 built 2026-08-25 01:30:50)\nFra:1 Mem:14.83M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | queried-ground-surface-mesh\nFra:1 Mem:14.83M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.historic-courtyard-potted-vegetation.cluster-001.member\nFra:1 Mem:14.84M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.historic-courtyard-potted-vegetation.cluster-001.memb\nFra:1 Mem:14.86M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | warm-leaf-edge\nFra:1 Mem:14.94M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | soft-sky-key\nFra:1 Mem:14.96M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.historic-courtyard-potted-vegetation.cluster-003.memb\nFra:1 Mem:15.01M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.historic-courtyard-potted-vegetation.cluster-002.member\nFra:1 Mem:15.46M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.historic-courtyard-potted-vegetation.cluster-003.member\nFra:1 Mem:15.80M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing\nFra:1 Mem:13.23M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Waiting for render to start\nFra:1 Mem:13.23M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene\nFra:1 Mem:13.23M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Shaders\nFra:1 Mem:13.23M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)\nFra:1 Mem:13.34M (Peak 22.20M) | Time:00:00.00 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Procedurals\nFra:1 Mem:13.34M (Peak 22.20M) | Time:00:00.00 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Background\nFra:1 Mem:13.34M (Peak 22.20M) | Time:00:00.00 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Camera\nFra:1 Mem:13.34M (Peak 22.20M) | Time:00:00.00 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Meshes Flags\nFra:1 Mem:13.34M (Peak 22.20M) | Time:00:00.00 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Objects\nFra:1 Mem:13.34M (Peak 22.20M) | Time:00:00.00 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Objects | Copying Transformations to device\nFra:1 Mem:13.34M (Peak 22.20M) | Time:00:00.00 | Mem:0.03M, Peak:0.03M | Scene, ViewLayer | Updating Particle Systems\nFra:1 Mem:13.34M (Peak 22.20M) | Time:00:00.00 | Mem:0.03M, Peak:0.03M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device\nFra:1 Mem:13.34M (Peak 22.20M) | Time:00:00.00 | Mem:0.03M, Peak:0.03M | Scene, ViewLayer | Updating Meshes\nFra:1 Mem:13.34M (Peak 22.20M) | Time:00:00.00 | Mem:0.03M, Peak:0.03M | Scene, ViewLayer | Updating Objects | Applying Static Transformations\nFra:1 Mem:13.34M (Peak 22.20M) | Time:00:00.00 | Mem:0.03M, Peak:0.03M | Scene, ViewLayer | Updating Mesh | Computing attributes\nFra:1 Mem:13.42M (Peak 22.20M) | Time:00:00.00 | Mem:0.03M, Peak:0.03M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device\nFra:1 Mem:13.42M (Peak 22.20M) | Time:00:00.00 | Mem:0.10M, Peak:0.10M | Scene, ViewLayer | Updating Scene BVH | Building\nFra:1 Mem:13.42M (Peak 22.20M) | Time:00:00.00 | Mem:0.10M, Peak:0.10M | Scene, ViewLayer | Updating Scene BVH | Building BVH\nFra:1 Mem:13.42M (Peak 22.20M) | Time:00:00.00 | Mem:0.41M, Peak:0.41M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%\nFra:1 Mem:13.42M (Peak 22.20M) | Time:00:00.00 | Mem:0.75M, Peak:1.06M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device\nFra:1 Mem:13.42M (Peak 22.20M) | Time:00:00.00 | Mem:0.75M, Peak:1.06M | Scene, ViewLayer | Updating Mesh | Computing normals\nFra:1 Mem:13.73M (Peak 22.20M) | Time:00:00.00 | Mem:0.75M, Peak:1.06M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device\nFra:1 Mem:13.73M (Peak 22.20M) | Time:00:00.00 | Mem:1.06M, Peak:1.06M | Scene, ViewLayer | Updating Objects Flags\nFra:1 Mem:13.73M (Peak 22.20M) | Time:00:00.00 | Mem:1.06M, Peak:1.06M | Scene, ViewLayer | Updating Primitive Offsets\nFra:1 Mem:13.73M (Peak 22.20M) | Time:00:00.00 | Mem:1.06M, Peak:1.06M | Scene, ViewLayer | Updating Images\nFra:1 Mem:13.73M (Peak 22.20M) | Time:00:00.00 | Mem:1.06M, Peak:1.06M | Scene, ViewLayer | Updating Camera Volume\nFra:1 Mem:13.73M (Peak 22.20M) | Time:00:00.00 | Mem:1.06M, Peak:1.06M | Scene, ViewLayer | Updating Lookup Tables\nFra:1 Mem:13.73M (Peak 22.20M) | Time:00:00.00 | Mem:1.14M, Peak:1.14M | Scene, ViewLayer | Updating Lights\nFra:1 Mem:13.73M (Peak 22.20M) | Time:00:00.00 | Mem:1.14M, Peak:1.14M | Scene, ViewLayer | Updating Lights | Computing tree\nFra:1 Mem:13.73M (Peak 22.20M) | Time:00:00.00 | Mem:1.14M, Peak:1.14M | Scene, ViewLayer | Updating Integrator\nFra:1 Mem:13.73M (Peak 22.20M) | Time:00:00.00 | Mem:1.14M, Peak:1.14M | Scene, ViewLayer | Updating Film\nFra:1 Mem:13.73M (Peak 22.20M) | Time:00:00.00 | Mem:1.06M, Peak:1.14M | Scene, ViewLayer | Updating Lookup Tables\nFra:1 Mem:13.73M (Peak 22.20M) | Time:00:00.00 | Mem:1.15M, Peak:1.15M | Scene, ViewLayer | Updating Baking\nFra:1 Mem:13.73M (Peak 22.20M) | Time:00:00.00 | Mem:1.15M, Peak:1.15M | Scene, ViewLayer | Updating Device | Writing constant memory\nFra:1 Mem:13.73M (Peak 22.20M) | Time:00:00.00 | Mem:1.15M, Peak:1.15M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)\nFra:1 Mem:13.73M (Peak 22.20M) | Time:00:00.00 | Mem:1.15M, Peak:1.15M | Scene, ViewLayer | Sample 0/128\nFra:1 Mem:29.50M (Peak 29.50M) | Time:00:00.09 | Remaining:00:11.26 | Mem:16.76M, Peak:16.76M | Scene, ViewLayer | Sample 1/128\nFra:1 Mem:38.43M (Peak 51.81M) | Time:00:09.70 | Mem:16.76M, Peak:16.76M | Scene, ViewLayer | Sample 128/128\nFra:1 Mem:38.43M (Peak 51.81M) | Time:00:09.70 | Mem:16.76M, Peak:16.76M | Scene, ViewLayer | Finished\nSaved: '/Users/colum/dev/personal/videoer/work/environments/potted-vegetation-family-v3/family/verification/historic-courtyard/lossless-frames/potted-vegetation-historic-courtyard-transfer-0001.png'\nTime: 00:09.76 (Saving: 00:00.05)\n\nFra:2 Mem:15.01M (Peak 51.81M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | queried-ground-surface-mesh\nFra:2 Mem:15.01M (Peak 51.81M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | host-context-mesh\nFra:2 Mem:15.02M (Peak 51.81M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.historic-courtyard-potted-vegetation.cluster-002.member\nFra:2 Mem:15.03M (Peak 51.81M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | warm-leaf-edge\nFra:2 Mem:15.05M (Peak 51.81M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | soft-sky-key\nFra:2 Mem:15.80M (Peak 51.81M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing\nFra:2 Mem:13.23M (Peak 51.81M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Waiting for render to start\nFra:2 Mem:13.23M (Peak 51.81M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene\nFra:2 Mem:13.23M (Peak 51.81M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Shaders\nFra:2 Mem:13.23M (Peak 51.81M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)\nFra:2 Mem:13.34M (Peak 51.81M) | Time:00:00.00 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Procedurals\nFra:2 Mem:13.34M (Peak 51.81M) | Time:00:00.00 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Background\nFra:2 Mem:13.34M (Peak 51.81M) | Time:00:00.00 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Camera\nFra:2 Mem:13.34M (Peak 51.81M) | Time:00:00.00 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Meshes Flags\nFra:2 Mem:13.34M (Peak 51.81M) | Time:00:00.00 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Objects\nFra:2 Mem:13.34M (Peak 51.81M) | Time:00:00.00 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Objects | Copying Transformations to device\nFra:2 Mem:13.34M (Peak 51.81M) | Time:00:00.00 | Mem:0.03M, Peak:0.03M | Scene, ViewLayer | Updating Particle Systems\nFra:2 Mem:13.34M (Peak 51.81M) | Time:00:00.00 | Mem:0.03M, Peak:0.03M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device\nFra:2 Mem:13.34M (Peak 51.81M) | Time:00:00.00 | Mem:0.03M, Peak:0.03M | Scene, ViewLayer | Updating Meshes\nFra:2 Mem:13.34M (Peak 51.81M) | Time:00:00.00 | Mem:0.03M, Peak:0.03M | Scene, ViewLayer | Updating Objects | Applying Static Transformations\nFra:2 Mem:13.34M (Peak 51.81M) | Time:00:00.00 | Mem:0.03M, Peak:0.03M | Scene, ViewLayer | Updating Mesh | Computing attributes\nFra:2 Mem:13.42M (Peak 51.81M) | Time:00:00.00 | Mem:0.03M, Peak:0.03M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device\nFra:2 Mem:13.42M (Peak 51.81M) | Time:00:00.00 | Mem:0.10M, Peak:0.10M | Scene, ViewLayer | Updating Scene BVH | Building\nFra:2 Mem:13.42M (Peak 51.81M) | Time:00:00.00 | Mem:0.10M, Peak:0.10M | Scene, ViewLayer | Updating Scene BVH | Building BVH\nFra:2 Mem:13.42M (Peak 51.81M) | Time:00:00.00 | Mem:0.41M, Peak:0.41M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%\nFra:2 Mem:13.42M (Peak 51.81M) | Time:00:00.00 | Mem:0.75M, Peak:1.06M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device\nFra:2 Mem:13.42M (Peak 51.81M) | Time:00:00.00 | Mem:0.75M, Peak:1.06M | Scene, ViewLayer | Updating Mesh | Computing normals\nFra:2 Mem:13.73M (Peak 51.81M) | Time:00:00.00 | Mem:0.75M, Peak:1.06M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device\nFra:2 Mem:13.73M (Peak 51.81M) | Time:00:00.00 | Mem:1.06M, Peak:1.06M | Scene, ViewLayer | Updating Objects Flags\nFra:2 Mem:13.73M (Peak 51.81M) | Time:00:00.00 | Mem:1.06M, Peak:1.06M | Scene, ViewLayer | Updating Primitive Offsets\nFra:2 Mem:13.73M (Peak 51.81M) | Time:00:00.00 | Mem:1.06M, Peak:1.06M | Scene, ViewLayer | Updating Images\nFra:2 Mem:13.73M (Peak 51.81M) | Time:00:00.00 | Mem:1.06M, Peak:1.06M | Scene, ViewLayer | Updating Camera Volume\nFra:2 Mem:13.73M (Peak 51.81M) | Time:00:00.00 | Mem:1.06M, Peak:1.06M | Scene, ViewLayer | Updating Lookup Tables\nFra:2 Mem:13.73M (Peak 51.81M) | Time:00:00.00 | Mem:1.14M, Peak:1.14M | Scene, ViewLayer | Updating Lights\nFra:2 Mem:13.73M (Peak 51.81M) | Time:00:00.00 | Mem:1.14M, Peak:1.14M | Scene, ViewLayer | Updating Lights | Computing tree\nFra:2 Mem:13.73M (Peak 51.81M) | Time:00:00.00 | Mem:1.14M, Peak:1.14M | Scene, ViewLayer | Updating Integrator\nFra:2 Mem:13.73M (Peak 51.81M) | Time:00:00.00 | Mem:1.14M, Peak:1.14M | Scene, ViewLayer | Updating Film\nFra:2 Mem:13.73M (Peak 51.81M) | Time:00:00.00 | Mem:1.06M, Peak:1.14M | Scene, ViewLayer | Updating Lookup Tables\nFra:2 Mem:13.73M (Peak 51.81M) | Time:00:00.00 | Mem:1.15M, Peak:1.15M | Scene, ViewLayer | Updating Baking\nFra:2 Mem:13.73M (Peak 51.81M) | Time:00:00.00 | Mem:1.15M, Peak:1.15M | Scene, ViewLayer | Updating Device | Writing constant memory\nFra:2 Mem:13.73M (Peak 51.81M) | Time:00:00.00 | Mem:1.15M, Peak:1.15M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)\nFra:2 Mem:13.73M (Peak 51.81M) | Time:00:00.00 | Mem:1.15M, Peak:1.15M | Scene, ViewLayer | Sample 0/128\nFra:2 Mem:29.50M (Peak 51.81M) | Time:00:00.08 | Remaining:00:10.40 | Mem:16.76M, Peak:16.76M | Scene, ViewLayer | Sample 1/128\nFra:2 Mem:38.43M (Peak 51.81M) | Time:00:11.23 | Mem:16.76M, Peak:16.76M | Scene, ViewLayer | Sample 128/128\nFra:2 Mem:38.43M (Peak 51.81M) | Time:00:11.23 | Mem:16.76M, Peak:16.76M | Scene, ViewLayer | Finished\nSaved: '/Users/colum/dev/personal/videoer/work/environments/potted-vegetation-family-v3/family/verification/historic-courtyard/lossless-frames/potted-vegetation-historic-courtyard-transfer-0002.png'\nTime: 00:11.24 (Saving: 00:00.00)\n\nFra:3 Mem:15.01M (Peak 51.81M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | queried-ground-surface-mesh\nFra:3 Mem:15.01M (Peak 51.81M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.historic-courtyard-potted-vegetation.cluster-002.member\nFra:3 Mem:15.02M (Peak 51.81M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | warm-leaf-edge\nFra:3 Mem:15.04M (Peak 51.81M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | soft-sky-key\nFra:3 Mem:15.04M (Peak 51.81M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.historic-courtyard-potted-vegetation.cluster-003.memb\nFra:3 Mem:15.80M (Peak 51.81M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing\nFra:3 Mem:13.23M (Peak 51.81M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Waiting for render to start\nFra:3 Mem:13.23M (Peak 51.81M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene\nFra:3 Mem:13.23M (Peak 51.81M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Shaders\nFra:3 Mem:13.23M (Peak 51.81M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)\nFra:3 Mem:13.34M (Peak 51.81M) | Time:00:00.00 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Procedurals\nFra:3 Mem:13.34M (Peak 51.81M) | Time:00:00.00 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Background\nFra:3 Mem:13.34M (Peak 51.81M) | Time:00:00.00 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Camera\nFra:3 Mem:13.34M (Peak 51.81M) | Time:00:00.00 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Meshes Flags\nFra:3 Mem:13.34M (Peak 51.81M) | Time:00:00.00 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Objects\nFra:3 Mem:13.34M (Peak 51.81M) | Time:00:00.00 | Mem:0.02M, Peak:0.02M | Scene, ViewLayer | Updating Objects | Copying Transformations to device\nFra:3 Mem:13.34M (Peak 51.81M) | Time:00:00.00 | Mem:0.03M, Peak:0.03M | Scene, ViewLayer | Updating Particle Systems\nFra:3 Mem:13.34M (Peak 51.81M) | Time:00:00.00 | Mem:0.03M, Peak:0.03M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device\nFra:3 Mem:13.34M (Peak 51.81M) | Time:00:00.00 | Mem:0.03M, Peak:0.03M | Scene, ViewLayer | Updating Meshes\nFra:3 Mem:13.34M (Peak 51.81M) | Time:00:00.00 | Mem:0.03M, Peak:0.03M | Scene, ViewLayer | Updating Objects | Applying Static Transformations\nFra:3 Mem:13.34M (Peak 51.81M) | Time:00:00.00 | Mem:0.03M, Peak:0.03M | Scene, ViewLayer | Updating Mesh | Computing attributes\nFra:3 Mem:13.42M (Peak 51.81M) | Time:00:00.00 | Mem:0.03M, Peak:0.03M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device\nFra:3 Mem:13.42M (Peak 51.81M) | Time:00:00.00 | Mem:0.10M, Peak:0.10M | Scene, ViewLayer | Updating Scene BVH | Building\nFra:3 Mem:13.42M (Peak 51.81M) | Time:00:00.00 | Mem:0.10M, Peak:0.10M | Scene, ViewLayer | Updating Scene BVH | Building BVH\nFra:3 Mem:13.42M (Peak 51.81M) | Time:00:00.00 | Mem:0.41M, Peak:0.41M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%\nFra:3 Mem:13.42M (Peak 51.81M) | Time:00:00.00 | Mem:0.75M, Peak:1.06M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device\nFra:3 Mem:13.42M (Peak 51.81M) | Time:00:00.00 | Mem:0.75M, Peak:1.06M | Scene, ViewLayer | Updating Mesh | Computing normals\nFra:3 Mem:13.73M (Peak 51.81M) | Time:00:00.00 | Mem:0.75M, Peak:1.06M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device\nFra:3 Mem:13.73M (Peak 51.81M) | Time:00:00.00 | Mem:1.06M, Peak:1.06M | Scene, ViewLayer | Updating Objects Flags\nFra:3 Mem:13.73M (Peak 51.81M) | Time:00:00.00 | Mem:1.06M, Peak:1.06M | Scene, ViewLayer | Updating Primitive Offsets\nFra:3 Mem:13.73M (Peak 51.81M) | Time:00:00.00 | Mem:1.06M, Peak:1.06M | Scene, ViewLayer | Updating Images\nFra:3 Mem:13.73M (Peak 51.81M) | Time:00:00.00 | Mem:1.06M, Peak:1.06M | Scene, ViewLayer | Updating Camera Volume\nFra:3 Mem:13.73M (Peak 51.81M) | Time:00:00.00 | Mem:1.06M, Peak:1.06M | Scene, ViewLayer | Updating Lookup Tables\nFra:3 Mem:13.73M (Peak 51.81M) | Time:00:00.00 | Mem:1.14M, Peak:1.14M | Scene, ViewLayer | Updating Lights\nFra:3 Mem:13.73M (Peak 51.81M) | Time:00:00.00 | Mem:1.14M, Peak:1.14M | Scene, ViewLayer | Updating Lights | Computing tree\nFra:3 Mem:13.73M (Peak 51.81M) | Time:00:00.00 | Mem:1.14M, Peak:1.14M | Scene, ViewLayer | Updating Integrator\nFra:3 Mem:13.73M (Peak 51.81M) | Time:00:00.00 | Mem:1.14M, Peak:1.14M | Scene, ViewLayer | Updating Film\nFra:3 Mem:13.73M (Peak 51.81M) | Time:00:00.00 | Mem:1.06M, Peak:1.14M | Scene, ViewLayer | Updating Lookup Tables\nFra:3 Mem:13.73M (Peak 51.81M) | Time:00:00.00 | Mem:1.15M, Peak:1.15M | Scene, ViewLayer | Updating Baking\nFra:3 Mem:13.73M (Peak 51.81M) | Time:00:00.00 | Mem:1.15M, Peak:1.15M | Scene, ViewLayer | Updating Device | Writing constant memory\nFra:3 Mem:13.73M (Peak 51.81M) | Time:00:00.00 | Mem:1.15M, Peak:1.15M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)\nFra:3 Mem:13.73M (Peak 51.81M) | Time:00:00.00 | Mem:1.15M, Peak:1.15M | Scene, ViewLayer | Sample 0/128\nFra:3 Mem:29.50M (Peak 51.81M) | Time:00:00.08 | Remaining:00:09.82 | Mem:16.76M, Peak:16.76M | Scene, ViewLayer | Sample 1/128\nFra:3 Mem:38.43M (Peak 51.81M) | Time:00:10.89 | Mem:16.76M, Peak:16.76M | Scene, ViewLayer | Sample 128/128\nFra:3 Mem:38.43M (Peak 51.81M) | Time:00:10.89 | Mem:16.76M, Peak:16.76M | Scene, ViewLayer | Finished\nSaved: '/Users/colum/dev/personal/videoer/work/environments/potted-vegetation-family-v3/family/verification/historic-courtyard/lossless-frames/potted-vegetation-historic-courtyard-transfer-0003.png'\nTime: 00:10.90 (Saving: 00:00.00)\n\nInfo: Saved as \"potted-vegetation-historic-courtyard-transfer.blend\"\n\nBlender quit\n",
+    "stderr": ""
+  }
+}

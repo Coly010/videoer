@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "familyAssetId": "environment.street-storage-family",
+  "memberAssetIds": [
+    "prop.storage-barrel",
+    "prop.slatted-storage-crate"
+  ],
+  "decision": "accepted",
+  "reviewer": "Codex visual and structural cross-environment review",
+  "reviewedAt": "2026-09-01T05:52:00.000Z",
+  "intendedShotDistance": "medium",
+  "evidence": [
+    "verification/old-city-alley/contact-sheet.png",
+    "verification/old-city-alley/scene-render.json",
+    "verification/old-city-alley/layout-report.json",
+    "verification/contemporary-loading-dock/contact-sheet.png",
+    "verification/contemporary-loading-dock/scene-render.json",
+    "verification/contemporary-loading-dock/layout-report.json"
+  ],
+  "strengths": [
+    "The barrel has a curved faceted stave silhouette, raised head and separate aged-metal hoops; the crate has separated lid and wall boards, a recessed dark interior and reinforced corners.",
+    "Authored mixed, paired and stacked cluster recipes read as purposeful storage caches rather than independent uniform scatter.",
+    "The identical explicit-version family transfers from a weathered old-city alley to an unrelated contemporary loading dock without renderer-specific placement data.",
+    "Every member passes at least one fully visible semantic inspection view while deterministic exclusion geometry preserves the actor and camera corridor and the primary doorway."
+  ],
+  "limitations": [
+    "Accepted for background and medium-distance environment dressing, not hero close-up prop inspection.",
+    "The initial family contains only barrel and crate variants; sacks, carts, baskets, pallets and context-specific labels remain future inventory rather than being faked through recolouring.",
+    "The barrel does not yet expose individually detachable staves or close-range fasteners, and the crate omits close-range nails, joinery wear and contents.",
+    "Placement currently targets an explicit flat ground plane. Sloped or irregular terrain requires a future surface-query and normal-alignment contract rather than the unused slope limit rejected during this iteration."
+  ],
+  "notes": "V1 proved deterministic variant placement but read as anonymous scatter. V2 introduced semantic clusters. V3 exposed that landmark probes were not executing declared render gates. V4 exposed an invalid odd-height H.264 raster. V5 executed the new entity-set coverage gate and rejected four cropped members. V6 widened the inspection cameras but exposed incomplete witness geometry. V7 expands the witness sets, passes every declared gate in both environments, and refreshes contact sheets through exact decoded frame indices after rejecting timestamp-based duplicate landmark extraction."
+}

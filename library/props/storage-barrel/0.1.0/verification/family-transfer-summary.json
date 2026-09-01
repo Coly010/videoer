@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "familyId": "environment.street-storage-family",
+  "memberAssetId": "prop.storage-barrel",
+  "acceptedAt": "2026-09-01T05:52:00.000Z",
+  "transferSummaries": [
+    {
+      "kind": "old-city-alley",
+      "requestId": "layout.old-city-alley-street-storage",
+      "landmarkHashes": [
+        "23b685a12ab0e0e17056bc8aed8c80ea5c650f51d7a39f984af573e46da8d675",
+        "c4802b005490b07468c20db7e054c387391fa85f0ddba15ce01323b8cfc66398",
+        "4055a98f6e9a3095d6e0273e9f29829980e643852a978903d28d788939d2da97"
+      ]
+    },
+    {
+      "kind": "contemporary-loading-dock",
+      "requestId": "layout.contemporary-loading-dock-street-storage",
+      "landmarkHashes": [
+        "b9f709e8ae24e3621aab6e63353479154fad49e690e0065f55ba48d4506d3fa1",
+        "6f4b27a163f0deff63d2336f7724be2793b43f2b930d3fb3d2cf3189bab02fb2",
+        "4b051440677eb19c905d903f53a23905f6f44bafb218948b978d3a0280747a7f"
+      ]
+    }
+  ],
+  "intendedShotDistance": "medium",
+  "limitations": [
+    "Accepted for background and medium-distance environment dressing, not hero close-up prop inspection.",
+    "The initial family contains only barrel and crate variants; sacks, carts, baskets, pallets and context-specific labels remain future inventory rather than being faked through recolouring.",
+    "The barrel does not yet expose individually detachable staves or close-range fasteners, and the crate omits close-range nails, joinery wear and contents.",
+    "Placement currently targets an explicit flat ground plane. Sloped or irregular terrain requires a future surface-query and normal-alignment contract rather than the unused slope limit rejected during this iteration."
+  ]
+}

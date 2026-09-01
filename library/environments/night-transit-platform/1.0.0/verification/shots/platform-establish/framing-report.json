@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "samples": [
+    {
+      "landmarkId": "tunnel-arrival",
+      "progress": 0,
+      "frame": 1,
+      "entities": {
+        "platform": {
+          "minimumX": -0.46389320492744446,
+          "maximumX": 11.177504539489746,
+          "minimumY": -3.487382650375366,
+          "maximumY": 4.852259159088135,
+          "widthPercentage": 1164.139774441719,
+          "heightPercentage": 833.9641809463501
+        }
+      }
+    },
+    {
+      "landmarkId": "light-rhythm",
+      "progress": 0.5,
+      "frame": 25,
+      "entities": {
+        "platform": {
+          "minimumX": -1.3678674697875977,
+          "maximumX": 47.31623458862305,
+          "minimumY": -7.243927478790283,
+          "maximumY": 19.777503967285156,
+          "widthPercentage": 4868.410205841064,
+          "heightPercentage": 2702.143144607544
+        }
+      }
+    },
+    {
+      "landmarkId": "runway-ready",
+      "progress": 1,
+      "frame": 48,
+      "entities": {
+        "platform": {
+          "minimumX": -4.262919902801514,
+          "maximumX": 413.17401123046875,
+          "minimumY": -35.53907775878906,
+          "maximumY": 144.96620178222656,
+          "widthPercentage": 41743.69311332703,
+          "heightPercentage": 18050.527954101562
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+schemaVersion: 1
+id: material.rainwalk-blue-cobble
+version: 1.0.0
+type: material
+title: Rainwalk blue cobble surface
+description: Deterministic cold-blue rain-polished cobble treatment derived from
+  the verified old-city surface model.
+status: verified
+tags:
+  - stone
+  - cobble
+  - wet
+  - cold-blue
+capabilities:
+  - procedural
+  - albedo
+  - normal
+  - roughness
+  - cold-blue-treatment
+source:
+  kind: procedural
+  generator: videoer.surface-treatment.v1
+  sourceAsset: material.wet-old-city-cobble@0.1.0
+  references:
+    - provenance/cinematic-campaign.yaml
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: material
+    path: material.json
+    mediaType: application/vnd.videoer.surface-material+json
+    sha256: 68848dc1c2b10beec4a7633cca83146052ad8eeae96b83cb654070a492963141
+  - role: source-campaign
+    path: provenance/cinematic-campaign.yaml
+    mediaType: application/yaml
+    sha256: 025a6b7d4e0b955d13508ff8323a831dd5c9397b612226185c71974bdc4db199
+  - role: verification-material-adaptation-compatibility
+    path: verification/adaptation/verification-material-adaptation-compatibility.json
+    mediaType: application/json
+    sha256: a757fc943c6de2a9b5e35ee942196a5961d943a3317124651810b57e0da6eaf2
+  - role: verification-rainwalk-scene-render
+    path: verification/shots/rainwalk/scene-render.json
+    mediaType: application/json
+    sha256: b28f0b3e8c20e7648afacc1335ad0a631c52baccc1ecf41f349758ea545c98a1
+  - role: verification-rainwalk-contact-sheet
+    path: verification/shots/rainwalk/contact-sheet.png
+    mediaType: image/png
+    sha256: 547ca4116b142f29390e6b9e220810879de82a5a0f5f9110c143526957b5b809
+  - role: verification-rainwalk-framing-report
+    path: verification/shots/rainwalk/framing-report.json
+    mediaType: application/json
+    sha256: ab5eb29f6e6a39e227721c1d3433a2a1d0bcbc55223e45985129bb3b7b5f4a17
+  - role: verification-campaign-delivery
+    path: verification/campaign-delivery-report.json
+    mediaType: application/json
+    sha256: 934cbeba6eafabe551b27490babe70951292cd14a45c211628b0a54c41a5d99d
+  - role: verification-approval
+    path: verification/approval.json
+    mediaType: application/json
+    sha256: df3de8a85c7bc3fc89d4516807bd8030952d7322215d990004274c0f84e48a2e
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - blender-headless
+  requires:
+    - id: material.wet-old-city-cobble
+      version: 0.1.0
+verification:
+  checks:
+    - material.schema
+    - material.model-preserved
+    - material.procedural-node-render
+    - visual.rain-polished-surface
+    - campaign.delivery.verified
+    - review.operator-approved
+  artifacts:
+    - verification/adaptation/verification-material-adaptation-compatibility.json
+    - verification/shots/rainwalk/scene-render.json
+    - verification/shots/rainwalk/contact-sheet.png
+    - verification/shots/rainwalk/framing-report.json
+    - verification/campaign-delivery-report.json
+    - verification/approval.json
+  verifiedAt: 2026-08-31T02:55:25.482Z

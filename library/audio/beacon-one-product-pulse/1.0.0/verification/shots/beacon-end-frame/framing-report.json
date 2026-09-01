@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "samples": [
+    {
+      "landmarkId": "hero-arrival",
+      "progress": 0,
+      "frame": 1,
+      "entities": {
+        "beacon": {
+          "minimumX": 0.0689074769616127,
+          "maximumX": 0.8981582522392273,
+          "minimumY": 0.12209922075271606,
+          "maximumY": 1.0221140384674072,
+          "widthPercentage": 82.92507752776146,
+          "heightPercentage": 90.00148177146912
+        }
+      }
+    },
+    {
+      "landmarkId": "promise",
+      "progress": 0.5,
+      "frame": 37,
+      "entities": {
+        "beacon": {
+          "minimumX": 0.013786240480840206,
+          "maximumX": 0.9460993409156799,
+          "minimumY": 0.07466685026884079,
+          "maximumY": 1.087634563446045,
+          "widthPercentage": 93.23131004348397,
+          "heightPercentage": 101.29677131772041
+        }
+      }
+    },
+    {
+      "landmarkId": "brand-hold",
+      "progress": 1,
+      "frame": 72,
+      "entities": {
+        "beacon": {
+          "minimumX": -0.04614106938242912,
+          "maximumX": 0.9989925622940063,
+          "minimumY": 0.021119657903909683,
+          "maximumY": 1.157935380935669,
+          "widthPercentage": 104.51336316764355,
+          "heightPercentage": 113.68157230317593
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "kind": "replaceable-two-sided-sign-face",
+  "contentBoundsMeters": {
+    "height": 0.5,
+    "width": 0.42
+  },
+  "canonicalTreatment": "embossed-open-book-emblem",
+  "campaignMayReplaceFaceTreatment": true,
+  "hardwareMustRemainIndependent": true
+}

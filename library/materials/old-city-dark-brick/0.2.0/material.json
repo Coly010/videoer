@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "id": "material.old-city-dark-brick",
+  "shadingModel": "metallic-roughness",
+  "baseColor": {
+    "kind": "procedural-palette",
+    "colors": [
+      [
+        0.014,
+        0.004,
+        0.002,
+        1
+      ],
+      [
+        0.038,
+        0.009,
+        0.004,
+        1
+      ],
+      [
+        0.008,
+        0.0025,
+        0.0015,
+        1
+      ],
+      [
+        0.062,
+        0.016,
+        0.006,
+        1
+      ]
+    ],
+    "scaleMeters": 0.32,
+    "seed": 2311
+  },
+  "normal": {
+    "kind": "procedural-noise",
+    "strength": 0.42,
+    "scaleMeters": 0.028
+  },
+  "roughness": {
+    "minimum": 0.38,
+    "maximum": 0.68,
+    "variationScaleMeters": 0.21,
+    "wetness": 0.34
+  },
+  "pattern": {
+    "kind": "masonry-bond",
+    "projectionAxes": [
+      "x",
+      "y"
+    ],
+    "unitWidthMeters": 0.29,
+    "unitHeightMeters": 0.082,
+    "mortarWidthMeters": 0.009,
+    "rowOffset": 0.5,
+    "mortarColor": [
+      0.009,
+      0.008,
+      0.007,
+      1
+    ],
+    "edgeReliefMeters": 0.0045,
+    "irregularityMeters": 0.004
+  },
+  "weathering": {
+    "verticalStreaks": {
+      "amount": 0.34,
+      "widthMeters": 0.085,
+      "lengthMeters": 0.9
+    },
+    "lowerDamp": {
+      "amount": 0.42,
+      "heightMeters": 0.62
+    },
+    "surfaceDirt": {
+      "amount": 0.18,
+      "scaleMeters": 0.48
+    }
+  },
+  "metallic": 0,
+  "metadata": {
+    "generator": "videoer.old-city-surface-library.v3",
+    "coordinateScale": "object-space-metres",
+    "layeredResponse": [
+      "surface-specific-pattern",
+      "palette",
+      "micro-normal",
+      "roughness-variation",
+      "wet-coat"
+    ]
+  }
+}

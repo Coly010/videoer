@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "hair.pulled-back-low-bun",
+  "version": "0.7.0",
+  "style": "pulled-back-low-bun",
+  "representation": "dedicated-scalp-layered-cards",
+  "compatibleSkeleton": "canonical-humanoid-v1",
+  "anchorJoint": "head",
+  "fit": {
+    "scalpClearanceMeters": 0.01,
+    "headWidthMeters": 0.1785011950075241,
+    "headHeightMeters": 0.23708807648048147,
+    "headDepthMeters": 0.2103423327727125
+  },
+  "cardSystem": {
+    "scalpTopology": "parametric-continuous-cap-v1",
+    "cardCount": 72,
+    "segmentsPerCard": 24,
+    "widthMinimumMeters": 0.00125,
+    "widthMaximumMeters": 0.0019,
+    "rootLiftMeters": 0.0004,
+    "silhouetteBreakupMeters": 0.0009
+  },
+  "material": {
+    "melaninColor": [
+      0.018,
+      0.006,
+      0.003
+    ],
+    "roughness": 0.72,
+    "anisotropy": 0.2
+  },
+  "metadata": {
+    "generator": "videoer.layered-mesh-hair.v7",
+    "sourceTarget": "character.production-human-foundation"
+  }
+}

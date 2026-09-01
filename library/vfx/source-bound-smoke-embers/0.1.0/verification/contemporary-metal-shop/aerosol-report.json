@@ -1,0 +1,913 @@
+{
+  "schemaVersion": 1,
+  "sceneId": "scene.contemporary-metal-shop-source-bound-aerosol-transfer",
+  "layers": [
+    {
+      "layerId": "smoke-body",
+      "kind": "smoke-volume",
+      "seed": 8841,
+      "declaredCount": 18,
+      "generatedCount": 18,
+      "source": {
+        "vfxAssetId": "vfx.source-bound-smoke-embers",
+        "entityId": "aerosol-source",
+        "geometryAssetId": "prop.contemporary-metal-shop-aerosol-source",
+        "attachmentId": "aerosol-origin",
+        "resolvedAttachmentPosition": [
+          -0.2,
+          1.31,
+          0.75
+        ]
+      },
+      "origin": [
+        -0.2,
+        1.3900000000000001,
+        0.75
+      ],
+      "originDistanceFromAttachmentMeters": 0.08000000000000007,
+      "particles": [
+        {
+          "particleIndex": 0,
+          "offset": [
+            0.01796587246414054,
+            0.028375795099780037
+          ],
+          "radiusMeters": 0.2856679951589833,
+          "phase": 4.12355179844834,
+          "riseSpeedMetersPerSecond": 0.5109421211424486
+        },
+        {
+          "particleIndex": 1,
+          "offset": [
+            0.12772411333897044,
+            0.04846184048605424
+          ],
+          "radiusMeters": 0.24367764143804344,
+          "phase": 2.2609747205276935,
+          "riseSpeedMetersPerSecond": 0.41615890692300783
+        },
+        {
+          "particleIndex": 2,
+          "offset": [
+            -0.0012040500149028655,
+            0.10006000601270687
+          ],
+          "radiusMeters": 0.3087016054949098,
+          "phase": 3.687903567404692,
+          "riseSpeedMetersPerSecond": 0.427148450778219
+        },
+        {
+          "particleIndex": 3,
+          "offset": [
+            -0.0489563895366977,
+            0.20694388181483064
+          ],
+          "radiusMeters": 0.14000257241632125,
+          "phase": 0.45855611869095164,
+          "riseSpeedMetersPerSecond": 0.6227213071509001
+        },
+        {
+          "particleIndex": 4,
+          "offset": [
+            -0.1813598950658618,
+            0.10154974882006133
+          ],
+          "radiusMeters": 0.30751937320470113,
+          "phase": 0.1985432013966611,
+          "riseSpeedMetersPerSecond": 0.7032322879131812
+        },
+        {
+          "particleIndex": 5,
+          "offset": [
+            -0.07734829410756065,
+            0.18510011612972507
+          ],
+          "radiusMeters": 0.24138798268069633,
+          "phase": 4.230949903290297,
+          "riseSpeedMetersPerSecond": 0.49859596421675556
+        },
+        {
+          "particleIndex": 6,
+          "offset": [
+            -0.015537397498524152,
+            0.22047414143689556
+          ],
+          "radiusMeters": 0.1948239537713396,
+          "phase": 3.4033349307612055,
+          "riseSpeedMetersPerSecond": 0.4535537748628303
+        },
+        {
+          "particleIndex": 7,
+          "offset": [
+            -0.11570369992819547,
+            0.16709133044389402
+          ],
+          "radiusMeters": 0.16679266395047182,
+          "phase": 1.3587745602897912,
+          "riseSpeedMetersPerSecond": 0.4822216978602828
+        },
+        {
+          "particleIndex": 8,
+          "offset": [
+            0.05919962044964558,
+            0.005274702860115416
+          ],
+          "radiusMeters": 0.19569530439728894,
+          "phase": 3.41607477680929,
+          "riseSpeedMetersPerSecond": 0.5608825339591422
+        },
+        {
+          "particleIndex": 9,
+          "offset": [
+            -0.1049418485017061,
+            -0.06363905384849887
+          ],
+          "radiusMeters": 0.19317010693998574,
+          "phase": 6.24113271081099,
+          "riseSpeedMetersPerSecond": 0.47504747543677
+        },
+        {
+          "particleIndex": 10,
+          "offset": [
+            -0.09471969749653211,
+            0.19569971023219818
+          ],
+          "radiusMeters": 0.2257085031190919,
+          "phase": 3.3169241450974574,
+          "riseSpeedMetersPerSecond": 0.5571030818198301
+        },
+        {
+          "particleIndex": 11,
+          "offset": [
+            0.07688264623054059,
+            0.0941112870559373
+          ],
+          "radiusMeters": 0.32614614515637674,
+          "phase": 0.6929423118824185,
+          "riseSpeedMetersPerSecond": 0.5040043024806228
+        },
+        {
+          "particleIndex": 12,
+          "offset": [
+            -0.004496537082270602,
+            -0.014450946334673085
+          ],
+          "radiusMeters": 0.18526583040722672,
+          "phase": 5.944856134012201,
+          "riseSpeedMetersPerSecond": 0.6699068874558106
+        },
+        {
+          "particleIndex": 13,
+          "offset": [
+            -0.21188537216278233,
+            -0.06088494295540422
+          ],
+          "radiusMeters": 0.29058817887091837,
+          "phase": 3.744012408253847,
+          "riseSpeedMetersPerSecond": 0.38922857782408
+        },
+        {
+          "particleIndex": 14,
+          "offset": [
+            0.09036194701753845,
+            0.07394218413643389
+          ],
+          "radiusMeters": 0.16047707580856713,
+          "phase": 1.1138335397340215,
+          "riseSpeedMetersPerSecond": 0.6401825564558213
+        },
+        {
+          "particleIndex": 15,
+          "offset": [
+            -0.08246479910700744,
+            -0.19804055155283076
+          ],
+          "radiusMeters": 0.2755945815601176,
+          "phase": 3.0616634865362085,
+          "riseSpeedMetersPerSecond": 0.5548650436137932
+        },
+        {
+          "particleIndex": 16,
+          "offset": [
+            -0.16349346875009854,
+            0.10330113460292373
+          ],
+          "radiusMeters": 0.3070610401080419,
+          "phase": 1.7923856635475541,
+          "riseSpeedMetersPerSecond": 0.6998115962002539
+        },
+        {
+          "particleIndex": 17,
+          "offset": [
+            -0.0010701051608911158,
+            -0.15687073778778038
+          ],
+          "radiusMeters": 0.22760067631347597,
+          "phase": 0.8241114823336576,
+          "riseSpeedMetersPerSecond": 0.5081393638200036
+        }
+      ],
+      "volumeSequence": {
+        "representation": "sparse-openvdb-buoyant-incompressible-v3",
+        "voxelSizeMeters": 0.0456,
+        "gridDimensions": [
+          64,
+          64,
+          60
+        ],
+        "warmupFrames": 79,
+        "sequenceFrames": 12,
+        "solver": {
+          "kind": "buoyant-incompressible-grid",
+          "pressureIterations": 14,
+          "vorticityConfinement": 0.36000000000000004,
+          "maximumPreProjectionDivergence": 1.5565564632415771,
+          "maximumPostProjectionDivergence": 1.080852746963501
+        },
+        "domainMinimumBlender": [
+          -1.6500000953674316,
+          -2.200000047683716,
+          1.3899999856948853
+        ],
+        "sourceParcels": [
+          {
+            "particleIndex": 0,
+            "offset": [
+              0.01796587246414054,
+              0.028375795099780037
+            ],
+            "radiusMeters": 0.2856679951589833,
+            "phase": 4.12355179844834,
+            "riseSpeedMetersPerSecond": 0.5109421211424486
+          },
+          {
+            "particleIndex": 1,
+            "offset": [
+              0.12772411333897044,
+              0.04846184048605424
+            ],
+            "radiusMeters": 0.24367764143804344,
+            "phase": 2.2609747205276935,
+            "riseSpeedMetersPerSecond": 0.41615890692300783
+          },
+          {
+            "particleIndex": 2,
+            "offset": [
+              -0.0012040500149028655,
+              0.10006000601270687
+            ],
+            "radiusMeters": 0.3087016054949098,
+            "phase": 3.687903567404692,
+            "riseSpeedMetersPerSecond": 0.427148450778219
+          },
+          {
+            "particleIndex": 3,
+            "offset": [
+              -0.0489563895366977,
+              0.20694388181483064
+            ],
+            "radiusMeters": 0.14000257241632125,
+            "phase": 0.45855611869095164,
+            "riseSpeedMetersPerSecond": 0.6227213071509001
+          },
+          {
+            "particleIndex": 4,
+            "offset": [
+              -0.1813598950658618,
+              0.10154974882006133
+            ],
+            "radiusMeters": 0.30751937320470113,
+            "phase": 0.1985432013966611,
+            "riseSpeedMetersPerSecond": 0.7032322879131812
+          },
+          {
+            "particleIndex": 5,
+            "offset": [
+              -0.07734829410756065,
+              0.18510011612972507
+            ],
+            "radiusMeters": 0.24138798268069633,
+            "phase": 4.230949903290297,
+            "riseSpeedMetersPerSecond": 0.49859596421675556
+          },
+          {
+            "particleIndex": 6,
+            "offset": [
+              -0.015537397498524152,
+              0.22047414143689556
+            ],
+            "radiusMeters": 0.1948239537713396,
+            "phase": 3.4033349307612055,
+            "riseSpeedMetersPerSecond": 0.4535537748628303
+          },
+          {
+            "particleIndex": 7,
+            "offset": [
+              -0.11570369992819547,
+              0.16709133044389402
+            ],
+            "radiusMeters": 0.16679266395047182,
+            "phase": 1.3587745602897912,
+            "riseSpeedMetersPerSecond": 0.4822216978602828
+          },
+          {
+            "particleIndex": 8,
+            "offset": [
+              0.05919962044964558,
+              0.005274702860115416
+            ],
+            "radiusMeters": 0.19569530439728894,
+            "phase": 3.41607477680929,
+            "riseSpeedMetersPerSecond": 0.5608825339591422
+          },
+          {
+            "particleIndex": 9,
+            "offset": [
+              -0.1049418485017061,
+              -0.06363905384849887
+            ],
+            "radiusMeters": 0.19317010693998574,
+            "phase": 6.24113271081099,
+            "riseSpeedMetersPerSecond": 0.47504747543677
+          },
+          {
+            "particleIndex": 10,
+            "offset": [
+              -0.09471969749653211,
+              0.19569971023219818
+            ],
+            "radiusMeters": 0.2257085031190919,
+            "phase": 3.3169241450974574,
+            "riseSpeedMetersPerSecond": 0.5571030818198301
+          },
+          {
+            "particleIndex": 11,
+            "offset": [
+              0.07688264623054059,
+              0.0941112870559373
+            ],
+            "radiusMeters": 0.32614614515637674,
+            "phase": 0.6929423118824185,
+            "riseSpeedMetersPerSecond": 0.5040043024806228
+          },
+          {
+            "particleIndex": 12,
+            "offset": [
+              -0.004496537082270602,
+              -0.014450946334673085
+            ],
+            "radiusMeters": 0.18526583040722672,
+            "phase": 5.944856134012201,
+            "riseSpeedMetersPerSecond": 0.6699068874558106
+          },
+          {
+            "particleIndex": 13,
+            "offset": [
+              -0.21188537216278233,
+              -0.06088494295540422
+            ],
+            "radiusMeters": 0.29058817887091837,
+            "phase": 3.744012408253847,
+            "riseSpeedMetersPerSecond": 0.38922857782408
+          },
+          {
+            "particleIndex": 14,
+            "offset": [
+              0.09036194701753845,
+              0.07394218413643389
+            ],
+            "radiusMeters": 0.16047707580856713,
+            "phase": 1.1138335397340215,
+            "riseSpeedMetersPerSecond": 0.6401825564558213
+          },
+          {
+            "particleIndex": 15,
+            "offset": [
+              -0.08246479910700744,
+              -0.19804055155283076
+            ],
+            "radiusMeters": 0.2755945815601176,
+            "phase": 3.0616634865362085,
+            "riseSpeedMetersPerSecond": 0.5548650436137932
+          },
+          {
+            "particleIndex": 16,
+            "offset": [
+              -0.16349346875009854,
+              0.10330113460292373
+            ],
+            "radiusMeters": 0.3070610401080419,
+            "phase": 1.7923856635475541,
+            "riseSpeedMetersPerSecond": 0.6998115962002539
+          },
+          {
+            "particleIndex": 17,
+            "offset": [
+              -0.0010701051608911158,
+              -0.15687073778778038
+            ],
+            "radiusMeters": 0.22760067631347597,
+            "phase": 0.8241114823336576,
+            "riseSpeedMetersPerSecond": 0.5081393638200036
+          }
+        ],
+        "frames": [
+          {
+            "frame": 1,
+            "path": "aerosol-vdb/smoke-body/smoke-body_0001.vdb",
+            "densityActiveVoxels": 75931,
+            "temperatureActiveVoxels": 69914,
+            "densityMaximum": 1.5,
+            "densityMeanActive": 0.05825791880488396,
+            "sha256": "d98447c56f7b8a85e5271c17fb02f2705b2189104b6c4ee17b3c46070c361f35"
+          },
+          {
+            "frame": 2,
+            "path": "aerosol-vdb/smoke-body/smoke-body_0002.vdb",
+            "densityActiveVoxels": 77691,
+            "temperatureActiveVoxels": 71445,
+            "densityMaximum": 1.5,
+            "densityMeanActive": 0.0575469546020031,
+            "sha256": "616b0ea0a51ca665f3ae18ffac621d8219f6ea21568d8f2b386a893404b33b11"
+          },
+          {
+            "frame": 3,
+            "path": "aerosol-vdb/smoke-body/smoke-body_0003.vdb",
+            "densityActiveVoxels": 79430,
+            "temperatureActiveVoxels": 72874,
+            "densityMaximum": 1.5,
+            "densityMeanActive": 0.056899942457675934,
+            "sha256": "16017de4fb81e6270a1a650501fca145d28617127c93ac5b174b4acc23619918"
+          },
+          {
+            "frame": 4,
+            "path": "aerosol-vdb/smoke-body/smoke-body_0004.vdb",
+            "densityActiveVoxels": 81122,
+            "temperatureActiveVoxels": 74390,
+            "densityMaximum": 1.5,
+            "densityMeanActive": 0.05632265284657478,
+            "sha256": "c37c8434872b1040ff63a6d724a8fcecffe7ea01c4c2d9248b73541d28de629e"
+          },
+          {
+            "frame": 5,
+            "path": "aerosol-vdb/smoke-body/smoke-body_0005.vdb",
+            "densityActiveVoxels": 82925,
+            "temperatureActiveVoxels": 75900,
+            "densityMaximum": 1.5,
+            "densityMeanActive": 0.05567670986056328,
+            "sha256": "67c00c404cc0acdf4c346989d5b403198bfcb6fdfca00320742be95729f672d4"
+          },
+          {
+            "frame": 6,
+            "path": "aerosol-vdb/smoke-body/smoke-body_0006.vdb",
+            "densityActiveVoxels": 84701,
+            "temperatureActiveVoxels": 77335,
+            "densityMaximum": 1.5,
+            "densityMeanActive": 0.0550835095345974,
+            "sha256": "687d00752430b50c1838e7109b2caa8fb065afbbfa506ace1a241ec5a08753f1"
+          },
+          {
+            "frame": 7,
+            "path": "aerosol-vdb/smoke-body/smoke-body_0007.vdb",
+            "densityActiveVoxels": 86493,
+            "temperatureActiveVoxels": 78803,
+            "densityMaximum": 1.5,
+            "densityMeanActive": 0.05449427291750908,
+            "sha256": "c3b9fdbde7a98156e7be639ec0658b7f143655963e3e81ab2b0730ab8f548602"
+          },
+          {
+            "frame": 8,
+            "path": "aerosol-vdb/smoke-body/smoke-body_0008.vdb",
+            "densityActiveVoxels": 88201,
+            "temperatureActiveVoxels": 80236,
+            "densityMaximum": 1.5,
+            "densityMeanActive": 0.05399424210190773,
+            "sha256": "6e33b69419e942e44e596e6951d388b7b624483ebf2fcb6f880862dd8dc545fc"
+          },
+          {
+            "frame": 9,
+            "path": "aerosol-vdb/smoke-body/smoke-body_0009.vdb",
+            "densityActiveVoxels": 89963,
+            "temperatureActiveVoxels": 81721,
+            "densityMaximum": 1.5,
+            "densityMeanActive": 0.05351109802722931,
+            "sha256": "e416d226130d14db68517a427c35727f1cb06b7d3777e5042e582a704e489597"
+          },
+          {
+            "frame": 10,
+            "path": "aerosol-vdb/smoke-body/smoke-body_0010.vdb",
+            "densityActiveVoxels": 91729,
+            "temperatureActiveVoxels": 83164,
+            "densityMaximum": 1.5,
+            "densityMeanActive": 0.05303558334708214,
+            "sha256": "9a2ec16fadb0ad1b1a824b528ed907b100b3e3ac159a0be90c715cfeee84fcff"
+          },
+          {
+            "frame": 11,
+            "path": "aerosol-vdb/smoke-body/smoke-body_0011.vdb",
+            "densityActiveVoxels": 93565,
+            "temperatureActiveVoxels": 84606,
+            "densityMaximum": 1.5,
+            "densityMeanActive": 0.052533652633428574,
+            "sha256": "109d5d9b5b013a8ae9010812e907fc0cc76a18cb7abbe0e988f770f1a01cdde2"
+          },
+          {
+            "frame": 12,
+            "path": "aerosol-vdb/smoke-body/smoke-body_0012.vdb",
+            "densityActiveVoxels": 95340,
+            "temperatureActiveVoxels": 86035,
+            "densityMaximum": 1.5,
+            "densityMeanActive": 0.05209183320403099,
+            "sha256": "8cc3325b5b439fb8fb5c8bd77f9f51ddf22978103c7d57b73edc3db92e6a184e"
+          }
+        ]
+      }
+    },
+    {
+      "layerId": "rising-embers",
+      "kind": "ember-particles",
+      "seed": 8842,
+      "declaredCount": 30,
+      "generatedCount": 30,
+      "source": {
+        "vfxAssetId": "vfx.source-bound-smoke-embers",
+        "entityId": "aerosol-source",
+        "geometryAssetId": "prop.contemporary-metal-shop-aerosol-source",
+        "attachmentId": "aerosol-origin",
+        "resolvedAttachmentPosition": [
+          -0.2,
+          1.31,
+          0.75
+        ]
+      },
+      "origin": [
+        -0.2,
+        1.4100000000000001,
+        0.75
+      ],
+      "originDistanceFromAttachmentMeters": 0.10000000000000009,
+      "particles": [
+        {
+          "particleIndex": 0,
+          "startFrame": -17,
+          "lifetimeFrames": 67,
+          "radiusMeters": 0.005733709877958682,
+          "riseSpeedMetersPerSecond": 1.100388476779608,
+          "spawnPosition": [
+            -0.2311475535625584,
+            1.4100000000000001,
+            0.8139046696791548
+          ]
+        },
+        {
+          "particleIndex": 1,
+          "startFrame": -4,
+          "lifetimeFrames": 67,
+          "radiusMeters": 0.0032071839756161267,
+          "riseSpeedMetersPerSecond": 1.0348446039037436,
+          "spawnPosition": [
+            -0.008456877156031634,
+            1.4100000000000001,
+            0.5464561379552813
+          ]
+        },
+        {
+          "particleIndex": 2,
+          "startFrame": -53,
+          "lifetimeFrames": 67,
+          "radiusMeters": 0.0036512969900712295,
+          "riseSpeedMetersPerSecond": 0.7843039681079946,
+          "spawnPosition": [
+            -0.20265978777949872,
+            1.4100000000000001,
+            0.7972683680287505
+          ]
+        },
+        {
+          "particleIndex": 3,
+          "startFrame": -65,
+          "lifetimeFrames": 67,
+          "radiusMeters": 0.00261646815906979,
+          "riseSpeedMetersPerSecond": 0.42515944601245714,
+          "spawnPosition": [
+            -0.35101359947703437,
+            1.4100000000000001,
+            0.7518162814588825
+          ]
+        },
+        {
+          "particleIndex": 4,
+          "startFrame": -52,
+          "lifetimeFrames": 67,
+          "radiusMeters": 0.0047254687417541096,
+          "riseSpeedMetersPerSecond": 0.444488054499726,
+          "spawnPosition": [
+            0.030410552132742047,
+            1.4100000000000001,
+            0.6264580515053723
+          ]
+        },
+        {
+          "particleIndex": 5,
+          "startFrame": -33,
+          "lifetimeFrames": 67,
+          "radiusMeters": 0.004133740651121275,
+          "riseSpeedMetersPerSecond": 0.7430598130627963,
+          "spawnPosition": [
+            -0.33082897892174734,
+            1.4100000000000001,
+            0.8734712053291476
+          ]
+        },
+        {
+          "particleIndex": 6,
+          "startFrame": -50,
+          "lifetimeFrames": 67,
+          "radiusMeters": 0.003657890433915652,
+          "riseSpeedMetersPerSecond": 0.6682601364759398,
+          "spawnPosition": [
+            -0.012044911307825368,
+            1.4100000000000001,
+            0.8665645427049303
+          ]
+        },
+        {
+          "particleIndex": 7,
+          "startFrame": -54,
+          "lifetimeFrames": 67,
+          "radiusMeters": 0.005693305819835237,
+          "riseSpeedMetersPerSecond": 0.7244219264505555,
+          "spawnPosition": [
+            -0.2202417268657731,
+            1.4100000000000001,
+            0.6935144137531737
+          ]
+        },
+        {
+          "particleIndex": 8,
+          "startFrame": -24,
+          "lifetimeFrames": 67,
+          "radiusMeters": 0.0033272457027108786,
+          "riseSpeedMetersPerSecond": 0.6975148942161344,
+          "spawnPosition": [
+            -0.19430925548553984,
+            1.4100000000000001,
+            0.7482926064970329
+          ]
+        },
+        {
+          "particleIndex": 9,
+          "startFrame": -15,
+          "lifetimeFrames": 67,
+          "radiusMeters": 0.003458823681602148,
+          "riseSpeedMetersPerSecond": 0.5132234220305982,
+          "spawnPosition": [
+            -0.4023010325445999,
+            1.4100000000000001,
+            0.6090260030822382
+          ]
+        },
+        {
+          "particleIndex": 10,
+          "startFrame": -45,
+          "lifetimeFrames": 67,
+          "radiusMeters": 0.005850429153335611,
+          "riseSpeedMetersPerSecond": 0.8191670961978404,
+          "spawnPosition": [
+            -0.44243884146381696,
+            1.4100000000000001,
+            0.8479617620277158
+          ]
+        },
+        {
+          "particleIndex": 11,
+          "startFrame": -21,
+          "lifetimeFrames": 67,
+          "radiusMeters": 0.0032710100737616526,
+          "riseSpeedMetersPerSecond": 0.6942473688180715,
+          "spawnPosition": [
+            -0.0029776610106651558,
+            1.4100000000000001,
+            0.7848674664756836
+          ]
+        },
+        {
+          "particleIndex": 12,
+          "startFrame": -40,
+          "lifetimeFrames": 67,
+          "radiusMeters": 0.0052535253793963566,
+          "riseSpeedMetersPerSecond": 0.6024127297504999,
+          "spawnPosition": [
+            -0.4553036889217984,
+            1.4100000000000001,
+            0.7586770397665029
+          ]
+        },
+        {
+          "particleIndex": 13,
+          "startFrame": -1,
+          "lifetimeFrames": 67,
+          "radiusMeters": 0.004996013355003349,
+          "riseSpeedMetersPerSecond": 1.1178427841088983,
+          "spawnPosition": [
+            -0.029994428750797608,
+            1.4100000000000001,
+            0.5618838035963483
+          ]
+        },
+        {
+          "particleIndex": 14,
+          "startFrame": -20,
+          "lifetimeFrames": 67,
+          "radiusMeters": 0.0037214360316645315,
+          "riseSpeedMetersPerSecond": 0.5651497922174873,
+          "spawnPosition": [
+            -0.05180942470004074,
+            1.4100000000000001,
+            0.8702613485248156
+          ]
+        },
+        {
+          "particleIndex": 15,
+          "startFrame": -64,
+          "lifetimeFrames": 67,
+          "radiusMeters": 0.0037405972353995696,
+          "riseSpeedMetersPerSecond": 0.6746415150284872,
+          "spawnPosition": [
+            -0.3184181299762199,
+            1.4100000000000001,
+            0.5506819029956251
+          ]
+        },
+        {
+          "particleIndex": 16,
+          "startFrame": -33,
+          "lifetimeFrames": 67,
+          "radiusMeters": 0.0053384053510237214,
+          "riseSpeedMetersPerSecond": 1.0151610921012155,
+          "spawnPosition": [
+            -0.21496808561785108,
+            1.4100000000000001,
+            0.6414222458552613
+          ]
+        },
+        {
+          "particleIndex": 17,
+          "startFrame": -12,
+          "lifetimeFrames": 67,
+          "radiusMeters": 0.004906134867950516,
+          "riseSpeedMetersPerSecond": 1.0301541287723595,
+          "spawnPosition": [
+            -0.1736383753087878,
+            1.4100000000000001,
+            0.5894679598197312
+          ]
+        },
+        {
+          "particleIndex": 18,
+          "startFrame": -3,
+          "lifetimeFrames": 67,
+          "radiusMeters": 0.003757173980455831,
+          "riseSpeedMetersPerSecond": 0.7913573967105927,
+          "spawnPosition": [
+            -0.3556914856748238,
+            1.4100000000000001,
+            0.8228115008364133
+          ]
+        },
+        {
+          "particleIndex": 19,
+          "startFrame": -34,
+          "lifetimeFrames": 67,
+          "radiusMeters": 0.00457818488847112,
+          "riseSpeedMetersPerSecond": 0.9693727751996999,
+          "spawnPosition": [
+            -0.3008068047293718,
+            1.4100000000000001,
+            0.6322684174715257
+          ]
+        },
+        {
+          "particleIndex": 20,
+          "startFrame": -41,
+          "lifetimeFrames": 67,
+          "radiusMeters": 0.004481734347494723,
+          "riseSpeedMetersPerSecond": 0.9579061658187407,
+          "spawnPosition": [
+            -0.26225950677360227,
+            1.4100000000000001,
+            0.48731567721102165
+          ]
+        },
+        {
+          "particleIndex": 21,
+          "startFrame": -29,
+          "lifetimeFrames": 67,
+          "radiusMeters": 0.005415843747499828,
+          "riseSpeedMetersPerSecond": 0.4845250290182174,
+          "spawnPosition": [
+            -0.12093751075926283,
+            1.4100000000000001,
+            0.8008869834764711
+          ]
+        },
+        {
+          "particleIndex": 22,
+          "startFrame": -3,
+          "lifetimeFrames": 67,
+          "radiusMeters": 0.005231036328857029,
+          "riseSpeedMetersPerSecond": 0.6224131480801319,
+          "spawnPosition": [
+            -0.2704245260460093,
+            1.4100000000000001,
+            0.6396489730820812
+          ]
+        },
+        {
+          "particleIndex": 23,
+          "startFrame": -57,
+          "lifetimeFrames": 67,
+          "radiusMeters": 0.005065234315157898,
+          "riseSpeedMetersPerSecond": 0.6996174611814618,
+          "spawnPosition": [
+            -0.3207869465435789,
+            1.4100000000000001,
+            0.8809043980737927
+          ]
+        },
+        {
+          "particleIndex": 24,
+          "startFrame": -2,
+          "lifetimeFrames": 67,
+          "radiusMeters": 0.003964803896432007,
+          "riseSpeedMetersPerSecond": 0.6705104130885826,
+          "spawnPosition": [
+            -0.39827759289676623,
+            1.4100000000000001,
+            0.7712408017306032
+          ]
+        },
+        {
+          "particleIndex": 25,
+          "startFrame": -32,
+          "lifetimeFrames": 67,
+          "radiusMeters": 0.0041323948466788175,
+          "riseSpeedMetersPerSecond": 0.45040961414138625,
+          "spawnPosition": [
+            0.03291825984756808,
+            1.4100000000000001,
+            0.6154537216865552
+          ]
+        },
+        {
+          "particleIndex": 26,
+          "startFrame": -22,
+          "lifetimeFrames": 67,
+          "radiusMeters": 0.0054743873547886,
+          "riseSpeedMetersPerSecond": 1.0772893024294912,
+          "spawnPosition": [
+            -0.18429201702746503,
+            1.4100000000000001,
+            1.0076306220384663
+          ]
+        },
+        {
+          "particleIndex": 27,
+          "startFrame": -48,
+          "lifetimeFrames": 67,
+          "radiusMeters": 0.00429063762339346,
+          "riseSpeedMetersPerSecond": 0.4756885839852665,
+          "spawnPosition": [
+            -0.17574678340119218,
+            1.4100000000000001,
+            0.7778547792721741
+          ]
+        },
+        {
+          "particleIndex": 28,
+          "startFrame": -55,
+          "lifetimeFrames": 67,
+          "radiusMeters": 0.003986047472843855,
+          "riseSpeedMetersPerSecond": 0.7523176946673222,
+          "spawnPosition": [
+            -0.334628689992039,
+            1.4100000000000001,
+            0.7745470917606063
+          ]
+        },
+        {
+          "particleIndex": 29,
+          "startFrame": -3,
+          "lifetimeFrames": 67,
+          "radiusMeters": 0.004256377536401628,
+          "riseSpeedMetersPerSecond": 0.6882490180046432,
+          "spawnPosition": [
+            -0.20740697140109957,
+            1.4100000000000001,
+            0.9763449760816915
+          ]
+        }
+      ]
+    }
+  ]
+}

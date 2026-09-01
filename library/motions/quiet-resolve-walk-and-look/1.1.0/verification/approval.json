@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "campaign": "campaign.quiet-resolve-performance",
+  "sourceId": "walk-and-resolve",
+  "asset": {
+    "id": "motion.quiet-resolve.walk-and-look",
+    "version": "1.1.0"
+  },
+  "reviewer": "codex-visual-and-mechanical-review",
+  "rationale": "Reviewed the rebuilt non-benchmark brand-manifesto delivery, passing edit report, masked-layer contribution evidence, subject framing, motion direction, and stable temporally corrected garment silhouette.",
+  "approvedAt": "2026-08-31T04:35:53.694Z"
+}

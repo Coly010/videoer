@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "samples": [
+    {
+      "landmarkId": "screen-lock",
+      "progress": 0,
+      "frame": 1,
+      "entities": {
+        "beacon": {
+          "minimumX": -0.2709082067012787,
+          "maximumX": 1.64938223361969,
+          "minimumY": -0.45821312069892883,
+          "maximumY": 1.6700639724731445,
+          "widthPercentage": 192.02904403209686,
+          "heightPercentage": 212.82770931720734
+        }
+      }
+    },
+    {
+      "landmarkId": "control-read",
+      "progress": 0.55,
+      "frame": 40,
+      "entities": {
+        "beacon": {
+          "minimumX": -0.3932686746120453,
+          "maximumX": 1.8146878480911255,
+          "minimumY": -0.5891337394714355,
+          "maximumY": 1.8642590045928955,
+          "widthPercentage": 220.79565227031708,
+          "heightPercentage": 245.3392744064331
+        }
+      }
+    },
+    {
+      "landmarkId": "detail-hold",
+      "progress": 1,
+      "frame": 72,
+      "entities": {
+        "beacon": {
+          "minimumX": -0.49364468455314636,
+          "maximumX": 1.9606138467788696,
+          "minimumY": -0.70395427942276,
+          "maximumY": 2.02902889251709,
+          "widthPercentage": 245.4258531332016,
+          "heightPercentage": 273.298317193985
+        }
+      }
+    }
+  ]
+}

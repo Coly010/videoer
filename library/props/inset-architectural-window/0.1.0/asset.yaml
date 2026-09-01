@@ -1,0 +1,95 @@
+schemaVersion: 1
+id: prop.inset-architectural-window
+version: 0.1.0
+type: prop
+title: Inset architectural cross window
+description: Project-owned wall-opening module with projecting sill, deep
+  reveal, painted timber frame, cross mullions, physical 8 mm glazing, dim
+  interior witness and an explicit host cutout contract.
+status: verified
+tags:
+  - window
+  - architecture
+  - wall-opening
+  - glazing
+  - portable-set-dressing
+capabilities:
+  - portable-geometry
+  - rectangular-host-cutout-contract
+  - physical-eight-millimetre-glazing
+  - deep-wall-reveal
+  - named-wall-mount-and-focus-points
+  - cross-environment-transfer
+  - medium-background-quality-tier
+source:
+  kind: procedural
+  generator: videoer.inset-architectural-window.v1
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: geometry
+    path: geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: 4e49fc9764b582d77395bc794ed5566a24e39c476bfe38321afaa6400247d3d0
+  - role: validation
+    path: validation.json
+    mediaType: application/json
+    sha256: ab622d26d24083ba16ebc4cfc78d2c6d13ff06d9b5a45700d7d3e2a6591bb2e0
+  - role: old-city-brick-contact-sheet
+    path: verification/old-city-brick/contact-sheet.png
+    mediaType: image/png
+    sha256: f20baeb146a01ac6e97bc7b86d9242e20c0b91aad7dc9500856db51bce594661
+  - role: old-city-brick-render-report
+    path: verification/old-city-brick/scene-render.json
+    mediaType: application/json
+    sha256: 9536d1bc23d6367a798bd12a47b39fc99a3d11452f5b54c31b7459f2fd0ad548
+  - role: old-city-brick-host-opening-report
+    path: verification/old-city-brick/host-opening-report.json
+    mediaType: application/json
+    sha256: 344ee57438598b34aa3389bd351fa5b238495b6a52d0e4939e03a322a846f6c7
+  - role: contemporary-plaster-contact-sheet
+    path: verification/contemporary-plaster/contact-sheet.png
+    mediaType: image/png
+    sha256: 0ec13e543ed27d25608be4ded0b626fcf507d312c0c258c00455801f828fc8bb
+  - role: contemporary-plaster-render-report
+    path: verification/contemporary-plaster/scene-render.json
+    mediaType: application/json
+    sha256: d036658b3ae4c81ad06df4ecb686c4f9f6fccb623813699471f962b5d172c19c
+  - role: contemporary-plaster-host-opening-report
+    path: verification/contemporary-plaster/host-opening-report.json
+    mediaType: application/json
+    sha256: 2d77ffdc489e50a930af117c59a23bc1adfc56fe46fa0e68ed82db2347244c5c
+  - role: qualitative-review
+    path: verification/window-candidate-review.json
+    mediaType: application/json
+    sha256: a2f6f09b32f2d285575bfe427515c761386f73b8601a1fc8e5ea2ca1b13a726f
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - three-3d
+    - blender-headless
+  requires: []
+verification:
+  checks:
+    - geometry.topology
+    - module.host-cutout-required
+    - module.host-wall-thickness-compatible
+    - material.physical-eight-millimetre-glazing
+    - geometry.real-host-aperture-ray-clear
+    - visual.old-city-host-transfer-accepted
+    - visual.contemporary-host-transfer-accepted
+    - module.medium-background-shot-distance-accepted
+  artifacts:
+    - verification/old-city-brick/contact-sheet.png
+    - verification/old-city-brick/scene-render.json
+    - verification/old-city-brick/host-opening-report.json
+    - verification/contemporary-plaster/contact-sheet.png
+    - verification/contemporary-plaster/scene-render.json
+    - verification/contemporary-plaster/host-opening-report.json
+    - verification/window-candidate-review.json
+  verifiedAt: 2026-09-01T07:17:00.000Z

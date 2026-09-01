@@ -1,0 +1,294 @@
+{
+  "schemaVersion": 1,
+  "requestId": "layout.historic-market-square-market-world",
+  "familyId": "environment.market-world-family",
+  "seed": 7719,
+  "attempts": 29,
+  "instances": [
+    {
+      "id": "layout.historic-market-square-market-world.cluster-001.member-01",
+      "clusterId": "layout.historic-market-square-market-world.cluster-001",
+      "recipeId": "complete-merchandised-stall",
+      "variantId": "market-stall",
+      "geometryAssetId": "prop.modular-market-stall",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          -4.147739768463008,
+          0,
+          1.7155348006273157
+        ],
+        "rotation": [
+          0,
+          0.09401087435160087,
+          0
+        ],
+        "scale": [
+          1.0251040139771066,
+          1.0251040139771066,
+          1.0251040139771066
+        ]
+      },
+      "footprintRadiusMeters": 1.9066934659974184,
+      "heightMeters": 2.9112953996949824
+    },
+    {
+      "id": "layout.historic-market-square-market-world.cluster-001.member-02",
+      "clusterId": "layout.historic-market-square-market-world.cluster-001",
+      "recipeId": "complete-merchandised-stall",
+      "variantId": "produce-basket",
+      "geometryAssetId": "prop.produce-basket",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          -4.855573229957793,
+          1.09,
+          1.014270377753667
+        ],
+        "rotation": [
+          0,
+          -0.0840283105311455,
+          0
+        ],
+        "scale": [
+          0.7391362497478723,
+          0.7391362497478723,
+          0.7391362497478723
+        ]
+      },
+      "footprintRadiusMeters": 0.34739403738149993,
+      "heightMeters": 0.5987003622957766
+    },
+    {
+      "id": "layout.historic-market-square-market-world.cluster-001.member-03",
+      "clusterId": "layout.historic-market-square-market-world.cluster-001",
+      "recipeId": "complete-merchandised-stall",
+      "variantId": "produce-basket",
+      "geometryAssetId": "prop.produce-basket",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          -3.3247343652244177,
+          1.09,
+          1.1819974483828035
+        ],
+        "rotation": [
+          0,
+          -0.24184082623847244,
+          0
+        ],
+        "scale": [
+          0.7234216499432923,
+          0.7234216499432923,
+          0.7234216499432923
+        ]
+      },
+      "footprintRadiusMeters": 0.34000817547334733,
+      "heightMeters": 0.5859715364540667
+    },
+    {
+      "id": "layout.historic-market-square-market-world.cluster-001.member-04",
+      "clusterId": "layout.historic-market-square-market-world.cluster-001",
+      "recipeId": "complete-merchandised-stall",
+      "variantId": "provision-sack",
+      "geometryAssetId": "prop.tied-provision-sack",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          -5.059137752701023,
+          0.42,
+          1.4949589308525741
+        ],
+        "rotation": [
+          0,
+          -0.3434375099515772,
+          0
+        ],
+        "scale": [
+          0.6928381482409314,
+          0.6928381482409314,
+          0.6928381482409314
+        ]
+      },
+      "footprintRadiusMeters": 0.2840636407787818,
+      "heightMeters": 0.6512678593464755
+    },
+    {
+      "id": "layout.historic-market-square-market-world.cluster-001.member-05",
+      "clusterId": "layout.historic-market-square-market-world.cluster-001",
+      "recipeId": "complete-merchandised-stall",
+      "variantId": "provision-sack",
+      "geometryAssetId": "prop.tied-provision-sack",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          -3.2244995598883097,
+          0.42,
+          1.7362112914066246
+        ],
+        "rotation": [
+          0,
+          -0.0712469250821859,
+          0
+        ],
+        "scale": [
+          0.6963995314994827,
+          0.6963995314994827,
+          0.6963995314994827
+        ]
+      },
+      "footprintRadiusMeters": 0.28552380791478793,
+      "heightMeters": 0.6546155596095138
+    },
+    {
+      "id": "layout.historic-market-square-market-world.cluster-002.member-01",
+      "clusterId": "layout.historic-market-square-market-world.cluster-002",
+      "recipeId": "provision-cache",
+      "variantId": "provision-sack",
+      "geometryAssetId": "prop.tied-provision-sack",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          4.368758907605278,
+          0,
+          2.3131953641640908
+        ],
+        "rotation": [
+          0,
+          0.2148834507079582,
+          0
+        ],
+        "scale": [
+          1.0611542788334192,
+          1.0611542788334192,
+          1.0611542788334192
+        ]
+      },
+      "footprintRadiusMeters": 0.43507325432170185,
+      "heightMeters": 0.9974850221034139
+    },
+    {
+      "id": "layout.historic-market-square-market-world.cluster-002.member-02",
+      "clusterId": "layout.historic-market-square-market-world.cluster-002",
+      "recipeId": "provision-cache",
+      "variantId": "provision-sack",
+      "geometryAssetId": "prop.tied-provision-sack",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          5.129610976319712,
+          0,
+          2.3846385551130203
+        ],
+        "rotation": [
+          0,
+          -0.03801342535409751,
+          0
+        ],
+        "scale": [
+          0.9285059407446534,
+          0.9285059407446534,
+          0.9285059407446534
+        ]
+      },
+      "footprintRadiusMeters": 0.3806874357053079,
+      "heightMeters": 0.8727955842999742
+    },
+    {
+      "id": "layout.historic-market-square-market-world.cluster-003.member-01",
+      "clusterId": "layout.historic-market-square-market-world.cluster-003",
+      "recipeId": "produce-display-trio",
+      "variantId": "produce-basket",
+      "geometryAssetId": "prop.produce-basket",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          1.1929051768647447,
+          0,
+          1.393622807501178
+        ],
+        "rotation": [
+          0,
+          -0.43697066959910974,
+          0
+        ],
+        "scale": [
+          1.0150832647830248,
+          1.0150832647830248,
+          1.0150832647830248
+        ]
+      },
+      "footprintRadiusMeters": 0.47708913444802165,
+      "heightMeters": 0.8222174444742502
+    },
+    {
+      "id": "layout.historic-market-square-market-world.cluster-003.member-02",
+      "clusterId": "layout.historic-market-square-market-world.cluster-003",
+      "recipeId": "produce-display-trio",
+      "variantId": "produce-basket",
+      "geometryAssetId": "prop.produce-basket",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          1.7871836905107716,
+          0,
+          1.3179059123015653
+        ],
+        "rotation": [
+          0,
+          0.6114815457947799,
+          0
+        ],
+        "scale": [
+          0.9352081161201001,
+          0.9352081161201001,
+          0.9352081161201001
+        ]
+      },
+      "footprintRadiusMeters": 0.43954781457644704,
+      "heightMeters": 0.7575185740572812
+    },
+    {
+      "id": "layout.historic-market-square-market-world.cluster-003.member-03",
+      "clusterId": "layout.historic-market-square-market-world.cluster-003",
+      "recipeId": "produce-display-trio",
+      "variantId": "produce-basket",
+      "geometryAssetId": "prop.produce-basket",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          2.3200374225235714,
+          0,
+          1.5670382070367752
+        ],
+        "rotation": [
+          0,
+          1.0138053348291338,
+          0
+        ],
+        "scale": [
+          0.9089061049953104,
+          0.9089061049953104,
+          0.9089061049953104
+        ]
+      },
+      "footprintRadiusMeters": 0.4271858693477959,
+      "heightMeters": 0.7362139450462015
+    }
+  ],
+  "verification": {
+    "requestedClusterCount": 3,
+    "placedClusterCount": 3,
+    "placedCount": 10,
+    "requiredVariantIds": [
+      "market-stall",
+      "produce-basket",
+      "provision-sack"
+    ],
+    "allRequiredVariantsPresent": true,
+    "exclusionCount": 2,
+    "deterministic": true,
+    "overlapFree": true,
+    "navigationClearancePreserved": true
+  }
+}

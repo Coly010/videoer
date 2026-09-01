@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "samples": [
+    {
+      "landmarkId": "name-arrival",
+      "progress": 0,
+      "frame": 1,
+      "entities": {
+        "gallery": {
+          "minimumX": -2.49788236618042,
+          "maximumX": 3.4978854656219482,
+          "minimumY": -1.1581132411956787,
+          "maximumY": 2.695221424102783,
+          "widthPercentage": 599.5767831802368,
+          "heightPercentage": 385.3334665298462
+        }
+      }
+    },
+    {
+      "landmarkId": "architecture-emerges",
+      "progress": 0.55,
+      "frame": 53,
+      "entities": {
+        "gallery": {
+          "minimumX": -4.497844219207764,
+          "maximumX": 5.49785041809082,
+          "minimumY": -2.052293300628662,
+          "maximumY": 4.150763034820557,
+          "widthPercentage": 999.5694637298584,
+          "heightPercentage": 620.3056335449219
+        }
+      }
+    },
+    {
+      "landmarkId": "crossing-threshold",
+      "progress": 1,
+      "frame": 96,
+      "entities": {
+        "gallery": {
+          "minimumX": -8.575387954711914,
+          "maximumX": 9.575406074523926,
+          "minimumY": -3.501067876815796,
+          "maximumY": 7.1140007972717285,
+          "widthPercentage": 1815.079402923584,
+          "heightPercentage": 1061.5068674087524
+        }
+      }
+    }
+  ]
+}

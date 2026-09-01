@@ -15,6 +15,10 @@ export function campaignPaths(root: string) {
     renders: join(root, 'renders'),
     inspection: join(root, 'inspection'),
     reports: join(root, 'reports'),
+    productionPlan: join(root, 'production-plan.yaml'),
+    assetManifest: join(root, 'asset-manifest.yaml'),
+    work: join(root, 'work'),
+    verification: join(root, 'verification'),
     state: join(root, 'campaign-state.json'),
   };
 }

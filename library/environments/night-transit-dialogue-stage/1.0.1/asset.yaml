@@ -1,0 +1,123 @@
+schemaVersion: 1
+id: environment.night-transit-dialogue-stage
+version: 1.0.1
+type: environment
+title: Night transit dialogue stage
+description: Provenance-linked adaptation of the abstract night platform with
+  reusable two-character marks, wide and three-quarter camera anchors, and
+  preserved topology and coordinate system.
+status: verified
+tags:
+  - transit
+  - platform
+  - night
+  - dialogue
+  - two-character
+  - staging
+capabilities:
+  - deterministic-geometry
+  - semantic-camera-anchors
+  - dialogue-blocking-anchors
+  - two-character-camera-anchors
+  - cinematic-light-rhythm
+source:
+  kind: procedural
+  generator: videoer.declarative-geometry-adaptation.v1
+  sourceAsset: environment.night-transit-platform@1.0.1
+  references:
+    - provenance/cinematic-campaign.yaml
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: geometry
+    path: geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: 2865f666aee42e8750472b09e10b58faa74a708b3185692a42fabf8c435d91b1
+  - role: source-campaign
+    path: provenance/cinematic-campaign.yaml
+    mediaType: application/yaml
+    sha256: 929d690180dceebaa8ddad390cba5f30fdc7c4055cd515c709ede58471fb6ff0
+  - role: verification-adaptation-compatibility
+    path: verification/adaptation/verification-adaptation-compatibility.json
+    mediaType: application/json
+    sha256: af466144812e5d50866e4a78a8f94d7bd689c760907ca0311e2a78a6f1fbddfa
+  - role: verification-last-train-wide-scene-render
+    path: verification/shots/last-train-wide/scene-render.json
+    mediaType: application/json
+    sha256: 976ce9cde13adb8ec01bac400ffdd1f6e6a1f209feb00b202f7b06aa38ce9b3e
+  - role: verification-last-train-wide-contact-sheet
+    path: verification/shots/last-train-wide/contact-sheet.png
+    mediaType: image/png
+    sha256: 8c0f2b9d0e7147be64d76405cb525d6eb59f2ed80fbc234c9c05fb2249e084d8
+  - role: verification-last-train-wide-framing-report
+    path: verification/shots/last-train-wide/framing-report.json
+    mediaType: application/json
+    sha256: 069dac70ab1c7d89486d3cd72b64619ed858bc48608b6325c7c138421980f53d
+  - role: verification-exchanged-look-scene-render
+    path: verification/shots/exchanged-look/scene-render.json
+    mediaType: application/json
+    sha256: ec26619f584840bdae8465be56015543c78b7d76ee066c01514d5ea7161952c1
+  - role: verification-exchanged-look-contact-sheet
+    path: verification/shots/exchanged-look/contact-sheet.png
+    mediaType: image/png
+    sha256: cafa7ce448ce00c13304979034468387b977d31c2c713c25776dc63a25df1a9b
+  - role: verification-exchanged-look-framing-report
+    path: verification/shots/exchanged-look/framing-report.json
+    mediaType: application/json
+    sha256: 72b908bfc7e13da37a24603546d1e779540fbc8c54ab20bb78dbac4830de0d14
+  - role: verification-shared-silence-scene-render
+    path: verification/shots/shared-silence/scene-render.json
+    mediaType: application/json
+    sha256: bd605557126aff60333276bd9ab7b3b3bfbd47a5beb529a9cc0e6c56500e0670
+  - role: verification-shared-silence-contact-sheet
+    path: verification/shots/shared-silence/contact-sheet.png
+    mediaType: image/png
+    sha256: ec332d2ccd752169e06d6c06e37246fdca3b73395224281bff906be9269feebb
+  - role: verification-shared-silence-framing-report
+    path: verification/shots/shared-silence/framing-report.json
+    mediaType: application/json
+    sha256: bb9623da153ca2f92d4e57f207d44892589447639e835e650c19435d05f6c0fa
+  - role: verification-campaign-delivery
+    path: verification/campaign-delivery-report.json
+    mediaType: application/json
+    sha256: 989dda107fbc8cd13cf43bc8647e544a5499d2e305262014572cebe7b7a9d85e
+  - role: verification-approval
+    path: verification/approval.json
+    mediaType: application/json
+    sha256: 24f464838d5a3e1fef13a22326239c184cb69b9afcae1d182a5f42b7b1f9cd67
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - three-3d
+    - blender-headless
+  requires:
+    - id: environment.night-transit-platform
+      version: 1.0.1
+verification:
+  checks:
+    - adaptation.parent-hash
+    - adaptation.topology-preserved
+    - adaptation.skeleton-preserved
+    - attachments.dialogue-blocking
+    - blocking.mutual-facing
+    - visual.multi-character-coverage
+    - campaign.delivery.verified
+    - review.operator-approved
+  artifacts:
+    - verification/adaptation/verification-adaptation-compatibility.json
+    - verification/shots/last-train-wide/scene-render.json
+    - verification/shots/last-train-wide/contact-sheet.png
+    - verification/shots/last-train-wide/framing-report.json
+    - verification/shots/exchanged-look/scene-render.json
+    - verification/shots/exchanged-look/contact-sheet.png
+    - verification/shots/exchanged-look/framing-report.json
+    - verification/shots/shared-silence/scene-render.json
+    - verification/shots/shared-silence/contact-sheet.png
+    - verification/shots/shared-silence/framing-report.json
+    - verification/campaign-delivery-report.json
+    - verification/approval.json
+  verifiedAt: 2026-08-31T04:28:37.471Z

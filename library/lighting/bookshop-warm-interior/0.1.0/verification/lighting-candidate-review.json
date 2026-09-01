@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "assetId": "lighting.bookshop-warm-interior",
+  "decision": "accepted",
+  "reviewer": "codex-visual-inspection",
+  "reviewedAt": "2026-09-01T02:25:00.000Z",
+  "portableWithoutEnvironment": true,
+  "evidence": [
+    "verification/contact-sheet.png",
+    "verification/transfer/gallery/contact-sheet.png",
+    "verification/scene-render.json",
+    "verification/transfer/gallery/scene-render.json",
+    "verification/transfer/gallery/lighting-adaptation-report.json"
+  ],
+  "strengths": [
+    "Off-axis warm key, camera-side cool fill, and rear rim remain visually distinct in both old-city bookshop and contemporary gallery environments.",
+    "Neutral diffuse, matte cloth, glossy, metallic, structured wood, plaster, and portrait-form responses remain readable without clipped highlights.",
+    "The unrelated square gallery transfer preserves useful floor reflections, shadow modelling, and warm/cool spatial separation through camera movement.",
+    "All source and transfer camera, whole-frame exposure, subject-region exposure, and bounded adaptation checks pass."
+  ],
+  "limitations": [
+    "The rig is accepted for warm interior key/fill/rim staging, not as a universal daylight, candlelight, firelight, or product-lighting solution.",
+    "The static witness establishes material and form response but does not establish final close-up skin shading or animated-character deformation quality.",
+    "Individual campaigns may still require bounded spatial and energy adaptation plus supplemental motivated practicals."
+  ],
+  "notes": "Accepted after rejecting the mannequin-dependent probe, the cropped witness composition, the outside-set black render, the overly warm and flat v5 balance, and the first gallery transfer with its directional witness facing away from camera. The corrected v0.3/v7 bookshop and gallery evidence demonstrates a reusable, scoped production lighting asset rather than benchmark-only coordinates."
+}

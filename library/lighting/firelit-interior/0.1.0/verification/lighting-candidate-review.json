@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "assetId": "lighting.firelit-interior",
+  "decision": "accepted",
+  "reviewer": "codex-visual-inspection",
+  "reviewedAt": "2026-09-01T15:36:00.000Z",
+  "portableWithoutEnvironment": true,
+  "sourceEvidenceDirectory": "verification/source/stone-chamber",
+  "transferEvidenceDirectory": "verification/transfer/contemporary-lounge",
+  "evidence": [
+    "verification/source/stone-chamber/stone-chamber-host.json",
+    "verification/source/stone-chamber/lighting-witness.json",
+    "verification/source/stone-chamber/contact-sheet.png",
+    "verification/source/stone-chamber/scene-render.json",
+    "verification/source/stone-chamber/lighting-modulation-report.json",
+    "verification/transfer/contemporary-lounge/contemporary-lounge-host.json",
+    "verification/transfer/contemporary-lounge/contact-sheet.png",
+    "verification/transfer/contemporary-lounge/scene-render.json",
+    "verification/transfer/contemporary-lounge/transfer-definition.json",
+    "verification/transfer/contemporary-lounge/lighting-adaptation-report.json",
+    "verification/transfer/contemporary-lounge/lighting-modulation-report.json"
+  ],
+  "strengths": [
+    "One seeded renderer-independent signal drives the visible hearth material, practical source, shaped key, ground bounce and edge rim with identical per-frame intensity and colour-temperature samples.",
+    "The stone chamber retains warm spatial falloff, readable shadow structure and a cool ceiling/edge counter-tone without the flat yellow flooding rejected in V1.",
+    "The unchanged five-light topology transfers through a bounded adaptation into a materially and architecturally different contemporary lounge while retaining motivated direction and warm/cool separation.",
+    "All source and transfer semantic frames retain highlight detail, and the witness regions retain 98 percent and 67 to 73 percent midtones respectively.",
+    "Acceptance reconstructs both the bounded rig adaptation and every temporal light/source sample from the live source and adapted rig definitions rather than trusting rendered imagery alone."
+  ],
+  "limitations": [
+    "Accepted for background and medium firelit interiors; hero faces, macro reflective products and extreme close-ups require dedicated shot evidence.",
+    "The verification hearths and stylised flame tongues are diagnostic host geometry, not a production flame, smoke, sparks or heat-distortion effect.",
+    "The lighting rig requires a host-provided visible-source material binding for the primary-fire role; it does not own fireplace architecture or combustion geometry.",
+    "This release models correlated authored light modulation, not fluid combustion, smoke transport, volumetric self-shadowing or interactive heat effects."
+  ],
+  "notes": "Accepted V2 after rejecting V1 for flat yellow exposure, negligible cool separation and evenly spaced ember geometry that read as bulbs. V2 reduces and reshapes fire energy, strengthens cool environmental separation, narrows the flicker envelope, encloses both hosts and replaces the bulb row with a clustered coal and diagnostic flame source. Production flame/smoke integration remains intentionally unresolved for the next full benchmark audit."
+}

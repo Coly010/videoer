@@ -1,0 +1,11 @@
+{
+  "valid": true,
+  "issues": [],
+  "checks": {
+    "leftContactErrorMeters": 2.435541875787129e-16,
+    "rightContactErrorMeters": 2.435541875787129e-16,
+    "gazeTurnRadians": 0.5822395843705004,
+    "twoHandConstraint": true,
+    "contactCheckedAcrossCompleteClip": true
+  }
+}

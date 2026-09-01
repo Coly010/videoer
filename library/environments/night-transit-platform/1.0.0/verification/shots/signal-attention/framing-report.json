@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "samples": [
+    {
+      "landmarkId": "grounded",
+      "progress": 0,
+      "frame": 1,
+      "entities": {
+        "platform": {
+          "minimumX": -19.945749282836914,
+          "maximumX": 57.30059051513672,
+          "minimumY": -4.059770584106445,
+          "maximumY": 165.52894592285156,
+          "widthPercentage": 7724.633979797363,
+          "heightPercentage": 16958.8716506958
+        },
+        "courier": {
+          "minimumX": 0.23285126686096191,
+          "maximumX": 0.7133577466011047,
+          "minimumY": -0.7241654396057129,
+          "maximumY": 0.8340635895729065,
+          "widthPercentage": 48.05064797401428,
+          "heightPercentage": 155.82290291786194
+        }
+      }
+    },
+    {
+      "landmarkId": "orient",
+      "progress": 0.55,
+      "frame": 27,
+      "entities": {
+        "platform": {
+          "minimumX": -23.91378402709961,
+          "maximumX": 4.929383754730225,
+          "minimumY": -4.794303894042969,
+          "maximumY": 14.271607398986816,
+          "widthPercentage": 2884.3167781829834,
+          "heightPercentage": 1906.5911293029785
+        },
+        "courier": {
+          "minimumX": 0.20378407835960388,
+          "maximumX": 0.7494376301765442,
+          "minimumY": -0.9066663384437561,
+          "maximumY": 0.8377640843391418,
+          "widthPercentage": 54.56535518169403,
+          "heightPercentage": 174.4430422782898
+        }
+      }
+    },
+    {
+      "landmarkId": "attention",
+      "progress": 1,
+      "frame": 48,
+      "entities": {
+        "platform": {
+          "minimumX": -27.551088333129883,
+          "maximumX": 5.8783721923828125,
+          "minimumY": -5.471593379974365,
+          "maximumY": 16.21507453918457,
+          "widthPercentage": 3342.9460525512695,
+          "heightPercentage": 2168.6667919158936
+        },
+        "courier": {
+          "minimumX": 0.18852192163467407,
+          "maximumX": 0.7869472503662109,
+          "minimumY": -1.0707907676696777,
+          "maximumY": 0.8381231427192688,
+          "widthPercentage": 59.84253287315369,
+          "heightPercentage": 190.89139103889465
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "samples": [
+    {
+      "landmarkId": "reverse-axis",
+      "progress": 0,
+      "frame": 1,
+      "entities": {
+        "platform": {
+          "minimumX": -60.02994155883789,
+          "maximumX": 11.262866020202637,
+          "minimumY": -16.974811553955078,
+          "maximumY": 30.793508529663086,
+          "widthPercentage": 7129.280757904053,
+          "heightPercentage": 4776.832008361816
+        },
+        "elara": {
+          "minimumX": 0.28922411799430847,
+          "maximumX": 0.4642205536365509,
+          "minimumY": 0.15339285135269165,
+          "maximumY": 0.6556983590126038,
+          "widthPercentage": 17.499643564224243,
+          "heightPercentage": 50.23055076599121
+        },
+        "traveller": {
+          "minimumX": 0.5862579345703125,
+          "maximumX": 0.762768030166626,
+          "minimumY": -0.06889426708221436,
+          "maximumY": 0.6686630845069885,
+          "widthPercentage": 17.651009559631348,
+          "heightPercentage": 73.75573515892029
+        }
+      }
+    },
+    {
+      "landmarkId": "silence-held",
+      "progress": 0.5,
+      "frame": 37,
+      "entities": {
+        "platform": {
+          "minimumX": -180.76336669921875,
+          "maximumX": 2.664019823074341,
+          "minimumY": -52.155033111572266,
+          "maximumY": 10.680013656616211,
+          "widthPercentage": 18342.73865222931,
+          "heightPercentage": 6283.504676818848
+        },
+        "elara": {
+          "minimumX": 0.27233949303627014,
+          "maximumX": 0.46450474858283997,
+          "minimumY": 0.12414322048425674,
+          "maximumY": 0.6767736077308655,
+          "widthPercentage": 19.216525554656982,
+          "heightPercentage": 55.26303872466087
+        },
+        "traveller": {
+          "minimumX": 0.5957533121109009,
+          "maximumX": 0.798128068447113,
+          "minimumY": -0.15310396254062653,
+          "maximumY": 0.6893482208251953,
+          "widthPercentage": 20.237475633621216,
+          "heightPercentage": 84.24521833658218
+        }
+      }
+    },
+    {
+      "landmarkId": "final-distance",
+      "progress": 1,
+      "frame": 72,
+      "entities": {
+        "platform": {
+          "minimumX": -276.73089599609375,
+          "maximumX": 3.677070379257202,
+          "minimumY": -76.69094848632812,
+          "maximumY": 20.440853118896484,
+          "widthPercentage": 28040.796637535095,
+          "heightPercentage": 9713.180160522461
+        },
+        "elara": {
+          "minimumX": 0.2521789073944092,
+          "maximumX": 0.46279892325401306,
+          "minimumY": 0.09001254290342331,
+          "maximumY": 0.6974443197250366,
+          "widthPercentage": 21.062001585960388,
+          "heightPercentage": 60.74317768216133
+        },
+        "traveller": {
+          "minimumX": 0.6030877232551575,
+          "maximumX": 0.8362979292869568,
+          "minimumY": -0.2557949423789978,
+          "maximumY": 0.7090581655502319,
+          "widthPercentage": 23.32102060317993,
+          "heightPercentage": 96.48531079292297
+        }
+      }
+    }
+  ]
+}

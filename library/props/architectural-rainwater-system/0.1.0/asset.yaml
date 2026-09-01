@@ -1,0 +1,103 @@
+schemaVersion: 1
+id: prop.architectural-rainwater-system
+version: 0.1.0
+type: prop
+title: Architectural half-round rainwater system
+description: Project-owned portable open half-round gutter, visible eave
+  brackets, hopper, wall-clipped downpipe and discharge shoe with configurable
+  handedness and an explicit facade/eave host contract.
+status: verified
+tags:
+  - architecture
+  - gutter
+  - downpipe
+  - rainwater
+  - facade
+  - portable-set-dressing
+capabilities:
+  - portable-geometry
+  - physically-open-gutter-trough
+  - configurable-left-right-outlet
+  - facade-eave-host-contract
+  - visible-eave-and-wall-mounts
+  - named-water-discharge-attachment
+  - metre-scaled-patinated-metal
+  - cross-environment-transfer
+  - medium-background-quality-tier
+source:
+  kind: procedural
+  generator: videoer.architectural-rainwater-system.v1
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: geometry
+    path: geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: 1c401e8ba9cc3fb3f1207741c74a75fca62b760e1ab80564ce9b360298273ef8
+  - role: surface-definition
+    path: surface.json
+    mediaType: application/json
+    sha256: 1f9c15de4a8308a956bee88b04fb1cde2400e57893ca446e4d8d6808cdbad985
+  - role: validation
+    path: validation.json
+    mediaType: application/json
+    sha256: 96260c895f32777ca6995051ff524ba2316f92b49f0f2cd1c76aae5e1f377569
+  - role: old-city-plaster-contact-sheet
+    path: verification/old-city-plaster/contact-sheet.png
+    mediaType: image/png
+    sha256: 4d76617842d4e4b9d08abe38fac75cd1eec18a5a510a213603f9c498be83e2e3
+  - role: old-city-plaster-render-report
+    path: verification/old-city-plaster/scene-render.json
+    mediaType: application/json
+    sha256: 958746e8ecba7ca04386fccd29c32f144a0e1324340846565b0d175f4435b7f7
+  - role: old-city-plaster-host-contract-report
+    path: verification/old-city-plaster/host-contract-report.json
+    mediaType: application/json
+    sha256: 5557481b57f40ab1af9fe43a525029d1f33c0587ca1a90249d6330f28dd0129f
+  - role: contemporary-concrete-contact-sheet
+    path: verification/contemporary-concrete/contact-sheet.png
+    mediaType: image/png
+    sha256: 109d692e99a193c9480e5c96b0ebcacb480d583f23796d148b88a2b8db9ed0b9
+  - role: contemporary-concrete-render-report
+    path: verification/contemporary-concrete/scene-render.json
+    mediaType: application/json
+    sha256: 79753da13ca34586c5602b7d4650170b09be15ebb9ff1853dff108a83efdc868
+  - role: contemporary-concrete-host-contract-report
+    path: verification/contemporary-concrete/host-contract-report.json
+    mediaType: application/json
+    sha256: d93e950d19a7da37ebb5488850cdf04e12ee5db6209fb27fcda872538e10c37b
+  - role: qualitative-review
+    path: verification/rainwater-candidate-review.json
+    mediaType: application/json
+    sha256: 960e0132bd0e4ea7ab0ab5c622274262b9026d512fc727b3ce63e7c7e7410240
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - three-3d
+    - blender-headless
+  requires: []
+verification:
+  checks:
+    - geometry.topology
+    - geometry.open-trough-aperture
+    - module.facade-eave-host-compatible
+    - module.mounts-and-discharge-explicit
+    - material.metre-scaled-patinated-metal
+    - geometry.open-trough-independently-reverified
+    - visual.old-city-host-transfer-accepted
+    - visual.contemporary-host-transfer-accepted
+    - module.medium-background-shot-distance-accepted
+  artifacts:
+    - verification/old-city-plaster/contact-sheet.png
+    - verification/old-city-plaster/scene-render.json
+    - verification/old-city-plaster/host-contract-report.json
+    - verification/contemporary-concrete/contact-sheet.png
+    - verification/contemporary-concrete/scene-render.json
+    - verification/contemporary-concrete/host-contract-report.json
+    - verification/rainwater-candidate-review.json
+  verifiedAt: 2026-09-01T07:09:37.000Z

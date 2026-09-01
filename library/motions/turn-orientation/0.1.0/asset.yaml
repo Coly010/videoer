@@ -1,0 +1,107 @@
+schemaVersion: 1
+id: motion.turn-orientation
+version: 0.1.0
+type: motion
+title: Bidirectional head and body orientation turns
+description: Blendable canonical-humanoid head-only, body-only, and coordinated
+  head/body turns in both directions.
+status: verified
+tags:
+  - turn
+  - gaze
+  - head
+  - body
+  - orientation
+capabilities:
+  - canonical-humanoid
+  - additive-blend
+  - gaze-target
+source:
+  kind: procedural
+  generator: videoer.turn-synthesis.v1
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: motion-head-left
+    path: motions/head-left.json
+    mediaType: application/vnd.videoer.motion+json
+    sha256: c4e640d37c13c1bc447114cc074bcfd666ee0e68a43d3e7ec311bb3789e06ce6
+  - role: motion-head-right
+    path: motions/head-right.json
+    mediaType: application/vnd.videoer.motion+json
+    sha256: 216325be3260bb4b7b08835ad4dc5a36d06fcb526df5a2d1771c5f192c6054e7
+  - role: motion-body-left
+    path: motions/body-left.json
+    mediaType: application/vnd.videoer.motion+json
+    sha256: 85a7ce47367516fca56c69b1eb935b8eb7c48b84dcea0154257b851fe9c6ca90
+  - role: motion-body-right
+    path: motions/body-right.json
+    mediaType: application/vnd.videoer.motion+json
+    sha256: fbb790e05d81c374efe7df7350887e08531c8f114f144d18bb6fbe713245ada0
+  - role: motion-head-and-body-left
+    path: motions/head-and-body-left.json
+    mediaType: application/vnd.videoer.motion+json
+    sha256: 124b65f21d763b0b91d241c0616213920b771ddbcf2ebd634da2c558a32107d9
+  - role: motion-head-and-body-right
+    path: motions/head-and-body-right.json
+    mediaType: application/vnd.videoer.motion+json
+    sha256: a39a6419989cbe50bd5f54478cbb9929945896f45e6bde7459f8c98db3c2d981
+  - role: head-turn-preview
+    path: verification/head-left/turn.mp4
+    mediaType: video/mp4
+    sha256: 7d65cb3a0d12ff387d2979d930aa5307d32686bcfd5a0c116ffab14a1d803af6
+  - role: body-turn-preview
+    path: verification/body-left/turn.mp4
+    mediaType: video/mp4
+    sha256: 1dfdaf9234bd05547f2c4f34042131bc96e4346310842b2840e057c022b0016b
+  - role: verification-verification-head-left-contact-sheet
+    path: verification/head-left/contact-sheet.png
+    mediaType: image/png
+    sha256: f8b1d89b747013fbcc77daeb17eaacc85ab4a3948e0f6270c1f0cd35dec1c584
+  - role: verification-verification-head-left-contact-sheet-three-quarter
+    path: verification/head-left/contact-sheet-three-quarter.png
+    mediaType: image/png
+    sha256: 7b1644dc7d77f26a0df5c18672d4c8ad2375b580394b5fa66c0f2fbf7dd86d6f
+  - role: verification-verification-head-left-turn
+    path: verification/head-left/turn.blend
+    mediaType: application/x-blender
+    sha256: 6e525d3f1ff7cf657cfd09179fd857ad17aa506e035a289223a1d5088ac90d6f
+  - role: verification-verification-body-left-contact-sheet
+    path: verification/body-left/contact-sheet.png
+    mediaType: image/png
+    sha256: ec56ec14d3af6b20da9e50a6cff97752ef02be89b41596db2390244bcd4b4da8
+  - role: verification-verification-body-left-contact-sheet-three-quarter
+    path: verification/body-left/contact-sheet-three-quarter.png
+    mediaType: image/png
+    sha256: 1228c15c297e6af37f3825e66655a312b5daf4fa693c274cb7b27ae7d59cb7ed
+  - role: verification-verification-body-left-turn
+    path: verification/body-left/turn.blend
+    mediaType: application/x-blender
+    sha256: b010179b97a0110a2ec37b423eeebc40c1cda657534cbd1410bbd6faa23c674f
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  skeleton: videoer.canonical-humanoid.v1
+  renderers:
+    - three-3d
+    - blender-headless
+  requires: []
+verification:
+  checks:
+    - motion.direction-sign
+    - motion.scope-isolation
+    - motion.mirrored-directions
+    - visual.head-turn-two-view
+    - visual.body-turn-two-view
+  artifacts:
+    - verification/head-left/contact-sheet.png
+    - verification/head-left/contact-sheet-three-quarter.png
+    - verification/head-left/turn.blend
+    - verification/body-left/contact-sheet.png
+    - verification/body-left/contact-sheet-three-quarter.png
+    - verification/body-left/turn.blend
+  verifiedAt: 2026-08-30T21:08:21.270Z

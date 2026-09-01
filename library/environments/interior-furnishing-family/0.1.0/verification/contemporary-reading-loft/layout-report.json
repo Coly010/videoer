@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "requestId": "layout.contemporary-reading-loft-interior-furnishing",
+  "familyId": "environment.interior-furnishing-family",
+  "seed": 12691,
+  "attempts": 1,
+  "instances": [
+    {
+      "id": "layout.contemporary-reading-loft-interior-furnishing.cluster-001.member-01",
+      "clusterId": "layout.contemporary-reading-loft-interior-furnishing.cluster-001",
+      "recipeId": "complete-reading-corner",
+      "variantId": "reading-chair",
+      "geometryAssetId": "prop.upholstered-reading-chair",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          -3.3783510075428613,
+          0,
+          0.847229515284528
+        ],
+        "rotation": [
+          0,
+          -0.014318787449574712,
+          0
+        ],
+        "scale": [
+          0.9920040475763381,
+          0.9920040475763381,
+          0.9920040475763381
+        ]
+      },
+      "footprintRadiusMeters": 0.7142429142549634,
+      "heightMeters": 1.6864068808797748
+    },
+    {
+      "id": "layout.contemporary-reading-loft-interior-furnishing.cluster-001.member-02",
+      "clusterId": "layout.contemporary-reading-loft-interior-furnishing.cluster-001",
+      "recipeId": "complete-reading-corner",
+      "variantId": "pedestal-table",
+      "geometryAssetId": "prop.pedestal-side-table",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          -2.0999560226151037,
+          0,
+          0.42189874692705504
+        ],
+        "rotation": [
+          0,
+          -0.28381911522276904,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "footprintRadiusMeters": 0.58,
+      "heightMeters": 0.77
+    },
+    {
+      "id": "layout.contemporary-reading-loft-interior-furnishing.cluster-001.member-03",
+      "clusterId": "layout.contemporary-reading-loft-interior-furnishing.cluster-001",
+      "recipeId": "complete-reading-corner",
+      "variantId": "vessel-set",
+      "geometryAssetId": "prop.decorative-vessel-set",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          -2.0999560226151037,
+          0.77,
+          0.42189874692705504
+        ],
+        "rotation": [
+          0,
+          0.04008983584746876,
+          0
+        ],
+        "scale": [
+          0.7543266498629003,
+          0.7543266498629003,
+          0.7543266498629003
+        ]
+      },
+      "footprintRadiusMeters": 0.3168171929424181,
+      "heightMeters": 0.49031232241088524
+    }
+  ],
+  "verification": {
+    "requestedClusterCount": 1,
+    "placedClusterCount": 1,
+    "placedCount": 3,
+    "requiredVariantIds": [
+      "reading-chair",
+      "pedestal-table",
+      "vessel-set"
+    ],
+    "requiredRecipeIds": [
+      "complete-reading-corner"
+    ],
+    "allRequiredVariantsPresent": true,
+    "exclusionCount": 1,
+    "deterministic": true,
+    "overlapFree": true,
+    "navigationClearancePreserved": true
+  }
+}

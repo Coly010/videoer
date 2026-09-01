@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "id": "lighting.nocturne-gallery",
+  "exposure": {
+    "look": "AgX - Medium High Contrast",
+    "coherentAcrossShots": true
+  },
+  "worldColor": [
+    0.004,
+    0.006,
+    0.014
+  ],
+  "lights": [
+    {
+      "id": "warm-reading-key",
+      "type": "area",
+      "position": [
+        -0.8,
+        2.9499999999999997,
+        1.1
+      ],
+      "target": [
+        0.45,
+        1.3499999999999999,
+        0
+      ],
+      "color": [
+        0.92,
+        0.43119999999999997,
+        0.2
+      ],
+      "energy": 719.4399999999999,
+      "sizeMeters": 2.2,
+      "angleDegrees": 45,
+      "purpose": "key"
+    },
+    {
+      "id": "cool-window-fill",
+      "type": "area",
+      "position": [
+        2.3,
+        2.25,
+        -2.1999999999999997
+      ],
+      "target": [
+        0.45,
+        1.3499999999999999,
+        0
+      ],
+      "color": [
+        0.276,
+        0.4576,
+        0.92
+      ],
+      "energy": 281.52000000000004,
+      "sizeMeters": 2.6,
+      "angleDegrees": 45,
+      "purpose": "fill"
+    },
+    {
+      "id": "shelf-rim",
+      "type": "spot",
+      "position": [
+        0,
+        2.85,
+        1.6999999999999997
+      ],
+      "target": [
+        0.45,
+        1.4,
+        0.10000000000000009
+      ],
+      "color": [
+        0.92,
+        0.5720000000000001,
+        0.35
+      ],
+      "energy": 368.00000000000006,
+      "sizeMeters": 1,
+      "angleDegrees": 48,
+      "purpose": "rim"
+    }
+  ],
+  "metadata": {
+    "context": "contemporary-night-exhibition",
+    "faceKey": "warm-reading-key",
+    "windowFill": "cool-window-fill",
+    "campaign": "campaign.nocturne-exhibition",
+    "derivedFrom": "environment.warm-bookshop-lighting",
+    "lightingAdaptation": "lighting-rig-transform-v1"
+  }
+}

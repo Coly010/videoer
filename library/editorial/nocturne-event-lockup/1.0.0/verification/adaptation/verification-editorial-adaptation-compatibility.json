@@ -1,0 +1,175 @@
+{
+  "schemaVersion": 1,
+  "adaptationKind": "editorial-treatment-v1",
+  "sourceId": "opening-title",
+  "baseAsset": {
+    "id": "material.rise-of-demons-title-treatment",
+    "version": "0.1.1"
+  },
+  "baseArtifact": "/Users/colum/dev/personal/videoer/library/materials/rise-of-demons-title-treatment/0.1.1/title-treatment.json",
+  "baseArtifactRole": "title-treatment",
+  "baseEditorialSha256": "5d7cbe54c93eaf7efbe2408ae4040e15b3de62ae8cbe75c311f50c6e7d0e47bf",
+  "adaptedAssetId": "editorial.nocturne-event-lockup",
+  "adaptedTreatment": "/Users/colum/dev/personal/videoer/campaigns/nocturne-exhibition-conformance/work/editorial/opening-title-treatment.json",
+  "adaptedTreatmentSha256": "ed9b2a6f429af7ba3da5d5f3f678fbba6db2885f2368afe62c5544386ab712a1",
+  "adaptedArtifact": "/Users/colum/dev/personal/videoer/campaigns/nocturne-exhibition-conformance/work/editorial/opening-title.png",
+  "adaptedEditorialSha256": "d839d50dde64615d863d112997a2cc1b08cc997f768347471b3ed765a488eb86",
+  "requestedCapabilities": [
+    "vertical-safe-area",
+    "deterministic-render",
+    "event-identity-lockup"
+  ],
+  "missingBaseCapabilities": [
+    "event-identity-lockup"
+  ],
+  "providedCapabilities": [
+    "event-identity-lockup"
+  ],
+  "adaptation": {
+    "kind": "editorial-treatment-v1",
+    "assetId": "editorial.nocturne-event-lockup",
+    "canvas": {
+      "width": 480,
+      "height": 270
+    },
+    "safeAreaMargins": {
+      "left": 0.08,
+      "top": 0.08,
+      "right": 0.08,
+      "bottom": 0.08
+    },
+    "copy": {
+      "eyebrow": "LIGHT / MATTER / MEMORY",
+      "title": "NOCTURNE",
+      "cta": "14 SEPTEMBER — 03 NOVEMBER"
+    },
+    "palette": {
+      "background": "#02030a",
+      "foreground": "#f2f4ff",
+      "accent": "#8ebcff"
+    },
+    "motifOpacity": 0.28,
+    "typographyScale": 1,
+    "metadata": {
+      "context": "contemporary-night-exhibition",
+      "campaignFamily": "nocturne"
+    }
+  },
+  "operations": {
+    "fontChanged": false,
+    "motifChanged": false,
+    "deterministicPixelsChanged": false,
+    "safeAreaViolated": false
+  },
+  "compatibility": {
+    "fontPreserved": true,
+    "motifPreserved": true,
+    "exactTreatmentMatched": true,
+    "deterministicRenderMatched": true,
+    "dimensionsMatched": true,
+    "linesInsideSafeArea": true,
+    "contrast": {
+      "foreground": 18.784242931971136,
+      "accent": 10.576039281533582
+    },
+    "fontSha256": "b20b7d9626dd956b2c5e558692ad328b1f19e3275e2782db4fa07670d83f35e0"
+  },
+  "validation": {
+    "valid": true,
+    "adaptation": {
+      "valid": true,
+      "issues": [],
+      "adaptation": {
+        "kind": "editorial-treatment-v1",
+        "assetId": "editorial.nocturne-event-lockup",
+        "canvas": {
+          "width": 480,
+          "height": 270
+        },
+        "safeAreaMargins": {
+          "left": 0.08,
+          "top": 0.08,
+          "right": 0.08,
+          "bottom": 0.08
+        },
+        "copy": {
+          "eyebrow": "LIGHT / MATTER / MEMORY",
+          "title": "NOCTURNE",
+          "cta": "14 SEPTEMBER — 03 NOVEMBER"
+        },
+        "palette": {
+          "background": "#02030a",
+          "foreground": "#f2f4ff",
+          "accent": "#8ebcff"
+        },
+        "motifOpacity": 0.28,
+        "typographyScale": 1,
+        "metadata": {
+          "context": "contemporary-night-exhibition",
+          "campaignFamily": "nocturne"
+        }
+      },
+      "exactTreatmentMatched": true,
+      "fontPreserved": true,
+      "motifPreserved": true
+    },
+    "rendering": {
+      "valid": true,
+      "issues": [],
+      "candidateSha256": "d839d50dde64615d863d112997a2cc1b08cc997f768347471b3ed765a488eb86",
+      "expectedSha256": "d839d50dde64615d863d112997a2cc1b08cc997f768347471b3ed765a488eb86",
+      "fontSha256": "b20b7d9626dd956b2c5e558692ad328b1f19e3275e2782db4fa07670d83f35e0",
+      "deterministicRenderMatched": true,
+      "dimensionsMatched": true,
+      "linesInsideSafeArea": true,
+      "layerBounds": {
+        "eyebrow": {
+          "width": 228,
+          "height": 18,
+          "x": 126,
+          "y": 48
+        },
+        "title": {
+          "width": 240,
+          "height": 36,
+          "x": 119,
+          "y": 109
+        },
+        "cta": {
+          "width": 225,
+          "height": 17,
+          "x": 127,
+          "y": 192
+        }
+      },
+      "contrast": {
+        "foreground": 18.784242931971136,
+        "accent": 10.576039281533582
+      },
+      "layout": {
+        "eyebrow": {
+          "y": 49,
+          "size": 18
+        },
+        "title": {
+          "y": 112,
+          "size": 44
+        },
+        "cta": {
+          "y": 194,
+          "size": 16
+        }
+      },
+      "canvas": {
+        "width": 480,
+        "height": 270
+      },
+      "safeArea": {
+        "left": 38,
+        "top": 22,
+        "right": 442,
+        "bottom": 248
+      }
+    }
+  }
+}

@@ -1,0 +1,64 @@
+schemaVersion: 1
+id: environment.dusk-exterior-lighting
+version: 0.1.0
+type: environment
+title: Overcast dusk exterior lighting rig
+description: Reusable overcast dusk exterior rig with cool environmental key,
+  warm bookshop practicals, threshold rim, and coherent AgX exposure.
+status: verified
+tags:
+  - lighting-rig
+  - dusk
+  - warm-practicals
+capabilities:
+  - reusable-rig
+  - coherent-exposure
+source:
+  kind: procedural
+  generator: videoer.bookshop-lighting-rig.v1
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: lighting-rig
+    path: lighting-rig.json
+    mediaType: application/vnd.videoer.lighting+json
+    sha256: 2ce1fc37a40917e499b65ca623faa28fad54354b15975d199b81c70f884a0208
+  - role: preview
+    path: verification/exterior-lighting-probe.mp4
+    mediaType: video/mp4
+    sha256: 4a449e149af07d87cb87bb51a2491421c2ba183a2d83782157155c032cea4f02
+  - role: blender-source
+    path: verification/exterior-lighting-probe.blend
+    mediaType: application/x-blender
+    sha256: 011af010da90130d3bf820e3fb11d4c0b2da32ee7f796173750540ed8e6f83c7
+  - role: verification-verification-contact-sheet
+    path: verification/contact-sheet.png
+    mediaType: image/png
+    sha256: 8ba42dfaa5567a635d44ae6fbac2560111eb990dbc16324c6b81730677ee2364
+  - role: verification-verification-scene-render
+    path: verification/scene-render.json
+    mediaType: application/json
+    sha256: 9535aa17345ce5f068c9a657b3c12ae89be2de372ca68a4fac77cf51645a3b01
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - blender-headless
+  requires:
+    - id: environment.old-city-bookshop
+      version: 0.2.1
+verification:
+  checks:
+    - lighting.reusable-rig-schema
+    - lighting.agx-coherent-exposure
+    - lighting.warm-practical-cool-dusk-separation
+    - visual.camera-movement-exposure-continuity
+  artifacts:
+    - verification/contact-sheet.png
+    - verification/exterior-lighting-probe.mp4
+    - verification/scene-render.json
+  verifiedAt: 2026-08-30T22:32:31.171Z

@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "id": "fixture.old-city-wall-lantern",
+  "geometryAssetId": "prop.old-city-wall-lantern",
+  "mountAttachmentId": "wall-mount",
+  "emitters": [
+    {
+      "id": "warm-lantern-source",
+      "type": "point",
+      "position": [
+        0,
+        -0.37,
+        -0.48
+      ],
+      "color": [
+        1,
+        0.34,
+        0.11
+      ],
+      "powerWatts": 52,
+      "sizeMeters": 0.006,
+      "angleDegrees": 45,
+      "falloff": "inverse-square",
+      "purpose": "practical",
+      "visibleSourceMaterialId": "warm-flame",
+      "temporalModulation": {
+        "kind": "seeded-flicker",
+        "seed": 2417,
+        "frequencyHz": 7.2,
+        "intensityMinimumMultiplier": 0.78,
+        "intensityMaximumMultiplier": 1.12,
+        "colorTemperatureMinimumKelvin": 1780,
+        "colorTemperatureMaximumKelvin": 2050,
+        "interpolation": "smooth"
+      }
+    }
+  ],
+  "metadata": {
+    "generator": "videoer.portable-wall-lantern.v5",
+    "photometricIntent": "warm-local-practical-with-inverse-square-falloff",
+    "compatibleMount": "vertical-wall"
+  }
+}

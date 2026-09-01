@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "campaign": "campaign.night-signal-library-reuse",
+  "sourceFile": "/Users/colum/dev/personal/videoer/campaigns/night-signal-library-reuse-conformance/cinematic-campaign.yaml",
+  "sourceLines": 113,
+  "bespokeOrchestrationSourceFiles": 0,
+  "generatedGeometry": 1,
+  "generatedMotionSources": 0,
+  "generatedMotionTimelines": 0,
+  "motionReport": "/Users/colum/dev/personal/videoer/campaigns/night-signal-library-reuse-conformance/work/motions/motion-build-report.json",
+  "assetManifestFile": "/Users/colum/dev/personal/videoer/campaigns/night-signal-library-reuse-conformance/work/asset-manifest.yaml",
+  "publicationCandidatesDeclared": 0,
+  "scenes": ["scene.shared-platform", "scene.new-story"],
+  "editPlanFile": "/Users/colum/dev/personal/videoer/campaigns/night-signal-library-reuse-conformance/work/edit/edit-plan.json",
+  "delivery": "/Users/colum/dev/personal/videoer/campaigns/night-signal-library-reuse-conformance/delivery/night-signal-library-reuse.mp4"
+}

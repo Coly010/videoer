@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "id": "lighting-probe.transit-dusk-exterior-v1",
+  "sourceRigPath": "../../../lighting-rig.json",
+  "environmentGeometryPath": "../../../../../../../library/environments/night-transit-platform/1.0.1/geometry.json",
+  "adaptation": {
+    "kind": "lighting-rig-transform-v1",
+    "assetId": "lighting.transit-dusk-exterior-v1-transfer",
+    "transform": {
+      "translation": [0, 0, -0.6],
+      "yawRadians": 0,
+      "uniformScale": 1
+    },
+    "energyScale": 0.88,
+    "purposeEnergyScale": {
+      "key": 1,
+      "fill": 1.05,
+      "rim": 1,
+      "practical": 0.9,
+      "environment": 1
+    },
+    "colorMultiply": [0.96, 0.98, 1],
+    "worldColor": [0.004, 0.008, 0.02],
+    "metadata": {
+      "context": "unrelated-night-transit-platform-transfer",
+      "sourceCandidate": "lighting.bookshop-dusk-exterior@0.1.0"
+    }
+  },
+  "witnessTransform": {
+    "position": [0, 0, -0.8],
+    "rotation": [0, 0, 0],
+    "scale": [1, 1, 1]
+  },
+  "camera": {
+    "start": {
+      "position": [-2.8, 1.55, -3.6],
+      "target": [0, 0.9, -0.8],
+      "lensMillimeters": 44
+    },
+    "end": {
+      "position": [-2.55, 1.6, -3.35],
+      "target": [0, 0.92, -0.78],
+      "lensMillimeters": 48
+    }
+  },
+  "resolution": {
+    "width": 480,
+    "height": 480,
+    "percentage": 100
+  },
+  "exposureRegion": {
+    "x": 0.18,
+    "y": 0.12,
+    "width": 0.64,
+    "height": 0.78,
+    "maximumBlackPercentage": 55,
+    "maximumWhitePercentage": 10,
+    "minimumMidtonePercentage": 38
+  },
+  "metadata": {
+    "campaignClass": "lighting-transfer-conformance",
+    "environmentFamily": "abstract-night-transit-platform",
+    "sourceEnvironmentFamily": "old-city-bookshop-exterior"
+  }
+}

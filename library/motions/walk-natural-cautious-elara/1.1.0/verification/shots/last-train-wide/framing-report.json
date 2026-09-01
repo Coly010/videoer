@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "samples": [
+    {
+      "landmarkId": "shared-distance",
+      "progress": 0,
+      "frame": 1,
+      "entities": {
+        "platform": {
+          "minimumX": -0.6785748600959778,
+          "maximumX": 1.6785757541656494,
+          "minimumY": 0.15746146440505981,
+          "maximumY": 1.92363703250885,
+          "widthPercentage": 235.71506142616272,
+          "heightPercentage": 176.61755681037903
+        },
+        "elara": {
+          "minimumX": 0.6176354289054871,
+          "maximumX": 0.7902315258979797,
+          "minimumY": 0.12476734071969986,
+          "maximumY": 0.6532062292098999,
+          "widthPercentage": 17.259609699249268,
+          "heightPercentage": 52.843888849020004
+        },
+        "traveller": {
+          "minimumX": 0.2586672306060791,
+          "maximumX": 0.38275912404060364,
+          "minimumY": 0.12295623123645782,
+          "maximumY": 0.6626279354095459,
+          "widthPercentage": 12.409189343452454,
+          "heightPercentage": 53.96717041730881
+        }
+      }
+    },
+    {
+      "landmarkId": "last-train-space",
+      "progress": 0.5,
+      "frame": 37,
+      "entities": {
+        "platform": {
+          "minimumX": -0.8588311672210693,
+          "maximumX": 1.8588323593139648,
+          "minimumY": 0.12198306620121002,
+          "maximumY": 2.1220221519470215,
+          "widthPercentage": 271.7663526535034,
+          "heightPercentage": 200.00390857458115
+        },
+        "elara": {
+          "minimumX": 0.6272553205490112,
+          "maximumX": 0.8146282434463501,
+          "minimumY": 0.09487078338861465,
+          "maximumY": 0.6679627895355225,
+          "widthPercentage": 18.737292289733887,
+          "heightPercentage": 57.30920061469078
+        },
+        "traveller": {
+          "minimumX": 0.2371404469013214,
+          "maximumX": 0.373268723487854,
+          "minimumY": 0.09304505586624146,
+          "maximumY": 0.6782290935516357,
+          "widthPercentage": 13.61282765865326,
+          "heightPercentage": 58.51840376853943
+        }
+      }
+    },
+    {
+      "landmarkId": "conversation-axis",
+      "progress": 1,
+      "frame": 72,
+      "entities": {
+        "platform": {
+          "minimumX": -1.0741702318191528,
+          "maximumX": 2.074171543121338,
+          "minimumY": 0.0808010846376419,
+          "maximumY": 2.351876735687256,
+          "widthPercentage": 314.8341774940491,
+          "heightPercentage": 227.1075651049614
+        },
+        "elara": {
+          "minimumX": 0.6373175978660583,
+          "maximumX": 0.8402506709098816,
+          "minimumY": 0.0611407496035099,
+          "maximumY": 0.6809546947479248,
+          "widthPercentage": 20.293307304382324,
+          "heightPercentage": 61.98139451444149
+        },
+        "traveller": {
+          "minimumX": 0.2136968970298767,
+          "maximumX": 0.3633570671081543,
+          "minimumY": 0.059322990477085114,
+          "maximumY": 0.6921939253807068,
+          "widthPercentage": 14.966017007827759,
+          "heightPercentage": 63.28709349036217
+        }
+      }
+    }
+  ]
+}

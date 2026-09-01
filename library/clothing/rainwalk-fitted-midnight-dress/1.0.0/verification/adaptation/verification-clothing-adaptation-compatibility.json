@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "adaptationKind": "canonical-clothing-fit",
+  "sourceId": "fitted-dress",
+  "baseAsset": {
+    "id": "clothing.elara-midnight-dress",
+    "version": "0.1.0"
+  },
+  "baseArtifact": "/Users/colum/dev/personal/videoer/library/clothing/elara-midnight-dress/0.1.0/geometry.json",
+  "baseClothingSha256": "3d0c682942faf69ff2f617d9fc1efdfaceb78139015fb036fc56af74ce3757c3",
+  "targetGeometry": {
+    "sourceId": "walker",
+    "libraryAsset": {
+      "id": "character.humanoid-mannequin",
+      "version": "0.4.0"
+    },
+    "sha256": "df3b280b655a8e23a3de6d171d332727ebc424b687be2207cbef7edde17894ba"
+  },
+  "adaptedAssetId": "clothing.rainwalk-fitted-midnight-dress",
+  "adaptedArtifact": "/Users/colum/dev/personal/videoer/campaigns/rainwalk-square-crossdomain-conformance/work/clothing/fitted-dress.json",
+  "adaptedClothingSha256": "d4e886c3d831aedac1126f50626c7a6984568d5c6c96cc77fde36f013de574cd",
+  "requestedCapabilities": [
+    "canonical-humanoid-fit",
+    "walk-deformation",
+    "reusable-material",
+    "target-character-fit"
+  ],
+  "missingBaseCapabilities": [
+    "target-character-fit"
+  ],
+  "providedCapabilities": [
+    "target-character-fit"
+  ],
+  "operations": {
+    "topologyChanged": false,
+    "skinningChanged": true,
+    "skinningPolicy": "long-dress-drape-v1",
+    "skeletonRetargeted": true,
+    "changedVertexCount": 1092,
+    "maximumVertexDisplacement": 0.05702318544487761,
+    "clearanceMeters": 0.012,
+    "minimumNormalClearance": 0.011999999999999891
+  },
+  "compatibility": {
+    "topologyPreserved": true,
+    "skinningPreserved": false,
+    "targetSkeletonMatched": true,
+    "canonicalSkeletonCompatible": true,
+    "drapeSkinningValid": true,
+    "maximumHemNonPelvisWeight": 0.09797277414736955
+  },
+  "validation": {
+    "valid": true,
+    "issues": [],
+    "topologyPreserved": true,
+    "skinningPreserved": false,
+    "skinningPolicy": "long-dress-drape-v1",
+    "drapeSkinningValid": true,
+    "hemVertexCount": 132,
+    "maximumHemNonPelvisWeight": 0.09797277414736955,
+    "targetSkeletonMatched": true,
+    "canonicalSkeletonCompatible": true,
+    "changedVertexCount": 1092,
+    "maximumVertexDisplacement": 0.05702318544487761,
+    "clearanceMeters": 0.012,
+    "minimumNormalClearance": 0.011999999999999891,
+    "validation": {
+      "valid": true,
+      "issues": [],
+      "stats": {
+        "vertices": 1092,
+        "triangles": 1984,
+        "joints": 22,
+        "skinned": true,
+        "morphTargets": 0
+      }
+    }
+  }
+}

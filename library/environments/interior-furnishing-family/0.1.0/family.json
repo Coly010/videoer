@@ -1,0 +1,218 @@
+{
+  "schemaVersion": 1,
+  "id": "environment.interior-furnishing-family",
+  "title": "Cross-era inhabited-interior furnishing family",
+  "tags": [
+    "interior",
+    "furniture",
+    "seating",
+    "tabletop",
+    "inhabited-environment"
+  ],
+  "intendedShotDistance": [
+    "background",
+    "medium"
+  ],
+  "variants": [
+    {
+      "id": "reading-chair",
+      "geometryAssetId": "prop.upholstered-reading-chair",
+      "geometryVersion": "0.1.0",
+      "weight": 0.42,
+      "footprintRadiusMeters": 0.72,
+      "heightMeters": 1.7,
+      "scale": {
+        "minimum": 0.96,
+        "maximum": 1.04
+      },
+      "yawDegrees": {
+        "minimum": -4,
+        "maximum": 4
+      },
+      "tags": [
+        "seating",
+        "upholstered",
+        "interaction-anchors"
+      ]
+    },
+    {
+      "id": "pedestal-table",
+      "geometryAssetId": "prop.pedestal-side-table",
+      "geometryVersion": "0.1.0",
+      "weight": 0.34,
+      "footprintRadiusMeters": 0.58,
+      "heightMeters": 0.77,
+      "scale": {
+        "minimum": 1,
+        "maximum": 1
+      },
+      "yawDegrees": {
+        "minimum": -12,
+        "maximum": 12
+      },
+      "tags": [
+        "table",
+        "interaction-surface",
+        "brass-inlay"
+      ]
+    },
+    {
+      "id": "vessel-set",
+      "geometryAssetId": "prop.decorative-vessel-set",
+      "geometryVersion": "0.1.0",
+      "weight": 0.24,
+      "footprintRadiusMeters": 0.42,
+      "heightMeters": 0.65,
+      "scale": {
+        "minimum": 0.9,
+        "maximum": 1.08
+      },
+      "yawDegrees": {
+        "minimum": -25,
+        "maximum": 25
+      },
+      "tags": [
+        "tabletop",
+        "ceramic",
+        "brass",
+        "portable-inventory"
+      ]
+    }
+  ],
+  "clusters": [
+    {
+      "id": "complete-reading-corner",
+      "weight": 0.54,
+      "yawDegrees": {
+        "minimum": -18,
+        "maximum": 18
+      },
+      "members": [
+        {
+          "variantId": "reading-chair",
+          "offset": [
+            -0.72,
+            0,
+            0.08
+          ],
+          "yawOffsetDegrees": 12,
+          "scaleMultiplier": 1
+        },
+        {
+          "variantId": "pedestal-table",
+          "offset": [
+            0.62,
+            0,
+            -0.06
+          ],
+          "yawOffsetDegrees": -4,
+          "scaleMultiplier": 1
+        },
+        {
+          "variantId": "vessel-set",
+          "offset": [
+            0.62,
+            0.77,
+            -0.06
+          ],
+          "yawOffsetDegrees": 8,
+          "scaleMultiplier": 0.72
+        }
+      ]
+    },
+    {
+      "id": "conversation-setting",
+      "weight": 0.3,
+      "yawDegrees": {
+        "minimum": -24,
+        "maximum": 24
+      },
+      "members": [
+        {
+          "variantId": "reading-chair",
+          "offset": [
+            -1.1,
+            0,
+            0.05
+          ],
+          "yawOffsetDegrees": 52,
+          "scaleMultiplier": 1
+        },
+        {
+          "variantId": "reading-chair",
+          "offset": [
+            1.1,
+            0,
+            0.05
+          ],
+          "yawOffsetDegrees": -52,
+          "scaleMultiplier": 1
+        },
+        {
+          "variantId": "pedestal-table",
+          "offset": [
+            0,
+            0,
+            -0.26
+          ],
+          "yawOffsetDegrees": 0,
+          "scaleMultiplier": 1
+        },
+        {
+          "variantId": "vessel-set",
+          "offset": [
+            0,
+            0.77,
+            -0.26
+          ],
+          "yawOffsetDegrees": 0,
+          "scaleMultiplier": 0.7
+        }
+      ]
+    },
+    {
+      "id": "solitary-table-vignette",
+      "weight": 0.16,
+      "yawDegrees": {
+        "minimum": -35,
+        "maximum": 35
+      },
+      "members": [
+        {
+          "variantId": "pedestal-table",
+          "offset": [
+            0,
+            0,
+            0
+          ],
+          "yawOffsetDegrees": 0,
+          "scaleMultiplier": 1
+        },
+        {
+          "variantId": "vessel-set",
+          "offset": [
+            0,
+            0.77,
+            0
+          ],
+          "yawOffsetDegrees": 14,
+          "scaleMultiplier": 0.76
+        }
+      ]
+    }
+  ],
+  "placement": {
+    "surface": "ground",
+    "distribution": "edge-band",
+    "edgeBandMeters": 2.25,
+    "minimumSpacingMeters": 0.24,
+    "preserveNavigationClearance": true
+  },
+  "metadata": {
+    "generator": "videoer.interior-furnishing-family.v1",
+    "assetResolution": "stable-id-and-explicit-version",
+    "layoutOutput": "renderer-independent-authored-furnishing-transforms",
+    "crossEraTransferFixture": true,
+    "tabletopSupportHeightMeters": 0.77
+  }
+}

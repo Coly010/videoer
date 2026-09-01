@@ -1,0 +1,208 @@
+schemaVersion: 1
+id: campaign.beacon-one-product
+fps: 24
+resolution: {width: 540, height: 960, percentage: 100}
+
+geometry:
+  - id: beacon
+    path: work/product/geometry.json
+    recipe:
+      assetId: prop.beacon-one
+      metadata:
+        generator: videoer.declarative-geometry.v1
+        productClass: portable-emergency-beacon
+        projectOwned: true
+      primitives:
+        - {kind: box, minimum: [-0.58, 0.08, -0.2], maximum: [0.58, 1.52, 0.2], materialId: shell}
+        - {kind: box, minimum: [-0.49, 0.78, -0.225], maximum: [0.49, 1.36, -0.2], materialId: screen-frame}
+        - {kind: box, minimum: [-0.42, 0.85, -0.235], maximum: [0.42, 1.29, -0.225], materialId: screen}
+        - {kind: box, minimum: [-0.29, 1.04, -0.247], maximum: [-0.22, 1.1, -0.239], materialId: signal-trace}
+        - {kind: box, minimum: [-0.18, 0.995, -0.247], maximum: [-0.11, 1.145, -0.239], materialId: signal-trace}
+        - {kind: box, minimum: [-0.07, 0.95, -0.247], maximum: [0, 1.19, -0.239], materialId: signal-trace}
+        - {kind: box, minimum: [0.04, 1.04, -0.247], maximum: [0.11, 1.1, -0.239], materialId: signal-trace}
+        - {kind: box, minimum: [0.15, 0.995, -0.247], maximum: [0.22, 1.145, -0.239], materialId: signal-trace}
+        - {kind: box, minimum: [0.26, 0.95, -0.247], maximum: [0.33, 1.19, -0.239], materialId: signal-trace}
+        - {kind: box, minimum: [-0.44, 0.2, -0.235], maximum: [-0.1, 0.55, -0.2], materialId: control}
+        - {kind: box, minimum: [0.1, 0.2, -0.235], maximum: [0.44, 0.55, -0.2], materialId: control}
+        - {kind: box, minimum: [-0.63, 0.17, -0.12], maximum: [-0.58, 1.42, 0.12], materialId: bumper}
+        - {kind: box, minimum: [0.58, 0.17, -0.12], maximum: [0.63, 1.42, 0.12], materialId: bumper}
+        - {kind: capsule, start: [-0.39, 1.5, 0], end: [-0.39, 2.28, 0], radiusX: 0.035, radiusZ: 0.035, materialId: antenna}
+        - {kind: capsule, start: [0.39, 1.5, 0], end: [0.39, 1.77, 0], radiusX: 0.065, radiusZ: 0.065, materialId: signal-light}
+      materials:
+        - {id: shell, baseColor: [0.055, 0.065, 0.075, 1], roughness: 0.34, metallic: 0.52, emission: [0, 0, 0], emissionStrength: 0}
+        - {id: screen-frame, baseColor: [0.015, 0.02, 0.025, 1], roughness: 0.2, metallic: 0.25, emission: [0, 0, 0], emissionStrength: 0}
+        - {id: screen, baseColor: [0.018, 0.07, 0.095, 1], roughness: 0.14, metallic: 0.05, emission: [0.015, 0.18, 0.24], emissionStrength: 1.1}
+        - {id: signal-trace, baseColor: [0.18, 0.92, 1, 1], roughness: 0.12, metallic: 0, emission: [0.1, 0.9, 1], emissionStrength: 2.4}
+        - {id: control, baseColor: [0.92, 0.34, 0.06, 1], roughness: 0.4, metallic: 0.18, emission: [0, 0, 0], emissionStrength: 0}
+        - {id: bumper, baseColor: [0.025, 0.028, 0.03, 1], roughness: 0.76, metallic: 0, emission: [0, 0, 0], emissionStrength: 0}
+        - {id: antenna, baseColor: [0.16, 0.17, 0.18, 1], roughness: 0.25, metallic: 0.72, emission: [0, 0, 0], emissionStrength: 0}
+        - {id: signal-light, baseColor: [0.8, 0.08, 0.025, 1], roughness: 0.18, metallic: 0.1, emission: [1, 0.03, 0.005], emissionStrength: 4.5}
+      attachments:
+        product-focus: {position: [0, 0.95, 0]}
+        screen-focus: {position: [0, 1.08, -0.24]}
+        camera-wide: {position: [2.6, 2.15, -4.8]}
+        camera-screen: {position: [-0.9, 1.35, -2.35]}
+        camera-hero: {position: [2.15, 1.75, -3.65]}
+
+audioSources:
+  - id: product-pulse
+    path: work/audio/product-pulse.wav
+    library:
+      type: audio
+      query: deterministic cinematic score and sound design
+      tags: [cinematic-score, deterministic]
+      capabilities: [provider-free, frame-synchronized, stereo-48khz, exact-duration]
+      preferredAsset: {id: audio.rainy-bookshop-score, version: 0.1.0}
+      artifactRole: master
+    adaptation:
+      kind: cinematic-audio-treatment-v1
+      assetId: audio.beacon-one-product-pulse
+      sourceStartSeconds: 0
+      durationSeconds: 9
+      highpassHz: 60
+      lowpassHz: 11000
+      gainDb: -1
+      compressor: {thresholdDb: -20, ratio: 2.5, attackMs: 18, releaseMs: 220}
+      stereoWidth: 1.2
+      fadeInSeconds: 0.12
+      fadeOutSeconds: 0.35
+      targetIntegratedLufs: -18
+      truePeakDb: -1.5
+      accents:
+        - {id: interface-lock, kind: tonal-accent, startSeconds: 2.72, endSeconds: 3.42, gain: 0.24, frequencyHz: 392}
+        - {id: brand-resolve, kind: tonal-accent, startSeconds: 6, endSeconds: 8.85, gain: 0.14, frequencyHz: 196}
+      providesCapabilities:
+        [deterministic-treatment, temporal-envelope-preserved, frame-synchronized-accents, product-launch-pulse]
+      metadata: {purpose: Restrained electronic product-launch treatment from verified score}
+      publication:
+        assetId: audio.beacon-one-product-pulse
+        version: 1.0.0
+        type: audio
+        title: Beacon One restrained product pulse
+        description: Deterministic nine-second cinematic treatment derived from a verified provider-free score with exact interval, preserved temporal envelope, 48 kHz stereo PCM, controlled dynamics, and independent approval-time re-rendering.
+        tags: [cinematic-score, product-launch, restrained, deterministic, provider-free]
+        capabilities:
+          [provider-free, exact-duration, stereo-48khz, deterministic-treatment, temporal-envelope-preserved, frame-synchronized-accents, product-launch-pulse]
+        generator: videoer.cinematic-audio-treatment.v1
+        renderers: [ffmpeg-full, remotion]
+        verification:
+          checks:
+            [audio.parent-hash, audio.output-hash, audio.exact-duration, audio.stereo-48000hz, audio.temporal-envelope-preserved, audio.frame-synchronized-accents, audio.deterministic-rerender, campaign.delivery.verified]
+          shots: [signal-silhouette, interface-detail, beacon-end-frame]
+
+overlays:
+  - id: brand-end-frame
+    path: work/editorial/product-overlay.png
+    width: 540
+    height: 960
+    font: {family: Cormorant Garamond, licence: OFL-1.1}
+    lines:
+      - {text: BEACON ONE, y: 92, fontSize: 58, color: '0xeaf8ff', borderWidth: 2, borderColor: '0x001018@0.9'}
+      - {text: SIGNAL BEYOND THE GRID, y: 866, fontSize: 25, color: '0x8ee9ff', borderWidth: 2, borderColor: '0x001018@0.95'}
+
+soundtrackPath: work/audio/soundtrack.wav
+soundtrack:
+  schemaVersion: 1
+  id: audio.beacon-one-product
+  durationSeconds: 9
+  sampleRate: 48000
+  channels: 2
+  cues:
+    - {id: treated-score, kind: audio-source, source: product-pulse, startSeconds: 0, endSeconds: 9, gain: 1, purpose: Verified reusable product-launch treatment}
+  metadata: {providerFree: true, conformanceCampaign: beacon-one-product, treatmentSource: audio.beacon-one-product-pulse@1.0.0}
+
+shots:
+  - id: signal-silhouette
+    frames: 72
+    entities:
+      - {id: beacon, geometry: beacon, role: prop}
+    camera:
+      keyframes:
+        - time: 0
+          position: {entityId: beacon, attachmentId: camera-wide}
+          target: {entityId: beacon, attachmentId: product-focus}
+          lensMillimeters: 56
+        - time: 3
+          position: {entityId: beacon, attachmentId: camera-wide, offset: [-0.45, -0.1, 0.65]}
+          target: {entityId: beacon, attachmentId: product-focus}
+          lensMillimeters: 62
+    lights:
+      - {id: cyan-rim, type: area, position: [-2.8, 2.9, 1.2], target: [0, 1, 0], color: [0.08, 0.72, 1], energy: 760, sizeMeters: 1.8}
+      - {id: orange-edge, type: area, position: [2.4, 1.7, -1.4], target: [0, 0.8, 0], color: [1, 0.22, 0.04], energy: 430, sizeMeters: 1.2}
+    atmosphere: &product-atmosphere
+      worldColor: [0.002, 0.006, 0.01]
+      fogColor: [0.02, 0.08, 0.11]
+      fogDensity: 0.009
+      rain: {enabled: false}
+    renderGates: [{id: product-visible, type: frame-visibility, maximumBlackPercentage: 85}]
+    landmarks:
+      - {id: dark-arrival, progress: 0, description: Emergency product enters as a silhouette}
+      - {id: signal-edge, progress: 0.5, description: Emissive screen and antenna separate}
+      - {id: identity-read, progress: 1, description: Complete portable form becomes readable}
+    metadata: {template: semantic-product-shot}
+
+  - id: interface-detail
+    frames: 72
+    entities:
+      - {id: beacon, geometry: beacon, role: prop}
+    camera:
+      keyframes:
+        - time: 0
+          position: {entityId: beacon, attachmentId: camera-screen}
+          target: {entityId: beacon, attachmentId: screen-focus}
+          lensMillimeters: 76
+        - time: 3
+          position: {entityId: beacon, attachmentId: camera-screen, offset: [0.16, 0.03, 0.28]}
+          target: {entityId: beacon, attachmentId: screen-focus}
+          lensMillimeters: 84
+    lights:
+      - {id: screen-key, type: area, position: [-1.1, 2.4, -1.5], target: [0, 1.05, 0], color: [0.25, 0.82, 1], energy: 620, sizeMeters: 1.1}
+      - {id: control-fill, type: area, position: [1.5, 0.8, -1.2], target: [0, 0.45, 0], color: [1, 0.3, 0.05], energy: 360, sizeMeters: 0.8}
+    atmosphere: *product-atmosphere
+    renderGates: [{id: product-visible, type: frame-visibility, maximumBlackPercentage: 85}]
+    landmarks:
+      - {id: screen-lock, progress: 0, description: Camera locks to the semantic screen target}
+      - {id: control-read, progress: 0.55, description: High-contrast controls remain legible}
+      - {id: detail-hold, progress: 1, description: Interface detail holds without coordinate tuning}
+    metadata: {template: semantic-product-shot}
+
+  - id: beacon-end-frame
+    frames: 72
+    entities:
+      - {id: beacon, geometry: beacon, role: prop}
+    camera:
+      keyframes:
+        - time: 0
+          position: {entityId: beacon, attachmentId: camera-hero}
+          target: {entityId: beacon, attachmentId: product-focus}
+          lensMillimeters: 58
+        - time: 3
+          position: {entityId: beacon, attachmentId: camera-hero, offset: [-0.25, -0.05, 0.45]}
+          target: {entityId: beacon, attachmentId: product-focus}
+          lensMillimeters: 64
+    lights:
+      - {id: hero-key, type: area, position: [-2, 3.1, -2.2], target: [0, 1, 0], color: [0.35, 0.82, 1], energy: 820, sizeMeters: 1.7}
+      - {id: hero-rim, type: area, position: [2.2, 2.2, 0.8], target: [0, 1, 0], color: [1, 0.22, 0.035], energy: 690, sizeMeters: 1.2}
+    atmosphere:
+      worldColor: [0.001, 0.003, 0.006]
+      fogDensity: 0.004
+      rain: {enabled: false}
+    overlays:
+      - {overlay: brand-end-frame, startSeconds: 0, endSeconds: 3, fadeInSeconds: 0.35, fadeOutSeconds: 0}
+    renderGates: [{id: product-visible, type: frame-visibility, maximumBlackPercentage: 85}]
+    landmarks:
+      - {id: hero-arrival, progress: 0, description: Full dimensional product arrives}
+      - {id: promise, progress: 0.5, description: Campaign promise overlays the product}
+      - {id: brand-hold, progress: 1, description: Original brand end frame settles}
+    metadata: {template: product-reveal}
+
+delivery:
+  id: edit.beacon-one-product
+  directory: delivery-declarative
+  codec: h264
+  pixelFormat: yuv420p
+  fastStart: true
+
+metadata:
+  conformancePurpose: zero-bespoke-orchestration
+  materiallyDifferentFromBenchmark: true

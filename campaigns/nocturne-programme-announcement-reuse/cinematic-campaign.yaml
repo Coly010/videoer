@@ -1,0 +1,248 @@
+schemaVersion: 1
+id: campaign.nocturne-programme-announcement
+fps: 24
+resolution: { width: 480, height: 270, percentage: 100 }
+assetLibrary: ../../library
+
+geometry:
+  - id: programme-stage
+    path: work/stage/geometry.json
+    recipe:
+      assetId: environment.nocturne-programme-stage
+      metadata:
+        {
+          generator: videoer.declarative-geometry.v1,
+          channel: programme-announcement,
+          projectOwned: true,
+        }
+      primitives:
+        - { kind: box, minimum: [-4, -0.18, -3.5], maximum: [4, 0, 3.5], materialId: floor }
+        - { kind: box, minimum: [-4, 0, 3.3], maximum: [4, 3.8, 3.5], materialId: wall }
+        - {
+            kind: box,
+            minimum: [-1.8, 0, 0.2],
+            maximum: [-0.25, 2.45, 0.38],
+            materialId: panel-blue,
+          }
+        - {
+            kind: box,
+            minimum: [0.25, 0, 0.2],
+            maximum: [1.8, 2.45, 0.38],
+            materialId: panel-amber,
+          }
+        - {
+            kind: capsule,
+            start: [-1.45, 0.35, 0.05],
+            end: [-0.55, 2.1, 0.05],
+            radiusX: 0.075,
+            radiusZ: 0.075,
+            materialId: blue-light,
+          }
+        - {
+            kind: capsule,
+            start: [1.45, 0.35, 0.05],
+            end: [0.55, 2.1, 0.05],
+            radiusX: 0.075,
+            radiusZ: 0.075,
+            materialId: amber-light,
+          }
+      materials:
+        - {
+            id: floor,
+            baseColor: [0.025, 0.03, 0.045, 1],
+            roughness: 0.25,
+            metallic: 0.2,
+            emission: [0, 0, 0],
+            emissionStrength: 0,
+          }
+        - {
+            id: wall,
+            baseColor: [0.08, 0.09, 0.12, 1],
+            roughness: 0.78,
+            metallic: 0,
+            emission: [0, 0, 0],
+            emissionStrength: 0,
+          }
+        - {
+            id: panel-blue,
+            baseColor: [0.025, 0.08, 0.22, 1],
+            roughness: 0.34,
+            metallic: 0.35,
+            emission: [0.01, 0.05, 0.18],
+            emissionStrength: 0.5,
+          }
+        - {
+            id: panel-amber,
+            baseColor: [0.28, 0.065, 0.018, 1],
+            roughness: 0.34,
+            metallic: 0.35,
+            emission: [0.2, 0.025, 0],
+            emissionStrength: 0.5,
+          }
+        - {
+            id: blue-light,
+            baseColor: [0.1, 0.55, 1, 1],
+            roughness: 0.1,
+            metallic: 0,
+            emission: [0.02, 0.4, 1],
+            emissionStrength: 4,
+          }
+        - {
+            id: amber-light,
+            baseColor: [1, 0.3, 0.05, 1],
+            roughness: 0.1,
+            metallic: 0,
+            emission: [1, 0.12, 0.01],
+            emissionStrength: 4,
+          }
+      attachments:
+        stage-focus: { position: [0, 1.25, 0.2] }
+        camera-wide: { position: [2.8, 1.8, -4.8] }
+
+lightingSources:
+  - id: gallery-lighting
+    library:
+      type: lighting
+      query: sculptural gallery stage key fill rim
+      tags: [lighting-rig, gallery, sculptural]
+      capabilities: [reusable-rig, coherent-exposure, key-fill-rim, sculptural-gallery-stage]
+      preferredAsset: { id: lighting.nocturne-gallery, version: 1.0.0 }
+      artifactRole: lighting
+
+overlays:
+  - id: event-identity
+    library:
+      type: editorial
+      query: Nocturne exhibition event identity lockup
+      tags: [editorial, event-identity, exhibition]
+      capabilities:
+        [
+          event-identity-lockup,
+          deterministic-render,
+          measured-safe-area,
+          contrast-verified,
+          threshold-lines,
+        ]
+      preferredAsset: { id: editorial.nocturne-event-lockup, version: 1.0.0 }
+      artifactRole: transparent-overlay
+
+soundtrackPath: work/audio/soundtrack.wav
+soundtrack:
+  schemaVersion: 1
+  id: audio.nocturne-programme-announcement
+  durationSeconds: 4
+  sampleRate: 48000
+  channels: 2
+  cues:
+    - {
+        id: room,
+        kind: noise-bed,
+        startSeconds: 0,
+        endSeconds: 4,
+        gain: 0.01,
+        seed: 1414,
+        purpose: Quiet programme-stage air,
+      }
+    - {
+        id: identity-tone,
+        kind: tone-bed,
+        startSeconds: 0,
+        endSeconds: 4,
+        gain: 0.045,
+        frequencyHz: 110,
+        purpose: Restrained event identity bed,
+      }
+    - {
+        id: resolve,
+        kind: tonal-accent,
+        startSeconds: 1.8,
+        endSeconds: 3.9,
+        gain: 0.07,
+        frequencyHz: 220,
+        purpose: Programme announcement resolve,
+      }
+  metadata: { providerFree: true, channel: programme-announcement }
+
+shots:
+  - id: programme-identity
+    frames: 96
+    entities: [{ id: programme-stage, geometry: programme-stage, role: environment }]
+    camera:
+      keyframes:
+        - {
+            time: 0,
+            position: { entityId: programme-stage, attachmentId: camera-wide },
+            target: { entityId: programme-stage, attachmentId: stage-focus },
+            lensMillimeters: 54,
+          }
+        - {
+            time: 4,
+            position:
+              { entityId: programme-stage, attachmentId: camera-wide, offset: [-0.7, 0.05, 0.55] },
+            target: { entityId: programme-stage, attachmentId: stage-focus },
+            lensMillimeters: 62,
+          }
+    lighting: gallery-lighting
+    lights: []
+    atmosphere:
+      {
+        worldColor: [0.002, 0.004, 0.012],
+        fogColor: [0.02, 0.03, 0.07],
+        fogDensity: 0.004,
+        rain: { enabled: false },
+      }
+    overlays:
+      [
+        {
+          overlay: event-identity,
+          startSeconds: 0.25,
+          endSeconds: 4,
+          fadeInSeconds: 0.5,
+          fadeOutSeconds: 0,
+        },
+      ]
+    renderGates: [{ id: programme-visible, type: frame-visibility, maximumBlackPercentage: 84 }]
+    qualityGates:
+      - {
+          id: camera-clears-programme-stage,
+          type: camera-path-clearance,
+          obstacleEntityIds: [programme-stage],
+          sampleCount: 49,
+          minimumCameraClearanceMeters: 0.15,
+          targetOcclusionToleranceMeters: 0.5,
+        }
+    landmarks:
+      - {
+          id: identity-arrival,
+          progress: 0,
+          description: Reused event identity enters over a new programme-stage composition,
+        }
+      - {
+          id: programme-hold,
+          progress: 0.5,
+          description: Identity remains stable while the dimensional panels gain parallax,
+        }
+      - {
+          id: channel-resolve,
+          progress: 1,
+          description: Programme announcement holds the verified identity unchanged,
+        }
+    metadata:
+      {
+        template: programme-announcement,
+        directEditorialReuse: editorial.nocturne-event-lockup@1.0.0,
+      }
+
+delivery:
+  {
+    id: edit.nocturne-programme-announcement,
+    directory: delivery-declarative,
+    codec: h264,
+    pixelFormat: yuv420p,
+    fastStart: true,
+  }
+metadata:
+  conformancePurpose: direct-cross-campaign-editorial-reuse
+  sourceEditorialAsset: editorial.nocturne-event-lockup@1.0.0
+  sourceLightingAsset: lighting.nocturne-gallery@1.0.0
+  bespokeOrchestrationSourceFiles: 0

@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "id": "material.rainwalk-blue-cobble",
+  "shadingModel": "metallic-roughness",
+  "baseColor": {
+    "kind": "procedural-palette",
+    "colors": [
+      [
+        0.025,
+        0.045,
+        0.07,
+        1
+      ],
+      [
+        0.055,
+        0.085,
+        0.12,
+        1
+      ],
+      [
+        0.018,
+        0.032,
+        0.052,
+        1
+      ]
+    ],
+    "scaleMeters": 0.38,
+    "seed": 7349
+  },
+  "normal": {
+    "kind": "geometry-relief",
+    "strength": 0.82,
+    "scaleMeters": 0.32
+  },
+  "roughness": {
+    "minimum": 0.1,
+    "maximum": 0.26,
+    "variationScaleMeters": 0.38,
+    "wetness": 0.92
+  },
+  "metallic": 0.035,
+  "metadata": {
+    "generator": "videoer.wet-cobble-material.v1",
+    "intendedSurfaces": [
+      "street",
+      "courtyard",
+      "rain-darkened-stone"
+    ],
+    "creativeIntent": "rain-polished blue stone under a cold dawn key",
+    "derivedFrom": "material.wet-old-city-cobble@0.1.0",
+    "sourceMaterial": "material.wet-old-city-cobble",
+    "adaptationGenerator": "videoer.surface-treatment.v1"
+  }
+}

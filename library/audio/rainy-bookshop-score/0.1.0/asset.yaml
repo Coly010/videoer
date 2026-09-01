@@ -1,0 +1,59 @@
+schemaVersion: 1
+id: audio.rainy-bookshop-score
+version: 0.1.0
+type: audio
+title: Deterministic rainy bookshop score and sound design
+description: Provider-free procedural rain bed, restrained tonal score,
+  synchronized door/page foley, title lift, and final-cover resolution for a
+  frame-exact 15-second edit.
+status: verified
+tags:
+  - rain
+  - cinematic-score
+  - foley
+  - deterministic
+capabilities:
+  - provider-free
+  - frame-synchronized
+  - stereo-48khz
+  - exact-duration
+source:
+  kind: procedural
+  generator: videoer.deterministic-soundtrack.v1
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned procedural audio
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: soundtrack-plan
+    path: soundtrack-plan.json
+    mediaType: application/vnd.videoer.audio-plan+json
+    sha256: 41040d52ec53032c36318abb0d305fbc10b3f32291095c2f3ddd67b71dfbca47
+  - role: master
+    path: soundtrack.wav
+    mediaType: audio/wav
+    sha256: 3041465e30faaedfe92c0bec74ee79d85ce0cdc4ac57e3380ba075202475e455
+  - role: waveform
+    path: waveform.png
+    mediaType: image/png
+    sha256: 1350c962c0b210f876d9d70b24623e268c51d2bef82e5ad2d367c9cf25d328b0
+compatibility:
+  renderers:
+    - ffmpeg-full
+    - remotion
+  requires: []
+verification:
+  checks:
+    - audio.exact-15-second-duration
+    - audio.stereo-48000hz
+    - audio.deterministic-noise-seeds
+    - audio.frame-synchronized-cues
+    - audio.provider-free-render
+    - audio.integrated-loudness-minus-18-lufs
+    - audio.true-peak-below-minus-1.5-dbtp
+  artifacts:
+    - waveform.png
+  verifiedAt: 2026-08-30T22:55:32.369Z

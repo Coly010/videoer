@@ -1,0 +1,105 @@
+schemaVersion: 1
+id: lighting.bookshop-warm-interior
+version: 0.1.0
+type: lighting
+title: Warm bookshop interior lighting rig
+description: Reusable warm bookshop interior rig with a readable face key, cool
+  window fill, shelf rim, and coherent AgX exposure.
+status: verified
+tags:
+  - lighting-rig
+  - warm-interior
+  - cool-fill
+capabilities:
+  - reusable-rig
+  - face-key
+  - coherent-exposure
+source:
+  kind: procedural
+  generator: videoer.bookshop-lighting-rig.v4
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: lighting-rig
+    path: lighting-rig.json
+    mediaType: application/vnd.videoer.lighting+json
+    sha256: dfe6f154da929a4af36168618efc5e088764a41b77ca4d8fa5df476994982510
+  - role: preview
+    path: verification/interior-lighting-probe.mp4
+    mediaType: video/mp4
+    sha256: 362b3a27e17acebee92654e1563fb5d07628af3725d7989ae3879964b82f1a21
+  - role: blender-source
+    path: verification/interior-lighting-probe.blend
+    mediaType: application/x-blender
+    sha256: 3222ce6c2cc90899bfe6a49e763a1407bd8da2cb0ce076b89ae2619e274cac56
+  - role: verification-lighting-witness
+    path: verification/interior-lighting-witness.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: 2d933ec465b59671628fe2f3e0137e139718a415a37fafd45f95552e745d4998
+  - role: verification-verification-contact-sheet
+    path: verification/contact-sheet.png
+    mediaType: image/png
+    sha256: 1dccb2332b4bb694bbffe60feea8d3c0377e6fb7e0f20df7e20470e7692dd892
+  - role: verification-verification-scene-render
+    path: verification/scene-render.json
+    mediaType: application/json
+    sha256: a4f25cf49d08df02d2a703b5c916ce268446f644acb50d80ba94fd06af56d47b
+  - role: transfer-definition
+    path: verification/transfer/gallery/transfer-definition.json
+    mediaType: application/vnd.videoer.lighting-transfer-probe+json
+    sha256: 12cb080cab834b9be9c100ef797ceeebd15c4bbc106855b2ab4fdf385dc72a1f
+  - role: transfer-lighting-rig
+    path: verification/transfer/gallery/adapted-lighting-rig.json
+    mediaType: application/vnd.videoer.lighting+json
+    sha256: 998ac27295fbb0bf7f12a7a083fa61ba3564f8d3b4b2d495063cb2e9ed72e64a
+  - role: transfer-adaptation-report
+    path: verification/transfer/gallery/lighting-adaptation-report.json
+    mediaType: application/json
+    sha256: f8ee2043bc91914b5158282005872b2707dab3d6e61b2e48e32dfec96a4a625a
+  - role: transfer-contact-sheet
+    path: verification/transfer/gallery/contact-sheet.png
+    mediaType: image/png
+    sha256: 8bfeb952200eb34add225d9db2ce7bac1c13959bfad47464acbad4b48260252b
+  - role: transfer-preview
+    path: verification/transfer/gallery/gallery-interior-v03.mp4
+    mediaType: video/mp4
+    sha256: 95812c56781cf46be80492012186c5bffe435e793740372e250e037b1e264878
+  - role: transfer-scene-render
+    path: verification/transfer/gallery/scene-render.json
+    mediaType: application/json
+    sha256: fd6e85913b4a5e97068cc562a929d5cd7dbe6f1cdf1e8a9bdd0ef4761333eb6b
+  - role: qualitative-review
+    path: verification/lighting-candidate-review.json
+    mediaType: application/json
+    sha256: e4304f7d0e163744680e28584773aa75b2ff48ce86970fd5c1cb2414a9e03952
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - blender-headless
+  requires: []
+verification:
+  checks:
+    - lighting.reusable-rig-schema
+    - lighting.agx-coherent-exposure
+    - lighting.interior-frame-visible
+    - lighting.interior-highlight-detail
+    - lighting.interior-regional-tonal-balance
+    - lighting.static-portrait-material-witness
+    - visual.camera-movement-exposure-continuity
+    - visual.bookshop-static-material-witness-accepted
+    - lighting.unrelated-gallery-transfer-semantics
+    - visual.unrelated-gallery-transfer-accepted
+  artifacts:
+    - verification/contact-sheet.png
+    - verification/interior-lighting-probe.mp4
+    - verification/scene-render.json
+    - verification/transfer/gallery/contact-sheet.png
+    - verification/transfer/gallery/scene-render.json
+    - verification/transfer/gallery/lighting-adaptation-report.json
+    - verification/lighting-candidate-review.json
+  verifiedAt: 2026-09-01T02:25:00.000Z

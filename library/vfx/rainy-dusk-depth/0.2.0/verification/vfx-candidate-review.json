@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "assetId": "vfx.rainy-dusk-depth",
+  "decision": "accepted",
+  "reviewer": "Codex visual review",
+  "reviewedAt": "2026-09-01T04:46:36.000Z",
+  "intendedShotDistance": "medium",
+  "evidence": [
+    "verification/ground-response-final/contact-sheet.png",
+    "verification/ground-response-final/atmospheric-ground-response-probe.mp4",
+    "verification/transfer/old-city-water-final/verification/contact-sheet.png",
+    "verification/transfer/night-transit-water-final/verification/contact-sheet.png",
+    "verification/transfer/night-transit-water-final/adaptation-report.json"
+  ],
+  "strengths": [
+    "Three deterministic depth bands create restrained non-synchronised rain without oversized foreground bars.",
+    "World-space impact surfaces remain attached to receivers and evolve through a complete twelve-frame lifecycle.",
+    "Irregular transmissive water waves and volumetric droplets respond to scene lighting without diffuse graphic rings.",
+    "The same rain topology transfers to old-city paving and an unrelated smooth transit platform through bounds-only receiver adaptation."
+  ],
+  "limitations": [
+    "Accepted for background and medium cinematic rain, not macro rain photography or hero slow-motion impacts.",
+    "Ground-splash receiver bounds must be measured and explicitly adapted for each materially different environment.",
+    "Physical impact visibility depends on receiver roughness and available glancing light, so it may be intentionally subtle in wide shots."
+  ],
+  "notes": "Accepted only after rejecting oversized streaks, wire-flower crowns, angular curve glyphs, smooth drawn arcs, perfect annular donuts, diffuse blue loops, invisible transmissive water, and overlit verification probes. Final evidence preserves the declared density, opacity, seeds, sizes, lifetime, wind, rain topology, and receiver bounds."
+}

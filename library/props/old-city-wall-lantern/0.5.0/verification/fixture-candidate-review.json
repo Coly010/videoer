@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "assetId": "prop.old-city-wall-lantern",
+  "fixtureId": "fixture.old-city-wall-lantern",
+  "decision": "accepted",
+  "reviewer": "Codex visual and structured temporal review",
+  "reviewedAt": "2026-09-01T05:13:36.000Z",
+  "intendedShotDistance": "medium",
+  "evidence": [
+    "verification/facade/contact-sheet.png",
+    "verification/facade/scene-render.json",
+    "verification/facade/wall-lantern-facade-probe.mp4",
+    "verification/facade/fixture-modulation-report.json",
+    "verification/warehouse/contact-sheet.png",
+    "verification/warehouse/scene-probe.json"
+  ],
+  "strengths": [
+    "One portable renderer-independent asset carries geometry, physical glazing, inverse-square practical light, visible flame source, and deterministic temporal behaviour across sets.",
+    "The corrected facade witness passes camera, visibility, highlight, and declared 12-38% fixture-framing gates across a full 12-frame render.",
+    "The unrelated warehouse transfer retains the iron silhouette, glazing, flame, and restrained local wall pool without environment-specific light placement.",
+    "Useful-light power, colour temperature, and visible-source emission share one seeded signal whose samples stay within the declared ranges."
+  ],
+  "limitations": [
+    "Accepted for background and medium-distance set dressing, not hero close-up product inspection.",
+    "The flame shape itself remains static; this version modulates photometry and emission rather than simulating fluid flame deformation.",
+    "The procedural iron and glazing omit the fasteners, soot, weathering, micro-scratches, and handcrafted asymmetry expected of a close hero prop."
+  ],
+  "notes": "Version 0.5.0 supersedes 0.4.0. The earlier publication used landmark images whose whole-frame exposure passed but whose declared frontal fixture-framing gate had not been executed; the corrected successor passes that gate and adds deterministic shared-signal temporal modulation."
+}

@@ -1,0 +1,655 @@
+schemaVersion: 1
+campaignId: reference-cinematic-benchmark
+productionPlan: production-plan.yaml
+library: ../../library
+generatedAt: 2026-08-30T22:45:15.293Z
+resolutions:
+  - requirementId: street
+    decision: reuse
+    asset:
+      id: environment.old-city-bookshop
+      version: 0.2.1
+    candidates:
+      - asset:
+          id: environment.old-city-bookshop
+          version: 0.2.1
+        score: 63
+        matchedTags:
+          - old-city
+          - narrow-street
+          - bookshop
+        missingCapabilities: []
+      - asset:
+          id: environment.old-city-bookshop
+          version: 0.2.0
+        score: 63
+        matchedTags:
+          - old-city
+          - narrow-street
+          - bookshop
+        missingCapabilities: []
+      - asset:
+          id: environment.old-city-bookshop
+          version: 0.1.0
+        score: 63
+        matchedTags:
+          - old-city
+          - narrow-street
+          - bookshop
+        missingCapabilities: []
+      - asset:
+          id: environment.dusk-exterior-lighting
+          version: 0.1.0
+        score: 15
+        matchedTags: []
+        missingCapabilities:
+          - deterministic-seed
+          - named-paths
+          - promotable-asset
+      - asset:
+          id: environment.warm-bookshop-lighting
+          version: 0.1.0
+        score: 11
+        matchedTags: []
+        missingCapabilities:
+          - deterministic-seed
+          - named-paths
+          - promotable-asset
+    reason: Best candidate satisfies the required capabilities.
+  - requirementId: shop-interior
+    decision: reuse
+    asset:
+      id: environment.old-city-bookshop
+      version: 0.2.1
+    candidates:
+      - asset:
+          id: environment.old-city-bookshop
+          version: 0.2.1
+        score: 67
+        matchedTags:
+          - bookshop
+          - shelves
+          - warm-interior
+        missingCapabilities: []
+      - asset:
+          id: environment.old-city-bookshop
+          version: 0.1.0
+        score: 60
+        matchedTags:
+          - bookshop
+          - warm-interior
+        missingCapabilities: []
+      - asset:
+          id: environment.old-city-bookshop
+          version: 0.2.0
+        score: 52
+        matchedTags:
+          - bookshop
+          - warm-interior
+        missingCapabilities: []
+      - asset:
+          id: environment.warm-bookshop-lighting
+          version: 0.1.0
+        score: 30
+        matchedTags:
+          - warm-interior
+        missingCapabilities:
+          - deterministic-seed
+          - exterior-continuity
+          - named-interaction-points
+      - asset:
+          id: environment.dusk-exterior-lighting
+          version: 0.1.0
+        score: 23
+        matchedTags: []
+        missingCapabilities:
+          - deterministic-seed
+          - exterior-continuity
+          - named-interaction-points
+    reason: Best candidate satisfies the required capabilities.
+  - requirementId: heroine
+    decision: reuse
+    asset:
+      id: character.elara-vale
+      version: 0.1.2
+    candidates:
+      - asset:
+          id: character.elara-vale
+          version: 0.1.2
+        score: 69
+        matchedTags:
+          - woman
+          - recurring
+        missingCapabilities: []
+      - asset:
+          id: character.elara-vale
+          version: 0.1.1
+        score: 64
+        matchedTags:
+          - woman
+          - recurring
+        missingCapabilities:
+          - identity-reference
+      - asset:
+          id: character.elara-vale
+          version: 0.1.0
+        score: 59
+        matchedTags:
+          - woman
+          - recurring
+        missingCapabilities:
+          - identity-reference
+          - motion-retargeting
+      - asset:
+          id: character.humanoid-mannequin
+          version: 0.4.0
+        score: 29
+        matchedTags: []
+        missingCapabilities:
+          - identity-reference
+          - motion-retargeting
+      - asset:
+          id: character.humanoid-mannequin
+          version: 0.3.0
+        score: 29
+        matchedTags: []
+        missingCapabilities:
+          - identity-reference
+          - motion-retargeting
+    reason: Best candidate satisfies the required capabilities.
+  - requirementId: dark-dress
+    decision: reuse
+    asset:
+      id: clothing.elara-midnight-dress
+      version: 0.1.0
+    candidates:
+      - asset:
+          id: clothing.elara-midnight-dress
+          version: 0.1.0
+        score: 55
+        matchedTags:
+          - long-dress
+          - dark
+          - period-inspired
+        missingCapabilities: []
+    reason: Best candidate satisfies the required capabilities.
+  - requirementId: shop-door
+    decision: reuse
+    asset:
+      id: prop.bookshop-door
+      version: 0.1.0
+    candidates:
+      - asset:
+          id: prop.bookshop-door
+          version: 0.1.0
+        score: 47
+        matchedTags:
+          - wooden
+          - glazed
+          - bookshop
+        missingCapabilities: []
+      - asset:
+          id: prop.significant-book
+          version: 0.1.0
+        score: 7
+        matchedTags: []
+        missingCapabilities:
+          - hinge
+          - handle-interaction-point
+          - collision-volume
+    reason: Best candidate satisfies the required capabilities.
+  - requirementId: book
+    decision: reuse
+    asset:
+      id: prop.significant-book
+      version: 0.1.0
+    candidates:
+      - asset:
+          id: prop.significant-book
+          version: 0.1.0
+        score: 68
+        matchedTags:
+          - book
+          - hardback
+          - significant
+        missingCapabilities: []
+      - asset:
+          id: prop.bookshop-door
+          version: 0.1.0
+        score: 15
+        matchedTags: []
+        missingCapabilities:
+          - openable-cover
+          - left-hand-grip
+          - right-hand-grip
+          - gaze-target
+      - asset:
+          id: prop.rise-of-demons-cover
+          version: 0.1.0
+        score: 11
+        matchedTags: []
+        missingCapabilities:
+          - openable-cover
+          - left-hand-grip
+          - right-hand-grip
+          - gaze-target
+    reason: Best candidate satisfies the required capabilities.
+  - requirementId: wet-stone
+    decision: reuse
+    asset:
+      id: material.wet-old-city-cobble
+      version: 0.1.0
+    candidates:
+      - asset:
+          id: material.wet-old-city-cobble
+          version: 0.1.0
+        score: 64
+        matchedTags:
+          - stone
+          - cobble
+          - wet
+        missingCapabilities: []
+      - asset:
+          id: material.rise-of-demons-title-treatment
+          version: 0.1.1
+        score: 15
+        matchedTags: []
+        missingCapabilities:
+          - procedural
+          - albedo
+          - normal
+          - roughness
+      - asset:
+          id: material.rise-of-demons-title-treatment
+          version: 0.1.0
+        score: 15
+        matchedTags: []
+        missingCapabilities:
+          - procedural
+          - albedo
+          - normal
+          - roughness
+    reason: Best candidate satisfies the required capabilities.
+  - requirementId: walk
+    decision: reuse
+    asset:
+      id: motion.walk-natural-cautious
+      version: 1.1.1
+    candidates:
+      - asset:
+          id: motion.walk-natural-cautious
+          version: 1.1.1
+        score: 56
+        matchedTags:
+          - walk
+          - cautious
+        missingCapabilities: []
+      - asset:
+          id: motion.walk-natural-confident
+          version: 1.1.1
+        score: 49
+        matchedTags:
+          - walk
+        missingCapabilities: []
+      - asset:
+          id: motion.walk-natural-neutral
+          version: 1.1.1
+        score: 45
+        matchedTags:
+          - walk
+        missingCapabilities: []
+      - asset:
+          id: motion.walk-natural-cautious
+          version: 1.1.0
+        score: 37
+        matchedTags:
+          - walk
+          - cautious
+        missingCapabilities:
+          - canonical-humanoid
+          - root-motion
+          - foot-contact
+      - asset:
+          id: motion.walk-natural-cautious
+          version: 1.0.0
+        score: 37
+        matchedTags:
+          - walk
+          - cautious
+        missingCapabilities:
+          - canonical-humanoid
+          - root-motion
+          - foot-contact
+    reason: Best candidate satisfies the required capabilities.
+  - requirementId: turn
+    decision: reuse
+    asset:
+      id: motion.turn-orientation
+      version: 0.1.0
+    candidates:
+      - asset:
+          id: motion.turn-orientation
+          version: 0.1.0
+        score: 52
+        matchedTags:
+          - turn
+          - gaze
+        missingCapabilities: []
+      - asset:
+          id: motion.read-significant-book
+          version: 0.1.0
+        score: 30
+        matchedTags: []
+        missingCapabilities: []
+      - asset:
+          id: motion.open-bookshop-door
+          version: 0.2.0
+        score: 20
+        matchedTags: []
+        missingCapabilities:
+          - additive-blend
+          - gaze-target
+      - asset:
+          id: motion.open-bookshop-door
+          version: 0.1.0
+        score: 20
+        matchedTags: []
+        missingCapabilities:
+          - additive-blend
+          - gaze-target
+      - asset:
+          id: motion.walk-natural-cautious
+          version: 1.1.1
+        score: 16
+        matchedTags: []
+        missingCapabilities:
+          - additive-blend
+          - gaze-target
+    reason: Best candidate satisfies the required capabilities.
+  - requirementId: open-door
+    decision: reuse
+    asset:
+      id: motion.open-bookshop-door
+      version: 0.2.0
+    candidates:
+      - asset:
+          id: motion.open-bookshop-door
+          version: 0.2.0
+        score: 60
+        matchedTags:
+          - door
+          - reach
+          - interaction
+        missingCapabilities: []
+      - asset:
+          id: motion.open-bookshop-door
+          version: 0.1.0
+        score: 60
+        matchedTags:
+          - door
+          - reach
+          - interaction
+        missingCapabilities: []
+      - asset:
+          id: motion.walk-natural-cautious
+          version: 1.1.1
+        score: 12
+        matchedTags: []
+        missingCapabilities:
+          - hand-ik
+          - target-resolution
+          - phase-sequencing
+      - asset:
+          id: motion.walk-natural-confident
+          version: 1.1.1
+        score: 12
+        matchedTags: []
+        missingCapabilities:
+          - hand-ik
+          - target-resolution
+          - phase-sequencing
+      - asset:
+          id: motion.walk-natural-neutral
+          version: 1.1.1
+        score: 12
+        matchedTags: []
+        missingCapabilities:
+          - hand-ik
+          - target-resolution
+          - phase-sequencing
+    reason: Best candidate satisfies the required capabilities.
+  - requirementId: read-book
+    decision: reuse
+    asset:
+      id: motion.read-significant-book
+      version: 0.1.0
+    candidates:
+      - asset:
+          id: motion.read-significant-book
+          version: 0.1.0
+        score: 68
+        matchedTags:
+          - book
+          - hold
+          - read
+        missingCapabilities: []
+      - asset:
+          id: motion.turn-orientation
+          version: 0.1.0
+        score: 25
+        matchedTags: []
+        missingCapabilities:
+          - two-hand-ik
+          - prop-attachment
+      - asset:
+          id: motion.walk-casual
+          version: 0.1.0
+        score: 15
+        matchedTags: []
+        missingCapabilities:
+          - two-hand-ik
+          - prop-attachment
+          - gaze-target
+          - additive-blend
+      - asset:
+          id: motion.open-bookshop-door
+          version: 0.2.0
+        score: 11
+        matchedTags: []
+        missingCapabilities:
+          - two-hand-ik
+          - prop-attachment
+          - gaze-target
+          - additive-blend
+      - asset:
+          id: motion.open-bookshop-door
+          version: 0.1.0
+        score: 11
+        matchedTags: []
+        missingCapabilities:
+          - two-hand-ik
+          - prop-attachment
+          - gaze-target
+          - additive-blend
+    reason: Best candidate satisfies the required capabilities.
+  - requirementId: rainy-dusk
+    decision: reuse
+    asset:
+      id: vfx.rainy-dusk-depth
+      version: 0.1.0
+    candidates:
+      - asset:
+          id: vfx.rainy-dusk-depth
+          version: 0.1.0
+        score: 59
+        matchedTags:
+          - rain
+          - fog
+          - dusk
+        missingCapabilities: []
+    reason: Best candidate satisfies the required capabilities.
+  - requirementId: exterior-lighting
+    decision: reuse
+    asset:
+      id: environment.dusk-exterior-lighting
+      version: 0.1.0
+    candidates:
+      - asset:
+          id: environment.dusk-exterior-lighting
+          version: 0.1.0
+        score: 66
+        matchedTags:
+          - lighting-rig
+          - dusk
+          - warm-practicals
+        missingCapabilities: []
+      - asset:
+          id: environment.warm-bookshop-lighting
+          version: 0.1.0
+        score: 48
+        matchedTags:
+          - lighting-rig
+        missingCapabilities: []
+      - asset:
+          id: environment.old-city-bookshop
+          version: 0.2.1
+        score: 19
+        matchedTags: []
+        missingCapabilities:
+          - reusable-rig
+          - coherent-exposure
+      - asset:
+          id: environment.old-city-bookshop
+          version: 0.2.0
+        score: 19
+        matchedTags: []
+        missingCapabilities:
+          - reusable-rig
+          - coherent-exposure
+      - asset:
+          id: environment.old-city-bookshop
+          version: 0.1.0
+        score: 19
+        matchedTags: []
+        missingCapabilities:
+          - reusable-rig
+          - coherent-exposure
+    reason: Best candidate satisfies the required capabilities.
+  - requirementId: interior-lighting
+    decision: reuse
+    asset:
+      id: environment.warm-bookshop-lighting
+      version: 0.1.0
+    candidates:
+      - asset:
+          id: environment.warm-bookshop-lighting
+          version: 0.1.0
+        score: 75
+        matchedTags:
+          - lighting-rig
+          - warm-interior
+          - cool-fill
+        missingCapabilities: []
+      - asset:
+          id: environment.dusk-exterior-lighting
+          version: 0.1.0
+        score: 44
+        matchedTags:
+          - lighting-rig
+        missingCapabilities:
+          - face-key
+      - asset:
+          id: environment.old-city-bookshop
+          version: 0.2.1
+        score: 30
+        matchedTags:
+          - warm-interior
+        missingCapabilities:
+          - reusable-rig
+          - face-key
+          - coherent-exposure
+      - asset:
+          id: environment.old-city-bookshop
+          version: 0.1.0
+        score: 30
+        matchedTags:
+          - warm-interior
+        missingCapabilities:
+          - reusable-rig
+          - face-key
+          - coherent-exposure
+      - asset:
+          id: environment.old-city-bookshop
+          version: 0.2.0
+        score: 26
+        matchedTags:
+          - warm-interior
+        missingCapabilities:
+          - reusable-rig
+          - face-key
+          - coherent-exposure
+    reason: Best candidate satisfies the required capabilities.
+  - requirementId: title-treatment
+    decision: reuse
+    asset:
+      id: material.rise-of-demons-title-treatment
+      version: 0.1.1
+    candidates:
+      - asset:
+          id: material.rise-of-demons-title-treatment
+          version: 0.1.1
+        score: 54
+        matchedTags:
+          - typography
+          - title
+          - editorial
+        missingCapabilities: []
+      - asset:
+          id: material.rise-of-demons-title-treatment
+          version: 0.1.0
+        score: 54
+        matchedTags:
+          - typography
+          - title
+          - editorial
+        missingCapabilities: []
+      - asset:
+          id: material.wet-old-city-cobble
+          version: 0.1.0
+        score: 7
+        matchedTags: []
+        missingCapabilities:
+          - vertical-safe-area
+          - deterministic-render
+    reason: Best candidate satisfies the required capabilities.
+  - requirementId: cover-art
+    decision: reuse
+    asset:
+      id: prop.rise-of-demons-cover
+      version: 0.1.0
+    candidates:
+      - asset:
+          id: prop.rise-of-demons-cover
+          version: 0.1.0
+        score: 59
+        matchedTags:
+          - cover
+          - campaign-supplied
+        missingCapabilities: []
+      - asset:
+          id: prop.significant-book
+          version: 0.1.0
+        score: 11
+        matchedTags: []
+        missingCapabilities:
+          - front-texture
+          - dimensional-reveal
+      - asset:
+          id: prop.bookshop-door
+          version: 0.1.0
+        score: 7
+        matchedTags: []
+        missingCapabilities:
+          - front-texture
+          - dimensional-reveal
+    reason: Best candidate satisfies the required capabilities.

@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "id": "editorial.nocturne-event-lockup",
+  "canvas": {
+    "width": 480,
+    "height": 270
+  },
+  "safeArea": {
+    "left": 38,
+    "top": 22,
+    "right": 442,
+    "bottom": 248
+  },
+  "font": {
+    "family": "Cormorant Garamond",
+    "weight": 600,
+    "licence": "OFL-1.1",
+    "package": "@fontsource/cormorant-garamond@5.3.0",
+    "nativeInstall": "font-cormorant-garamond"
+  },
+  "copy": {
+    "eyebrow": "LIGHT / MATTER / MEMORY",
+    "title": "NOCTURNE",
+    "cta": "14 SEPTEMBER — 03 NOVEMBER"
+  },
+  "palette": {
+    "background": "#02030a",
+    "foreground": "#f2f4ff",
+    "accent": "#8ebcff"
+  },
+  "motif": {
+    "kind": "threshold-lines",
+    "opacity": 0.28
+  },
+  "typographyScale": 1,
+  "metadata": {
+    "context": "contemporary-night-exhibition",
+    "campaignFamily": "nocturne",
+    "derivedFrom": "material.rise-of-demons-title-treatment",
+    "editorialAdaptation": "editorial-treatment-v1"
+  }
+}

@@ -1,0 +1,193 @@
+{
+  "schemaVersion": 1,
+  "id": "environment.street-storage-family",
+  "title": "Portable street storage and edge dressing",
+  "tags": [
+    "street",
+    "storage",
+    "crate",
+    "barrel",
+    "inhabited-environment"
+  ],
+  "intendedShotDistance": [
+    "background",
+    "medium"
+  ],
+  "variants": [
+    {
+      "id": "barrel",
+      "geometryAssetId": "prop.storage-barrel",
+      "geometryVersion": "0.1.0",
+      "weight": 0.42,
+      "footprintRadiusMeters": 0.4,
+      "heightMeters": 0.925,
+      "scale": {
+        "minimum": 0.9,
+        "maximum": 1.08
+      },
+      "yawDegrees": {
+        "minimum": -180,
+        "maximum": 180
+      },
+      "tags": [
+        "round",
+        "vertical"
+      ]
+    },
+    {
+      "id": "slatted-crate",
+      "geometryAssetId": "prop.slatted-storage-crate",
+      "geometryVersion": "0.1.0",
+      "weight": 0.58,
+      "footprintRadiusMeters": 0.47,
+      "heightMeters": 0.58,
+      "scale": {
+        "minimum": 0.88,
+        "maximum": 1.12
+      },
+      "yawDegrees": {
+        "minimum": -22,
+        "maximum": 22
+      },
+      "tags": [
+        "rectangular",
+        "stackable"
+      ]
+    }
+  ],
+  "clusters": [
+    {
+      "id": "mixed-cache",
+      "weight": 0.38,
+      "yawDegrees": {
+        "minimum": -28,
+        "maximum": 28
+      },
+      "members": [
+        {
+          "variantId": "barrel",
+          "offset": [
+            -0.43,
+            0,
+            0
+          ],
+          "yawOffsetDegrees": -8,
+          "scaleMultiplier": 1
+        },
+        {
+          "variantId": "slatted-crate",
+          "offset": [
+            0.43,
+            0,
+            0.08
+          ],
+          "yawOffsetDegrees": 8,
+          "scaleMultiplier": 0.96
+        }
+      ]
+    },
+    {
+      "id": "barrel-pair",
+      "weight": 0.24,
+      "yawDegrees": {
+        "minimum": -35,
+        "maximum": 35
+      },
+      "members": [
+        {
+          "variantId": "barrel",
+          "offset": [
+            -0.32,
+            0,
+            0
+          ],
+          "yawOffsetDegrees": -5,
+          "scaleMultiplier": 1
+        },
+        {
+          "variantId": "barrel",
+          "offset": [
+            0.36,
+            0,
+            0.12
+          ],
+          "yawOffsetDegrees": 9,
+          "scaleMultiplier": 0.88
+        }
+      ]
+    },
+    {
+      "id": "crate-corner",
+      "weight": 0.25,
+      "yawDegrees": {
+        "minimum": -24,
+        "maximum": 24
+      },
+      "members": [
+        {
+          "variantId": "slatted-crate",
+          "offset": [
+            -0.37,
+            0,
+            0
+          ],
+          "yawOffsetDegrees": -7,
+          "scaleMultiplier": 1
+        },
+        {
+          "variantId": "slatted-crate",
+          "offset": [
+            0.38,
+            0,
+            0.16
+          ],
+          "yawOffsetDegrees": 19,
+          "scaleMultiplier": 0.9
+        }
+      ]
+    },
+    {
+      "id": "crate-stack",
+      "weight": 0.13,
+      "yawDegrees": {
+        "minimum": -18,
+        "maximum": 18
+      },
+      "members": [
+        {
+          "variantId": "slatted-crate",
+          "offset": [
+            0,
+            0,
+            0
+          ],
+          "yawOffsetDegrees": 0,
+          "scaleMultiplier": 1
+        },
+        {
+          "variantId": "slatted-crate",
+          "offset": [
+            0.02,
+            0.58,
+            0.01
+          ],
+          "yawOffsetDegrees": 7,
+          "scaleMultiplier": 0.92
+        }
+      ]
+    }
+  ],
+  "placement": {
+    "surface": "ground",
+    "distribution": "edge-band",
+    "edgeBandMeters": 1.15,
+    "minimumSpacingMeters": 0.12,
+    "maximumSlopeDegrees": 8,
+    "preserveNavigationClearance": true
+  },
+  "metadata": {
+    "generator": "videoer.environment-dressing-family.v1",
+    "assetResolution": "stable-id-and-explicit-version",
+    "layoutOutput": "renderer-independent-transforms"
+  }
+}

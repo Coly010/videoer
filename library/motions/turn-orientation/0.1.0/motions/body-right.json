@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "id": "turn.body.right",
+  "skeleton": "videoer.canonical-humanoid.v1",
+  "durationSeconds": 1.4,
+  "loop": false,
+  "tracks": [
+    {
+      "joint": "hips",
+      "property": "rotation-euler",
+      "space": "local-delta",
+      "keyframes": [
+        {
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "easing": "ease-in-out"
+        },
+        {
+          "time": 0.78,
+          "value": [
+            0,
+            -0.18,
+            0
+          ],
+          "easing": "ease-in-out"
+        },
+        {
+          "time": 1.4,
+          "value": [
+            0,
+            -0.18,
+            0
+          ],
+          "easing": "linear"
+        }
+      ]
+    },
+    {
+      "joint": "spine",
+      "property": "rotation-euler",
+      "space": "local-delta",
+      "keyframes": [
+        {
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "easing": "ease-in-out"
+        },
+        {
+          "time": 0.78,
+          "value": [
+            0,
+            -0.2,
+            0
+          ],
+          "easing": "ease-in-out"
+        },
+        {
+          "time": 1.4,
+          "value": [
+            0,
+            -0.2,
+            0
+          ],
+          "easing": "linear"
+        }
+      ]
+    },
+    {
+      "joint": "chest",
+      "property": "rotation-euler",
+      "space": "local-delta",
+      "keyframes": [
+        {
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "easing": "ease-in-out"
+        },
+        {
+          "time": 0.78,
+          "value": [
+            0,
+            -0.22,
+            0
+          ],
+          "easing": "ease-in-out"
+        },
+        {
+          "time": 1.4,
+          "value": [
+            0,
+            -0.22,
+            0
+          ],
+          "easing": "linear"
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "generator": "videoer.turn-synthesis.v1",
+    "direction": "right",
+    "scope": "body"
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "id": "fixture.projecting-neon-blade-sign",
+  "geometryAssetId": "prop.projecting-neon-blade-sign",
+  "mountAttachmentId": "wall-mount",
+  "emitters": [
+    {
+      "id": "cyan-face-left",
+      "type": "area",
+      "position": [
+        -0.12,
+        0.05,
+        -0.92
+      ],
+      "target": [
+        -1,
+        -0.03,
+        -0.92
+      ],
+      "color": [
+        0.05,
+        0.78,
+        1
+      ],
+      "powerWatts": 92,
+      "sizeMeters": 0.52,
+      "angleDegrees": 45,
+      "falloff": "inverse-square",
+      "purpose": "practical",
+      "visibleSourceMaterialId": "cyan-neon",
+      "temporalModulation": {
+        "kind": "seeded-electrical-instability",
+        "seed": 9107,
+        "frequencyHz": 5.5,
+        "intensityMinimumMultiplier": 0.62,
+        "intensityMaximumMultiplier": 1.04,
+        "dropoutProbability": 0.12,
+        "interpolation": "smooth"
+      }
+    },
+    {
+      "id": "cyan-face-right",
+      "type": "area",
+      "position": [
+        0.12,
+        0.05,
+        -0.92
+      ],
+      "target": [
+        1,
+        -0.03,
+        -0.92
+      ],
+      "color": [
+        0.05,
+        0.78,
+        1
+      ],
+      "powerWatts": 92,
+      "sizeMeters": 0.52,
+      "angleDegrees": 45,
+      "falloff": "inverse-square",
+      "purpose": "practical",
+      "temporalModulation": {
+        "kind": "seeded-electrical-instability",
+        "seed": 9107,
+        "frequencyHz": 5.5,
+        "intensityMinimumMultiplier": 0.62,
+        "intensityMaximumMultiplier": 1.04,
+        "dropoutProbability": 0.12,
+        "interpolation": "smooth"
+      }
+    }
+  ],
+  "metadata": {
+    "generator": "videoer.projecting-neon-blade-sign.v1",
+    "photometricIntent": "cold-two-sided-local-wayfinding-practical",
+    "compatibleMount": "vertical-wall",
+    "modulationSemantics": "bounded-seeded-electrical-instability-with-authored-colour"
+  }
+}

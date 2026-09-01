@@ -1,0 +1,71 @@
+schemaVersion: 1
+id: prop.upholstered-reading-chair
+version: 0.1.0
+type: prop
+title: Upholstered reading chair
+description: Project-owned timber-frame reading chair with physical upholstery,
+  arm rests, tufting and named occupant/side-table anchors.
+status: verified
+tags:
+  - chair
+  - seating
+  - upholstery
+  - interior-furnishing
+  - portable
+  - inhabited-environment
+capabilities:
+  - physical-seating-silhouette
+  - occupant-anchor
+  - side-table-anchors
+source:
+  kind: procedural
+  generator: videoer.interior-furnishings.v1
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: geometry
+    path: geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: 6a2acafe774919db43808ed6cf798c9f969d6b4cc145c2ab0f2acd540f48261a
+  - role: validation
+    path: validation.json
+    mediaType: application/json
+    sha256: 786c1061d52d5dc3d5bd53328c34bca3b44a1395b8ecfe29abfec8ea7b33c7b5
+  - role: historic-library-chamber-family-contact-sheet
+    path: verification/historic-library-chamber-family-contact-sheet.png
+    mediaType: image/png
+    sha256: 47a75c5e4a95b3c20f5ca691a961f3fed831e833dbee325bafda00b365c35f0f
+  - role: contemporary-reading-loft-family-contact-sheet
+    path: verification/contemporary-reading-loft-family-contact-sheet.png
+    mediaType: image/png
+    sha256: 076e10817f8da7afe8e1419ac378986e6c2e0a1151d0fdbb7b514ea0702670e1
+  - role: family-transfer-summary
+    path: verification/family-transfer-summary.json
+    mediaType: application/json
+    sha256: daea19edf77070e14d1bd10dca7b5c021b02272d6aeea3798affc3c48c32a710
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - three-3d
+    - blender-headless
+  requires: []
+verification:
+  checks:
+    - geometry.topology
+    - geometry.material-groups
+    - attachments.seating-semantic
+    - prop.physical-frame-and-upholstery
+    - visual.historic-library-chamber-furnishing-transfer-accepted
+    - visual.contemporary-reading-loft-furnishing-transfer-accepted
+    - prop.physical-furnishing-semantics-accepted
+    - prop.medium-background-shot-distance-accepted
+  artifacts:
+    - verification/historic-library-chamber-family-contact-sheet.png
+    - verification/contemporary-reading-loft-family-contact-sheet.png
+    - verification/family-transfer-summary.json
+  verifiedAt: 2026-09-01T12:35:00.000Z

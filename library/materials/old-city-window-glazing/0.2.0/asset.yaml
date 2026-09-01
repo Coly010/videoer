@@ -1,0 +1,125 @@
+schemaVersion: 1
+id: material.old-city-window-glazing
+version: 0.2.0
+type: material
+title: Old-city window glazing
+description: Slightly imperfect architectural glass with physically declared
+  transmission, IOR, thickness, fine scratches, and restrained accumulated dirt.
+status: verified
+tags:
+  - glass
+  - glazing
+  - window
+  - architectural
+capabilities:
+  - procedural
+  - albedo
+  - normal
+  - roughness
+  - object-space-metre-scale
+  - deterministic-seed
+  - wet-coat
+  - transmission
+  - ior
+  - physical-thickness
+  - cycles-verified
+  - medium-background-quality-tier
+source:
+  kind: procedural
+  generator: videoer.old-city-surface-library.v3
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: material
+    path: material.json
+    mediaType: application/vnd.videoer.material+json
+    sha256: b636cd443a8bcca9eeb23b715ce5479b7dd4f09464c0523c8856e9204dfb8290
+  - role: swatch-geometry
+    path: swatch-geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: 6b7aa94d2a2076f6ced36baa1cf8e617d12f1b6b16949883341e157b8578adae
+  - role: preview
+    path: verification/turntable.mp4
+    mediaType: video/mp4
+    sha256: b2702f705429e9c7adeb9a36b6199fddb60e61cafc47476e402d907851129e28
+  - role: blender-source
+    path: verification/mannequin.blend
+    mediaType: application/x-blender
+    sha256: f03acb0127976a95cab6cc0e6bfe198c5a0faa5e12444bace5a01b6ab1a001fd
+  - role: verification-verification-top
+    path: verification/top.png
+    mediaType: image/png
+    sha256: c1fd048d45455afb740726b1cb42dd1ff1f950b243d00c0541d845c101404189
+  - role: verification-verification-raking
+    path: verification/raking.png
+    mediaType: image/png
+    sha256: c77249adf4dfe4486e6929362f36bdb6459cb035b6e72b05584a37bc8aaa6876
+  - role: verification-verification-close
+    path: verification/close.png
+    mediaType: image/png
+    sha256: 5b5c10f419119aa59685d6c95f68589f09cb2902cf95aacf720c6d7934280cd7
+  - role: verification-verification-glancing
+    path: verification/glancing.png
+    mediaType: image/png
+    sha256: 932fadb31b8c8ea728eada11808227e182f35e836ede5bcce2ba331290139b99
+  - role: verification-verification-contact-sheet
+    path: verification/contact-sheet.png
+    mediaType: image/png
+    sha256: e9edc5b5374b9f860083880f919451a1cf8b394cf1be5ef3f1264266b4df832f
+  - role: exterior-architectural-transfer
+    path: verification/exterior-contact-sheet.png
+    mediaType: image/png
+    sha256: a92e9cb0d39c567dc4bc21dcf45878a9615427d2494e598d388cb6d3b28ca2d8
+  - role: exterior-transfer-report
+    path: verification/exterior-scene-render.json
+    mediaType: application/json
+    sha256: 5f0a6aa2d6e25071575ef5554552d41f21276b45c107eb012a7e86249c2919f1
+  - role: interior-architectural-transfer
+    path: verification/interior-contact-sheet.png
+    mediaType: image/png
+    sha256: d24ea4ce1738cff146ff73c0069dbc6a84af2cc6263a8b7df014a00b1a0ed468
+  - role: interior-transfer-report
+    path: verification/interior-scene-render.json
+    mediaType: application/json
+    sha256: ece12600d266cbed84fc328d8ff65c572d26b7e09e8493f0761fa8a4366bc7e5
+  - role: qualitative-suite-review
+    path: verification/surface-suite-review.json
+    mediaType: application/json
+    sha256: 7162568322f61a62f63afa3a4fd69fd027b6e36e8376d74ac75c5e98956827f2
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - three-3d
+    - blender-headless
+  requires: []
+verification:
+  checks:
+    - material.schema
+    - material.palette-variation
+    - material.object-space-metre-scale
+    - material.procedural-normal-relief
+    - material.roughness-range
+    - material.cycles-transmission
+    - material.declared-physical-thickness
+    - visual.material-diagnostic-views-accepted
+    - visual.architectural-transfer-accepted
+    - material.medium-background-shot-distance-accepted
+  artifacts:
+    - verification/top.png
+    - verification/raking.png
+    - verification/close.png
+    - verification/glancing.png
+    - verification/contact-sheet.png
+    - verification/turntable.mp4
+    - verification/mannequin.blend
+    - verification/exterior-contact-sheet.png
+    - verification/exterior-scene-render.json
+    - verification/interior-contact-sheet.png
+    - verification/interior-scene-render.json
+    - verification/surface-suite-review.json
+  verifiedAt: 2026-09-01T07:45:00.000Z

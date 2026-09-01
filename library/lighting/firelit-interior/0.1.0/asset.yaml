@@ -1,0 +1,152 @@
+schemaVersion: 1
+id: lighting.firelit-interior
+version: 0.1.0
+type: lighting
+title: Firelit interior lighting rig
+description: Reusable firelit interior rig with one correlated seeded signal
+  driving the visible hearth, low warm key, ground bounce and edge rim against
+  restrained cool environmental separation.
+status: verified
+tags:
+  - lighting-rig
+  - firelight
+  - warm-interior
+  - temporal-lighting
+  - cinematic
+capabilities:
+  - reusable-rig
+  - coherent-exposure
+  - correlated-seeded-fire-signal
+  - visible-source-synchronization
+  - warm-fire-cool-environment-separation
+  - background-medium-shot-lighting
+  - renderer-independent
+source:
+  kind: procedural
+  generator: videoer.firelit-interior-lighting.v1
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: lighting-rig
+    path: lighting-rig.json
+    mediaType: application/vnd.videoer.lighting+json
+    sha256: a6aadb24ce77b62aeebb8add180eb323fe226f3749280b583a86f01615811333
+  - role: source-host
+    path: verification/source/stone-chamber/stone-chamber-host.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: 35eb6f3229f20cbfc183e9283c145013c2e41a4e5909b5a99e8a010a13551fb2
+  - role: source-witness
+    path: verification/source/stone-chamber/lighting-witness.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: f18d55f0229818c0093db85a32da63902eddedd42466dcc9d083dc101e361f1f
+  - role: source-preview
+    path: verification/source/stone-chamber/firelit-stone-chamber-probe.mp4
+    mediaType: video/mp4
+    sha256: 5d2fad3173f78b47758b3ae909e947f55b97f78cd5f5b5844bdb36e180ef8651
+  - role: source-blender
+    path: verification/source/stone-chamber/firelit-stone-chamber-probe.blend
+    mediaType: application/x-blender
+    sha256: 6798f25e795489f2807c60f4678a08f27d0d8b921ce7f236b51324002cd5ec15
+  - role: source-lighting-modulation-report
+    path: verification/source/stone-chamber/lighting-modulation-report.json
+    mediaType: application/json
+    sha256: 9e64307d850ee5c276a56788c8948ad97d9154115d8724cebcd941aa13163bb9
+  - role: transfer-host
+    path: verification/transfer/contemporary-lounge/contemporary-lounge-host.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: 251181b45eed082f05db6ce646916192e4a4d0291200f9f75fc4578281085dc7
+  - role: verification-verification-source-stone-chamber-contact-sheet
+    path: verification/source/stone-chamber/contact-sheet.png
+    mediaType: image/png
+    sha256: e011e393382b2d59c0247a8a7ee11ce500eb054e99bdad6ef3d8cec304e7f3e2
+  - role: verification-verification-source-stone-chamber-scene-render
+    path: verification/source/stone-chamber/scene-render.json
+    mediaType: application/json
+    sha256: 97b69dfd0966f815e459979821ab69f4d20da4fa4eca62693a7ad93b83bddfc6
+  - role: verification-verification-transfer-contemporary-lounge-contact-sheet
+    path: verification/transfer/contemporary-lounge/contact-sheet.png
+    mediaType: image/png
+    sha256: 8cfc4788df8ec3903ca6f8890fd325df083bbbcff297c25c25b9a15d4c189eb6
+  - role: verification-verification-transfer-contemporary-lounge-scene-render
+    path: verification/transfer/contemporary-lounge/scene-render.json
+    mediaType: application/json
+    sha256: 31da49ac02864163de7c2f1135ab0a9e3fcdd59be0531a432ae387e6b82ab4e8
+  - role: verification-verification-transfer-contemporary-lounge-lighting-adaptation-report
+    path: verification/transfer/contemporary-lounge/lighting-adaptation-report.json
+    mediaType: application/json
+    sha256: bf1c96fb05e8195702b6122dde3824163bf5fff276a9d1f8d3ee9be9270215cf
+  - role: verification-verification-transfer-contemporary-lounge-lighting-modulation-report
+    path: verification/transfer/contemporary-lounge/lighting-modulation-report.json
+    mediaType: application/json
+    sha256: 9a9ddece035de2523c18bbb31b0ac6844f3d1f14af1d048fdcfff0e9273c6f12
+  - role: transfer-definition
+    path: verification/transfer/contemporary-lounge/transfer-definition.json
+    mediaType: application/vnd.videoer.lighting-transfer-probe+json
+    sha256: 8f36c8cf4ff06b54be1203b059d6627ead71915a189f2d2068dde2742219a803
+  - role: transfer-lighting-rig
+    path: verification/transfer/contemporary-lounge/adapted-lighting-rig.json
+    mediaType: application/vnd.videoer.lighting+json
+    sha256: 7d1f6e325c026891142cc01d2faa6c694afcc1391a45f54f3d7c63634734fbcd
+  - role: transfer-adaptation-report
+    path: verification/transfer/contemporary-lounge/lighting-adaptation-report.json
+    mediaType: application/json
+    sha256: bf1c96fb05e8195702b6122dde3824163bf5fff276a9d1f8d3ee9be9270215cf
+  - role: transfer-contact-sheet
+    path: verification/transfer/contemporary-lounge/contact-sheet.png
+    mediaType: image/png
+    sha256: 8cfc4788df8ec3903ca6f8890fd325df083bbbcff297c25c25b9a15d4c189eb6
+  - role: transfer-preview
+    path: verification/transfer/contemporary-lounge/firelit-contemporary-lounge.mp4
+    mediaType: video/mp4
+    sha256: 0f57a2a3fac16aa03d5aa070f2fb5f25929234edfbadfd9e08093ee57740bb26
+  - role: transfer-scene-render
+    path: verification/transfer/contemporary-lounge/scene-render.json
+    mediaType: application/json
+    sha256: 31da49ac02864163de7c2f1135ab0a9e3fcdd59be0531a432ae387e6b82ab4e8
+  - role: qualitative-review
+    path: verification/lighting-candidate-review.json
+    mediaType: application/json
+    sha256: e388b725fb5a439b3211d13b0407b5fd4f418ee0a9677552c876a975c4c80b9e
+  - role: transfer-lighting-modulation-report
+    path: verification/transfer/contemporary-lounge/lighting-modulation-report.json
+    mediaType: application/json
+    sha256: 9a9ddece035de2523c18bbb31b0ac6844f3d1f14af1d048fdcfff0e9273c6f12
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - blender-headless
+  requires: []
+verification:
+  checks:
+    - lighting.reusable-rig-schema
+    - lighting.agx-coherent-exposure
+    - lighting.firelit-source-frame-visible
+    - lighting.firelit-source-highlight-detail
+    - lighting.firelit-source-witness-tonal-balance
+    - lighting.correlated-temporal-signal-generated
+    - lighting.visible-source-shared-signal-generated
+    - lighting.bounded-unrelated-lounge-transfer-generated
+    - visual.source-lighting-evidence-accepted
+    - lighting.unrelated-environment-transfer-reconstructed
+    - visual.unrelated-environment-transfer-accepted
+    - lighting.source-temporal-modulation-reconstructed
+    - lighting.transfer-temporal-modulation-reconstructed
+  artifacts:
+    - verification/source/stone-chamber/contact-sheet.png
+    - verification/source/stone-chamber/scene-render.json
+    - verification/source/stone-chamber/lighting-modulation-report.json
+    - verification/transfer/contemporary-lounge/contact-sheet.png
+    - verification/transfer/contemporary-lounge/scene-render.json
+    - verification/transfer/contemporary-lounge/lighting-adaptation-report.json
+    - verification/transfer/contemporary-lounge/lighting-modulation-report.json
+    - verification/source/stone-chamber/stone-chamber-host.json
+    - verification/source/stone-chamber/lighting-witness.json
+    - verification/transfer/contemporary-lounge/contemporary-lounge-host.json
+    - verification/transfer/contemporary-lounge/transfer-definition.json
+    - verification/lighting-candidate-review.json
+  verifiedAt: 2026-09-01T15:36:00.000Z

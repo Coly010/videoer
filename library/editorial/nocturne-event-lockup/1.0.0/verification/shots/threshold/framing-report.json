@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "cameraContract": {
+    "valid": true,
+    "trackingConstraint": "TRACK_TO",
+    "trackAxis": "TRACK_NEGATIVE_Z",
+    "upAxis": "UP_Y",
+    "interpolationImplementation": "frame-baked-declarative-v1",
+    "maximumPositionErrorMeters": 0,
+    "maximumTargetErrorMeters": 0,
+    "maximumLensErrorMillimeters": 2.4476788951233175e-07,
+    "positionToleranceMeters": 1e-05,
+    "targetToleranceMeters": 1e-05,
+    "lensToleranceMillimeters": 0.005,
+    "samples": [
+      {
+        "landmarkId": "name-arrival",
+        "frame": 1,
+        "positionErrorMeters": 0.0,
+        "targetErrorMeters": 0.0,
+        "lensErrorMillimeters": 0.0,
+        "actualLensMillimeters": 43.0,
+        "expectedLensMillimeters": 43
+      },
+      {
+        "landmarkId": "architecture-emerges",
+        "frame": 53,
+        "positionErrorMeters": 0.0,
+        "targetErrorMeters": 0.0,
+        "lensErrorMillimeters": 2.4476788951233175e-07,
+        "actualLensMillimeters": 45.87065887451172,
+        "expectedLensMillimeters": 45.87065911927961
+      },
+      {
+        "landmarkId": "crossing-threshold",
+        "frame": 96,
+        "positionErrorMeters": 0.0,
+        "targetErrorMeters": 0.0,
+        "lensErrorMillimeters": 0.0,
+        "actualLensMillimeters": 48.0,
+        "expectedLensMillimeters": 48.0
+      }
+    ]
+  },
+  "samples": [
+    {
+      "landmarkId": "name-arrival",
+      "progress": 0,
+      "frame": 1,
+      "entities": {
+        "gallery": {
+          "minimumX": -2.4978835582733154,
+          "maximumX": 3.4978835582733154,
+          "minimumY": -1.1581121683120728,
+          "maximumY": 2.695220708847046,
+          "widthPercentage": 599.5767116546631,
+          "heightPercentage": 385.33328771591187
+        }
+      }
+    },
+    {
+      "landmarkId": "architecture-emerges",
+      "progress": 0.55,
+      "frame": 53,
+      "entities": {
+        "gallery": {
+          "minimumX": -4.515292644500732,
+          "maximumX": 5.515292644500732,
+          "minimumY": -2.0601511001586914,
+          "maximumY": 4.163266658782959,
+          "widthPercentage": 1003.0585289001465,
+          "heightPercentage": 622.341775894165
+        }
+      }
+    },
+    {
+      "landmarkId": "crossing-threshold",
+      "progress": 1,
+      "frame": 96,
+      "entities": {
+        "gallery": {
+          "minimumX": -8.575396537780762,
+          "maximumX": 9.575396537780762,
+          "minimumY": -3.5010621547698975,
+          "maximumY": 7.1139984130859375,
+          "widthPercentage": 1815.0793075561523,
+          "heightPercentage": 1061.5060567855835
+        }
+      }
+    }
+  ]
+}

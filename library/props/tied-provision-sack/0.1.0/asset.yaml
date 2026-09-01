@@ -1,0 +1,71 @@
+schemaVersion: 1
+id: prop.tied-provision-sack
+version: 0.1.0
+type: prop
+title: Tied provision sack
+description: Project-owned weighted burlap provision sack with gathered neck,
+  physical tie and named carry/stack anchors.
+status: verified
+tags:
+  - sack
+  - provisions
+  - merchandise
+  - market
+  - portable
+  - inhabited-environment
+capabilities:
+  - portable-geometry
+  - ground-placement
+  - named-merchandising-attachments
+  - medium-background-quality-tier
+source:
+  kind: procedural
+  generator: videoer.market-world-assets.v1
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: geometry
+    path: geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: bd715f1b04095f37f55860bdff66db9955e1732559df5b4b2fec5a3b538b991e
+  - role: validation
+    path: validation.json
+    mediaType: application/json
+    sha256: ac18b57b2807fd84438e274091b395c8744cfd5f91a8f225268ee4fcb8153e1f
+  - role: historic-market-square-family-contact-sheet
+    path: verification/historic-market-square-family-contact-sheet.png
+    mediaType: image/png
+    sha256: af3528239bbbbb9540f749569281c833522776a7f2c1f8d74ef37152b269edb8
+  - role: contemporary-pop-up-family-contact-sheet
+    path: verification/contemporary-pop-up-family-contact-sheet.png
+    mediaType: image/png
+    sha256: 7458a9a915e891778b9b0ee765b0c8d5aa8ec9405ac3a89adb294acb38a6a899
+  - role: family-transfer-summary
+    path: verification/family-transfer-summary.json
+    mediaType: application/json
+    sha256: bfab3d13f37057120e4bf3e2f77f29821482262b8cebe26fa906476bc06f0548
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - three-3d
+    - blender-headless
+  requires: []
+verification:
+  checks:
+    - geometry.topology
+    - geometry.material-groups
+    - attachments.market-semantic
+    - visual.historic-market-square-family-transfer-accepted
+    - visual.contemporary-pop-up-family-transfer-accepted
+    - prop.physical-merchandising-semantics-accepted
+    - prop.medium-background-shot-distance-accepted
+  artifacts:
+    - verification/historic-market-square-family-contact-sheet.png
+    - verification/contemporary-pop-up-family-contact-sheet.png
+    - verification/family-transfer-summary.json
+  verifiedAt: 2026-09-01T10:03:00.000Z

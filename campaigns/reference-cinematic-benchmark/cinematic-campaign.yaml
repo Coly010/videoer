@@ -1,0 +1,645 @@
+schemaVersion: 1
+id: campaign.reference-cinematic-benchmark
+fps: 24
+resolution: { width: 540, height: 960, percentage: 100 }
+assetLibrary: ../../library
+
+geometry:
+  - id: bookshop
+    library:
+      type: environment
+      query: continuous old city bookshop street and interior
+      tags: [old-city, bookshop, warm-interior]
+      capabilities:
+        [deterministic-seed, exterior-continuity, named-interaction-points, opposing-street-depth]
+      preferredAsset: { id: environment.old-city-bookshop, version: 0.2.1 }
+      artifactRole: geometry
+  - id: elara
+    library:
+      type: character
+      query: Elara Vale recurring heroine
+      tags: [humanoid, woman, recurring]
+      capabilities:
+        [
+          canonical-humanoid-rig,
+          skinned-mesh,
+          identity-reference,
+          motion-retargeting,
+          long-dress-drape-skinning,
+        ]
+      preferredAsset: { id: character.elara-vale, version: 0.1.4 }
+      artifactRole: geometry
+  - id: door
+    library:
+      type: prop
+      query: articulated glazed bookshop door
+      tags: [wooden, glazed, bookshop, door]
+      capabilities: [hinge, handle-interaction-point, collision-volume]
+      preferredAsset: { id: prop.bookshop-door, version: 0.1.0 }
+      artifactRole: geometry
+  - id: book
+    library:
+      type: prop
+      query: significant articulated hardback book
+      tags: [book, hardback, significant]
+      capabilities: [openable-cover, left-hand-grip, right-hand-grip, gaze-target]
+      preferredAsset: { id: prop.significant-book, version: 0.1.0 }
+      artifactRole: geometry
+  - id: cover
+    library:
+      type: prop
+      query: Rise of Demons dimensional campaign cover
+      tags: [cover, campaign-supplied]
+      capabilities: [front-texture, dimensional-reveal]
+      preferredAsset: { id: prop.rise-of-demons-cover, version: 0.1.0 }
+      artifactRole: geometry
+
+lightingSources:
+  - id: exterior-lighting
+    library:
+      type: environment
+      query: overcast dusk exterior lighting rig
+      tags: [lighting-rig, dusk, warm-practicals]
+      capabilities: [reusable-rig, coherent-exposure]
+      preferredAsset: { id: environment.dusk-exterior-lighting, version: 0.1.0 }
+      artifactRole: lighting-rig
+  - id: interior-lighting
+    library:
+      type: environment
+      query: warm bookshop interior lighting rig
+      tags: [lighting-rig, warm-interior, cool-fill]
+      capabilities: [reusable-rig, face-key, coherent-exposure]
+      preferredAsset: { id: environment.warm-bookshop-lighting, version: 0.1.0 }
+      artifactRole: lighting-rig
+
+vfxSources:
+  - id: rainy-dusk
+    library:
+      type: vfx
+      query: camera depth rainy dusk atmosphere
+      tags: [rain, fog, dusk]
+      capabilities: [camera-depth, deterministic-seed, foreground-background]
+      preferredAsset: { id: vfx.rainy-dusk-depth, version: 0.1.0 }
+      artifactRole: vfx
+
+audioSources:
+  - id: rainy-bookshop-score
+    library:
+      type: audio
+      query: deterministic rainy bookshop score and sound design
+      tags: [rain, cinematic-score, foley, deterministic]
+      capabilities: [provider-free, frame-synchronized, stereo-48khz, exact-duration]
+      preferredAsset: { id: audio.rainy-bookshop-score, version: 0.1.0 }
+      artifactRole: master
+
+overlays:
+  - id: title-treatment
+    library:
+      type: material
+      query: Rise of Demons restrained editorial title treatment
+      tags: [typography, title, editorial]
+      capabilities: [vertical-safe-area, deterministic-render]
+      preferredAsset: { id: material.rise-of-demons-title-treatment, version: 0.1.1 }
+      artifactRole: transparent-overlay
+
+motions:
+  - id: cautious-walk
+    library:
+      type: motion
+      query: Elara proportioned natural cautious walk
+      tags: [humanoid, walk, cautious, naturalistic, elara-vale]
+      capabilities:
+        [
+          canonical-humanoid,
+          root-motion,
+          foot-contact,
+          planted-contact-constraints,
+          elara-proportions,
+        ]
+      preferredAsset: { id: motion.walk-natural-cautious-elara, version: 1.1.0 }
+      artifactRole: motion
+  - id: window-head-turn
+    path: work/motions/window-head-turn.json
+    recipe:
+      kind: targeted-turn
+      actorTransform:
+        { position: [2.2, 0, -1.3], rotation: [0, 1.5707963267948966, 0], scale: [1, 1, 1] }
+      target: { geometry: bookshop, attachmentId: window-gaze-target }
+      scope: head
+      durationSeconds: 1.05
+      maximumYawRadians: 0.7853981633974483
+  - id: window-body-turn
+    path: work/motions/window-body-turn.json
+    recipe:
+      kind: targeted-turn
+      actorTransform:
+        { position: [1.5, 0, -1.3], rotation: [0, 1.5707963267948966, 0], scale: [1, 1, 1] }
+      target: { geometry: bookshop, attachmentId: window-gaze-target }
+      scope: head-and-body
+      durationSeconds: 1.5833333333333333
+      maximumYawRadians: 1.1309733552923256
+  - id: open-door-actor
+    library:
+      type: motion
+      query: phased bookshop door interaction actor motion
+      tags: [door, reach, interaction]
+      capabilities: [canonical-humanoid, hand-ik, target-resolution, phase-sequencing, root-motion]
+      preferredAsset: { id: motion.open-bookshop-door, version: 0.2.0 }
+      artifactRole: actor-motion
+  - id: open-door-target
+    library:
+      type: motion
+      query: phased bookshop door interaction target motion
+      tags: [door, reach, interaction]
+      capabilities: [canonical-humanoid, hand-ik, target-resolution, phase-sequencing, root-motion]
+      preferredAsset: { id: motion.open-bookshop-door, version: 0.2.0 }
+      artifactRole: target-motion
+  - id: read-book-actor
+    library:
+      type: motion
+      query: two handed book raise and read actor motion
+      tags: [book, hold, read]
+      capabilities: [canonical-humanoid, two-hand-ik, prop-attachment, gaze-target]
+      preferredAsset: { id: motion.read-significant-book, version: 0.1.0 }
+      artifactRole: actor-motion
+  - id: read-book-target
+    library:
+      type: motion
+      query: two handed book raise and read target motion
+      tags: [book, hold, read]
+      capabilities: [canonical-humanoid, two-hand-ik, prop-attachment, gaze-target]
+      preferredAsset: { id: motion.read-significant-book, version: 0.1.0 }
+      artifactRole: target-motion
+
+motionTimelines:
+  - id: approach-performance
+    clipId: motion.reference-benchmark.approach
+    path: work/motions/approach-performance.json
+    frames: 58
+    layers:
+      - { id: walk, motion: cautious-walk, mode: base, startFrame: 0, endFrame: 58, playback: loop }
+    metadata: { purpose: Elara-proportioned cautious profile travel }
+  - id: attraction-performance
+    clipId: motion.reference-benchmark.attraction
+    path: work/motions/attraction-performance.json
+    frames: 43
+    layers:
+      - { id: walk, motion: cautious-walk, mode: base, startFrame: 0, endFrame: 43, playback: once }
+      - {
+          id: turn,
+          motion: window-head-turn,
+          mode: additive,
+          startFrame: 18,
+          endFrame: 43,
+          playback: once,
+          fadeInFrames: 3,
+          joints: [neck, head],
+        }
+    metadata: { purpose: Walking attention turn toward semantic shop window target }
+  - id: pause-performance
+    clipId: motion.reference-benchmark.pause
+    path: work/motions/pause-performance.json
+    frames: 38
+    layers:
+      - {
+          id: grounded-hold,
+          motion: cautious-walk,
+          mode: base,
+          startFrame: 0,
+          endFrame: 38,
+          playback: hold,
+          sourceStartSeconds: 0,
+        }
+      - {
+          id: turn,
+          motion: window-body-turn,
+          mode: additive,
+          startFrame: 0,
+          endFrame: 38,
+          playback: once,
+        }
+    metadata: { purpose: Grounded target-derived body orientation }
+
+soundtrackPath: work/audio/soundtrack.wav
+soundtrack:
+  schemaVersion: 1
+  id: audio.reference-cinematic-benchmark
+  durationSeconds: 15
+  sampleRate: 48000
+  channels: 2
+  cues:
+    - {
+        id: complete-score,
+        kind: audio-source,
+        source: rainy-bookshop-score,
+        startSeconds: 0,
+        endSeconds: 15,
+        gain: 1,
+        purpose: Reuse the verified frame-synchronised benchmark score and foley master,
+      }
+  metadata: { providerFree: true, sourceAsset: audio.rainy-bookshop-score@0.1.0 }
+
+shots:
+  - id: city-establish
+    frames: 34
+    entities:
+      - { id: bookshop-set, geometry: bookshop, role: environment }
+    camera:
+      keyframes:
+        - {
+            time: 0,
+            position: { world: [8.2, 3.45, -2.7] },
+            target: { world: [-1.8, 1.45, -2.1] },
+            lensMillimeters: 46,
+          }
+        - {
+            time: 1.4166666666666667,
+            position: { world: [7.1, 3.15, -2.62] },
+            target: { world: [-2.4, 1.42, -2.05] },
+            lensMillimeters: 52,
+          }
+    lighting: exterior-lighting
+    lights:
+      - {
+          id: tower-cool-rim,
+          type: spot,
+          position: [-5.2, 7.4, -1.2],
+          target: [-8.05, 5.3, -3.7],
+          color: [0.24, 0.42, 0.9],
+          energy: 1100,
+          angleDegrees: 42,
+        }
+    vfx: rainy-dusk
+    landmarks:
+      - { id: establish, progress: 0, description: High rainy old-city geography establishes }
+      - { id: push, progress: 0.5, description: Slow push finds the warm bookshop practical }
+      - { id: settle, progress: 1, description: Camera settles with street and shop readable }
+    metadata: { campaignClass: reference-cinematic, grammar: environmental-establish }
+
+  - id: character-approach
+    frames: 58
+    entities:
+      - { id: bookshop-set, geometry: bookshop, role: environment }
+      - id: elara
+        geometry: elara
+        role: character
+        transform:
+          { position: [3.5, 0, -1.3], rotation: [0, 1.5707963267948966, 0], scale: [1, 1, 1] }
+        motion: { source: approach-performance, startFrame: 0, endFrame: 58 }
+    camera:
+      keyframes:
+        - {
+            time: 0,
+            position: { world: [3.2, 1.1, -3.8] },
+            target: { world: [3.2, 0.86, -1.3] },
+            lensMillimeters: 45,
+          }
+        - {
+            time: 2.4166666666666665,
+            position: { world: [1.9, 1.1, -3.8] },
+            target: { world: [1.9, 0.86, -1.3] },
+            lensMillimeters: 45,
+          }
+    lighting: exterior-lighting
+    vfx: rainy-dusk
+    qualityGates:
+      - {
+          id: body-faces-travel,
+          type: directional-motion,
+          entityId: elara,
+          minimumDistanceMeters: 1.1,
+          minimumForwardDot: 0.9,
+        }
+    renderGates:
+      - {
+          id: profile-frame-visible,
+          type: frame-visibility,
+          maximumBlackPercentage: 40,
+          blackThreshold: 32,
+        }
+    landmarks:
+      - { id: initial-contact, progress: 0, description: Profile gait begins on a grounded contact }
+      - { id: weight-transfer, progress: 0.3, description: Pelvis transfers over the stance foot }
+      - { id: passing-shop, progress: 0.62, description: Recurring identity passes the shop facade }
+      - { id: next-contact, progress: 1, description: Root continues in the facing direction }
+    metadata: { campaignClass: reference-cinematic, grammar: recurring-character-profile-walk }
+
+  - id: window-attraction
+    frames: 43
+    entities:
+      - { id: bookshop-set, geometry: bookshop, role: environment }
+      - id: elara
+        geometry: elara
+        role: character
+        transform:
+          { position: [2.2, 0, -1.3], rotation: [0, 1.5707963267948966, 0], scale: [1, 1, 1] }
+        motion: { source: attraction-performance, startFrame: 0, endFrame: 43 }
+    camera:
+      keyframes:
+        - {
+            time: 0,
+            position: { world: [0.2, 1.36, -2.15] },
+            target: { world: [2.05, 1.12, -1.08] },
+            lensMillimeters: 64,
+          }
+        - {
+            time: 1.7916666666666667,
+            position: { world: [0.05, 1.4, -2] },
+            target: { world: [1.48, 1.14, -1.02] },
+            lensMillimeters: 68,
+          }
+    lighting: exterior-lighting
+    vfx: rainy-dusk
+    qualityGates:
+      - {
+          id: body-faces-travel,
+          type: directional-motion,
+          entityId: elara,
+          minimumDistanceMeters: 0.6,
+          minimumForwardDot: 0.9,
+        }
+    landmarks:
+      - { id: walking, progress: 0, description: Cautious profile walk continues }
+      - {
+          id: notice,
+          progress: 0.42,
+          description: Head begins target-derived turn toward the window,
+        }
+      - { id: orient, progress: 0.72, description: Gaze layers over the continuing gait }
+      - { id: attention, progress: 1, description: Window attraction is readable before the cut }
+    metadata: { campaignClass: reference-cinematic, grammar: walk-plus-targeted-attention }
+
+  - id: window-pause
+    frames: 38
+    entities:
+      - { id: bookshop-set, geometry: bookshop, role: environment }
+      - id: elara
+        geometry: elara
+        role: character
+        transform:
+          { position: [1.5, 0, -1.3], rotation: [0, 1.5707963267948966, 0], scale: [1, 1, 1] }
+        motion: { source: pause-performance, startFrame: 0, endFrame: 38 }
+    camera:
+      keyframes:
+        - {
+            time: 0,
+            position: { world: [0, 1.38, -1.85] },
+            target: { world: [1.48, 1.18, -1.03] },
+            lensMillimeters: 62,
+          }
+        - {
+            time: 1.5833333333333333,
+            position: { world: [0.12, 1.42, -1.72] },
+            target: { world: [1.52, 1.2, -0.98] },
+            lensMillimeters: 68,
+          }
+    lighting: exterior-lighting
+    vfx: rainy-dusk
+    landmarks:
+      - { id: pause, progress: 0, description: Grounded gait pose holds without sliding }
+      - { id: body-turn, progress: 0.38, description: Torso follows the actual window target }
+      - { id: gaze-settle, progress: 0.7, description: Head settles after body orientation }
+      - { id: hold, progress: 1, description: Identity and wardrobe hold for editorial continuity }
+    metadata: { campaignClass: reference-cinematic, grammar: grounded-targeted-turn }
+
+  - id: enter-bookshop
+    frames: 43
+    entities:
+      - { id: bookshop-set, geometry: bookshop, role: environment }
+      - id: elara
+        geometry: elara
+        role: character
+        transform: { position: [0, 0, -0.6], rotation: [0, 3.141592653589793, 0], scale: [1, 1, 1] }
+        motion:
+          {
+            source: open-door-actor,
+            startFrame: 0,
+            endFrame: 43,
+            sourceStartSeconds: 0,
+            sourceEndSeconds: 4.8,
+          }
+      - id: bookshop-door
+        geometry: door
+        role: prop
+        motion:
+          {
+            source: open-door-target,
+            startFrame: 0,
+            endFrame: 43,
+            sourceStartSeconds: 0,
+            sourceEndSeconds: 4.8,
+          }
+    camera:
+      keyframes:
+        - {
+            time: 0,
+            position: { world: [2.65, 1.48, -3.15] },
+            target: { world: [0, 1.06, -0.04] },
+            lensMillimeters: 52,
+          }
+        - {
+            time: 1.7916666666666667,
+            position: { world: [2.4, 1.52, -2.78] },
+            target: { world: [0, 1.08, 0.3] },
+            lensMillimeters: 58,
+          }
+    lighting: exterior-lighting
+    vfx: rainy-dusk
+    qualityGates:
+      - {
+          id: body-faces-travel,
+          type: directional-motion,
+          entityId: elara,
+          minimumDistanceMeters: 0.75,
+          minimumForwardDot: 0.8,
+        }
+      - {
+          id: exterior-to-interior,
+          type: axis-crossing,
+          entityId: elara,
+          axis: z,
+          boundary: 0,
+          direction: negative-to-positive,
+          minimumClearanceMeters: 0.25,
+        }
+    landmarks:
+      - { id: approach, progress: 0, description: Elara is outside and faces the interior }
+      - { id: reach, progress: 0.18, description: Right hand reaches the door handle }
+      - { id: grasp, progress: 0.36, description: Hand establishes handle contact }
+      - { id: open, progress: 0.64, description: Door swings inward while contact holds }
+      - { id: release, progress: 0.86, description: Hand releases after the door clears }
+      - { id: inside, progress: 1, description: Root has crossed the threshold into the shop }
+    metadata: { campaignClass: reference-cinematic, grammar: articulated-threshold-interaction }
+
+  - id: discover-book
+    frames: 53
+    entities:
+      - { id: bookshop-set, geometry: bookshop, role: environment }
+      - id: elara
+        geometry: elara
+        role: character
+        transform:
+          { position: [0.45, 0, 2.25], rotation: [0, 3.141592653589793, 0], scale: [1, 1, 1] }
+        motion:
+          {
+            source: read-book-actor,
+            startFrame: 0,
+            endFrame: 53,
+            sourceStartSeconds: 0,
+            sourceEndSeconds: 3.2,
+          }
+      - id: significant-book
+        geometry: book
+        role: prop
+        transform:
+          { position: [0.45, 1.17, 2.62], rotation: [0, 3.141592653589793, 0], scale: [1, 1, 1] }
+        motion:
+          {
+            source: read-book-target,
+            startFrame: 0,
+            endFrame: 53,
+            sourceStartSeconds: 0,
+            sourceEndSeconds: 3.2,
+          }
+    camera:
+      keyframes:
+        - {
+            time: 0,
+            position: { world: [-0.95, 1.5, 4.2] },
+            target: { world: [0.45, 1.2, 2.42] },
+            lensMillimeters: 68,
+          }
+        - {
+            time: 2.2083333333333335,
+            position: { world: [-0.72, 1.5, 3.85] },
+            target: { world: [0.45, 1.28, 2.48] },
+            lensMillimeters: 76,
+          }
+    lighting: interior-lighting
+    atmosphere:
+      worldColor: [0.009, 0.006, 0.004]
+      fogDensity: 0.004
+      rain: { enabled: false, count: 0, seed: 1701 }
+    landmarks:
+      - { id: hold-low, progress: 0, description: Book rests in a stable two-hand hold }
+      - { id: raise, progress: 0.2, description: Both hands raise the book together }
+      - { id: grasp, progress: 0.4, description: Both grips remain registered on the covers }
+      - { id: settle, progress: 0.58, description: Book settles at reading height }
+      - { id: read, progress: 0.78, description: Head and gaze orient to the pages }
+      - { id: complete, progress: 1, description: Reading pose holds without prop drift }
+    metadata: { campaignClass: reference-cinematic, grammar: bilateral-prop-reading }
+
+  - id: title-reveal
+    frames: 43
+    entities:
+      - { id: bookshop-set, geometry: bookshop, role: environment }
+    camera:
+      keyframes:
+        - {
+            time: 0,
+            position: { world: [7.1, 3.15, -2.62] },
+            target: { world: [-2.4, 1.42, -2.05] },
+            lensMillimeters: 52,
+          }
+        - {
+            time: 1.7916666666666667,
+            position: { world: [6.75, 3.08, -2.58] },
+            target: { world: [-2.55, 1.42, -2.04] },
+            lensMillimeters: 55,
+          }
+    lighting: exterior-lighting
+    vfx: rainy-dusk
+    overlays:
+      - {
+          overlay: title-treatment,
+          startSeconds: 0,
+          endSeconds: 1.7916666666666667,
+          opacity: 1,
+          fadeInSeconds: 0.3,
+          fadeOutSeconds: 0.25,
+        }
+    landmarks:
+      - {
+          id: copy-arrives,
+          progress: 0,
+          description: Rainy city motif returns beneath restrained campaign copy,
+        }
+      - {
+          id: title-hold,
+          progress: 0.5,
+          description: Original title treatment holds inside vertical safe area,
+        }
+      - {
+          id: title-yields,
+          progress: 1,
+          description: Editorial overlay fades toward the product reveal,
+        }
+    metadata: { campaignClass: reference-cinematic, grammar: editorial-title-reveal }
+
+  - id: cover-reveal
+    frames: 48
+    entities:
+      - id: campaign-cover
+        geometry: cover
+        role: prop
+        transform: { position: [0, 1.05, 0], rotation: [0, -0.16, 0], scale: [1.22, 1.22, 1.22] }
+    camera:
+      keyframes:
+        - {
+            time: 0,
+            position: { world: [0.4799633973674722, 1.130032, -2.9993995730811642] },
+            target: { world: [0, 1.05, 0] },
+            lensMillimeters: 60,
+          }
+        - {
+            time: 2,
+            position: { world: [0.15996339736747217, 1.080032, -2.649399573081164] },
+            target: { world: [0, 1.05, 0] },
+            lensMillimeters: 64,
+          }
+    lights:
+      - {
+          id: cover-warm-key,
+          type: area,
+          position: [-1.4, 2.8, -1.8],
+          target: [0, 1.05, 0],
+          color: [1, 0.5, 0.22],
+          energy: 900,
+          sizeMeters: 2.1,
+        }
+      - {
+          id: cover-cool-rim,
+          type: area,
+          position: [1.6, 2.2, 0.7],
+          target: [0, 1.05, 0],
+          color: [0.28, 0.46, 0.9],
+          energy: 620,
+          sizeMeters: 1.6,
+        }
+    atmosphere: { worldColor: [0.003, 0.002, 0.004], fogDensity: 0, rain: { enabled: false } }
+    landmarks:
+      - {
+          id: dimensional-arrival,
+          progress: 0,
+          description: Three-quarter product angle establishes real cover thickness,
+        }
+      - {
+          id: front-legibility,
+          progress: 0.55,
+          description: Push improves supplied front-art legibility,
+        }
+      - { id: final-hold, progress: 1, description: Cover settles in a stable campaign end frame }
+    metadata: { campaignClass: reference-cinematic, grammar: dimensional-cover-resolution }
+
+delivery:
+  id: edit.reference-cinematic-benchmark
+  directory: delivery-declarative
+  codec: h264
+  pixelFormat: yuv420p
+  fastStart: true
+
+metadata:
+  conformancePurpose: complete-reference-benchmark-migration
+  campaignClass: narrative-book-trailer
+  bespokeOrchestrationSourceFiles: 0
+  expectedFrames: 360

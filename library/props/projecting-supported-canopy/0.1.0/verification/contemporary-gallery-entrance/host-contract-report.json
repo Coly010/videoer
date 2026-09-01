@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "kind": "contemporary-gallery-entrance",
+  "host": {
+    "kind": "vertical-facade-canopy-mount",
+    "facadePlaneZ": 0,
+    "mountHeightMeters": 4.05,
+    "clearWallSpanMeters": 7.3,
+    "clearanceVolumeAvailable": true
+  },
+  "asset": {
+    "kind": "vertical-facade-canopy-mount",
+    "facadePlaneZ": 0,
+    "requiredMountHeightMeters": {
+      "minimum": 2.6,
+      "maximum": 5.5
+    },
+    "requiredClearWallSpanMeters": 4.76,
+    "requiredClearanceVolumeMeters": {
+      "minimum": [
+        -2.42,
+        -0.78,
+        -1.08
+      ],
+      "maximum": [
+        2.42,
+        0.2,
+        0.08
+      ]
+    }
+  },
+  "exactPortableGeometryReused": true
+}

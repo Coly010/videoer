@@ -1,0 +1,69 @@
+import { lightingRigSchema } from './model.js';
+
+export function createMoonlitExteriorLightingRig() {
+  return lightingRigSchema.parse({
+    schemaVersion: 1,
+    id: 'lighting.moonlit-exterior',
+    exposure: { look: 'AgX - Medium High Contrast', coherentAcrossShots: true },
+    worldColor: [0.0015, 0.0025, 0.008],
+    lights: [
+      {
+        id: 'moon-directional-key',
+        type: 'area',
+        position: [-4.8, 7.6, -4.2],
+        target: [0, 0.95, 0.8],
+        color: [0.32, 0.48, 1],
+        energy: 980,
+        sizeMeters: 3.2,
+        purpose: 'key',
+      },
+      {
+        id: 'night-sky-fill',
+        type: 'area',
+        position: [3.8, 6.4, -1.2],
+        target: [0, 1.1, 0.7],
+        color: [0.12, 0.2, 0.46],
+        energy: 270,
+        sizeMeters: 6.5,
+        purpose: 'environment',
+      },
+      {
+        id: 'silver-edge-rim',
+        type: 'spot',
+        position: [4.5, 3.9, 3.8],
+        target: [0.2, 1.05, 0.8],
+        color: [0.45, 0.64, 1],
+        energy: 460,
+        sizeMeters: 0.45,
+        angleDegrees: 52,
+        purpose: 'rim',
+      },
+      {
+        id: 'warm-aperture-practical',
+        type: 'point',
+        position: [2.72, 1.75, 3.62],
+        target: [0.35, 0.9, 0.25],
+        color: [1, 0.37, 0.105],
+        energy: 420,
+        sizeMeters: 0.18,
+        purpose: 'practical',
+      },
+      {
+        id: 'cool-ground-bounce',
+        type: 'area',
+        position: [-0.8, 0.28, -1.4],
+        target: [0, 1.0, 0.75],
+        color: [0.12, 0.24, 0.58],
+        energy: 120,
+        sizeMeters: 3.4,
+        purpose: 'fill',
+      },
+    ],
+    metadata: {
+      context: 'moonlit-exterior-with-motivated-warm-aperture',
+      contrastStrategy: 'cool-directional-key-and-sky-fill-with-warm-local-depth-cue',
+      intendedShotDistance: 'background-to-medium',
+      motionDependency: 'none',
+    },
+  });
+}

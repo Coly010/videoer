@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "kind": "contemporary-plaster",
+  "wallThicknessMeters": 0.26,
+  "opening": {
+    "minimumX": -0.64,
+    "maximumX": 0.64,
+    "minimumY": 1.42,
+    "maximumY": 2.38
+  },
+  "moduleHostContract": {
+    "kind": "rectangular-wall-opening",
+    "cutoutRequired": true,
+    "openingWidthMeters": 1.28,
+    "openingHeightMeters": 0.96,
+    "supportedWallThicknessMeters": {
+      "minimum": 0.22,
+      "maximum": 0.42
+    },
+    "exteriorNormal": [
+      0,
+      0,
+      -1
+    ]
+  },
+  "cutoutGeneratedBy": "wallWithRectangularOpeningsParts"
+}

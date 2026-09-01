@@ -1,0 +1,533 @@
+schemaVersion: 1
+id: campaign.last-platform-multicharacter
+fps: 24
+resolution: { width: 640, height: 360, percentage: 100 }
+assetLibrary: ../../library
+
+geometry:
+  - id: dialogue-platform
+    path: work/environment/dialogue-platform.json
+    library:
+      type: environment
+      query: abstract night transit platform
+      tags: [transit, platform, night]
+      capabilities:
+        [
+          deterministic-geometry,
+          semantic-camera-anchors,
+          dialogue-blocking-anchors,
+          two-character-camera-anchors,
+        ]
+      preferredAsset: { id: environment.night-transit-platform, version: 1.0.1 }
+      artifactRole: geometry
+    adaptation:
+      assetId: environment.night-transit-dialogue-stage
+      providesCapabilities: [dialogue-blocking-anchors, two-character-camera-anchors]
+      addAttachments:
+        dialogue-a: { position: [-1.15, 0, -1.0] }
+        dialogue-b: { position: [1.15, 0, -1.0] }
+        dialogue-wide-camera: { position: [0, 1.65, -5.5] }
+        dialogue-wide-focus: { position: [0, 1.15, -1.0] }
+        dialogue-three-quarter-camera: { position: [-3.15, 1.58, -3.8] }
+        dialogue-three-quarter-focus: { position: [0, 1.25, -1.0] }
+        dialogue-reverse-camera: { position: [2.9, 1.62, 1.7] }
+        dialogue-reverse-focus: { position: [0, 1.2, -1.0] }
+      materialOverrides:
+        - { materialId: tunnel-wall, baseColor: [0.035, 0.03, 0.05, 1], roughness: 0.62 }
+      metadata:
+        adaptationPurpose: Reusable two-character blocking and coverage without changing platform topology
+      publication:
+        assetId: environment.night-transit-dialogue-stage
+        version: 1.0.1
+        type: environment
+        title: Night transit dialogue stage
+        description: Provenance-linked adaptation of the abstract night platform with reusable two-character marks, wide and three-quarter camera anchors, and preserved topology and coordinate system.
+        tags: [transit, platform, night, dialogue, two-character, staging]
+        capabilities:
+          [
+            deterministic-geometry,
+            semantic-camera-anchors,
+            dialogue-blocking-anchors,
+            two-character-camera-anchors,
+            cinematic-light-rhythm,
+          ]
+        generator: videoer.declarative-geometry-adaptation.v1
+        renderers: [three-3d, blender-headless]
+        verification:
+          checks:
+            [
+              adaptation.parent-hash,
+              adaptation.topology-preserved,
+              adaptation.skeleton-preserved,
+              attachments.dialogue-blocking,
+              blocking.mutual-facing,
+              visual.multi-character-coverage,
+            ]
+          shots: [last-train-wide, exchanged-look, shared-silence]
+
+  - id: elara
+    library:
+      type: character
+      query: Elara Vale recurring heroine
+      tags: [humanoid, woman, recurring]
+      capabilities: [canonical-humanoid-rig, gaze-target, identity-reference]
+      preferredAsset: { id: character.elara-vale, version: 0.1.4 }
+      artifactRole: geometry
+
+  - id: traveller
+    library:
+      type: character
+      query: parametric humanoid mannequin
+      tags: [humanoid, mannequin, procedural]
+      capabilities: [canonical-humanoid-rig, gaze-target, skinned-mesh]
+      preferredAsset: { id: character.humanoid-mannequin, version: 0.4.0 }
+      artifactRole: geometry
+
+motions:
+  - id: grounded-pose
+    library:
+      type: motion
+      query: natural cautious walk
+      tags: [humanoid, walk, cautious, naturalistic]
+      capabilities: [canonical-humanoid, foot-contact, planted-contact-constraints]
+      preferredAsset: { id: motion.walk-natural-cautious, version: 1.1.1 }
+      artifactRole: motion
+  - id: elara-grounded-pose
+    path: work/motions/elara-grounded-pose.json
+    library:
+      type: motion
+      query: natural cautious walk
+      tags: [humanoid, walk, cautious, naturalistic]
+      capabilities:
+        [canonical-humanoid, foot-contact, planted-contact-constraints, elara-proportions]
+      preferredAsset: { id: motion.walk-natural-cautious, version: 1.1.1 }
+      artifactRole: motion
+    adaptation:
+      kind: gait-retarget
+      assetId: motion.walk-natural-cautious-elara
+      targetGeometry: elara
+      providesCapabilities: [elara-proportions]
+      metadata: { performanceUse: grounded dialogue base for Elara Vale proportions }
+      publication:
+        assetId: motion.walk-natural-cautious-elara
+        version: 1.1.0
+        type: motion
+        title: Elara-proportioned cautious gait
+        description: Research gait re-synthesized from the verified cautious phase design against Elara Vale's exact height, leg, arm, hip, and foot proportions with repeated biomechanics and skeleton compatibility evidence.
+        tags: [humanoid, walk, cautious, naturalistic, elara-vale, retargeted]
+        capabilities:
+          [
+            canonical-humanoid,
+            root-motion,
+            foot-contact,
+            planted-contact-constraints,
+            elara-proportions,
+            dialogue-grounded-pose,
+          ]
+        generator: videoer.phase-gait-retarget.v1
+        renderers: [three-3d, blender-headless]
+        verification:
+          checks:
+            [
+              motion.parent-hash,
+              motion.target-geometry-hash,
+              motion.skeleton-compatible,
+              motion.biomechanics,
+              motion.canonical-forward-direction,
+              visual.multi-character-performance,
+            ]
+          shots: [last-train-wide, exchanged-look, shared-silence]
+  - id: elara-glance
+    path: work/motions/elara-glance.json
+    recipe: { kind: turn, direction: right, scope: head }
+  - id: traveller-glance
+    path: work/motions/traveller-glance.json
+    recipe: { kind: turn, direction: left, scope: head }
+
+motionTimelines:
+  - id: elara-performance
+    clipId: motion.last-platform.elara-performance
+    path: work/motions/elara-performance.json
+    frames: 72
+    layers:
+      - {
+          id: grounded-base,
+          motion: elara-grounded-pose,
+          mode: base,
+          startFrame: 0,
+          endFrame: 72,
+          playback: hold,
+          sourceStartSeconds: 0,
+        }
+      - {
+          id: glance,
+          motion: elara-glance,
+          mode: additive,
+          startFrame: 0,
+          endFrame: 72,
+          playback: once,
+          fadeInFrames: 8,
+        }
+    metadata: { purpose: Grounded dialogue pose plus restrained independent head performance }
+  - id: traveller-performance
+    clipId: motion.last-platform.traveller-performance
+    path: work/motions/traveller-performance.json
+    frames: 72
+    layers:
+      - {
+          id: grounded-base,
+          motion: grounded-pose,
+          mode: base,
+          startFrame: 0,
+          endFrame: 72,
+          playback: hold,
+          sourceStartSeconds: 0,
+        }
+      - {
+          id: glance,
+          motion: traveller-glance,
+          mode: additive,
+          startFrame: 0,
+          endFrame: 72,
+          playback: once,
+          fadeInFrames: 8,
+        }
+    metadata: { purpose: Grounded dialogue pose plus reciprocal independent head performance }
+
+overlays:
+  - id: last-platform-copy
+    path: work/editorial/last-platform-copy.png
+    width: 640
+    height: 360
+    font: { family: Cormorant Garamond, licence: OFL-1.1 }
+    lines:
+      - {
+          text: THE LAST PLATFORM,
+          y: 42,
+          fontSize: 46,
+          color: '0xf1eee7',
+          borderWidth: 2,
+          borderColor: '0x02050a@0.95',
+        }
+      - {
+          text: SOME GOODBYES NEED NO WORDS,
+          y: 300,
+          fontSize: 19,
+          color: '0x74d9ee',
+          borderWidth: 2,
+          borderColor: '0x02050a@0.95',
+        }
+
+soundtrackPath: work/audio/soundtrack.wav
+audioSources:
+  - id: restrained-nine-second-score
+    library:
+      type: audio
+      query: restrained deterministic nine-second cinematic treatment
+      tags: [cinematic-score, restrained, deterministic, provider-free]
+      capabilities:
+        [
+          provider-free,
+          exact-duration,
+          stereo-48khz,
+          deterministic-treatment,
+          temporal-envelope-preserved,
+          frame-synchronized-accents,
+        ]
+      preferredAsset: { id: audio.beacon-one-product-pulse, version: 1.0.0 }
+      artifactRole: audio
+
+soundtrack:
+  schemaVersion: 1
+  id: audio.last-platform-multicharacter
+  durationSeconds: 9
+  sampleRate: 48000
+  channels: 2
+  cues:
+    - {
+        id: restrained-score,
+        kind: audio-source,
+        source: restrained-nine-second-score,
+        startSeconds: 0,
+        endSeconds: 9,
+        gain: 1,
+        purpose: Exact reuse of the verified restrained score in a different campaign grammar,
+      }
+  metadata:
+    {
+      providerFree: true,
+      campaignClass: multi-character-performance,
+      reusedAsset: audio.beacon-one-product-pulse@1.0.0,
+    }
+
+shots:
+  - id: last-train-wide
+    frames: 72
+    entities: &dialogue-entities
+      - { id: platform, geometry: dialogue-platform, role: environment }
+      - id: elara
+        geometry: elara
+        role: character
+        placement: { entityId: platform, attachmentId: dialogue-a }
+        transform: { position: [0, 0, 0], rotation: [0, -1.5707963268, 0], scale: [1, 1, 1] }
+        motion: { source: elara-performance, startFrame: 0, endFrame: 72 }
+      - id: traveller
+        geometry: traveller
+        role: character
+        placement: { entityId: platform, attachmentId: dialogue-b }
+        transform: { position: [0, 0, 0], rotation: [0, 1.5707963268, 0], scale: [1, 1, 1] }
+        motion: { source: traveller-performance, startFrame: 0, endFrame: 72 }
+    camera:
+      keyframes:
+        - {
+            time: 0,
+            position: { entityId: platform, attachmentId: dialogue-wide-camera },
+            target: { entityId: platform, attachmentId: dialogue-wide-focus },
+            lensMillimeters: 30,
+          }
+        - {
+            time: 3,
+            position:
+              { entityId: platform, attachmentId: dialogue-wide-camera, offset: [0, 0.08, 0.45] },
+            target: { entityId: platform, attachmentId: dialogue-wide-focus },
+            lensMillimeters: 32,
+          }
+    lights: &dialogue-lights
+      - {
+          id: cyan-pair-key,
+          type: area,
+          position: [2.7, 3.1, -2.2],
+          target: [0, 1.1, -1],
+          color: [0.14, 0.68, 1],
+          energy: 590,
+          sizeMeters: 2.4,
+        }
+      - {
+          id: amber-pair-rim,
+          type: area,
+          position: [-2.8, 2.5, 0.6],
+          target: [0, 1.1, -1],
+          color: [1, 0.24, 0.05],
+          energy: 430,
+          sizeMeters: 2.1,
+        }
+    atmosphere: &dialogue-air
+      worldColor: [0.003, 0.006, 0.014]
+      fogColor: [0.045, 0.055, 0.1]
+      fogDensity: 0.005
+      rain: { enabled: false }
+    qualityGates:
+      - {
+          id: reciprocal-blocking,
+          type: mutual-facing,
+          firstEntityId: elara,
+          secondEntityId: traveller,
+          minimumFacingDot: 0.98,
+        }
+    renderGates:
+      - { id: wide-visible, type: frame-visibility, maximumBlackPercentage: 78 }
+      - { id: wide-highlight-detail, type: frame-overexposure, maximumWhitePercentage: 14 }
+      - {
+          id: elara-wide-framed,
+          type: subject-framing,
+          entityId: elara,
+          minimumScreenHeightPercentage: 35,
+          maximumScreenHeightPercentage: 88,
+          marginPercentage: 2,
+        }
+      - {
+          id: traveller-wide-framed,
+          type: subject-framing,
+          entityId: traveller,
+          minimumScreenHeightPercentage: 35,
+          maximumScreenHeightPercentage: 88,
+          marginPercentage: 2,
+        }
+    landmarks:
+      - {
+          id: shared-distance,
+          progress: 0,
+          description: Two distinct characters hold reciprocal platform marks,
+        }
+      - {
+          id: last-train-space,
+          progress: 0.5,
+          description: Environment and negative space establish silent tension,
+        }
+      - { id: conversation-axis, progress: 1, description: Mutual-facing line remains unbroken }
+    metadata: { campaignClass: multi-character-performance, grammar: silent-two-shot }
+
+  - id: exchanged-look
+    frames: 72
+    entities:
+      - { id: platform, geometry: dialogue-platform, role: environment }
+      - id: elara
+        geometry: elara
+        role: character
+        placement: { entityId: platform, attachmentId: dialogue-a }
+        transform: { position: [0, 0, 0], rotation: [0, -1.5707963268, 0], scale: [1, 1, 1] }
+        motion: { source: elara-performance, startFrame: 0, endFrame: 72 }
+      - id: traveller
+        geometry: traveller
+        role: character
+        placement: { entityId: platform, attachmentId: dialogue-b }
+        transform: { position: [0, 0, 0], rotation: [0, 1.5707963268, 0], scale: [1, 1, 1] }
+        motion: { source: traveller-performance, startFrame: 0, endFrame: 72 }
+    camera:
+      keyframes:
+        - {
+            time: 0,
+            position: { entityId: platform, attachmentId: dialogue-three-quarter-camera },
+            target: { entityId: platform, attachmentId: dialogue-three-quarter-focus },
+            lensMillimeters: 32,
+          }
+        - {
+            time: 3,
+            position:
+              {
+                entityId: platform,
+                attachmentId: dialogue-three-quarter-camera,
+                offset: [0.35, 0.04, 0.45],
+              },
+            target: { entityId: platform, attachmentId: dialogue-three-quarter-focus },
+            lensMillimeters: 34,
+          }
+    lights: *dialogue-lights
+    atmosphere: *dialogue-air
+    qualityGates:
+      - {
+          id: exchanged-reciprocity,
+          type: mutual-facing,
+          firstEntityId: elara,
+          secondEntityId: traveller,
+          minimumFacingDot: 0.98,
+        }
+    renderGates:
+      - { id: exchange-visible, type: frame-visibility, maximumBlackPercentage: 78 }
+      - { id: exchange-highlight-detail, type: frame-overexposure, maximumWhitePercentage: 14 }
+      - {
+          id: elara-shoulder-coverage,
+          type: subject-coverage,
+          entityId: elara,
+          minimumVisibleAreaPercentage: 65,
+          minimumVisibleScreenHeightPercentage: 55,
+          maximumVisibleScreenHeightPercentage: 80,
+        }
+      - {
+          id: traveller-exchange-framed,
+          type: subject-framing,
+          entityId: traveller,
+          minimumScreenHeightPercentage: 38,
+          maximumScreenHeightPercentage: 92,
+          marginPercentage: 2,
+        }
+      - {
+          id: traveller-local-detail,
+          type: subject-overexposure,
+          entityId: traveller,
+          maximumWhitePercentage: 28,
+          whiteThreshold: 238,
+        }
+    landmarks:
+      - {
+          id: look-begins,
+          progress: 0,
+          description: Paired head performance starts from stable body blocking,
+        }
+      - {
+          id: reciprocal-glance,
+          progress: 0.55,
+          description: Two independently bound motions read in one composition,
+        }
+      - { id: look-held, progress: 1, description: Shared eyeline remains spatially coherent }
+    metadata: { campaignClass: multi-character-performance, grammar: reciprocal-glance }
+
+  - id: shared-silence
+    frames: 72
+    entities: *dialogue-entities
+    camera:
+      keyframes:
+        - {
+            time: 0,
+            position: { entityId: platform, attachmentId: dialogue-reverse-camera },
+            target: { entityId: platform, attachmentId: dialogue-reverse-focus },
+            lensMillimeters: 30,
+          }
+        - {
+            time: 3,
+            position:
+              {
+                entityId: platform,
+                attachmentId: dialogue-reverse-camera,
+                offset: [-0.35, 0.02, -0.5],
+              },
+            target: { entityId: platform, attachmentId: dialogue-reverse-focus },
+            lensMillimeters: 32,
+          }
+    lights: *dialogue-lights
+    atmosphere: *dialogue-air
+    overlays:
+      [
+        {
+          overlay: last-platform-copy,
+          startSeconds: 0,
+          endSeconds: 3,
+          fadeInSeconds: 0.45,
+          fadeOutSeconds: 0,
+        },
+      ]
+    qualityGates:
+      - {
+          id: resolve-reciprocity,
+          type: mutual-facing,
+          firstEntityId: elara,
+          secondEntityId: traveller,
+          minimumFacingDot: 0.98,
+        }
+    renderGates:
+      - { id: resolve-visible, type: frame-visibility, maximumBlackPercentage: 80 }
+      - { id: resolve-highlight-detail, type: frame-overexposure, maximumWhitePercentage: 14 }
+      - {
+          id: elara-resolve-framed,
+          type: subject-framing,
+          entityId: elara,
+          minimumScreenHeightPercentage: 35,
+          maximumScreenHeightPercentage: 90,
+          marginPercentage: 2,
+        }
+      - {
+          id: traveller-reverse-coverage,
+          type: subject-coverage,
+          entityId: traveller,
+          minimumVisibleAreaPercentage: 70,
+          minimumVisibleScreenHeightPercentage: 60,
+          maximumVisibleScreenHeightPercentage: 80,
+        }
+    landmarks:
+      - {
+          id: reverse-axis,
+          progress: 0,
+          description: Reverse coverage preserves character geography,
+        }
+      - {
+          id: silence-held,
+          progress: 0.5,
+          description: Two-character staging supports editorial meaning without dialogue audio,
+        }
+      - {
+          id: final-distance,
+          progress: 1,
+          description: Campaign resolves with both identities still legible,
+        }
+    metadata: { campaignClass: multi-character-performance, grammar: reverse-two-shot-resolve }
+
+delivery:
+  id: edit.last-platform-multicharacter
+  directory: delivery
+  codec: h264
+  pixelFormat: yuv420p
+  fastStart: true
+
+metadata:
+  purpose: Prove auditable derived-environment adaptation, semantic two-character placement, independent performance binding, and reciprocal blocking
+  bespokeOrchestrationSourceFiles: 0

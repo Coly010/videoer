@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "requestId": "layout.contemporary-maker-lab-workshop-world",
+  "familyId": "environment.workshop-world-family",
+  "seed": 12187,
+  "attempts": 1,
+  "instances": [
+    {
+      "id": "layout.contemporary-maker-lab-workshop-world.cluster-001.member-01",
+      "clusterId": "layout.contemporary-maker-lab-workshop-world.cluster-001",
+      "recipeId": "complete-craft-workstation",
+      "variantId": "joiners-workbench",
+      "geometryAssetId": "prop.joiners-workbench",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          3.14933885406774,
+          0,
+          0.5287597373014095
+        ],
+        "rotation": [
+          0,
+          0.14062777803243756,
+          0
+        ],
+        "scale": [
+          1.014267647622619,
+          1.014267647622619,
+          1.014267647622619
+        ]
+      },
+      "footprintRadiusMeters": 1.2678345595282736,
+      "heightMeters": 1.0548383535275236
+    },
+    {
+      "id": "layout.contemporary-maker-lab-workshop-world.cluster-001.member-02",
+      "clusterId": "layout.contemporary-maker-lab-workshop-world.cluster-001",
+      "recipeId": "complete-craft-workstation",
+      "variantId": "freestanding-tool-board",
+      "geometryAssetId": "prop.freestanding-tool-board",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          3.015279073142268,
+          0,
+          1.3579931032112809
+        ],
+        "rotation": [
+          0,
+          0.1791928829117255,
+          0
+        ],
+        "scale": [
+          1.0250422769621945,
+          1.0250422769621945,
+          1.0250422769621945
+        ]
+      },
+      "footprintRadiusMeters": 0.9840405858837067,
+      "heightMeters": 2.1730896271598525
+    },
+    {
+      "id": "layout.contemporary-maker-lab-workshop-world.cluster-001.member-03",
+      "clusterId": "layout.contemporary-maker-lab-workshop-world.cluster-001",
+      "recipeId": "complete-craft-workstation",
+      "variantId": "rolling-parts-cabinet",
+      "geometryAssetId": "prop.rolling-parts-cabinet",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          4.762822865098551,
+          0,
+          1.0124635166415399
+        ],
+        "rotation": [
+          0,
+          0.02779100634550445,
+          0
+        ],
+        "scale": [
+          0.9934835187176242,
+          0.9934835187176242,
+          0.9934835187176242
+        ]
+      },
+      "footprintRadiusMeters": 0.6358294519792795,
+      "heightMeters": 1.0133531890919767
+    }
+  ],
+  "verification": {
+    "requestedClusterCount": 1,
+    "placedClusterCount": 1,
+    "placedCount": 3,
+    "requiredVariantIds": [
+      "joiners-workbench",
+      "freestanding-tool-board",
+      "rolling-parts-cabinet"
+    ],
+    "requiredRecipeIds": [
+      "complete-craft-workstation"
+    ],
+    "allRequiredVariantsPresent": true,
+    "exclusionCount": 1,
+    "deterministic": true,
+    "overlapFree": true,
+    "navigationClearancePreserved": true
+  }
+}

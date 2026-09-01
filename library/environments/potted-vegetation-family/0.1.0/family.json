@@ -1,0 +1,155 @@
+{
+  "schemaVersion": 1,
+  "id": "environment.potted-vegetation-family",
+  "title": "Portable inhabited-space potted vegetation",
+  "tags": [
+    "vegetation",
+    "planter",
+    "courtyard",
+    "interior",
+    "inhabited-environment"
+  ],
+  "intendedShotDistance": [
+    "background",
+    "medium"
+  ],
+  "variants": [
+    {
+      "id": "potted-fern",
+      "geometryAssetId": "prop.potted-fern",
+      "geometryVersion": "0.1.0",
+      "weight": 0.56,
+      "footprintRadiusMeters": 0.74,
+      "heightMeters": 1.35,
+      "scale": {
+        "minimum": 0.96,
+        "maximum": 1.18
+      },
+      "yawDegrees": {
+        "minimum": -180,
+        "maximum": 180
+      },
+      "tags": [
+        "broad",
+        "soft-silhouette",
+        "terracotta"
+      ]
+    },
+    {
+      "id": "potted-shrub",
+      "geometryAssetId": "prop.potted-shrub",
+      "geometryVersion": "0.1.0",
+      "weight": 0.44,
+      "footprintRadiusMeters": 0.56,
+      "heightMeters": 1.55,
+      "scale": {
+        "minimum": 0.94,
+        "maximum": 1.2
+      },
+      "yawDegrees": {
+        "minimum": -180,
+        "maximum": 180
+      },
+      "tags": [
+        "upright",
+        "branching",
+        "galvanized"
+      ]
+    }
+  ],
+  "clusters": [
+    {
+      "id": "mixed-threshold-pair",
+      "weight": 0.42,
+      "yawDegrees": {
+        "minimum": -28,
+        "maximum": 28
+      },
+      "members": [
+        {
+          "variantId": "potted-fern",
+          "offset": [
+            -0.62,
+            0,
+            0
+          ],
+          "yawOffsetDegrees": -12,
+          "scaleMultiplier": 1
+        },
+        {
+          "variantId": "potted-shrub",
+          "offset": [
+            0.58,
+            0,
+            0.12
+          ],
+          "yawOffsetDegrees": 16,
+          "scaleMultiplier": 0.9
+        }
+      ]
+    },
+    {
+      "id": "fern-corner",
+      "weight": 0.31,
+      "yawDegrees": {
+        "minimum": -38,
+        "maximum": 38
+      },
+      "members": [
+        {
+          "variantId": "potted-fern",
+          "offset": [
+            0,
+            0,
+            0
+          ],
+          "yawOffsetDegrees": 0,
+          "scaleMultiplier": 1
+        }
+      ]
+    },
+    {
+      "id": "shrub-pair",
+      "weight": 0.27,
+      "yawDegrees": {
+        "minimum": -24,
+        "maximum": 24
+      },
+      "members": [
+        {
+          "variantId": "potted-shrub",
+          "offset": [
+            -0.48,
+            0,
+            0
+          ],
+          "yawOffsetDegrees": -14,
+          "scaleMultiplier": 1
+        },
+        {
+          "variantId": "potted-shrub",
+          "offset": [
+            0.49,
+            0,
+            0.1
+          ],
+          "yawOffsetDegrees": 18,
+          "scaleMultiplier": 0.84
+        }
+      ]
+    }
+  ],
+  "placement": {
+    "surface": "ground",
+    "distribution": "edge-band",
+    "edgeBandMeters": 1.5,
+    "minimumSpacingMeters": 0.16,
+    "preserveNavigationClearance": true
+  },
+  "metadata": {
+    "generator": "videoer.potted-vegetation-family.v1",
+    "assetResolution": "stable-id-and-explicit-version",
+    "layoutOutput": "renderer-independent-surface-bound-transforms",
+    "supportsTriangleSurfaceQuery": true
+  }
+}

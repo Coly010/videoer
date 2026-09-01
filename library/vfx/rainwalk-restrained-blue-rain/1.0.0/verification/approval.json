@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "campaign": "campaign.rainwalk-square-crossdomain-conformance",
+  "sourceId": "restrained-rain",
+  "asset": {
+    "id": "vfx.rainwalk-restrained-blue-rain",
+    "version": "1.0.0"
+  },
+  "reviewer": "codex-autonomous-visual-semantic-review",
+  "rationale": "Passing square-format delivery; dense 24-sample motion review; corrected camera tracking; verified long-dress hem influence, physical clearance, procedural surface shading, and deterministic rain depth.",
+  "approvedAt": "2026-08-31T02:55:25.519Z"
+}

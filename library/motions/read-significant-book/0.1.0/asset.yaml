@@ -1,0 +1,93 @@
+schemaVersion: 1
+id: motion.read-significant-book
+version: 0.1.0
+type: motion
+title: Two-handed book raise and read
+description: Canonical-humanoid low hold, raise, settle, and reading action with
+  continuous bilateral attachment and animated gaze.
+status: verified
+tags:
+  - book
+  - hold
+  - read
+capabilities:
+  - canonical-humanoid
+  - two-hand-ik
+  - prop-attachment
+  - gaze-target
+  - additive-blend
+source:
+  kind: procedural
+  generator: videoer.read-book-synthesis.v1
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: actor-motion
+    path: actor-motion.json
+    mediaType: application/vnd.videoer.motion+json
+    sha256: b11e9c9ef75b7cf67f0cb699f70958e189eedc325c6cab23c07329d5c9f40799
+  - role: target-motion
+    path: target-motion.json
+    mediaType: application/vnd.videoer.motion+json
+    sha256: 0e0e83881a8eaf432f3f5ca0ec86d4f8df61ee0d6d659819b7f6a57ef27dc8c9
+  - role: interaction
+    path: interaction.json
+    mediaType: application/json
+    sha256: eb329c3dc9432a8f6429d706245bd94269822e90aaea0a6f9978a124fb2ef2a2
+  - role: verification
+    path: verification.json
+    mediaType: application/json
+    sha256: e14b49670668354919105cbc5f34efedea00bd853036cf9b1a3b072b9c89f706
+  - role: preview
+    path: verification/interaction.mp4
+    mediaType: video/mp4
+    sha256: 110edab93de447719e5d84cddd989ad9d47682840b2f4304326c3fd43306fb40
+  - role: verification-verification-contact-sheet
+    path: verification/contact-sheet.png
+    mediaType: image/png
+    sha256: 5de61b078c884da2d79dc3bbd0469db392e06e71f9b1d940851e2822d8181c3f
+  - role: verification-verification-contact-sheet-opposite
+    path: verification/contact-sheet-opposite.png
+    mediaType: image/png
+    sha256: cad738e25569629c1849940c68a8fb9efc3f04b297c4f0ce292238c6c1180067
+  - role: verification-verification-interaction-opposite
+    path: verification/interaction-opposite.mp4
+    mediaType: video/mp4
+    sha256: 769ed0b7bbe69ab12abf0b4204ed9b304fc46156a45016484d45cfddaffec73b
+  - role: verification-verification-interaction
+    path: verification/interaction.blend
+    mediaType: application/x-blender
+    sha256: e2c7aa6b9a015acb0a5c65d2e2c6c94b5a08fc0c1067f1eb15538c1ae303f11f
+  - role: verification-verification-interaction-probe
+    path: verification/interaction-probe.json
+    mediaType: application/json
+    sha256: 127aa7a3c079df51601de51ec7d1307d7d43128d81e49be2a9fd4b0db561efe5
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  skeleton: videoer.canonical-humanoid.v1
+  renderers:
+    - three-3d
+    - blender-headless
+  requires:
+    - id: prop.significant-book
+      version: 0.1.0
+verification:
+  checks:
+    - interaction.phase-coverage
+    - ik.reachability
+    - attachment.contact-error
+    - visual.pose-two-view
+    - gaze.target
+    - attachment.bilateral
+  artifacts:
+    - verification/contact-sheet.png
+    - verification/contact-sheet-opposite.png
+    - verification/interaction-opposite.mp4
+    - verification/interaction.blend
+    - verification/interaction-probe.json
+  verifiedAt: 2026-08-30T21:03:34.724Z

@@ -1,0 +1,171 @@
+{
+  "schemaVersion": 1,
+  "requestId": "layout.contemporary-rooftop-potted-vegetation",
+  "familyId": "environment.potted-vegetation-family",
+  "seed": 14932,
+  "attempts": 115,
+  "instances": [
+    {
+      "id": "layout.contemporary-rooftop-potted-vegetation.cluster-001.member-01",
+      "clusterId": "layout.contemporary-rooftop-potted-vegetation.cluster-001",
+      "recipeId": "fern-corner",
+      "variantId": "potted-fern",
+      "geometryAssetId": "prop.potted-fern",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          -3.289155729087349,
+          -0.10876948929080893,
+          1.9461581548468159
+        ],
+        "rotation": [
+          2.866333655628638,
+          -1.3486155098254775,
+          -2.8727747218818354
+        ],
+        "scale": [
+          1.1739234997937456,
+          1.1739234997937456,
+          1.1739234997937456
+        ]
+      },
+      "footprintRadiusMeters": 0.8687033898473717,
+      "heightMeters": 1.5847967247215566,
+      "surface": {
+        "geometryAssetId": "environment.contemporary-rooftop-planting-surface",
+        "triangleIndex": 1,
+        "normal": [
+          0,
+          0.9982048454657787,
+          0.059892290727946725
+        ],
+        "slopeDegrees": 3.4336303624505082
+      }
+    },
+    {
+      "id": "layout.contemporary-rooftop-potted-vegetation.cluster-002.member-01",
+      "clusterId": "layout.contemporary-rooftop-potted-vegetation.cluster-002",
+      "recipeId": "fern-corner",
+      "variantId": "potted-fern",
+      "geometryAssetId": "prop.potted-fern",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          3.1882019415858203,
+          -0.08434235248699157,
+          1.5390392081165256
+        ],
+        "rotation": [
+          2.722914890809763,
+          1.422940815552348,
+          2.7269748458847487
+        ],
+        "scale": [
+          1.101389822778292,
+          1.101389822778292,
+          1.101389822778292
+        ]
+      },
+      "footprintRadiusMeters": 0.8150284688559359,
+      "heightMeters": 1.4868762607506942,
+      "surface": {
+        "geometryAssetId": "environment.contemporary-rooftop-planting-surface",
+        "triangleIndex": 0,
+        "normal": [
+          0,
+          0.9982048454657787,
+          0.059892290727946725
+        ],
+        "slopeDegrees": 3.4336303624505082
+      }
+    },
+    {
+      "id": "layout.contemporary-rooftop-potted-vegetation.cluster-003.member-01",
+      "clusterId": "layout.contemporary-rooftop-potted-vegetation.cluster-003",
+      "recipeId": "shrub-pair",
+      "variantId": "potted-shrub",
+      "geometryAssetId": "prop.potted-shrub",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          2.562230411447835,
+          0.13298623159763812,
+          -2.0831038599606355
+        ],
+        "rotation": [
+          0.05993785187856181,
+          -0.01797725301786245,
+          -0.001078751603676997
+        ],
+        "scale": [
+          1.0414321035286411,
+          1.0414321035286411,
+          1.0414321035286411
+        ]
+      },
+      "footprintRadiusMeters": 0.5832019779760391,
+      "heightMeters": 1.6142197604693937,
+      "surface": {
+        "geometryAssetId": "environment.contemporary-rooftop-planting-surface",
+        "triangleIndex": 0,
+        "normal": [
+          0,
+          0.9982048454657787,
+          0.059892290727946725
+        ],
+        "slopeDegrees": 3.4336303624505082
+      }
+    },
+    {
+      "id": "layout.contemporary-rooftop-potted-vegetation.cluster-003.member-02",
+      "clusterId": "layout.contemporary-rooftop-potted-vegetation.cluster-003",
+      "recipeId": "shrub-pair",
+      "variantId": "potted-shrub",
+      "geometryAssetId": "prop.potted-shrub",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          3.5083937974803927,
+          0.11882892080239674,
+          -1.8471486800399455
+        ],
+        "rotation": [
+          3.060048231730218,
+          0.7447033102720783,
+          3.0862593370130305
+        ],
+        "scale": [
+          0.8749520586686208,
+          0.8749520586686208,
+          0.8749520586686208
+        ]
+      },
+      "footprintRadiusMeters": 0.4899731528544277,
+      "heightMeters": 1.3561756909363623,
+      "surface": {
+        "geometryAssetId": "environment.contemporary-rooftop-planting-surface",
+        "triangleIndex": 0,
+        "normal": [
+          0,
+          0.9982048454657787,
+          0.059892290727946725
+        ],
+        "slopeDegrees": 3.4336303624505082
+      }
+    }
+  ],
+  "verification": {
+    "requestedClusterCount": 3,
+    "placedClusterCount": 3,
+    "placedCount": 4,
+    "requiredVariantIds": [
+      "potted-fern",
+      "potted-shrub"
+    ],
+    "allRequiredVariantsPresent": true,
+    "exclusionCount": 2,
+    "deterministic": true,
+    "overlapFree": true,
+    "navigationClearancePreserved": true
+  }
+}

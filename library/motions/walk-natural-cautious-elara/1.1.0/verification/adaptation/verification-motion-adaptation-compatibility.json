@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "elara-grounded-pose",
+  "adaptationKind": "gait-retarget",
+  "baseAsset": {
+    "id": "motion.walk-natural-cautious",
+    "version": "1.1.1"
+  },
+  "baseArtifact": "/Users/colum/dev/personal/videoer/library/motions/walk-natural-cautious/1.1.1/motion.json",
+  "baseMotionSha256": "9054dbedf27780fcb56a3c2f113714074aacd03b72850b5616ae6cf9be670e37",
+  "adaptedAssetId": "motion.walk-natural-cautious-elara",
+  "adaptedArtifact": "/Users/colum/dev/personal/videoer/campaigns/last-platform-multicharacter-conformance/work/motions/elara-grounded-pose.json",
+  "adaptedMotionSha256": "d1523872939e99a06600b3232ac48140994b6006c2656f575f4ba24183113bfd",
+  "targetGeometry": {
+    "sourceId": "elara",
+    "assetId": "character.elara-vale",
+    "libraryAsset": {
+      "id": "character.elara-vale",
+      "version": "0.1.4"
+    },
+    "sha256": "ab0728e04ae1dabf73f92b124a8c5e10565357bdca3f91b225b44a33ac240c42"
+  },
+  "skeleton": {
+    "source": "videoer.canonical-humanoid.v1",
+    "adapted": "videoer.canonical-humanoid.v1",
+    "targetJoints": [
+      "root",
+      "hips",
+      "spine",
+      "chest",
+      "neck",
+      "head",
+      "left-clavicle",
+      "left-upper-arm",
+      "left-forearm",
+      "left-hand",
+      "right-clavicle",
+      "right-upper-arm",
+      "right-forearm",
+      "right-hand",
+      "left-thigh",
+      "left-shin",
+      "left-foot",
+      "left-toe",
+      "right-thigh",
+      "right-shin",
+      "right-foot",
+      "right-toe"
+    ],
+    "compatible": true
+  },
+  "proportions": {
+    "source": {
+      "height": 1.72,
+      "legLength": 0.88,
+      "armLength": 0.62,
+      "hipWidth": 0.32,
+      "footScale": 1
+    },
+    "target": {
+      "height": 1.7,
+      "legLength": 0.86,
+      "armLength": 0.6,
+      "hipWidth": 0.34,
+      "footScale": 0.94
+    }
+  },
+  "requestedCapabilities": [
+    "canonical-humanoid",
+    "foot-contact",
+    "planted-contact-constraints",
+    "elara-proportions"
+  ],
+  "missingBaseCapabilities": [
+    "elara-proportions"
+  ],
+  "providedCapabilities": [
+    "elara-proportions"
+  ],
+  "biomechanics": {
+    "valid": true,
+    "issues": [],
+    "checks": {
+      "style": "cautious",
+      "phaseModel": [
+        "initial-contact",
+        "loading-response",
+        "mid-stance",
+        "terminal-stance",
+        "pre-swing",
+        "initial-swing",
+        "mid-swing",
+        "terminal-swing"
+      ],
+      "strideLengthMeters": 0.7051999999999999,
+      "cadenceStepsPerMinute": 92,
+      "speedMetersPerSecond": 0.5406533333333333,
+      "maximumContactErrorMeters": 2.7755575615628914e-17,
+      "minimumSwingClearanceMeters": 0.03454067117045348,
+      "maximumGroundPenetrationMeters": 0,
+      "maximumPelvisStepMeters": 0.0017767447433423775,
+      "minimumFootForwardSpanMeters": 0.22224106358635043,
+      "initialLeadingHeelAdvanceMeters": 0.17629999999999998,
+      "initialTrailingHeelRetreatMeters": 0.17113182016394798,
+      "jointLimitViolations": [],
+      "canonicalForward": "-z",
+      "rootForwardMeters": 0.7051999999999999,
+      "peakKneeFlexionRadians": -1.2466719308412106,
+      "wrongWayKneeRadians": -0.449385086754899,
+      "wholeBodyTrackCount": 11
+    }
+  }
+}

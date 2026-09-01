@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "id": "turn.head.right",
+  "skeleton": "videoer.canonical-humanoid.v1",
+  "durationSeconds": 1.4,
+  "loop": false,
+  "tracks": [
+    {
+      "joint": "neck",
+      "property": "rotation-euler",
+      "space": "local-delta",
+      "keyframes": [
+        {
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "easing": "ease-in-out"
+        },
+        {
+          "time": 0.78,
+          "value": [
+            0,
+            -0.24,
+            0
+          ],
+          "easing": "ease-in-out"
+        },
+        {
+          "time": 1.4,
+          "value": [
+            0,
+            -0.24,
+            0
+          ],
+          "easing": "linear"
+        }
+      ]
+    },
+    {
+      "joint": "head",
+      "property": "rotation-euler",
+      "space": "local-delta",
+      "keyframes": [
+        {
+          "time": 0,
+          "value": [
+            0,
+            0,
+            0
+          ],
+          "easing": "ease-in-out"
+        },
+        {
+          "time": 0.78,
+          "value": [
+            0,
+            -0.34,
+            0
+          ],
+          "easing": "ease-in-out"
+        },
+        {
+          "time": 1.4,
+          "value": [
+            0,
+            -0.34,
+            0
+          ],
+          "easing": "linear"
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "generator": "videoer.turn-synthesis.v1",
+    "direction": "right",
+    "scope": "head"
+  }
+}

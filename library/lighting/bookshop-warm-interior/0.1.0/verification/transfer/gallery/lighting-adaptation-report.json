@@ -1,0 +1,59 @@
+{
+  "valid": true,
+  "issues": [],
+  "adaptation": {
+    "kind": "lighting-rig-transform-v1",
+    "assetId": "lighting.gallery-interior-v03-transfer",
+    "transform": {
+      "translation": [
+        -0.45,
+        0.15,
+        -4.6
+      ],
+      "yawRadians": 0,
+      "uniformScale": 1
+    },
+    "energyScale": 0.92,
+    "purposeEnergyScale": {
+      "key": 1.1,
+      "fill": 1,
+      "rim": 1.1,
+      "practical": 1,
+      "environment": 1
+    },
+    "colorMultiply": [
+      0.96,
+      0.94,
+      1
+    ],
+    "worldColor": [
+      0.004,
+      0.006,
+      0.014
+    ],
+    "metadata": {
+      "context": "unrelated-contemporary-gallery-transfer",
+      "sourceCandidate": "lighting.bookshop-warm-interior@0.1.0"
+    }
+  },
+  "topologyPreserved": true,
+  "exposurePreserved": true,
+  "spatialTransformMatched": true,
+  "energyTransformMatched": true,
+  "colorTransformMatched": true,
+  "sizeTransformMatched": true,
+  "nonBlackWorld": true,
+  "roleCoverage": {
+    "key": 1,
+    "fill": 1,
+    "rim": 1,
+    "practical": 0,
+    "environment": 0
+  },
+  "baseLightCount": 3,
+  "adaptedLightCount": 3,
+  "energyRange": {
+    "minimum": 232.76000000000005,
+    "maximum": 435.1600000000001
+  }
+}

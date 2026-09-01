@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "campaign": "campaign.breathe-again-awareness",
+  "sourceFile": "/Users/colum/dev/personal/videoer/campaigns/breathe-again-awareness-conformance/cinematic-campaign.yaml",
+  "sourceLines": 211,
+  "bespokeOrchestrationSourceFiles": 0,
+  "generatedGeometry": 2,
+  "scenes": [
+    "scene.urban-pressure",
+    "scene.corridor-breath",
+    "scene.resilient-growth",
+    "scene.collective-resolve"
+  ],
+  "editPlanFile": "/Users/colum/dev/personal/videoer/campaigns/breathe-again-awareness-conformance/work/edit/edit-plan.json",
+  "delivery": "/Users/colum/dev/personal/videoer/campaigns/breathe-again-awareness-conformance/delivery/breathe-again-awareness.mp4"
+}

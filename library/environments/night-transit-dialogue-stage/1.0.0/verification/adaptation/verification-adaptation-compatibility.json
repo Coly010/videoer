@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "dialogue-platform",
+  "baseAsset": {
+    "id": "environment.night-transit-platform",
+    "version": "1.0.1"
+  },
+  "baseArtifact": "/Users/colum/dev/personal/videoer/library/environments/night-transit-platform/1.0.1/geometry.json",
+  "baseGeometrySha256": "1fa976fd4d34db6f01e5c6043f1cbcb0798762a720f903d317f2c822182924e1",
+  "adaptedAssetId": "environment.night-transit-dialogue-stage",
+  "adaptedArtifact": "/Users/colum/dev/personal/videoer/campaigns/last-platform-multicharacter-conformance/work/environment/dialogue-platform.json",
+  "adaptedGeometrySha256": "09d00293ff2da98ad10c6e2c7f873fe9e7d779d74e17859f4d02277647803292",
+  "requestedCapabilities": [
+    "deterministic-geometry",
+    "semantic-camera-anchors",
+    "dialogue-blocking-anchors",
+    "two-character-camera-anchors"
+  ],
+  "missingBaseCapabilities": [
+    "dialogue-blocking-anchors",
+    "two-character-camera-anchors"
+  ],
+  "providedCapabilities": [
+    "dialogue-blocking-anchors",
+    "two-character-camera-anchors"
+  ],
+  "operations": {
+    "addedAttachments": [
+      "dialogue-a",
+      "dialogue-b",
+      "dialogue-wide-camera",
+      "dialogue-wide-focus",
+      "dialogue-three-quarter-camera",
+      "dialogue-three-quarter-focus",
+      "dialogue-reverse-camera",
+      "dialogue-reverse-focus"
+    ],
+    "materialOverrides": [
+      "tunnel-wall"
+    ],
+    "topologyChanged": false,
+    "skeletonChanged": false
+  },
+  "compatibility": {
+    "coordinateSystemPreserved": true,
+    "vertexCountBefore": 360,
+    "vertexCountAfter": 360,
+    "triangleCountBefore": 180,
+    "triangleCountAfter": 180,
+    "skeletonJointsBefore": [
+      "root"
+    ],
+    "skeletonJointsAfter": [
+      "root"
+    ]
+  },
+  "validation": {
+    "valid": true,
+    "issues": [],
+    "stats": {
+      "vertices": 360,
+      "triangles": 180,
+      "joints": 1,
+      "skinned": true
+    }
+  }
+}

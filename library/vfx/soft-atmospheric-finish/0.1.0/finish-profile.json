@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "vfx.soft-atmospheric-finish",
+  "tonal": {
+    "contrast": 1.04,
+    "saturation": 0.97,
+    "brightness": 0,
+    "gamma": 1,
+    "temperature": 0.01,
+    "tint": 0,
+    "preserveLightness": true
+  },
+  "bloom": {
+    "enabled": true,
+    "threshold": 0.8,
+    "radiusPixels": 7.5,
+    "intensity": 0.055
+  },
+  "vignette": {
+    "enabled": true,
+    "angleRadians": 0.06
+  },
+  "grain": {
+    "enabled": true,
+    "strength": 2,
+    "seed": 53921,
+    "temporal": true
+  },
+  "metadata": {
+    "generator": "videoer.cinematic-finish.v1",
+    "intendedUse": "restrained-short-form-cinematic-finishing",
+    "colorPipeline": "post-AgX-display-referred"
+  }
+}

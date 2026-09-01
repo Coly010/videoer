@@ -10,3 +10,9 @@ campaigns/**/campaign-state.json
 *.log
 .DS_Store
 misc-images/
+__pycache__/
+*.py[cod]
+.venv-blender/
+.videoer-cache/
+campaigns/**/work/
+/work/

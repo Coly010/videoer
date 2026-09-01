@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "campaign": "campaign.quiet-resolve-performance",
+  "sourceId": "walk-and-resolve",
+  "asset": {
+    "id": "motion.quiet-resolve.walk-and-look",
+    "version": "1.0.0"
+  },
+  "reviewer": "codex-agentic-review",
+  "rationale": "Reviewed the accepted two-shot delivery, semantic contact sheets, full-body framing reports, 1.622 m forward travel at 0.99994 facing alignment, exact 72-frame composition grid, uninterrupted base coverage, explicit neck/head mask, measured 0.34-radian additive contribution above the 0.20 threshold, both source artifact hashes, target-character geometry hash, and canonical skeleton compatibility.",
+  "approvedAt": "2026-08-31T01:13:59.945Z"
+}

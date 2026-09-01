@@ -1,0 +1,495 @@
+{
+  "schemaVersion": 1,
+  "source": "/Users/colum/dev/personal/videoer/work/environments/market-world-family-v3/family/verification/contemporary-pop-up/scene.json",
+  "manifest": "/Users/colum/dev/personal/videoer/work/environments/market-world-family-v3/family/verification/contemporary-pop-up/resolved-scene.json",
+  "video": "/Users/colum/dev/personal/videoer/work/environments/market-world-family-v3/family/verification/contemporary-pop-up/market-world-contemporary-pop-up-transfer.mp4",
+  "blend": "/Users/colum/dev/personal/videoer/work/environments/market-world-family-v3/family/verification/contemporary-pop-up/market-world-contemporary-pop-up-transfer.blend",
+  "frames": [
+    {
+      "id": "right-context",
+      "progress": 0,
+      "description": "Right host and market silhouette",
+      "path": "/Users/colum/dev/personal/videoer/work/environments/market-world-family-v3/family/verification/contemporary-pop-up/000-right-context.png"
+    },
+    {
+      "id": "frontal-layout",
+      "progress": 0.5,
+      "description": "Canopy, display inventory and circulation",
+      "path": "/Users/colum/dev/personal/videoer/work/environments/market-world-family-v3/family/verification/contemporary-pop-up/050-frontal-layout.png"
+    },
+    {
+      "id": "left-context",
+      "progress": 1,
+      "description": "Left host and material separation",
+      "path": "/Users/colum/dev/personal/videoer/work/environments/market-world-family-v3/family/verification/contemporary-pop-up/100-left-context.png"
+    }
+  ],
+  "contactSheet": "/Users/colum/dev/personal/videoer/work/environments/market-world-family-v3/family/verification/contemporary-pop-up/contact-sheet.png",
+  "media": {
+    "streams": [
+      {
+        "index": 0,
+        "codec_name": "h264",
+        "codec_long_name": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+        "profile": "High",
+        "codec_type": "video",
+        "codec_tag_string": "avc1",
+        "codec_tag": "0x31637661",
+        "mime_codec_string": "avc1.64001e",
+        "width": 720,
+        "height": 406,
+        "coded_width": 720,
+        "coded_height": 406,
+        "has_b_frames": 2,
+        "sample_aspect_ratio": "1:1",
+        "display_aspect_ratio": "360:203",
+        "pix_fmt": "yuv420p",
+        "level": 30,
+        "chroma_location": "left",
+        "field_order": "progressive",
+        "is_avc": "true",
+        "nal_length_size": "4",
+        "id": "0x1",
+        "r_frame_rate": "24/1",
+        "avg_frame_rate": "24/1",
+        "time_base": "1/12288",
+        "start_pts": 0,
+        "start_time": "0.000000",
+        "duration_ts": 1536,
+        "duration": "0.125000",
+        "bit_rate": "856384",
+        "bits_per_raw_sample": "8",
+        "nb_frames": "3",
+        "extradata_size": 47,
+        "disposition": {
+          "default": 1,
+          "dub": 0,
+          "original": 0,
+          "comment": 0,
+          "lyrics": 0,
+          "karaoke": 0,
+          "forced": 0,
+          "hearing_impaired": 0,
+          "visual_impaired": 0,
+          "clean_effects": 0,
+          "attached_pic": 0,
+          "timed_thumbnails": 0,
+          "non_diegetic": 0,
+          "captions": 0,
+          "descriptions": 0,
+          "metadata": 0,
+          "dependent": 0,
+          "still_image": 0,
+          "multilayer": 0
+        },
+        "tags": {
+          "language": "und",
+          "handler_name": "VideoHandler",
+          "encoder": "Lavc libx264"
+        }
+      }
+    ],
+    "format": {
+      "filename": "/Users/colum/dev/personal/videoer/work/environments/market-world-family-v3/family/verification/contemporary-pop-up/market-world-contemporary-pop-up-transfer.mp4",
+      "nb_streams": 1,
+      "nb_programs": 0,
+      "nb_stream_groups": 0,
+      "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+      "format_long_name": "QuickTime / MOV",
+      "start_time": "0.000000",
+      "duration": "0.125000",
+      "size": "14276",
+      "bit_rate": "913664",
+      "probe_score": 100,
+      "tags": {
+        "major_brand": "isom",
+        "minor_version": "512",
+        "compatible_brands": "isomiso2avc1mp41",
+        "encoder": "Lavf63.1.101"
+      }
+    }
+  },
+  "verification": {
+    "schemaVersion": 1,
+    "status": "pass",
+    "checks": []
+  },
+  "evidenceRefresh": "new-pixel-render",
+  "renderProfile": {
+    "engine": "cycles-cpu",
+    "samples": 128,
+    "seed": 1729,
+    "denoise": true,
+    "intent": "deterministic-final"
+  },
+  "deterministicEvidence": {
+    "boundary": "cycles-cpu-fixed-seed-to-lossless-png-to-single-thread-x264",
+    "expected": "byte-identical-on-matching-runtime-and-input-fingerprint"
+  },
+  "renderChecks": [
+    {
+      "id": "renderer-camera-contract",
+      "status": "pass",
+      "message": "Renderer camera position, semantic target, lens, and tracking contract match the declarative path",
+      "measurements": {
+        "valid": true,
+        "trackingConstraint": "TRACK_TO",
+        "trackAxis": "TRACK_NEGATIVE_Z",
+        "upAxis": "UP_Y",
+        "interpolationImplementation": "frame-baked-declarative-v1",
+        "maximumPositionErrorMeters": 0,
+        "maximumTargetErrorMeters": 0,
+        "maximumLensErrorMillimeters": 0,
+        "positionToleranceMeters": 0.00001,
+        "targetToleranceMeters": 0.00001,
+        "lensToleranceMillimeters": 0.005,
+        "samples": [
+          {
+            "landmarkId": "right-context",
+            "frame": 1,
+            "positionErrorMeters": 0,
+            "targetErrorMeters": 0,
+            "lensErrorMillimeters": 0,
+            "actualLensMillimeters": 32,
+            "expectedLensMillimeters": 32
+          },
+          {
+            "landmarkId": "frontal-layout",
+            "frame": 2,
+            "positionErrorMeters": 0,
+            "targetErrorMeters": 0,
+            "lensErrorMillimeters": 0,
+            "actualLensMillimeters": 34,
+            "expectedLensMillimeters": 34
+          },
+          {
+            "landmarkId": "left-context",
+            "frame": 3,
+            "positionErrorMeters": 0,
+            "targetErrorMeters": 0,
+            "lensErrorMillimeters": 0,
+            "actualLensMillimeters": 32,
+            "expectedLensMillimeters": 32
+          }
+        ]
+      }
+    },
+    {
+      "id": "market-visible",
+      "status": "pass",
+      "message": "Semantic frames retain the required visible image coverage",
+      "measurements": {
+        "maximumBlackPercentage": 58,
+        "allowedBlackPercentage": 70,
+        "perFrameBlackPercentage": [
+          58,
+          42,
+          55
+        ]
+      }
+    },
+    {
+      "id": "market-highlight-detail",
+      "status": "pass",
+      "message": "Semantic frames retain highlight detail within the declared limit",
+      "measurements": {
+        "maximumWhitePercentage": 0,
+        "allowedWhitePercentage": 5,
+        "perFrameWhitePercentage": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "market-entity-inspection-coverage",
+      "status": "pass",
+      "message": "Every declared entity is inspectable in at least one semantic landmark",
+      "measurements": {
+        "minimumVisibleAreaPercentage": 96,
+        "minimumScreenHeightPercentage": 4,
+        "maximumScreenHeightPercentage": 58,
+        "marginPercentage": 1,
+        "uncoveredEntityIds": [],
+        "entities": [
+          {
+            "entityId": "layout.contemporary-pop-up-market-world.cluster-001.member-01",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 9.734264016151428,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-layout",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 10.673904418945312,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 7.843655347824097,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "entityId": "layout.contemporary-pop-up-market-world.cluster-001.member-02",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 9.488555788993835,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-layout",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 10.144045948982239,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 7.286572456359863,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "entityId": "layout.contemporary-pop-up-market-world.cluster-002.member-01",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 9.290114045143127,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-layout",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 10.184121131896973,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 6.95171058177948,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "entityId": "layout.contemporary-pop-up-market-world.cluster-002.member-02",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 8.450722694396973,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-layout",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 9.062883257865906,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 6.069657206535339,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "entityId": "layout.contemporary-pop-up-market-world.cluster-002.member-03",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 8.321979641914368,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-layout",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 8.713197708129883,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 5.793866515159607,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "entityId": "layout.contemporary-pop-up-market-world.cluster-003.member-01",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 25.00670552253723,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-layout",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 33.430442214012146,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 32.63731896877289,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "entityId": "layout.contemporary-pop-up-market-world.cluster-003.member-02",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 5.009961128234863,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-layout",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 7.2614312171936035,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 6.884092092514038,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "entityId": "layout.contemporary-pop-up-market-world.cluster-003.member-03",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 4.84955906867981,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-layout",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 6.7002952098846436,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 6.018349528312683,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "entityId": "layout.contemporary-pop-up-market-world.cluster-003.member-04",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 5.071502923965454,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-layout",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 7.308441400527954,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 7.033440470695496,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "entityId": "layout.contemporary-pop-up-market-world.cluster-003.member-05",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 5.787986516952515,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-layout",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 7.876017689704895,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 7.112732529640198,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "blender": {
+    "mode": "render",
+    "stdout": "Blender 4.5.13 LTS (hash daeeeca98fb0 built 2026-08-25 01:30:50)\nFra:1 Mem:30.60M (Peak 30.60M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | market-host-mesh\nFra:1 Mem:30.60M (Peak 30.60M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.contemporary-pop-up-market-world.cluster-001.member-01-m\nFra:1 Mem:30.61M (Peak 30.61M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.contemporary-pop-up-market-world.cluster-002.member-02-m\nFra:1 Mem:30.63M (Peak 30.63M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.contemporary-pop-up-market-world.cluster-003.member-01-m\nFra:1 Mem:30.70M (Peak 30.70M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.contemporary-pop-up-market-world.cluster-003.member-03-m\nFra:1 Mem:30.80M (Peak 30.80M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | merchandise-warm-edge\nFra:1 Mem:30.92M (Peak 30.92M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | market-sky-key\nFra:1 Mem:30.96M (Peak 30.96M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.contemporary-pop-up-market-world.cluster-003.member-05-m\nFra:1 Mem:31.33M (Peak 31.33M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.contemporary-pop-up-market-world.cluster-003.member-04-m\nFra:1 Mem:32.02M (Peak 32.02M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing\nFra:1 Mem:24.18M (Peak 32.02M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Waiting for render to start\nFra:1 Mem:24.18M (Peak 32.02M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene\nFra:1 Mem:24.18M (Peak 32.02M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Shaders\nFra:1 Mem:24.18M (Peak 32.02M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)\nFra:1 Mem:24.52M (Peak 32.02M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Procedurals\nFra:1 Mem:24.52M (Peak 32.02M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Background\nFra:1 Mem:24.52M (Peak 32.02M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Camera\nFra:1 Mem:24.52M (Peak 32.02M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Meshes Flags\nFra:1 Mem:24.52M (Peak 32.02M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Objects\nFra:1 Mem:24.52M (Peak 32.02M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Objects | Copying Transformations to device\nFra:1 Mem:24.52M (Peak 32.02M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Particle Systems\nFra:1 Mem:24.52M (Peak 32.02M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device\nFra:1 Mem:24.52M (Peak 32.02M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Meshes\nFra:1 Mem:24.52M (Peak 32.02M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Objects | Applying Static Transformations\nFra:1 Mem:24.52M (Peak 32.02M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Mesh | Computing attributes\nFra:1 Mem:24.63M (Peak 32.02M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device\nFra:1 Mem:24.63M (Peak 32.02M) | Time:00:00.00 | Mem:0.37M, Peak:0.37M | Scene, ViewLayer | Updating Scene BVH | Building\nFra:1 Mem:24.63M (Peak 32.02M) | Time:00:00.00 | Mem:0.37M, Peak:0.37M | Scene, ViewLayer | Updating Scene BVH | Building BVH\nFra:1 Mem:24.63M (Peak 32.02M) | Time:00:00.00 | Mem:0.84M, Peak:0.84M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%\nFra:1 Mem:24.63M (Peak 32.02M) | Time:00:00.00 | Mem:1.36M, Peak:1.82M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device\nFra:1 Mem:24.63M (Peak 32.02M) | Time:00:00.00 | Mem:1.36M, Peak:1.82M | Scene, ViewLayer | Updating Mesh | Computing normals\nFra:1 Mem:25.09M (Peak 32.02M) | Time:00:00.00 | Mem:1.36M, Peak:1.82M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device\nFra:1 Mem:25.09M (Peak 32.02M) | Time:00:00.00 | Mem:1.81M, Peak:1.82M | Scene, ViewLayer | Updating Objects Flags\nFra:1 Mem:25.09M (Peak 32.02M) | Time:00:00.00 | Mem:1.81M, Peak:1.82M | Scene, ViewLayer | Updating Primitive Offsets\nFra:1 Mem:25.09M (Peak 32.02M) | Time:00:00.00 | Mem:1.81M, Peak:1.82M | Scene, ViewLayer | Updating Images\nFra:1 Mem:25.09M (Peak 32.02M) | Time:00:00.00 | Mem:1.81M, Peak:1.82M | Scene, ViewLayer | Updating Camera Volume\nFra:1 Mem:25.09M (Peak 32.02M) | Time:00:00.00 | Mem:1.81M, Peak:1.82M | Scene, ViewLayer | Updating Lookup Tables\nFra:1 Mem:25.09M (Peak 32.02M) | Time:00:00.00 | Mem:1.89M, Peak:1.89M | Scene, ViewLayer | Updating Lights\nFra:1 Mem:25.09M (Peak 32.02M) | Time:00:00.00 | Mem:1.89M, Peak:1.89M | Scene, ViewLayer | Updating Lights | Computing tree\nFra:1 Mem:25.09M (Peak 32.02M) | Time:00:00.00 | Mem:1.89M, Peak:1.89M | Scene, ViewLayer | Updating Integrator\nFra:1 Mem:25.09M (Peak 32.02M) | Time:00:00.00 | Mem:1.89M, Peak:1.89M | Scene, ViewLayer | Updating Film\nFra:1 Mem:25.09M (Peak 32.02M) | Time:00:00.00 | Mem:1.81M, Peak:1.89M | Scene, ViewLayer | Updating Lookup Tables\nFra:1 Mem:25.09M (Peak 32.02M) | Time:00:00.00 | Mem:1.90M, Peak:1.90M | Scene, ViewLayer | Updating Baking\nFra:1 Mem:25.09M (Peak 32.02M) | Time:00:00.00 | Mem:1.90M, Peak:1.90M | Scene, ViewLayer | Updating Device | Writing constant memory\nFra:1 Mem:25.10M (Peak 32.02M) | Time:00:00.00 | Mem:1.90M, Peak:1.90M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)\nFra:1 Mem:25.10M (Peak 32.02M) | Time:00:00.00 | Mem:1.90M, Peak:1.90M | Scene, ViewLayer | Sample 0/128\nFra:1 Mem:40.87M (Peak 40.87M) | Time:00:00.07 | Remaining:00:08.68 | Mem:17.51M, Peak:17.51M | Scene, ViewLayer | Sample 1/128\nFra:1 Mem:49.79M (Peak 63.17M) | Time:00:09.89 | Mem:17.51M, Peak:17.51M | Scene, ViewLayer | Sample 128/128\nFra:1 Mem:49.79M (Peak 63.17M) | Time:00:09.89 | Mem:17.51M, Peak:17.51M | Scene, ViewLayer | Finished\nSaved: '/Users/colum/dev/personal/videoer/work/environments/market-world-family-v3/family/verification/contemporary-pop-up/lossless-frames/market-world-contemporary-pop-up-transfer-0001.png'\nTime: 00:09.94 (Saving: 00:00.04)\n\nFra:2 Mem:30.87M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | market-host-mesh\nFra:2 Mem:30.87M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.contemporary-pop-up-market-world.cluster-001.member-01-m\nFra:2 Mem:30.88M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.contemporary-pop-up-market-world.cluster-001.member-02-m\nFra:2 Mem:30.90M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.contemporary-pop-up-market-world.cluster-002.member-02-m\nFra:2 Mem:30.99M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.contemporary-pop-up-market-world.cluster-002.member-03-m\nFra:2 Mem:31.24M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | merchandise-warm-edge\nFra:2 Mem:31.41M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | market-sky-key\nFra:2 Mem:31.47M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.contemporary-pop-up-market-world.cluster-003.member-05-m\nFra:2 Mem:31.49M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.contemporary-pop-up-market-world.cluster-003.member-03-m\nFra:2 Mem:31.76M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.contemporary-pop-up-market-world.cluster-003.member-04-m\nFra:2 Mem:32.02M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing\nFra:2 Mem:24.18M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Waiting for render to start\nFra:2 Mem:24.18M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene\nFra:2 Mem:24.18M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Shaders\nFra:2 Mem:24.18M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)\nFra:2 Mem:24.52M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Procedurals\nFra:2 Mem:24.52M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Background\nFra:2 Mem:24.52M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Camera\nFra:2 Mem:24.52M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Meshes Flags\nFra:2 Mem:24.52M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Objects\nFra:2 Mem:24.52M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Objects | Copying Transformations to device\nFra:2 Mem:24.52M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Particle Systems\nFra:2 Mem:24.52M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device\nFra:2 Mem:24.52M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Meshes\nFra:2 Mem:24.52M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Objects | Applying Static Transformations\nFra:2 Mem:24.52M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Mesh | Computing attributes\nFra:2 Mem:24.63M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device\nFra:2 Mem:24.63M (Peak 63.17M) | Time:00:00.00 | Mem:0.37M, Peak:0.37M | Scene, ViewLayer | Updating Scene BVH | Building\nFra:2 Mem:24.63M (Peak 63.17M) | Time:00:00.00 | Mem:0.37M, Peak:0.37M | Scene, ViewLayer | Updating Scene BVH | Building BVH\nFra:2 Mem:24.63M (Peak 63.17M) | Time:00:00.00 | Mem:0.84M, Peak:0.84M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%\nFra:2 Mem:24.63M (Peak 63.17M) | Time:00:00.00 | Mem:1.36M, Peak:1.82M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device\nFra:2 Mem:24.63M (Peak 63.17M) | Time:00:00.00 | Mem:1.36M, Peak:1.82M | Scene, ViewLayer | Updating Mesh | Computing normals\nFra:2 Mem:25.09M (Peak 63.17M) | Time:00:00.00 | Mem:1.36M, Peak:1.82M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device\nFra:2 Mem:25.09M (Peak 63.17M) | Time:00:00.00 | Mem:1.81M, Peak:1.82M | Scene, ViewLayer | Updating Objects Flags\nFra:2 Mem:25.09M (Peak 63.17M) | Time:00:00.00 | Mem:1.81M, Peak:1.82M | Scene, ViewLayer | Updating Primitive Offsets\nFra:2 Mem:25.09M (Peak 63.17M) | Time:00:00.00 | Mem:1.81M, Peak:1.82M | Scene, ViewLayer | Updating Images\nFra:2 Mem:25.09M (Peak 63.17M) | Time:00:00.00 | Mem:1.81M, Peak:1.82M | Scene, ViewLayer | Updating Camera Volume\nFra:2 Mem:25.09M (Peak 63.17M) | Time:00:00.00 | Mem:1.81M, Peak:1.82M | Scene, ViewLayer | Updating Lookup Tables\nFra:2 Mem:25.09M (Peak 63.17M) | Time:00:00.00 | Mem:1.89M, Peak:1.89M | Scene, ViewLayer | Updating Lights\nFra:2 Mem:25.09M (Peak 63.17M) | Time:00:00.00 | Mem:1.89M, Peak:1.89M | Scene, ViewLayer | Updating Lights | Computing tree\nFra:2 Mem:25.09M (Peak 63.17M) | Time:00:00.00 | Mem:1.89M, Peak:1.89M | Scene, ViewLayer | Updating Integrator\nFra:2 Mem:25.09M (Peak 63.17M) | Time:00:00.00 | Mem:1.89M, Peak:1.89M | Scene, ViewLayer | Updating Film\nFra:2 Mem:25.09M (Peak 63.17M) | Time:00:00.00 | Mem:1.81M, Peak:1.89M | Scene, ViewLayer | Updating Lookup Tables\nFra:2 Mem:25.09M (Peak 63.17M) | Time:00:00.00 | Mem:1.90M, Peak:1.90M | Scene, ViewLayer | Updating Baking\nFra:2 Mem:25.09M (Peak 63.17M) | Time:00:00.00 | Mem:1.90M, Peak:1.90M | Scene, ViewLayer | Updating Device | Writing constant memory\nFra:2 Mem:25.10M (Peak 63.17M) | Time:00:00.00 | Mem:1.90M, Peak:1.90M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)\nFra:2 Mem:25.10M (Peak 63.17M) | Time:00:00.00 | Mem:1.90M, Peak:1.90M | Scene, ViewLayer | Sample 0/128\nFra:2 Mem:40.87M (Peak 63.17M) | Time:00:00.09 | Remaining:00:11.16 | Mem:17.51M, Peak:17.51M | Scene, ViewLayer | Sample 1/128\nFra:2 Mem:49.79M (Peak 63.17M) | Time:00:10.84 | Mem:17.51M, Peak:17.51M | Scene, ViewLayer | Sample 128/128\nFra:2 Mem:49.79M (Peak 63.17M) | Time:00:10.84 | Mem:17.51M, Peak:17.51M | Scene, ViewLayer | Finished\nSaved: '/Users/colum/dev/personal/videoer/work/environments/market-world-family-v3/family/verification/contemporary-pop-up/lossless-frames/market-world-contemporary-pop-up-transfer-0002.png'\nTime: 00:10.85 (Saving: 00:00.00)\n\nFra:3 Mem:30.87M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | market-host-mesh\nFra:3 Mem:30.88M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.contemporary-pop-up-market-world.cluster-002.member-01-m\nFra:3 Mem:30.91M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | merchandise-warm-edge\nFra:3 Mem:31.01M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.contemporary-pop-up-market-world.cluster-003.member-04-m\nFra:3 Mem:31.01M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | market-sky-key\nFra:3 Mem:31.07M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.contemporary-pop-up-market-world.cluster-003.member-05-m\nFra:3 Mem:32.02M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing\nFra:3 Mem:24.18M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Waiting for render to start\nFra:3 Mem:24.18M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene\nFra:3 Mem:24.18M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Shaders\nFra:3 Mem:24.18M (Peak 63.17M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)\nFra:3 Mem:24.52M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Procedurals\nFra:3 Mem:24.52M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Background\nFra:3 Mem:24.52M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Camera\nFra:3 Mem:24.52M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Meshes Flags\nFra:3 Mem:24.52M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Objects\nFra:3 Mem:24.52M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Objects | Copying Transformations to device\nFra:3 Mem:24.52M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Particle Systems\nFra:3 Mem:24.52M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device\nFra:3 Mem:24.52M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Meshes\nFra:3 Mem:24.52M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Objects | Applying Static Transformations\nFra:3 Mem:24.52M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Mesh | Computing attributes\nFra:3 Mem:24.63M (Peak 63.17M) | Time:00:00.00 | Mem:0.26M, Peak:0.26M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device\nFra:3 Mem:24.63M (Peak 63.17M) | Time:00:00.00 | Mem:0.37M, Peak:0.37M | Scene, ViewLayer | Updating Scene BVH | Building\nFra:3 Mem:24.63M (Peak 63.17M) | Time:00:00.00 | Mem:0.37M, Peak:0.37M | Scene, ViewLayer | Updating Scene BVH | Building BVH\nFra:3 Mem:24.63M (Peak 63.17M) | Time:00:00.00 | Mem:0.84M, Peak:0.84M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%\nFra:3 Mem:24.63M (Peak 63.17M) | Time:00:00.00 | Mem:1.36M, Peak:1.82M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device\nFra:3 Mem:24.63M (Peak 63.17M) | Time:00:00.00 | Mem:1.36M, Peak:1.82M | Scene, ViewLayer | Updating Mesh | Computing normals\nFra:3 Mem:25.09M (Peak 63.17M) | Time:00:00.00 | Mem:1.36M, Peak:1.82M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device\nFra:3 Mem:25.09M (Peak 63.17M) | Time:00:00.00 | Mem:1.81M, Peak:1.82M | Scene, ViewLayer | Updating Objects Flags\nFra:3 Mem:25.09M (Peak 63.17M) | Time:00:00.00 | Mem:1.81M, Peak:1.82M | Scene, ViewLayer | Updating Primitive Offsets\nFra:3 Mem:25.09M (Peak 63.17M) | Time:00:00.00 | Mem:1.81M, Peak:1.82M | Scene, ViewLayer | Updating Images\nFra:3 Mem:25.09M (Peak 63.17M) | Time:00:00.00 | Mem:1.81M, Peak:1.82M | Scene, ViewLayer | Updating Camera Volume\nFra:3 Mem:25.09M (Peak 63.17M) | Time:00:00.00 | Mem:1.81M, Peak:1.82M | Scene, ViewLayer | Updating Lookup Tables\nFra:3 Mem:25.09M (Peak 63.17M) | Time:00:00.00 | Mem:1.89M, Peak:1.89M | Scene, ViewLayer | Updating Lights\nFra:3 Mem:25.09M (Peak 63.17M) | Time:00:00.00 | Mem:1.89M, Peak:1.89M | Scene, ViewLayer | Updating Lights | Computing tree\nFra:3 Mem:25.09M (Peak 63.17M) | Time:00:00.00 | Mem:1.89M, Peak:1.89M | Scene, ViewLayer | Updating Integrator\nFra:3 Mem:25.09M (Peak 63.17M) | Time:00:00.00 | Mem:1.89M, Peak:1.89M | Scene, ViewLayer | Updating Film\nFra:3 Mem:25.09M (Peak 63.17M) | Time:00:00.00 | Mem:1.81M, Peak:1.89M | Scene, ViewLayer | Updating Lookup Tables\nFra:3 Mem:25.09M (Peak 63.17M) | Time:00:00.00 | Mem:1.90M, Peak:1.90M | Scene, ViewLayer | Updating Baking\nFra:3 Mem:25.09M (Peak 63.17M) | Time:00:00.00 | Mem:1.90M, Peak:1.90M | Scene, ViewLayer | Updating Device | Writing constant memory\nFra:3 Mem:25.10M (Peak 63.17M) | Time:00:00.00 | Mem:1.90M, Peak:1.90M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)\nFra:3 Mem:25.10M (Peak 63.17M) | Time:00:00.00 | Mem:1.90M, Peak:1.90M | Scene, ViewLayer | Sample 0/128\nFra:3 Mem:40.87M (Peak 63.17M) | Time:00:00.07 | Remaining:00:08.80 | Mem:17.51M, Peak:17.51M | Scene, ViewLayer | Sample 1/128\nFra:3 Mem:49.79M (Peak 63.17M) | Time:00:09.98 | Mem:17.51M, Peak:17.51M | Scene, ViewLayer | Sample 128/128\nFra:3 Mem:49.79M (Peak 63.17M) | Time:00:09.98 | Mem:17.51M, Peak:17.51M | Scene, ViewLayer | Finished\nSaved: '/Users/colum/dev/personal/videoer/work/environments/market-world-family-v3/family/verification/contemporary-pop-up/lossless-frames/market-world-contemporary-pop-up-transfer-0003.png'\nTime: 00:09.99 (Saving: 00:00.00)\n\nInfo: Saved as \"market-world-contemporary-pop-up-transfer.blend\"\n\nBlender quit\n",
+    "stderr": ""
+  }
+}

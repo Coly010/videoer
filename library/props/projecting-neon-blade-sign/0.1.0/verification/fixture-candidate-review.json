@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "assetId": "prop.projecting-neon-blade-sign",
+  "fixtureId": "fixture.projecting-neon-blade-sign",
+  "decision": "accepted",
+  "reviewer": "Codex visual review",
+  "reviewedAt": "2026-09-01T08:09:50.000Z",
+  "intendedShotDistance": "medium",
+  "evidence": [
+    "verification/facade/contact-sheet.png",
+    "verification/warehouse/contact-sheet.png",
+    "verification/facade/neon-blade-sign-facade-probe.mp4",
+    "verification/facade/fixture-modulation-report.json"
+  ],
+  "strengths": [
+    "The independently mountable cabinet, wall plates, projecting rails, and two physical face treatments remain legible from both three-quarter views and the edge-on structural view.",
+    "Cyan useful-light spill reads in both masonry-facade and unrelated industrial-warehouse hosts while the authored source colour remains stable.",
+    "Twelve deterministic frames prove bounded electrical instability and a shared visible-source/useful-light signal without black-body recolouring."
+  ],
+  "limitations": [
+    "The neutral geometric glyph and cabinet detailing are suitable for medium/background wayfinding and atmosphere, not hero close-up typography or product-signage shots.",
+    "Face replacement is currently a declared geometry/material slot contract; a later authoring tool may add automatic text-to-tube path generation without changing the fixture or host contract."
+  ],
+  "notes": "V1 was rejected because all landmarks exceeded the 38% framing maximum and two clipped the upper margin. V2 moved the camera around the sign's actual optical centre and increased distance without weakening the margin gate. It passes at 29.75%, 36.47%, and 33.70% screen height with 0% clipped-white coverage. Visual review accepts the two-sided physical form, wall load path, controlled cyan spill, edge-on evidence, and cross-host transfer for medium/background production use."
+}

@@ -1,0 +1,151 @@
+schemaVersion: 1
+id: campaign.last-call-dialogue
+fps: 24
+resolution: {width: 640, height: 360, percentage: 100}
+assetLibrary: ../../library
+
+geometry:
+  - id: dialogue-platform
+    library:
+      type: environment
+      query: night transit dialogue stage
+      tags: [transit, platform, dialogue, two-character]
+      capabilities: [deterministic-geometry, dialogue-blocking-anchors, two-character-camera-anchors]
+      preferredAsset: {id: environment.night-transit-dialogue-stage, version: 1.0.0}
+      artifactRole: geometry
+  - id: speaking-elara
+    path: work/characters/speaking-elara.json
+    library:
+      type: character
+      query: Elara Vale recurring heroine
+      tags: [humanoid, woman, recurring]
+      capabilities: [canonical-humanoid-rig, gaze-target, identity-reference]
+      preferredAsset: {id: character.elara-vale, version: 0.1.2}
+      artifactRole: geometry
+    adaptation:
+      assetId: character.elara-vale-speaking
+      providesCapabilities: [canonical-english-visemes, mouth-only-morph-deformation, speech-performance-binding]
+      speechMorphs: {kind: english-visemes-v1}
+      metadata: {adaptationPurpose: Reusable renderer-independent English speech morphology}
+      publication:
+        assetId: character.elara-vale-speaking
+        version: 1.0.0
+        type: character
+        title: Elara Vale speaking rig
+        description: Topology-preserving Elara Vale adaptation with five renderer-independent, mouth-only English viseme morph targets.
+        tags: [humanoid, woman, recurring, speech, viseme, facial-animation]
+        capabilities: [canonical-humanoid-rig, gaze-target, identity-reference, canonical-english-visemes, mouth-only-morph-deformation, speech-performance-binding]
+        generator: videoer.declarative-geometry-adaptation.v1
+        renderers: [three-3d, blender-headless]
+        verification:
+          checks: [adaptation.parent-hash, adaptation.topology-preserved, adaptation.skeleton-preserved, speech.mouth-only-morphs, speech.morphs-measurable, visual.viseme-peaks]
+          shots: [last-call-closeup]
+
+motions:
+  - id: last-call-line
+    path: work/motions/last-call-line.json
+    recipe:
+      kind: speech-visemes
+      soundtrackCue: last-call-dialogue
+      targetGeometry: speaking-elara
+    publication:
+      assetId: motion.last-call-line
+      version: 1.0.0
+      type: motion
+      title: Last Call spoken facial performance
+      description: Exact-frame English viseme performance derived from immutable native phoneme events and synchronized provider-free speech audio for the Elara speaking rig.
+      tags: [speech, dialogue, viseme, facial-animation, elara-vale]
+      capabilities: [canonical-humanoid, canonical-english-visemes, exact-frame-phoneme-timing, audiovisual-sync]
+      generator: videoer.espeak-viseme.v1
+      renderers: [three-3d, blender-headless]
+      verification:
+        checks: [speech.audio-hash, speech.event-ledger-hash, speech.target-geometry-hash, speech.exact-frame-grid, speech.one-frame-av-sync, visual.viseme-peaks]
+        shots: [last-call-closeup]
+
+motionTimelines: []
+overlays: []
+
+soundtrackPath: work/audio/soundtrack.wav
+soundtrack:
+  schemaVersion: 1
+  id: audio.last-call-dialogue
+  durationSeconds: 3
+  sampleRate: 48000
+  channels: 2
+  cues:
+    - {id: station-air, kind: noise-bed, startSeconds: 0, endSeconds: 3, gain: 0.018, seed: 5172, purpose: Quiet late-platform atmosphere beneath speech}
+    - id: last-call-dialogue
+      kind: speech
+      startSeconds: 0.25
+      endSeconds: 2.75
+      gain: 0.82
+      text: The next train leaves at midnight.
+      voice: en+f3
+      rate: 150
+      pitch: 45
+      purpose: Provider-free dialogue and authoritative facial timing source
+  metadata: {providerFree: true, campaignClass: spoken-dialogue-conformance}
+
+speechPublications:
+  - cue: last-call-dialogue
+    publication:
+      assetId: audio.last-call-dialogue
+      version: 1.0.0
+      type: audio
+      title: Last Call provider-free dialogue
+      description: Persisted eSpeak NG dialogue source with immutable native phoneme and word event ledger for deterministic audiovisual performance.
+      tags: [speech, dialogue, english, provider-free, phoneme-timing]
+      capabilities: [provider-free-speech, native-phoneme-events, word-events, deterministic-waveform]
+      generator: videoer.espeak-speech.v1
+      coordinateSystem: audio-time-seconds
+      renderers: [ffmpeg, web-audio]
+      verification:
+        checks: [speech.audio-hash, speech.event-ledger-hash, speech.monotonic-events, speech.cue-fit, campaign.delivery.verified]
+        shots: [last-call-closeup]
+
+shots:
+  - id: last-call-closeup
+    frames: 72
+    entities:
+      - {id: platform, geometry: dialogue-platform, role: environment}
+      - id: elara
+        geometry: speaking-elara
+        role: character
+        placement: {entityId: platform, attachmentId: dialogue-a}
+        transform: {position: [0, 0, 0], rotation: [0, 1.5707963268, 0], scale: [1, 1, 1]}
+        motion: {source: last-call-line, startFrame: 6, endFrame: 66}
+    camera:
+      keyframes:
+        - {time: 0, position: {world: [-3.05, 1.58, -1]}, target: {world: [-1.15, 1.52, -1]}, lensMillimeters: 68}
+        - {time: 3, position: {world: [-2.92, 1.59, -1.03]}, target: {world: [-1.15, 1.53, -1]}, lensMillimeters: 72}
+    lights:
+      - {id: soft-face-key, type: area, position: [-2.4, 2.2, -2.2], target: [-1.15, 1.48, -1], color: [0.72, 0.88, 1], energy: 510, sizeMeters: 2.2}
+      - {id: amber-separation, type: area, position: [0.2, 2.1, 0.4], target: [-1.15, 1.4, -1], color: [1, 0.3, 0.08], energy: 360, sizeMeters: 1.6}
+    atmosphere:
+      worldColor: [0.003, 0.006, 0.014]
+      fogColor: [0.035, 0.055, 0.09]
+      fogDensity: 0.004
+      rain: {enabled: false}
+    renderGates:
+      - {id: dialogue-visible, type: frame-visibility, maximumBlackPercentage: 80}
+      - {id: facial-highlight-detail, type: frame-overexposure, maximumWhitePercentage: 14}
+      - {id: closeup-coverage, type: subject-coverage, entityId: elara, minimumVisibleAreaPercentage: 8, minimumVisibleScreenHeightPercentage: 60, maximumVisibleScreenHeightPercentage: 100}
+    landmarks:
+      - {id: breath-before-line, progress: 0, description: Neutral closed mouth before the native phoneme sequence}
+      - {id: aa-peak, progress: 0.0972222222, description: Native phoneme timing drives a fully weighted open-aa mouth shape}
+      - {id: ee-peak, progress: 0.1805555556, description: Native phoneme timing drives a fully weighted wide-ee mouth shape}
+      - {id: mbp-peak, progress: 0.5972222222, description: Native phoneme timing drives a fully weighted closed-mbp mouth shape}
+      - {id: line-resolves, progress: 1, description: Mouth returns to rest as the persisted audio ends}
+    metadata: {campaignClass: spoken-dialogue-conformance, grammar: intimate-single-line-closeup}
+
+delivery:
+  id: edit.last-call-dialogue
+  directory: delivery
+  codec: h264
+  pixelFormat: yuv420p
+  fastStart: true
+
+metadata:
+  conformancePurpose: renderer-independent-provider-free-speech-and-lip-sync
+  campaignClass: spoken-dialogue
+  bespokeOrchestrationSourceFiles: 0

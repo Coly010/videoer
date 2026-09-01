@@ -1,0 +1,101 @@
+schemaVersion: 1
+id: prop.projecting-hanging-sign
+version: 0.1.0
+type: prop
+title: Projecting two-sided hanging sign
+description: Project-owned facade sign with smooth forged bracket, alternating
+  chain links, framed two-sided weathered board, replaceable content contract
+  and neutral embossed book emblem.
+status: verified
+tags:
+  - signage
+  - shop-sign
+  - facade
+  - wayfinding
+  - portable-set-dressing
+capabilities:
+  - portable-geometry
+  - vertical-facade-host-contract
+  - two-sided-sign-face
+  - replaceable-campaign-content-slot
+  - smooth-swept-bracket-hardware
+  - explicit-chain-link-geometry
+  - named-mount-pivot-and-face-attachments
+  - cross-environment-transfer
+  - medium-background-quality-tier
+source:
+  kind: procedural
+  generator: videoer.projecting-hanging-sign.v1
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: geometry
+    path: geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: cfa254a083ae81fdcb646a84277bb6f7663eae8e90ab643b89ffa8b03627e34d
+  - role: content-contract
+    path: content-contract.json
+    mediaType: application/json
+    sha256: 033320e157f0679b9531eec000ef6605b9bb93e515cc4d82957fb002ce93d1d7
+  - role: validation
+    path: validation.json
+    mediaType: application/json
+    sha256: a53751b85f2d8cd38461923056c4f8a0de0b28020a80af319f23dc55a5a7aba6
+  - role: old-city-bookshop-contact-sheet
+    path: verification/old-city-bookshop/contact-sheet.png
+    mediaType: image/png
+    sha256: 12bef5af549b41a735fe0e59a64075fd0b079bded0514daa237ef0ed19ac3a45
+  - role: old-city-bookshop-render-report
+    path: verification/old-city-bookshop/scene-render.json
+    mediaType: application/json
+    sha256: 8042a29ce3271838c66a4745c72a973253259c72e0b25bff6fd0e730023726ce
+  - role: old-city-bookshop-host-contract-report
+    path: verification/old-city-bookshop/host-contract-report.json
+    mediaType: application/json
+    sha256: f3b0612ce36c4d23cea6657790bc029f368aa9c608793340fe3dd110eb4a41c2
+  - role: adaptive-reuse-cafe-contact-sheet
+    path: verification/adaptive-reuse-cafe/contact-sheet.png
+    mediaType: image/png
+    sha256: a6ed318a1973beae9f8a8a05d7fe65032a746115bd8e1890cf0f5f808e0d79a5
+  - role: adaptive-reuse-cafe-render-report
+    path: verification/adaptive-reuse-cafe/scene-render.json
+    mediaType: application/json
+    sha256: c2c07127288855cb79aa384fd0c7a7878e8613c1bfaaf34a2c244e26daad4eaa
+  - role: adaptive-reuse-cafe-host-contract-report
+    path: verification/adaptive-reuse-cafe/host-contract-report.json
+    mediaType: application/json
+    sha256: 774847f647a2e30edc5fa33dab66f3443f51aef0d352e526eebd7739c9829a85
+  - role: qualitative-review
+    path: verification/projecting-sign-candidate-review.json
+    mediaType: application/json
+    sha256: 26fc5a5acace565127353dabc09f8aa4d44f1c6cd66fe4e561f38dff396f54ab
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - three-3d
+    - blender-headless
+  requires: []
+verification:
+  checks:
+    - geometry.topology
+    - geometry.swept-bracket-and-closed-chain-links
+    - module.vertical-facade-host-compatible
+    - module.two-sided-content-contract
+    - geometry.two-physical-content-faces-independently-reverified
+    - visual.old-city-host-transfer-accepted
+    - visual.adaptive-reuse-host-transfer-accepted
+    - module.medium-background-shot-distance-accepted
+  artifacts:
+    - verification/old-city-bookshop/contact-sheet.png
+    - verification/old-city-bookshop/scene-render.json
+    - verification/old-city-bookshop/host-contract-report.json
+    - verification/adaptive-reuse-cafe/contact-sheet.png
+    - verification/adaptive-reuse-cafe/scene-render.json
+    - verification/adaptive-reuse-cafe/host-contract-report.json
+    - verification/projecting-sign-candidate-review.json
+  verifiedAt: 2026-09-01T07:31:41.000Z

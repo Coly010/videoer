@@ -1,0 +1,104 @@
+schemaVersion: 1
+id: prop.projecting-supported-canopy
+version: 0.1.0
+type: prop
+title: Layered projecting supported canopy
+description: Project-owned sloped facade canopy with slate covering, structural
+  timber deck, seven-board soffit, metal flashing, fascia, three double-rail
+  iron brackets, rainwater mounts and practical-light anchors.
+status: verified
+tags:
+  - architecture
+  - canopy
+  - eave
+  - shopfront
+  - facade
+  - portable-set-dressing
+capabilities:
+  - portable-geometry
+  - vertical-facade-canopy-host-contract
+  - physical-single-fall-roof
+  - layered-slate-timber-flashing-construction
+  - visible-three-bracket-load-path
+  - named-rainwater-mounts
+  - named-underside-practical-anchors
+  - cross-environment-transfer
+  - medium-background-quality-tier
+source:
+  kind: procedural
+  generator: videoer.projecting-supported-canopy.v1
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: geometry
+    path: geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: 4d03d5eff5b5c19afc010c1a2da99e6bf781f8531708a3516d5e87e432c043ae
+  - role: construction-contract
+    path: construction-contract.json
+    mediaType: application/json
+    sha256: f2c37a0ba97c6d8048bfee3938ee4ab66f607c0b3d964a87a47fc2b4e71f950e
+  - role: validation
+    path: validation.json
+    mediaType: application/json
+    sha256: 72eeb0a43af16111db01b00527bab7b95681d749dbde6fb6fe2fb6fda903b74c
+  - role: old-city-shopfront-contact-sheet
+    path: verification/old-city-shopfront/contact-sheet.png
+    mediaType: image/png
+    sha256: 6684ed423eb7e5c4deb9e1f150e8ae5b7008fc823a91995d04bd85778e49a85a
+  - role: old-city-shopfront-render-report
+    path: verification/old-city-shopfront/scene-render.json
+    mediaType: application/json
+    sha256: 15ae29e81f9c5555bf7b982acabe0ba754b4bc07c22c7111b966ccb582ad6256
+  - role: old-city-shopfront-host-contract-report
+    path: verification/old-city-shopfront/host-contract-report.json
+    mediaType: application/json
+    sha256: 76dc06ed8525694e08b555652a0481ebe57d5a5d417800a486293c82363bc0e5
+  - role: contemporary-gallery-entrance-contact-sheet
+    path: verification/contemporary-gallery-entrance/contact-sheet.png
+    mediaType: image/png
+    sha256: f2b47e8693fe927b01f5763e104eb61de17d030347ce1b1bc72a46eef7ffacaa
+  - role: contemporary-gallery-entrance-render-report
+    path: verification/contemporary-gallery-entrance/scene-render.json
+    mediaType: application/json
+    sha256: 4351380a248fbb9e95aa663bcc56add075085e5434729c4ea99c1de771a2a357
+  - role: contemporary-gallery-entrance-host-contract-report
+    path: verification/contemporary-gallery-entrance/host-contract-report.json
+    mediaType: application/json
+    sha256: d3f8eb3bfec4c56e3922cb73e0c511d1c2597ce9d4ffde4d9dd13d760707f604
+  - role: qualitative-review
+    path: verification/projecting-canopy-candidate-review.json
+    mediaType: application/json
+    sha256: 719357028aeb86017698106360de9c20ee25194d9cdadc290dbedea4d8967c58
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - three-3d
+    - blender-headless
+  requires: []
+verification:
+  checks:
+    - geometry.topology
+    - construction.layered-single-fall-roof
+    - construction.soffit-and-bracket-counts
+    - module.vertical-facade-host-compatible
+    - module.rainwater-and-practical-anchors
+    - geometry.physical-slate-components-independently-reverified
+    - construction.drainage-mathematics-reverified
+    - visual.old-city-host-transfer-accepted
+    - visual.contemporary-host-transfer-accepted
+    - module.medium-background-shot-distance-accepted
+  artifacts:
+    - verification/old-city-shopfront/contact-sheet.png
+    - verification/old-city-shopfront/scene-render.json
+    - verification/old-city-shopfront/host-contract-report.json
+    - verification/contemporary-gallery-entrance/contact-sheet.png
+    - verification/contemporary-gallery-entrance/scene-render.json
+    - verification/contemporary-gallery-entrance/host-contract-report.json
+    - verification/projecting-canopy-candidate-review.json
+  verifiedAt: 2026-09-01T07:45:35.000Z

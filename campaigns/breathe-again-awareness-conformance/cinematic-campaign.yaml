@@ -1,0 +1,637 @@
+schemaVersion: 1
+id: campaign.breathe-again-awareness
+fps: 24
+resolution: { width: 640, height: 360, percentage: 100 }
+
+geometry:
+  - id: city-corridor
+    path: work/environment/city-corridor.json
+    recipe:
+      assetId: environment.green-city-corridor
+      metadata:
+        generator: videoer.declarative-geometry.v1
+        environmentClass: urban-green-corridor
+        projectOwned: true
+      primitives:
+        - { kind: box, minimum: [-9, -0.25, -5], maximum: [9, 0, 5], materialId: ground }
+        - { kind: box, minimum: [-9, 0.01, -1.65], maximum: [9, 0.035, 1.65], materialId: path }
+        - {
+            kind: box,
+            minimum: [-8.5, 0, 2.8],
+            maximum: [-6.4, 5.7, 4.8],
+            materialId: building-cool,
+          }
+        - {
+            kind: box,
+            minimum: [-5.9, 0, 3.15],
+            maximum: [-3.8, 4.3, 4.9],
+            materialId: building-warm,
+          }
+        - {
+            kind: box,
+            minimum: [-3.3, 0, 2.7],
+            maximum: [-1.2, 6.4, 4.7],
+            materialId: building-cool,
+          }
+        - {
+            kind: box,
+            minimum: [-0.7, 0, 3.2],
+            maximum: [1.4, 3.8, 4.9],
+            materialId: building-warm,
+          }
+        - {
+            kind: box,
+            minimum: [1.9, 0, 2.75],
+            maximum: [4.2, 5.2, 4.8],
+            materialId: building-cool,
+          }
+        - {
+            kind: box,
+            minimum: [4.7, 0, 3.05],
+            maximum: [6.7, 4.1, 4.9],
+            materialId: building-warm,
+          }
+        - { kind: box, minimum: [7.1, 0, 2.7], maximum: [8.7, 6.1, 4.8], materialId: building-cool }
+        - {
+            kind: capsule,
+            start: [-7, 0.05, -2.35],
+            end: [-7, 1.25, -2.35],
+            radiusX: 0.08,
+            radiusZ: 0.08,
+            materialId: tree-trunk,
+          }
+        - {
+            kind: ellipsoid,
+            start: [-7, 1.0, -2.35],
+            end: [-7, 2.35, -2.35],
+            radiusX: 0.48,
+            radiusZ: 0.48,
+            materialId: foliage,
+          }
+        - {
+            kind: capsule,
+            start: [-4.6, 0.05, -2.35],
+            end: [-4.6, 1.2, -2.35],
+            radiusX: 0.08,
+            radiusZ: 0.08,
+            materialId: tree-trunk,
+          }
+        - {
+            kind: ellipsoid,
+            start: [-4.6, 0.95, -2.35],
+            end: [-4.6, 2.25, -2.35],
+            radiusX: 0.45,
+            radiusZ: 0.45,
+            materialId: foliage,
+          }
+        - {
+            kind: capsule,
+            start: [-2.2, 0.05, -2.35],
+            end: [-2.2, 1.3, -2.35],
+            radiusX: 0.08,
+            radiusZ: 0.08,
+            materialId: tree-trunk,
+          }
+        - {
+            kind: ellipsoid,
+            start: [-2.2, 1.0, -2.35],
+            end: [-2.2, 2.4, -2.35],
+            radiusX: 0.5,
+            radiusZ: 0.5,
+            materialId: foliage,
+          }
+        - {
+            kind: capsule,
+            start: [0.2, 0.05, -2.35],
+            end: [0.2, 1.15, -2.35],
+            radiusX: 0.08,
+            radiusZ: 0.08,
+            materialId: tree-trunk,
+          }
+        - {
+            kind: ellipsoid,
+            start: [0.2, 0.9, -2.35],
+            end: [0.2, 2.2, -2.35],
+            radiusX: 0.46,
+            radiusZ: 0.46,
+            materialId: foliage,
+          }
+        - {
+            kind: capsule,
+            start: [2.6, 0.05, -2.35],
+            end: [2.6, 1.3, -2.35],
+            radiusX: 0.08,
+            radiusZ: 0.08,
+            materialId: tree-trunk,
+          }
+        - {
+            kind: ellipsoid,
+            start: [2.6, 1.0, -2.35],
+            end: [2.6, 2.4, -2.35],
+            radiusX: 0.5,
+            radiusZ: 0.5,
+            materialId: foliage,
+          }
+        - {
+            kind: capsule,
+            start: [5, 0.05, -2.35],
+            end: [5, 1.2, -2.35],
+            radiusX: 0.08,
+            radiusZ: 0.08,
+            materialId: tree-trunk,
+          }
+        - {
+            kind: ellipsoid,
+            start: [5, 0.95, -2.35],
+            end: [5, 2.25, -2.35],
+            radiusX: 0.45,
+            radiusZ: 0.45,
+            materialId: foliage,
+          }
+        - {
+            kind: capsule,
+            start: [7.4, 0.05, -2.35],
+            end: [7.4, 1.25, -2.35],
+            radiusX: 0.08,
+            radiusZ: 0.08,
+            materialId: tree-trunk,
+          }
+        - {
+            kind: ellipsoid,
+            start: [7.4, 1.0, -2.35],
+            end: [7.4, 2.35, -2.35],
+            radiusX: 0.48,
+            radiusZ: 0.48,
+            materialId: foliage,
+          }
+      materials:
+        - {
+            id: ground,
+            baseColor: [0.045, 0.055, 0.06, 1],
+            roughness: 0.88,
+            metallic: 0,
+            emission: [0, 0, 0],
+            emissionStrength: 0,
+          }
+        - {
+            id: path,
+            baseColor: [0.19, 0.2, 0.19, 1],
+            roughness: 0.72,
+            metallic: 0,
+            emission: [0, 0, 0],
+            emissionStrength: 0,
+          }
+        - {
+            id: building-cool,
+            baseColor: [0.12, 0.18, 0.22, 1],
+            roughness: 0.72,
+            metallic: 0.08,
+            emission: [0, 0, 0],
+            emissionStrength: 0,
+          }
+        - {
+            id: building-warm,
+            baseColor: [0.28, 0.18, 0.12, 1],
+            roughness: 0.8,
+            metallic: 0,
+            emission: [0, 0, 0],
+            emissionStrength: 0,
+          }
+        - {
+            id: tree-trunk,
+            baseColor: [0.18, 0.09, 0.035, 1],
+            roughness: 0.9,
+            metallic: 0,
+            emission: [0, 0, 0],
+            emissionStrength: 0,
+          }
+        - {
+            id: foliage,
+            baseColor: [0.08, 0.36, 0.14, 1],
+            roughness: 0.82,
+            metallic: 0,
+            emission: [0.01, 0.05, 0.015],
+            emissionStrength: 0.25,
+          }
+      attachments:
+        skyline-focus: { position: [0, 2.3, 3.5] }
+        skyline-camera: { position: [10.8, 4.6, -9.8] }
+        corridor-focus: { position: [0, 0.9, -1.0] }
+        corridor-camera: { position: [-8.2, 1.45, -4.4] }
+        end-frame-camera: { position: [7.8, 3.2, -7.2] }
+
+  - id: seedling
+    path: work/props/seedling.json
+    recipe:
+      assetId: prop.resilient-seedling
+      metadata:
+        generator: videoer.declarative-geometry.v1
+        propClass: symbolic-seedling
+        projectOwned: true
+      primitives:
+        - { kind: box, minimum: [-0.75, 0, -0.75], maximum: [0.75, 0.16, 0.75], materialId: soil }
+        - {
+            kind: capsule,
+            start: [0, 0.14, 0],
+            end: [0, 1.85, 0],
+            radiusX: 0.07,
+            radiusZ: 0.07,
+            materialId: stem,
+          }
+        - {
+            kind: ellipsoid,
+            start: [-0.02, 1.15, 0],
+            end: [-0.78, 1.56, 0],
+            radiusX: 0.2,
+            radiusZ: 0.045,
+            materialId: leaf,
+          }
+        - {
+            kind: ellipsoid,
+            start: [0.02, 1.43, 0],
+            end: [0.82, 1.86, 0],
+            radiusX: 0.22,
+            radiusZ: 0.05,
+            materialId: leaf,
+          }
+        - {
+            kind: ellipsoid,
+            start: [0, 1.78, 0],
+            end: [-0.42, 2.18, 0],
+            radiusX: 0.16,
+            radiusZ: 0.04,
+            materialId: new-leaf,
+          }
+      materials:
+        - {
+            id: soil,
+            baseColor: [0.12, 0.055, 0.025, 1],
+            roughness: 0.95,
+            metallic: 0,
+            emission: [0, 0, 0],
+            emissionStrength: 0,
+          }
+        - {
+            id: stem,
+            baseColor: [0.12, 0.42, 0.12, 1],
+            roughness: 0.8,
+            metallic: 0,
+            emission: [0, 0, 0],
+            emissionStrength: 0,
+          }
+        - {
+            id: leaf,
+            baseColor: [0.045, 0.32, 0.08, 1],
+            roughness: 0.76,
+            metallic: 0,
+            emission: [0.005, 0.025, 0.006],
+            emissionStrength: 0.08,
+          }
+        - {
+            id: new-leaf,
+            baseColor: [0.12, 0.52, 0.12, 1],
+            roughness: 0.68,
+            metallic: 0,
+            emission: [0.008, 0.045, 0.006],
+            emissionStrength: 0.15,
+          }
+      attachments:
+        growth-focus: { position: [0, 1.25, 0] }
+        leaf-focus: { position: [0.28, 1.68, 0] }
+        macro-camera: { position: [2.6, 1.65, -3.8] }
+        hero-camera: { position: [-3.4, 2.1, -5.4] }
+
+overlays:
+  - id: pause-copy
+    path: work/editorial/pause-copy.png
+    width: 640
+    height: 360
+    font: { family: Cormorant Garamond, licence: OFL-1.1 }
+    lines:
+      - {
+          text: WHEN THE CITY PAUSES,
+          y: 48,
+          fontSize: 35,
+          color: '0xf2f0df',
+          borderWidth: 2,
+          borderColor: '0x07100b@0.9',
+        }
+  - id: resolve-copy
+    path: work/editorial/resolve-copy.png
+    width: 640
+    height: 360
+    font: { family: Cormorant Garamond, licence: OFL-1.1 }
+    lines:
+      - {
+          text: BREATHE AGAIN,
+          y: 46,
+          fontSize: 48,
+          color: '0xf1f5df',
+          borderWidth: 2,
+          borderColor: '0x07100b@0.95',
+        }
+      - {
+          text: ONE BLOCK AT A TIME,
+          y: 296,
+          fontSize: 24,
+          color: '0x8fe39b',
+          borderWidth: 2,
+          borderColor: '0x07100b@0.95',
+        }
+
+soundtrackPath: work/audio/soundtrack.wav
+soundtrack:
+  schemaVersion: 1
+  id: audio.breathe-again-awareness
+  durationSeconds: 12
+  sampleRate: 48000
+  channels: 2
+  cues:
+    - {
+        id: city-air,
+        kind: noise-bed,
+        startSeconds: 0,
+        endSeconds: 12,
+        gain: 0.035,
+        seed: 2718,
+        purpose: Continuous urban air texture,
+      }
+    - {
+        id: low-earth,
+        kind: tone-bed,
+        startSeconds: 0,
+        endSeconds: 12,
+        gain: 0.035,
+        frequencyHz: 65.41,
+        purpose: Grounded tonal foundation,
+      }
+    - {
+        id: green-harmonic,
+        kind: tone-bed,
+        startSeconds: 3,
+        endSeconds: 12,
+        gain: 0.025,
+        frequencyHz: 130.81,
+        purpose: Gradual harmonic opening,
+      }
+    - {
+        id: growth-chime,
+        kind: tonal-accent,
+        startSeconds: 6,
+        endSeconds: 7.2,
+        gain: 0.07,
+        frequencyHz: 523.25,
+        purpose: Seedling reveal accent,
+      }
+    - {
+        id: resolve,
+        kind: tonal-accent,
+        startSeconds: 9,
+        endSeconds: 12,
+        gain: 0.06,
+        frequencyHz: 261.63,
+        purpose: Campaign resolution,
+      }
+  metadata: { providerFree: true, campaignClass: public-awareness }
+
+shots:
+  - id: urban-pressure
+    frames: 72
+    entities:
+      - { id: city, geometry: city-corridor, role: environment }
+    camera:
+      keyframes:
+        - {
+            time: 0,
+            position: { entityId: city, attachmentId: skyline-camera },
+            target: { entityId: city, attachmentId: skyline-focus },
+            lensMillimeters: 52,
+          }
+        - {
+            time: 3,
+            position: { entityId: city, attachmentId: skyline-camera, offset: [-1.1, -0.35, 1] },
+            target: { entityId: city, attachmentId: skyline-focus },
+            lensMillimeters: 58,
+          }
+    lights: &daylight
+      - {
+          id: soft-sun,
+          type: sun,
+          position: [0, 8, -5],
+          target: [0, 0, 0],
+          color: [0.75, 0.86, 1],
+          energy: 2.2,
+          angleDegrees: 24,
+        }
+      - {
+          id: warm-horizon,
+          type: area,
+          position: [-5, 4, 1],
+          target: [0, 1, 2],
+          color: [1, 0.48, 0.2],
+          energy: 520,
+          sizeMeters: 4,
+        }
+      - {
+          id: camera-fill,
+          type: area,
+          position: [8, 5, -6],
+          target: [0, 2, 2.5],
+          color: [0.38, 0.58, 0.78],
+          energy: 540,
+          sizeMeters: 5,
+        }
+    atmosphere: &urban-air
+      worldColor: [0.025, 0.04, 0.055]
+      fogColor: [0.22, 0.3, 0.36]
+      fogDensity: 0.012
+      rain: { enabled: false }
+    renderGates: [{ id: city-visible, type: frame-visibility, maximumBlackPercentage: 75 }]
+    landmarks:
+      - { id: pressure, progress: 0, description: Dense skyline establishes urban pressure }
+      - {
+          id: corridor-found,
+          progress: 0.55,
+          description: Green corridor becomes spatially legible,
+        }
+      - { id: possibility, progress: 1, description: Camera settles toward the planted route }
+    metadata: { campaignClass: public-awareness, grammar: environmental-establish }
+
+  - id: corridor-breath
+    frames: 72
+    entities:
+      - { id: city, geometry: city-corridor, role: environment }
+    camera:
+      keyframes:
+        - {
+            time: 0,
+            position: { entityId: city, attachmentId: corridor-camera },
+            target: { entityId: city, attachmentId: corridor-focus },
+            lensMillimeters: 48,
+          }
+        - {
+            time: 3,
+            position: { entityId: city, attachmentId: corridor-camera, offset: [1.5, 0.1, 0.7] },
+            target: { entityId: city, attachmentId: corridor-focus, offset: [1.2, 0.15, 0] },
+            lensMillimeters: 55,
+          }
+    lights: *daylight
+    atmosphere: *urban-air
+    overlays:
+      [
+        {
+          overlay: pause-copy,
+          startSeconds: 0.35,
+          endSeconds: 3,
+          fadeInSeconds: 0.5,
+          fadeOutSeconds: 0.25,
+        },
+      ]
+    renderGates: [{ id: corridor-visible, type: frame-visibility, maximumBlackPercentage: 75 }]
+    landmarks:
+      - { id: enter, progress: 0, description: Camera enters the green corridor }
+      - { id: breathe, progress: 0.5, description: Trees displace the hard skyline }
+      - { id: pause, progress: 1, description: Public-awareness copy holds over green space }
+    metadata: { campaignClass: public-awareness, grammar: spatial-pause }
+
+  - id: resilient-growth
+    frames: 72
+    entities:
+      - {
+          id: city,
+          geometry: city-corridor,
+          role: environment,
+          transform: { position: [0, 0, 2.8], rotation: [0, 0, 0], scale: [1, 1, 1] },
+        }
+      - {
+          id: seedling,
+          geometry: seedling,
+          role: prop,
+          transform: { position: [0, 0.02, -0.8], rotation: [0, 0.18, 0], scale: [1, 1, 1] },
+        }
+    camera:
+      keyframes:
+        - {
+            time: 0,
+            position: { entityId: seedling, attachmentId: macro-camera },
+            target: { entityId: seedling, attachmentId: leaf-focus },
+            lensMillimeters: 72,
+          }
+        - {
+            time: 3,
+            position:
+              { entityId: seedling, attachmentId: macro-camera, offset: [-0.3, 0.08, 0.45] },
+            target: { entityId: seedling, attachmentId: growth-focus },
+            lensMillimeters: 80,
+          }
+    lights:
+      - {
+          id: leaf-key,
+          type: area,
+          position: [-2.5, 3.5, -2.5],
+          target: [0, 1.2, -0.8],
+          color: [0.45, 0.82, 0.4],
+          energy: 310,
+          sizeMeters: 2,
+        }
+      - {
+          id: earth-fill,
+          type: area,
+          position: [2.4, 1.2, -1.8],
+          target: [0, 0.6, -0.8],
+          color: [1, 0.38, 0.14],
+          energy: 240,
+          sizeMeters: 1.5,
+        }
+    atmosphere: *urban-air
+    renderGates:
+      - { id: growth-visible, type: frame-visibility, maximumBlackPercentage: 75 }
+      - {
+          id: growth-highlight-detail,
+          type: frame-overexposure,
+          maximumWhitePercentage: 18,
+          whiteThreshold: 245,
+        }
+    landmarks:
+      - { id: soil, progress: 0, description: Growth begins from a grounded urban soil block }
+      - { id: leaf, progress: 0.5, description: New leaf becomes the visual subject }
+      - { id: resilience, progress: 1, description: Seedling holds against the distant city }
+    metadata: { campaignClass: public-awareness, grammar: symbolic-macro }
+
+  - id: collective-resolve
+    frames: 72
+    entities:
+      - { id: city, geometry: city-corridor, role: environment }
+      - {
+          id: seedling,
+          geometry: seedling,
+          role: prop,
+          transform: { position: [0, 0.02, -0.8], rotation: [0, -0.12, 0], scale: [1.1, 1.1, 1.1] },
+        }
+    camera:
+      keyframes:
+        - {
+            time: 0,
+            position: { entityId: seedling, attachmentId: hero-camera },
+            target: { entityId: seedling, attachmentId: growth-focus },
+            lensMillimeters: 58,
+          }
+        - {
+            time: 3,
+            position: { entityId: seedling, attachmentId: hero-camera, offset: [0.45, 0.1, 0.55] },
+            target: { entityId: seedling, attachmentId: growth-focus, offset: [0, 0.12, 0] },
+            lensMillimeters: 64,
+          }
+    lights:
+      - {
+          id: resolve-key,
+          type: area,
+          position: [-3, 4, -3],
+          target: [0, 1, -0.8],
+          color: [0.64, 1, 0.58],
+          energy: 740,
+          sizeMeters: 2.5,
+        }
+      - {
+          id: city-rim,
+          type: sun,
+          position: [0, 8, 2],
+          target: [0, 0, 0],
+          color: [1, 0.52, 0.22],
+          energy: 1.8,
+          angleDegrees: 30,
+        }
+    atmosphere:
+      worldColor: [0.012, 0.03, 0.018]
+      fogColor: [0.12, 0.24, 0.14]
+      fogDensity: 0.007
+      rain: { enabled: false }
+    overlays:
+      [
+        {
+          overlay: resolve-copy,
+          startSeconds: 0,
+          endSeconds: 3,
+          fadeInSeconds: 0.4,
+          fadeOutSeconds: 0,
+        },
+      ]
+    renderGates: [{ id: resolve-visible, type: frame-visibility, maximumBlackPercentage: 82 }]
+    qualityGates: []
+    landmarks:
+      - { id: collective-arrival, progress: 0, description: Seedling and corridor share one frame }
+      - { id: promise, progress: 0.5, description: Campaign promise becomes primary }
+      - { id: action-hold, progress: 1, description: End frame holds a concrete local action }
+    metadata: { campaignClass: public-awareness, grammar: campaign-resolution }
+
+delivery:
+  id: edit.breathe-again-awareness
+  directory: delivery
+  codec: h264
+  pixelFormat: yuv420p
+  fastStart: true
+
+metadata:
+  conformancePurpose: third-campaign-zero-orchestration
+  aspectRatioClass: horizontal-16-9
+  campaignClass: public-awareness

@@ -1,0 +1,72 @@
+schemaVersion: 1
+id: prop.freestanding-tool-board
+version: 0.1.0
+type: prop
+title: Freestanding populated tool board
+description: Project-owned freestanding tool board with physical peg pattern,
+  shelves and distinct hammer, square, tongs and handled-tool silhouettes.
+status: verified
+tags:
+  - tool-board
+  - tools
+  - storage
+  - workshop
+  - portable
+  - inhabited-environment
+capabilities:
+  - portable-geometry
+  - ground-placement
+  - named-workstation-attachments
+  - medium-background-quality-tier
+source:
+  kind: procedural
+  generator: videoer.workshop-assets.v1
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: geometry
+    path: geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: 0e146f06faeb02798829fe9f0fea6ea60288933b68b12c2e43e931b63142bd61
+  - role: validation
+    path: validation.json
+    mediaType: application/json
+    sha256: 9d8fa29ce3aed49dcd95f4fe39230afe010893412b8c7bce010e2509764def27
+  - role: historic-forge-workroom-family-contact-sheet
+    path: verification/historic-forge-workroom-family-contact-sheet.png
+    mediaType: image/png
+    sha256: 06e4d9e9a3c16d3c797c3be2faa5980d40aea8c1ab3dbb034f655bc8ebfc5274
+  - role: contemporary-maker-lab-family-contact-sheet
+    path: verification/contemporary-maker-lab-family-contact-sheet.png
+    mediaType: image/png
+    sha256: 9561be25d3d5aaa2e822d8f3eb9de9315984f5aaacd6d47dd60b716d298fb2c0
+  - role: family-transfer-summary
+    path: verification/family-transfer-summary.json
+    mediaType: application/json
+    sha256: 8acdb3a3c2632212a1315e233fe7d68f5a39e31b7d0c3eb02b76dad05d4da5dd
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - three-3d
+    - blender-headless
+  requires: []
+verification:
+  checks:
+    - geometry.topology
+    - geometry.material-groups
+    - attachments.tool-display-semantic
+    - prop.physical-tool-silhouettes
+    - visual.historic-forge-workroom-workstation-transfer-accepted
+    - visual.contemporary-maker-lab-workstation-transfer-accepted
+    - prop.physical-workstation-semantics-accepted
+    - prop.medium-background-shot-distance-accepted
+  artifacts:
+    - verification/historic-forge-workroom-family-contact-sheet.png
+    - verification/contemporary-maker-lab-family-contact-sheet.png
+    - verification/family-transfer-summary.json
+  verifiedAt: 2026-09-01T11:05:00.000Z

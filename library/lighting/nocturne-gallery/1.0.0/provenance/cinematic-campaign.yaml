@@ -1,0 +1,224 @@
+schemaVersion: 1
+id: campaign.nocturne-exhibition
+fps: 24
+resolution: {width: 480, height: 270, percentage: 100}
+assetLibrary: ../../library
+
+geometry:
+  - id: gallery
+    path: work/gallery/geometry.json
+    recipe:
+      assetId: environment.nocturne-gallery
+      metadata:
+        generator: videoer.declarative-geometry.v1
+        venueClass: contemporary-exhibition-hall
+        projectOwned: true
+      primitives:
+        - {kind: box, minimum: [-6, -0.18, -6], maximum: [6, 0, 5], materialId: floor}
+        - {kind: box, minimum: [-6, 0, 4.8], maximum: [6, 4.5, 5], materialId: wall}
+        - {kind: box, minimum: [-6, 0, -6], maximum: [-5.8, 4.5, 5], materialId: wall}
+        - {kind: box, minimum: [5.8, 0, -6], maximum: [6, 4.5, 5], materialId: wall}
+        - {kind: box, minimum: [-4.8, 0, 1.8], maximum: [-2.3, 3.6, 2], materialId: partition}
+        - {kind: box, minimum: [2.3, 0, 1.8], maximum: [4.8, 3.6, 2], materialId: partition}
+        - {kind: box, minimum: [-1.1, 0, -0.5], maximum: [1.1, 0.3, 0.7], materialId: plinth}
+        - {kind: box, minimum: [-0.22, 0.3, -0.05], maximum: [0.22, 3.1, 0.25], materialId: monolith}
+        - {kind: capsule, start: [-1.25, 0.35, 0.2], end: [-0.35, 2.75, 0.2], radiusX: 0.11, radiusZ: 0.11, materialId: amber-light}
+        - {kind: capsule, start: [1.25, 0.35, 0.2], end: [0.35, 2.75, 0.2], radiusX: 0.11, radiusZ: 0.11, materialId: blue-light}
+        - {kind: capsule, start: [-0.95, 2.55, 0.2], end: [0.95, 2.55, 0.2], radiusX: 0.1, radiusZ: 0.1, materialId: pearl-light}
+        - {kind: box, minimum: [-4.2, 0, -1.4], maximum: [-2.9, 0.75, -0.5], materialId: side-plinth}
+        - {kind: capsule, start: [-3.7, 0.75, -0.95], end: [-3.3, 2.2, -0.95], radiusX: 0.28, radiusZ: 0.18, materialId: cobalt}
+        - {kind: box, minimum: [2.9, 0, -1.4], maximum: [4.2, 0.75, -0.5], materialId: side-plinth}
+        - {kind: capsule, start: [3.5, 0.75, -0.95], end: [3.5, 2.35, -0.95], radiusX: 0.3, radiusZ: 0.22, materialId: amber}
+      materials:
+        - {id: floor, baseColor: [0.035, 0.04, 0.05, 1], roughness: 0.2, metallic: 0.2, emission: [0, 0, 0], emissionStrength: 0}
+        - {id: wall, baseColor: [0.14, 0.15, 0.17, 1], roughness: 0.82, metallic: 0, emission: [0, 0, 0], emissionStrength: 0}
+        - {id: partition, baseColor: [0.09, 0.095, 0.11, 1], roughness: 0.7, metallic: 0, emission: [0, 0, 0], emissionStrength: 0}
+        - {id: plinth, baseColor: [0.2, 0.21, 0.23, 1], roughness: 0.45, metallic: 0.18, emission: [0, 0, 0], emissionStrength: 0}
+        - {id: side-plinth, baseColor: [0.16, 0.17, 0.19, 1], roughness: 0.52, metallic: 0.08, emission: [0, 0, 0], emissionStrength: 0}
+        - {id: monolith, baseColor: [0.015, 0.02, 0.028, 1], roughness: 0.16, metallic: 0.78, emission: [0.01, 0.035, 0.06], emissionStrength: 0.7}
+        - {id: amber-light, baseColor: [0.95, 0.3, 0.04, 1], roughness: 0.12, metallic: 0.05, emission: [1, 0.12, 0.015], emissionStrength: 4}
+        - {id: blue-light, baseColor: [0.08, 0.5, 0.95, 1], roughness: 0.12, metallic: 0.05, emission: [0.02, 0.32, 1], emissionStrength: 4}
+        - {id: pearl-light, baseColor: [0.72, 0.9, 1, 1], roughness: 0.1, metallic: 0, emission: [0.42, 0.75, 1], emissionStrength: 3.2}
+        - {id: cobalt, baseColor: [0.03, 0.12, 0.42, 1], roughness: 0.25, metallic: 0.6, emission: [0.01, 0.04, 0.2], emissionStrength: 0.5}
+        - {id: amber, baseColor: [0.55, 0.12, 0.025, 1], roughness: 0.24, metallic: 0.55, emission: [0.25, 0.03, 0], emissionStrength: 0.6}
+      attachments:
+        hall-focus: {position: [0, 1.45, 0.4]}
+        monolith-focus: {position: [0, 1.65, 0.1]}
+        cobalt-focus: {position: [-3.5, 1.45, -0.95]}
+        amber-focus: {position: [3.5, 1.45, -0.95]}
+        camera-arrival: {position: [0, 2.25, -8.6]}
+        camera-orbit-left: {position: [-4.8, 2.05, -5.5]}
+        camera-detail: {position: [-1.65, 1.65, -2.2]}
+        camera-crosshall: {position: [4.8, 1.85, -4.6]}
+        camera-final: {position: [0, 1.75, -5.7]}
+
+lightingSources:
+  - id: nocturne-lighting
+    path: work/lighting/nocturne-gallery.json
+    library:
+      type: environment
+      query: warm interior lighting rig coherent exposure
+      tags: [lighting-rig, warm-interior]
+      capabilities: [reusable-rig, face-key, coherent-exposure, sculptural-gallery-stage]
+      preferredAsset: {id: environment.warm-bookshop-lighting, version: 0.1.0}
+      artifactRole: lighting-rig
+    adaptation:
+      kind: lighting-rig-transform-v1
+      assetId: lighting.nocturne-gallery
+      transform: {translation: [0, 0.15, -2.4], yawRadians: 0, uniformScale: 1}
+      energyScale: 0.92
+      purposeEnergyScale: {key: 1.15, fill: 0.9, rim: 1.25, practical: 1, environment: 1}
+      colorMultiply: [0.92, 0.88, 1]
+      worldColor: [0.004, 0.006, 0.014]
+      providesCapabilities: [sculptural-gallery-stage]
+      metadata: {context: contemporary-night-exhibition, campaign: campaign.nocturne-exhibition}
+      publication:
+        assetId: lighting.nocturne-gallery
+        version: 1.0.0
+        type: lighting
+        title: Nocturne sculptural gallery lighting
+        description: Bounded cinematic gallery transformation of a verified interior rig, preserving light topology and coherent AgX exposure while relocating, recolouring, and rebalancing its key, fill, and rim roles.
+        tags: [lighting-rig, gallery, exhibition, sculptural, coherent-exposure]
+        capabilities: [reusable-rig, coherent-exposure, key-fill-rim, sculptural-gallery-stage]
+        generator: videoer.lighting-rig-transform.v1
+        renderers: [blender-headless]
+        verification:
+          checks: [lighting.parent-hash, lighting.output-hash, lighting.topology-preserved, lighting.exposure-preserved, lighting.semantic-transform, campaign.delivery.verified]
+          shots: [threshold, central-work, material-dialogue, spatial-reveal, invitation]
+
+overlays:
+  - id: opening-title
+    path: work/editorial/opening-title.png
+    width: 480
+    height: 270
+    font: {family: Cormorant Garamond, licence: OFL-1.1}
+    lines:
+      - {text: NOCTURNE, y: 96, fontSize: 45, color: '0xf2f4ff', borderWidth: 2, borderColor: '0x02030a@0.9'}
+      - {text: LIGHT  /  MATTER  /  MEMORY, y: 158, fontSize: 17, color: '0x8ebcff', borderWidth: 2, borderColor: '0x02030a@0.95'}
+  - id: closing-card
+    path: work/editorial/closing-card.png
+    width: 480
+    height: 270
+    font: {family: Cormorant Garamond, licence: OFL-1.1}
+    lines:
+      - {text: NOCTURNE, y: 72, fontSize: 42, color: '0xf4f5ff', borderWidth: 2, borderColor: '0x02030a@0.92'}
+      - {text: 14 SEPTEMBER — 03 NOVEMBER, y: 150, fontSize: 19, color: '0xffb07a', borderWidth: 2, borderColor: '0x02030a@0.95'}
+      - {text: NORTH HALL  ·  FREE ENTRY, y: 191, fontSize: 15, color: '0x9bcaff', borderWidth: 2, borderColor: '0x02030a@0.95'}
+
+soundtrackPath: work/audio/soundtrack.wav
+soundtrack:
+  schemaVersion: 1
+  id: audio.nocturne-exhibition
+  durationSeconds: 20
+  sampleRate: 48000
+  channels: 2
+  cues:
+    - {id: low-room-tone, kind: tone-bed, startSeconds: 0, endSeconds: 20, gain: 0.035, frequencyHz: 55, purpose: Architectural nocturne foundation}
+    - {id: air-texture, kind: noise-bed, startSeconds: 0, endSeconds: 20, gain: 0.012, seed: 1409, purpose: Quiet gallery air}
+    - {id: threshold-bloom, kind: tonal-accent, startSeconds: 3.2, endSeconds: 5.8, gain: 0.08, frequencyHz: 110, purpose: Title-to-space transition}
+    - {id: blue-response, kind: tonal-accent, startSeconds: 8, endSeconds: 11.8, gain: 0.065, frequencyHz: 165, purpose: Material dialogue transition}
+    - {id: invitation-resolve, kind: tonal-accent, startSeconds: 15.6, endSeconds: 19.8, gain: 0.09, frequencyHz: 220, purpose: Event invitation resolve}
+  metadata: {providerFree: true, genre: cultural-exhibition-trailer, deterministic: true}
+
+shots:
+  - id: threshold
+    frames: 96
+    entities: [{id: gallery, geometry: gallery, role: environment}]
+    camera:
+      keyframes:
+        - {time: 0, position: {entityId: gallery, attachmentId: camera-arrival}, target: {entityId: gallery, attachmentId: hall-focus}, lensMillimeters: 43}
+        - {time: 4, position: {entityId: gallery, attachmentId: camera-arrival, offset: [0, -0.12, 1.5]}, target: {entityId: gallery, attachmentId: hall-focus}, lensMillimeters: 48}
+    lighting: nocturne-lighting
+    lights: []
+    atmosphere: &gallery-atmosphere {worldColor: [0.002, 0.004, 0.012], fogColor: [0.025, 0.035, 0.07], fogDensity: 0.006, rain: {enabled: false}}
+    overlays: [{overlay: opening-title, startSeconds: 0.25, endSeconds: 3.75, fadeInSeconds: 0.5, fadeOutSeconds: 0.65}]
+    renderGates: [{id: venue-visible, type: frame-visibility, maximumBlackPercentage: 84}]
+    landmarks:
+      - {id: name-arrival, progress: 0, description: Event identity opens before the gallery threshold}
+      - {id: architecture-emerges, progress: 0.55, description: The central luminous installation separates from the hall}
+      - {id: crossing-threshold, progress: 1, description: Forward movement commits the viewer to the exhibition}
+    metadata: {template: exhibition-threshold}
+
+  - id: central-work
+    frames: 96
+    entities: [{id: gallery, geometry: gallery, role: environment}]
+    camera:
+      keyframes:
+        - {time: 0, position: {entityId: gallery, attachmentId: camera-orbit-left}, target: {entityId: gallery, attachmentId: monolith-focus}, lensMillimeters: 54}
+        - {time: 4, position: {entityId: gallery, attachmentId: camera-orbit-left, offset: [1.35, 0.35, 0.65]}, target: {entityId: gallery, attachmentId: monolith-focus}, lensMillimeters: 64}
+    lighting: nocturne-lighting
+    lights: [{id: blue-sculpture-edge, type: area, position: [2.5, 2.7, -1.8], target: [0, 1.4, 0], color: [0.08, 0.4, 1], energy: 270, sizeMeters: 1.1}]
+    atmosphere: *gallery-atmosphere
+    renderGates: [{id: central-work-visible, type: frame-visibility, maximumBlackPercentage: 84}]
+    landmarks:
+      - {id: amber-line, progress: 0, description: Warm diagonal light anchors the first material read}
+      - {id: parallax, progress: 0.5, description: Lateral drift reveals the installation as spatial rather than graphic}
+      - {id: blue-line, progress: 1, description: Cool response completes the opposing structure}
+    metadata: {template: sculptural-orbit}
+
+  - id: material-dialogue
+    frames: 96
+    entities: [{id: gallery, geometry: gallery, role: environment}]
+    camera:
+      keyframes:
+        - {time: 0, position: {entityId: gallery, attachmentId: camera-detail}, target: {entityId: gallery, attachmentId: monolith-focus}, lensMillimeters: 72}
+        - {time: 4, position: {entityId: gallery, attachmentId: camera-detail, offset: [0.7, 0.28, 0.45]}, target: {entityId: gallery, attachmentId: monolith-focus, offset: [0, 0.35, 0]}, lensMillimeters: 86}
+    lighting: nocturne-lighting
+    lights: [{id: pearl-detail, type: spot, position: [-1.2, 3.1, -1.5], target: [0, 2.2, 0], color: [0.55, 0.8, 1], energy: 360, sizeMeters: 0.7, angleDegrees: 38}]
+    atmosphere: *gallery-atmosphere
+    renderGates: [{id: material-visible, type: frame-visibility, maximumBlackPercentage: 82}]
+    landmarks:
+      - {id: metal-surface, progress: 0, description: Dark metal retains a readable grazing edge}
+      - {id: luminous-junction, progress: 0.52, description: Three light elements meet without clipping}
+      - {id: tactile-hold, progress: 1, description: Close framing holds long enough for material inspection}
+    metadata: {template: exhibition-material-detail}
+
+  - id: spatial-reveal
+    frames: 96
+    entities: [{id: gallery, geometry: gallery, role: environment}]
+    camera:
+      keyframes:
+        - {time: 0, position: {entityId: gallery, attachmentId: camera-crosshall}, target: {entityId: gallery, attachmentId: hall-focus}, lensMillimeters: 48}
+        - {time: 4, position: {entityId: gallery, attachmentId: camera-crosshall, offset: [-2, 0.2, 0.25]}, target: {entityId: gallery, attachmentId: hall-focus}, lensMillimeters: 52}
+    lighting: nocturne-lighting
+    lights: [{id: side-gallery-wash, type: area, position: [0, 3.6, -1], target: [0, 1.1, -0.8], color: [0.45, 0.55, 1], energy: 310, sizeMeters: 3.2}]
+    atmosphere: *gallery-atmosphere
+    renderGates: [{id: gallery-depth-visible, type: frame-visibility, maximumBlackPercentage: 84}]
+    landmarks:
+      - {id: cobalt-room, progress: 0, description: Secondary cobalt work establishes curatorial breadth}
+      - {id: central-axis, progress: 0.5, description: Camera crosses the main installation axis}
+      - {id: amber-room, progress: 1, description: Opposing work reveals a connected spatial sequence}
+    metadata: {template: exhibition-spatial-reveal}
+
+  - id: invitation
+    frames: 96
+    entities: [{id: gallery, geometry: gallery, role: environment}]
+    camera:
+      keyframes:
+        - {time: 0, position: {entityId: gallery, attachmentId: camera-final}, target: {entityId: gallery, attachmentId: hall-focus}, lensMillimeters: 55}
+        - {time: 4, position: {entityId: gallery, attachmentId: camera-final, offset: [0, 0.08, 0.5]}, target: {entityId: gallery, attachmentId: hall-focus}, lensMillimeters: 60}
+    lighting: nocturne-lighting
+    lights: []
+    atmosphere: {worldColor: [0.001, 0.002, 0.008], fogColor: [0.018, 0.025, 0.06], fogDensity: 0.003, rain: {enabled: false}}
+    overlays: [{overlay: closing-card, startSeconds: 0.35, endSeconds: 4, fadeInSeconds: 0.55, fadeOutSeconds: 0}]
+    renderGates: [{id: invitation-visible, type: frame-visibility, maximumBlackPercentage: 84}]
+    landmarks:
+      - {id: installation-return, progress: 0, description: The trailer returns to the complete central work}
+      - {id: dates-arrive, progress: 0.48, description: Dates and venue settle over a stable image}
+      - {id: invitation-hold, progress: 1, description: Event identity and access information hold cleanly}
+    metadata: {template: cultural-event-invitation}
+
+delivery:
+  id: edit.nocturne-exhibition
+  directory: delivery-declarative
+  codec: h264
+  pixelFormat: yuv420p
+  fastStart: true
+
+metadata:
+  conformancePurpose: reusable-long-form-cultural-event-family
+  materiallyDifferentFromBenchmark: true
+  benchmarkDurationSeconds: 15
+  campaignDurationSeconds: 20
+  bespokeOrchestrationSourceFiles: 0
+  proves: [new-duration-family, exhibition-event-genre, procedural-architecture, first-class-lighting-derivation, reusable-semantic-shot-templates]

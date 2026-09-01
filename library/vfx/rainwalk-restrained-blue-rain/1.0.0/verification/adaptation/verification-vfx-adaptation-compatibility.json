@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "adaptationKind": "atmospheric-treatment",
+  "sourceId": "restrained-rain",
+  "baseAsset": {
+    "id": "vfx.rainy-dusk-depth",
+    "version": "0.1.0"
+  },
+  "baseArtifact": "/Users/colum/dev/personal/videoer/library/vfx/rainy-dusk-depth/0.1.0/vfx.json",
+  "baseVfxSha256": "7c112b2961b181fbbceaa7186703f08199f672734bf9db97adb88f110a207dc6",
+  "adaptedAssetId": "vfx.rainwalk-restrained-blue-rain",
+  "adaptedArtifact": "/Users/colum/dev/personal/videoer/campaigns/rainwalk-square-crossdomain-conformance/work/vfx/restrained-rain.json",
+  "adaptedVfxSha256": "1dd00d1cbd0eb2354c6553968f5735f1b2637a16e795517eac11f10a5edd5afb",
+  "requestedCapabilities": [
+    "camera-depth",
+    "deterministic-seed",
+    "foreground-background",
+    "restrained-rain"
+  ],
+  "missingBaseCapabilities": [
+    "restrained-rain"
+  ],
+  "providedCapabilities": [
+    "restrained-rain"
+  ],
+  "operations": {
+    "changedFields": [
+      "worldColor",
+      "fog.density",
+      "fog.color",
+      "rain.layers.foreground.count",
+      "rain.layers.foreground.streakLengthMeters",
+      "rain.layers.foreground.opacity",
+      "rain.layers.midground.count",
+      "rain.layers.midground.streakLengthMeters",
+      "rain.layers.midground.opacity",
+      "rain.layers.background.count",
+      "rain.layers.background.streakLengthMeters",
+      "rain.layers.background.opacity"
+    ],
+    "placementChanged": false,
+    "deterministicLayerTopologyChanged": false
+  },
+  "compatibility": {
+    "placementPreserved": true,
+    "deterministicLayerTopologyPreserved": true
+  },
+  "validation": {
+    "valid": true,
+    "issues": [],
+    "placementPreserved": true,
+    "deterministicLayerTopologyPreserved": true,
+    "changedFields": [
+      "worldColor",
+      "fog.density",
+      "fog.color",
+      "rain.layers.foreground.count",
+      "rain.layers.foreground.streakLengthMeters",
+      "rain.layers.foreground.opacity",
+      "rain.layers.midground.count",
+      "rain.layers.midground.streakLengthMeters",
+      "rain.layers.midground.opacity",
+      "rain.layers.background.count",
+      "rain.layers.background.streakLengthMeters",
+      "rain.layers.background.opacity"
+    ]
+  }
+}

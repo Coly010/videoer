@@ -1,0 +1,62 @@
+schemaVersion: 1
+id: prop.rise-of-demons-cover
+version: 0.1.0
+type: prop
+title: The Rise of Demons campaign cover
+description: Campaign-supplied front artwork packaged on a project-owned
+  dimensional hardback cover mesh for the final product reveal.
+status: verified
+tags:
+  - cover
+  - campaign-supplied
+capabilities:
+  - front-texture
+  - dimensional-reveal
+source:
+  kind: supplied
+  sourceAsset: /Users/colum/dev/personal/videoer/misc-images/the-rise-of-demons-cover.png
+  references: []
+  licence:
+    spdx: LicenseRef-Campaign-Supplied
+    name: Campaign-supplied artwork authorized for this production
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: front-texture
+    path: cover.png
+    mediaType: image/png
+    sha256: 513b4efd9e6596693b98db46cbb17e032d3c81967432110906688370248a79bc
+  - role: geometry
+    path: geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: 294fea974f0082c96db07a5d8b41fe92ece0dc0b08eb4199454e892ab2090d2e
+  - role: preview
+    path: verification/turntable.mp4
+    mediaType: video/mp4
+    sha256: f8ce60c71417dc94a92c2cb659cf0492e3c465427f66bf8c34c4a9f8b89e0c5c
+  - role: blender-source
+    path: verification/mannequin.blend
+    mediaType: application/x-blender
+    sha256: 0e4a680951dc066f5788cab1e8ecd8ee7114e18ddf89394dd38e5ab8a6ae19f0
+  - role: verification-verification-contact-sheet
+    path: verification/contact-sheet.png
+    mediaType: image/png
+    sha256: 9b0df097cdad2a85f92f12730db2fba57c50ea472d352025024b0e0cc51d79ae
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - three-3d
+    - blender-headless
+  requires: []
+verification:
+  checks:
+    - geometry.topology
+    - geometry.front-face-uv
+    - texture.campaign-supplied-front
+    - visual.front-texture-legibility
+    - visual.dimensional-three-quarter
+  artifacts:
+    - verification/contact-sheet.png
+    - verification/turntable.mp4
+  verifiedAt: 2026-08-30T22:40:56.494Z

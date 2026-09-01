@@ -1,0 +1,397 @@
+{
+  "schemaVersion": 1,
+  "id": "scene.contemporary-metal-shop-source-bound-aerosol-transfer",
+  "durationSeconds": 0.5,
+  "fps": 24,
+  "resolution": {
+    "width": 640,
+    "height": 400,
+    "percentage": 100
+  },
+  "renderProfile": {
+    "engine": "cycles-cpu",
+    "samples": 128,
+    "seed": 1729,
+    "denoise": true,
+    "intent": "deterministic-final"
+  },
+  "entities": [
+    {
+      "id": "host-context",
+      "role": "environment",
+      "geometryPath": "/Users/colum/dev/personal/videoer/work/vfx/source-bound-aerosol-openvdb-v7/verification/contemporary-metal-shop/context-geometry.json",
+      "transform": {
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "visible": true
+    },
+    {
+      "id": "aerosol-source",
+      "role": "prop",
+      "geometryPath": "/Users/colum/dev/personal/videoer/work/vfx/source-bound-aerosol-openvdb-v7/verification/contemporary-metal-shop/source-geometry.json",
+      "transform": {
+        "position": [
+          -0.2,
+          0,
+          0.75
+        ],
+        "rotation": [
+          0,
+          0.18,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "visible": true
+    }
+  ],
+  "camera": {
+    "keyframes": [
+      {
+        "time": 0,
+        "position": [
+          7,
+          2.7,
+          -9.6
+        ],
+        "target": [
+          0,
+          1.25,
+          0.85
+        ],
+        "lensMillimeters": 48,
+        "easing": "ease-in-out"
+      },
+      {
+        "time": 0.25,
+        "position": [
+          0.2,
+          2.35,
+          -10.45
+        ],
+        "target": [
+          0,
+          1.35,
+          0.85
+        ],
+        "lensMillimeters": 52,
+        "easing": "ease-in-out"
+      },
+      {
+        "time": 0.5,
+        "position": [
+          -6.8,
+          2.65,
+          -9.4
+        ],
+        "target": [
+          0,
+          1.3,
+          0.85
+        ],
+        "lensMillimeters": 48,
+        "easing": "ease-in-out"
+      }
+    ]
+  },
+  "lights": [
+    {
+      "id": "cool-workspace-key",
+      "type": "area",
+      "position": [
+        3.8,
+        6.5,
+        -3.4
+      ],
+      "target": [
+        0,
+        1,
+        0.8
+      ],
+      "color": [
+        0.46,
+        0.62,
+        0.9
+      ],
+      "energy": 980,
+      "sizeMeters": 4.2,
+      "angleDegrees": 45
+    },
+    {
+      "id": "source-fire-light",
+      "type": "point",
+      "position": [
+        -0.2,
+        1.2,
+        0.35
+      ],
+      "color": [
+        1,
+        0.16,
+        0.015
+      ],
+      "energy": 390,
+      "sizeMeters": 0.34,
+      "angleDegrees": 45
+    },
+    {
+      "id": "smoke-rim",
+      "type": "area",
+      "position": [
+        -3.4,
+        4.6,
+        1.8
+      ],
+      "target": [
+        0,
+        1.7,
+        0.9
+      ],
+      "color": [
+        0.7,
+        0.82,
+        1
+      ],
+      "energy": 410,
+      "sizeMeters": 2.3,
+      "angleDegrees": 45
+    },
+    {
+      "id": "smoke-backlight",
+      "type": "area",
+      "position": [
+        -0.4,
+        3.7,
+        2.9
+      ],
+      "target": [
+        0,
+        1.65,
+        -0.9
+      ],
+      "color": [
+        0.58,
+        0.74,
+        1
+      ],
+      "energy": 410,
+      "sizeMeters": 1.3,
+      "angleDegrees": 45
+    }
+  ],
+  "atmosphere": {
+    "worldColor": [
+      0.012,
+      0.02,
+      0.032
+    ],
+    "fogDensity": 0.0008,
+    "fogColor": [
+      0.08,
+      0.1,
+      0.13
+    ],
+    "rain": {
+      "enabled": false,
+      "layers": [],
+      "windMetersPerSecond": [
+        0,
+        0
+      ],
+      "count": 0,
+      "seed": 1,
+      "boundsMinimum": [
+        -5,
+        0,
+        -5
+      ],
+      "boundsMaximum": [
+        5,
+        5,
+        5
+      ],
+      "streakLengthMeters": 0.14,
+      "fallSpeedMetersPerSecond": 8
+    },
+    "aerosols": [
+      {
+        "source": {
+          "vfxAssetId": "vfx.source-bound-smoke-embers",
+          "entityId": "aerosol-source",
+          "geometryAssetId": "prop.contemporary-metal-shop-aerosol-source",
+          "attachmentId": "aerosol-origin",
+          "resolvedAttachmentPosition": [
+            -0.2,
+            1.31,
+            0.75
+          ]
+        },
+        "origin": [
+          -0.2,
+          1.3900000000000001,
+          0.75
+        ],
+        "layer": {
+          "id": "smoke-body",
+          "seed": 8841,
+          "count": 18,
+          "originOffset": [
+            0,
+            0.08,
+            0
+          ],
+          "sourceRadiusMeters": 0.23,
+          "verticalSpanMeters": 2.5,
+          "lifetimeSeconds": 4.2,
+          "riseSpeedMetersPerSecond": {
+            "minimum": 0.38,
+            "maximum": 0.72
+          },
+          "windMetersPerSecond": [
+            0.16,
+            0,
+            0.08
+          ],
+          "turbulenceMeters": 0.2,
+          "color": [
+            0.18,
+            0.21,
+            0.24
+          ],
+          "opacity": 0.25,
+          "kind": "smoke-volume",
+          "particleRadiusMeters": {
+            "minimum": 0.14,
+            "maximum": 0.34
+          },
+          "density": 1.2,
+          "anisotropy": 0.18,
+          "noiseScaleMeters": 0.19,
+          "noiseDetail": 5
+        }
+      },
+      {
+        "source": {
+          "vfxAssetId": "vfx.source-bound-smoke-embers",
+          "entityId": "aerosol-source",
+          "geometryAssetId": "prop.contemporary-metal-shop-aerosol-source",
+          "attachmentId": "aerosol-origin",
+          "resolvedAttachmentPosition": [
+            -0.2,
+            1.31,
+            0.75
+          ]
+        },
+        "origin": [
+          -0.2,
+          1.4100000000000001,
+          0.75
+        ],
+        "layer": {
+          "id": "rising-embers",
+          "seed": 8842,
+          "count": 30,
+          "originOffset": [
+            0,
+            0.1,
+            0
+          ],
+          "sourceRadiusMeters": 0.28,
+          "verticalSpanMeters": 2.2,
+          "lifetimeSeconds": 2.8,
+          "riseSpeedMetersPerSecond": {
+            "minimum": 0.42,
+            "maximum": 1.12
+          },
+          "windMetersPerSecond": [
+            0.2,
+            0,
+            0.11
+          ],
+          "turbulenceMeters": 0.16,
+          "color": [
+            1,
+            0.11,
+            0.008
+          ],
+          "opacity": 0.48,
+          "kind": "ember-particles",
+          "particleRadiusMeters": {
+            "minimum": 0.0025,
+            "maximum": 0.006
+          },
+          "trailLengthMeters": 0.012,
+          "emissionStrength": 2.4
+        }
+      }
+    ]
+  },
+  "overlays": [],
+  "renderGates": [
+    {
+      "id": "aerosol-scene-visible",
+      "type": "frame-visibility",
+      "maximumBlackPercentage": 66,
+      "blackThreshold": 32
+    },
+    {
+      "id": "aerosol-highlight-detail",
+      "type": "frame-overexposure",
+      "maximumWhitePercentage": 3,
+      "whiteThreshold": 245
+    },
+    {
+      "id": "aerosol-source-framed",
+      "type": "subject-framing",
+      "entityId": "aerosol-source",
+      "minimumScreenHeightPercentage": 8,
+      "maximumScreenHeightPercentage": 30,
+      "marginPercentage": 1
+    }
+  ],
+  "qualityGates": [],
+  "landmarks": [
+    {
+      "id": "right-context",
+      "progress": 0,
+      "description": "Right view of source-attached plume"
+    },
+    {
+      "id": "frontal-plume",
+      "progress": 0.5,
+      "description": "Frontal smoke volume and ember separation"
+    },
+    {
+      "id": "left-context",
+      "progress": 1,
+      "description": "Left view proving 3D depth and occlusion"
+    }
+  ],
+  "metadata": {
+    "verificationPurpose": "source-bound-world-space-aerosol-transfer",
+    "hostClass": "contemporary-metal-shop",
+    "sourceVfx": "vfx.source-bound-smoke-embers",
+    "requiredAerosolKinds": [
+      "smoke-volume",
+      "ember-particles"
+    ]
+  }
+}

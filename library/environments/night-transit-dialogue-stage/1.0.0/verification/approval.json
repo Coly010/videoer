@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "campaign": "campaign.last-platform-multicharacter",
+  "sourceId": "dialogue-platform",
+  "asset": {
+    "id": "environment.night-transit-dialogue-stage",
+    "version": "1.0.0"
+  },
+  "reviewer": "codex-agentic-review",
+  "rationale": "Reviewed adaptation compatibility report against the verified parent, all three semantic contact sheets, mutual-facing metrics, full and partial subject coverage, highlight detail, delivery checks, and reusable dialogue-stage capabilities.",
+  "approvedAt": "2026-08-31T00:46:04.030Z"
+}

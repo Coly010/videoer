@@ -1,0 +1,131 @@
+schemaVersion: 1
+id: environment.night-transit-platform
+version: 1.0.1
+type: environment
+title: Abstract night transit platform
+description: Project-owned procedural enclosed platform with cyan and amber
+  light rhythm, semantic camera anchors, runway focus points, and a
+  signal-attention target.
+status: verified
+tags:
+  - transit
+  - platform
+  - night
+  - abstract
+  - fashion
+  - cyan-amber
+capabilities:
+  - deterministic-geometry
+  - enclosed-platform
+  - semantic-camera-anchors
+  - runway-blocking
+  - signal-attention-target
+  - cinematic-light-rhythm
+source:
+  kind: procedural
+  generator: videoer.declarative-geometry.v1
+  references:
+    - provenance/cinematic-campaign.yaml
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: geometry
+    path: geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: 1fa976fd4d34db6f01e5c6043f1cbcb0798762a720f903d317f2c822182924e1
+  - role: source-campaign
+    path: provenance/cinematic-campaign.yaml
+    mediaType: application/yaml
+    sha256: b4c6eefa795b160efa834879a4328e902d33a2c8aa137501b45ce1fcba2690a4
+  - role: verification-platform-establish-scene-render
+    path: verification/shots/platform-establish/scene-render.json
+    mediaType: application/json
+    sha256: da4ae0b60dc352724d2e88331114e0a26ab571367d548c6454e092d30e3495f2
+  - role: verification-platform-establish-contact-sheet
+    path: verification/shots/platform-establish/contact-sheet.png
+    mediaType: image/png
+    sha256: b593f0749beca05957a58d736937c2c0b494ab71de631ae92ca243f29bda50c3
+  - role: verification-platform-establish-framing-report
+    path: verification/shots/platform-establish/framing-report.json
+    mediaType: application/json
+    sha256: cd55c275ac1302a5f50939ef0c9d7e447eaf5f4e9f10574d63528e89a7e5df3b
+  - role: verification-intentional-walk-scene-render
+    path: verification/shots/intentional-walk/scene-render.json
+    mediaType: application/json
+    sha256: 3949cc40716541b827672cf5488bd39b512f0835c8db64d72e3ec7819bdbfc5a
+  - role: verification-intentional-walk-contact-sheet
+    path: verification/shots/intentional-walk/contact-sheet.png
+    mediaType: image/png
+    sha256: c580adb72a9f18c8350c4009ba02d8df5ba5046103ba47aa22f90eb5fb770736
+  - role: verification-intentional-walk-framing-report
+    path: verification/shots/intentional-walk/framing-report.json
+    mediaType: application/json
+    sha256: 7395d5a32a650b55911e27af0ee790a08afae081abcdab72a0d460b78900b1db
+  - role: verification-signal-attention-scene-render
+    path: verification/shots/signal-attention/scene-render.json
+    mediaType: application/json
+    sha256: 2318a074a7f45b97b8f4cebc5048edad9c57a8ed65b885dd2f463cd8d865af46
+  - role: verification-signal-attention-contact-sheet
+    path: verification/shots/signal-attention/contact-sheet.png
+    mediaType: image/png
+    sha256: d6f4782357be83357c86e677d8b306cb7c5a225bd65262a0f2c343c98df1afc6
+  - role: verification-signal-attention-framing-report
+    path: verification/shots/signal-attention/framing-report.json
+    mediaType: application/json
+    sha256: 0878609d60bcb520d883c3e1239af56da0360e684b6e6ad2fa5cfa7aec424868
+  - role: verification-after-hours-resolve-scene-render
+    path: verification/shots/after-hours-resolve/scene-render.json
+    mediaType: application/json
+    sha256: ef928e04066a8ab7061c2467985250e73992cc28b88700356d2d8402c3c14ba3
+  - role: verification-after-hours-resolve-contact-sheet
+    path: verification/shots/after-hours-resolve/contact-sheet.png
+    mediaType: image/png
+    sha256: 48470f99c0937ab862ab6d502b7257c8546dd21cb155a4446bbe7227b63dad7c
+  - role: verification-after-hours-resolve-framing-report
+    path: verification/shots/after-hours-resolve/framing-report.json
+    mediaType: application/json
+    sha256: ed2552465974cc6c15462c1cce98c49149b2389f5ff70e8e63195c4cf1a32e36
+  - role: verification-campaign-delivery
+    path: verification/campaign-delivery-report.json
+    mediaType: application/json
+    sha256: 8af4ceb3c6b1962a2991d78d687534469084be51afe9f1d27d2d01f2bb84e091
+  - role: verification-approval
+    path: verification/approval.json
+    mediaType: application/json
+    sha256: 912c9b99931708dcb94ae6ebb549baac2d03f2a770f8b3092233a3a8995ef898
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - three-3d
+    - blender-headless
+  requires: []
+verification:
+  checks:
+    - geometry.schema
+    - attachments.semantic-camera-anchors
+    - environment.camera-interior-clearance
+    - visual.multi-shot-continuity
+    - visual.highlight-detail
+    - visual.subject-framing
+    - campaign.delivery.verified
+    - review.operator-approved
+  artifacts:
+    - verification/shots/platform-establish/scene-render.json
+    - verification/shots/platform-establish/contact-sheet.png
+    - verification/shots/platform-establish/framing-report.json
+    - verification/shots/intentional-walk/scene-render.json
+    - verification/shots/intentional-walk/contact-sheet.png
+    - verification/shots/intentional-walk/framing-report.json
+    - verification/shots/signal-attention/scene-render.json
+    - verification/shots/signal-attention/contact-sheet.png
+    - verification/shots/signal-attention/framing-report.json
+    - verification/shots/after-hours-resolve/scene-render.json
+    - verification/shots/after-hours-resolve/contact-sheet.png
+    - verification/shots/after-hours-resolve/framing-report.json
+    - verification/campaign-delivery-report.json
+    - verification/approval.json
+  verifiedAt: 2026-08-31T00:17:57.271Z

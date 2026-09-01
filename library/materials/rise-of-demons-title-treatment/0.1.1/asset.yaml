@@ -1,0 +1,54 @@
+schemaVersion: 1
+id: material.rise-of-demons-title-treatment
+version: 0.1.1
+type: material
+title: Rise of Demons restrained editorial title treatment
+description: Original vertical-safe restrained serif typography and
+  threshold-line motif with deterministic FFmpeg rendering.
+status: verified
+tags:
+  - typography
+  - title
+  - editorial
+capabilities:
+  - vertical-safe-area
+  - deterministic-render
+source:
+  kind: self-authored
+  generator: videoer.editorial-title.v1
+  references:
+    - '@fontsource/cormorant-garamond@5.3.0'
+  licence:
+    spdx: LicenseRef-Videoer-Project-AND-OFL-1.1
+    name: Videoer project-owned design with OFL-1.1 Cormorant Garamond
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: title-treatment
+    path: title-treatment.json
+    mediaType: application/vnd.videoer.title+json
+    sha256: 5d7cbe54c93eaf7efbe2408ae4040e15b3de62ae8cbe75c311f50c6e7d0e47bf
+  - role: preview
+    path: title-card.png
+    mediaType: image/png
+    sha256: 8299e46d646cdf3be5383e7e20410a6adda0d9a4ac7b47deea0b9b0ae4451ea8
+  - role: transparent-overlay
+    path: title-overlay.png
+    mediaType: image/png
+    sha256: 5617ce9435f3299b2937ce38c8a7f5acb844b67c574997493697b79f255a8df6
+compatibility:
+  renderers:
+    - ffmpeg-full
+    - remotion
+  requires: []
+verification:
+  checks:
+    - title.vertical-safe-area
+    - title.exact-font-dependency
+    - title.original-copy
+    - title.deterministic-1080x1920-render
+  artifacts:
+    - title-card.png
+    - title-overlay.png
+  verifiedAt: 2026-08-30T22:44:28.815Z

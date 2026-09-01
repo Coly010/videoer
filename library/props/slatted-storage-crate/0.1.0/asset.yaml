@@ -1,0 +1,69 @@
+schemaVersion: 1
+id: prop.slatted-storage-crate
+version: 0.1.0
+type: prop
+title: Slatted storage crate
+description: Project-owned medium/background crate with separated boards,
+  interior depth, corner reinforcement, procedural wood and named grip/stack
+  attachments.
+status: verified
+tags:
+  - set-dressing
+  - storage
+  - portable
+  - inhabited-environment
+capabilities:
+  - portable-geometry
+  - ground-placement
+  - named-stack-attachment
+  - medium-background-quality-tier
+source:
+  kind: procedural
+  generator: videoer.street-storage-props.v1
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: geometry
+    path: geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: 60ad56caa44e0153136ee627bc392a112d0a9b888893af3df469863b8b7c758c
+  - role: validation
+    path: validation.json
+    mediaType: application/json
+    sha256: 5a6fe644860c83003673b5e95842a958acfc5656d7a2094e5b9894f3cc5510da
+  - role: old-city-family-contact-sheet
+    path: verification/old-city-alley-family-contact-sheet.png
+    mediaType: image/png
+    sha256: 0107a4be7eb8a3251c502867a084cbd0b5ea24123c6c44ae01b3b41cd78cbc56
+  - role: contemporary-family-contact-sheet
+    path: verification/contemporary-loading-dock-family-contact-sheet.png
+    mediaType: image/png
+    sha256: 7e5878715e6cd4c86e082e42cf1eb4cc238d53d8529ba2fc0418a1f7afc7eaad
+  - role: family-transfer-summary
+    path: verification/family-transfer-summary.json
+    mediaType: application/json
+    sha256: 471a31f99febd67ca1b2c6d70cf6b916ee912bad26ebcf3d320ca397873e2af0
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - three-3d
+    - blender-headless
+  requires: []
+verification:
+  checks:
+    - geometry.topology
+    - geometry.material-groups
+    - attachments.ground-and-stack
+    - visual.old-city-family-transfer-accepted
+    - visual.contemporary-family-transfer-accepted
+    - prop.medium-background-shot-distance-accepted
+  artifacts:
+    - verification/old-city-alley-family-contact-sheet.png
+    - verification/contemporary-loading-dock-family-contact-sheet.png
+    - verification/family-transfer-summary.json
+  verifiedAt: 2026-09-01T05:52:00.000Z

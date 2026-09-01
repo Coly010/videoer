@@ -1,0 +1,294 @@
+{
+  "schemaVersion": 1,
+  "requestId": "layout.contemporary-pop-up-market-world",
+  "familyId": "environment.market-world-family",
+  "seed": 10381,
+  "attempts": 18,
+  "instances": [
+    {
+      "id": "layout.contemporary-pop-up-market-world.cluster-001.member-01",
+      "clusterId": "layout.contemporary-pop-up-market-world.cluster-001",
+      "recipeId": "provision-cache",
+      "variantId": "provision-sack",
+      "geometryAssetId": "prop.tied-provision-sack",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          3.8785617880316594,
+          0,
+          2.162133914814951
+        ],
+        "rotation": [
+          0,
+          -0.7342507020498424,
+          0
+        ],
+        "scale": [
+          1.0285302282776685,
+          1.0285302282776685,
+          1.0285302282776685
+        ]
+      },
+      "footprintRadiusMeters": 0.42169739359384406,
+      "heightMeters": 0.9668184145810084
+    },
+    {
+      "id": "layout.contemporary-pop-up-market-world.cluster-001.member-02",
+      "clusterId": "layout.contemporary-pop-up-market-world.cluster-001",
+      "recipeId": "provision-cache",
+      "variantId": "provision-sack",
+      "geometryAssetId": "prop.tied-provision-sack",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          4.640200067594259,
+          0,
+          2.0996268663730047
+        ],
+        "rotation": [
+          0,
+          -0.38013992160081855,
+          0
+        ],
+        "scale": [
+          0.9731788444514388,
+          0.9731788444514388,
+          0.9731788444514388
+        ]
+      },
+      "footprintRadiusMeters": 0.3990033262250899,
+      "heightMeters": 0.9147881137843524
+    },
+    {
+      "id": "layout.contemporary-pop-up-market-world.cluster-002.member-01",
+      "clusterId": "layout.contemporary-pop-up-market-world.cluster-002",
+      "recipeId": "produce-display-trio",
+      "variantId": "produce-basket",
+      "geometryAssetId": "prop.produce-basket",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          4.670155834023407,
+          0,
+          0.22183682319987166
+        ],
+        "rotation": [
+          0,
+          -0.003574541604100922,
+          0
+        ],
+        "scale": [
+          1.006147750541568,
+          1.006147750541568,
+          1.006147750541568
+        ]
+      },
+      "footprintRadiusMeters": 0.47288944275453687,
+      "heightMeters": 0.8149796779386701
+    },
+    {
+      "id": "layout.contemporary-pop-up-market-world.cluster-002.member-02",
+      "clusterId": "layout.contemporary-pop-up-market-world.cluster-002",
+      "recipeId": "produce-display-trio",
+      "variantId": "produce-basket",
+      "geometryAssetId": "prop.produce-basket",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          5.26629143990255,
+          0,
+          0.16248752326206894
+        ],
+        "rotation": [
+          0,
+          0.0457902278140877,
+          0
+        ],
+        "scale": [
+          0.8919058352470399,
+          0.8919058352470399,
+          0.8919058352470399
+        ]
+      },
+      "footprintRadiusMeters": 0.41919574256610875,
+      "heightMeters": 0.7224437265501024
+    },
+    {
+      "id": "layout.contemporary-pop-up-market-world.cluster-002.member-03",
+      "clusterId": "layout.contemporary-pop-up-market-world.cluster-002",
+      "recipeId": "produce-display-trio",
+      "variantId": "produce-basket",
+      "geometryAssetId": "prop.produce-basket",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          5.792094146893608,
+          0,
+          0.426175811437474
+        ],
+        "rotation": [
+          0,
+          0.13191384865112735,
+          0
+        ],
+        "scale": [
+          0.8745573171898723,
+          0.8745573171898723,
+          0.8745573171898723
+        ]
+      },
+      "footprintRadiusMeters": 0.41104193907923997,
+      "heightMeters": 0.7083914269237966
+    },
+    {
+      "id": "layout.contemporary-pop-up-market-world.cluster-003.member-01",
+      "clusterId": "layout.contemporary-pop-up-market-world.cluster-003",
+      "recipeId": "complete-merchandised-stall",
+      "variantId": "market-stall",
+      "geometryAssetId": "prop.modular-market-stall",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          -3.897305436659033,
+          0,
+          1.5559880499914756
+        ],
+        "rotation": [
+          0,
+          0.09679797155319599,
+          0
+        ],
+        "scale": [
+          0.9969224833021871,
+          0.9969224833021871,
+          0.9969224833021871
+        ]
+      },
+      "footprintRadiusMeters": 1.8542758189420683,
+      "heightMeters": 2.8312598525782113
+    },
+    {
+      "id": "layout.contemporary-pop-up-market-world.cluster-003.member-02",
+      "clusterId": "layout.contemporary-pop-up-market-world.cluster-003",
+      "recipeId": "complete-merchandised-stall",
+      "variantId": "produce-basket",
+      "geometryAssetId": "prop.produce-basket",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          -4.57222757438654,
+          1.09,
+          0.8229941154972444
+        ],
+        "rotation": [
+          0,
+          0.47724160946266875,
+          0
+        ],
+        "scale": [
+          0.7587736217290163,
+          0.7587736217290163,
+          0.7587736217290163
+        ]
+      },
+      "footprintRadiusMeters": 0.3566236022126376,
+      "heightMeters": 0.6146066336005033
+    },
+    {
+      "id": "layout.contemporary-pop-up-market-world.cluster-003.member-03",
+      "clusterId": "layout.contemporary-pop-up-market-world.cluster-003",
+      "recipeId": "complete-merchandised-stall",
+      "variantId": "produce-basket",
+      "geometryAssetId": "prop.produce-basket",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          -3.0506934481845125,
+          1.09,
+          1.0607627063637306
+        ],
+        "rotation": [
+          0,
+          0.043534243191844305,
+          0
+        ],
+        "scale": [
+          0.7113984138414264,
+          0.7113984138414264,
+          0.7113984138414264
+        ]
+      },
+      "footprintRadiusMeters": 0.3343572545054704,
+      "heightMeters": 0.5762327152115555
+    },
+    {
+      "id": "layout.contemporary-pop-up-market-world.cluster-003.member-04",
+      "clusterId": "layout.contemporary-pop-up-market-world.cluster-003",
+      "recipeId": "complete-merchandised-stall",
+      "variantId": "provision-sack",
+      "geometryAssetId": "prop.tied-provision-sack",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          -4.797626544752479,
+          0.42,
+          1.2938394235953228
+        ],
+        "rotation": [
+          0,
+          -0.5355987594473167,
+          0
+        ],
+        "scale": [
+          0.6703263724232092,
+          0.6703263724232092,
+          0.6703263724232092
+        ]
+      },
+      "footprintRadiusMeters": 0.27483381269351576,
+      "heightMeters": 0.6301067900778167
+    },
+    {
+      "id": "layout.contemporary-pop-up-market-world.cluster-003.member-05",
+      "clusterId": "layout.contemporary-pop-up-market-world.cluster-003",
+      "recipeId": "complete-merchandised-stall",
+      "variantId": "provision-sack",
+      "geometryAssetId": "prop.tied-provision-sack",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          -2.9759853825193034,
+          0.42,
+          1.6189908899271932
+        ],
+        "rotation": [
+          0,
+          0.4488313282105136,
+          0
+        ],
+        "scale": [
+          0.7377031967462973,
+          0.7377031967462973,
+          0.7377031967462973
+        ]
+      },
+      "footprintRadiusMeters": 0.30245831066598183,
+      "heightMeters": 0.6934410049415194
+    }
+  ],
+  "verification": {
+    "requestedClusterCount": 3,
+    "placedClusterCount": 3,
+    "placedCount": 10,
+    "requiredVariantIds": [
+      "market-stall",
+      "produce-basket",
+      "provision-sack"
+    ],
+    "allRequiredVariantsPresent": true,
+    "exclusionCount": 2,
+    "deterministic": true,
+    "overlapFree": true,
+    "navigationClearancePreserved": true
+  }
+}

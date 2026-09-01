@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "campaign": "campaign.after-hours-character",
+  "sourceFile": "/Users/colum/dev/personal/videoer/campaigns/after-hours-character-conformance/cinematic-campaign.yaml",
+  "sourceLines": 248,
+  "bespokeOrchestrationSourceFiles": 0,
+  "generatedGeometry": 1,
+  "generatedMotionSources": 1,
+  "generatedMotionTimelines": 2,
+  "motionReport": "/Users/colum/dev/personal/videoer/campaigns/after-hours-character-conformance/work/motions/motion-build-report.json",
+  "assetManifestFile": "/Users/colum/dev/personal/videoer/campaigns/after-hours-character-conformance/work/asset-manifest.yaml",
+  "publicationCandidatesDeclared": 1,
+  "publicationCandidatesFile": "/Users/colum/dev/personal/videoer/campaigns/after-hours-character-conformance/work/publication-candidates/manifest.yaml",
+  "scenes": [
+    "scene.platform-establish",
+    "scene.intentional-walk",
+    "scene.signal-attention",
+    "scene.after-hours-resolve"
+  ],
+  "editPlanFile": "/Users/colum/dev/personal/videoer/campaigns/after-hours-character-conformance/work/edit/edit-plan.json",
+  "delivery": "/Users/colum/dev/personal/videoer/campaigns/after-hours-character-conformance/delivery/after-hours-character.mp4"
+}

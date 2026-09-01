@@ -1,0 +1,259 @@
+schemaVersion: 1
+id: campaign.rainwalk-square-crossdomain-conformance
+fps: 24
+resolution: {width: 480, height: 480, percentage: 100}
+assetLibrary: ../../library
+
+materialSources:
+  - id: rain-polished-stone
+    path: work/materials/rain-polished-stone.json
+    library:
+      type: material
+      query: wet old city cobble
+      tags: [stone, cobble, wet]
+      capabilities: [procedural, albedo, normal, roughness, cold-blue-treatment]
+      preferredAsset: {id: material.wet-old-city-cobble, version: 0.1.0}
+      artifactRole: material
+    adaptation:
+      kind: surface-treatment
+      assetId: material.rainwalk-blue-cobble
+      providesCapabilities: [cold-blue-treatment]
+      baseColor:
+        colors:
+          - [0.025, 0.045, 0.07, 1]
+          - [0.055, 0.085, 0.12, 1]
+          - [0.018, 0.032, 0.052, 1]
+        scaleMeters: 0.38
+        seed: 7349
+      normal: {strength: 0.82, scaleMeters: 0.32}
+      roughness: {minimum: 0.1, maximum: 0.26, variationScaleMeters: 0.38, wetness: 0.92}
+      metallic: 0.035
+      metadata: {creativeIntent: rain-polished blue stone under a cold dawn key}
+      publication:
+        assetId: material.rainwalk-blue-cobble
+        version: 1.0.0
+        type: material
+        title: Rainwalk blue cobble surface
+        description: Deterministic cold-blue rain-polished cobble treatment derived from the verified old-city surface model.
+        tags: [stone, cobble, wet, cold-blue]
+        capabilities: [procedural, albedo, normal, roughness, cold-blue-treatment]
+        generator: videoer.surface-treatment.v1
+        renderers: [blender-headless]
+        verification:
+          checks: [material.schema, material.model-preserved, material.procedural-node-render, visual.rain-polished-surface]
+          shots: [rainwalk]
+
+vfxSources:
+  - id: restrained-rain
+    path: work/vfx/restrained-rain.json
+    library:
+      type: vfx
+      query: camera depth rainy dusk atmosphere
+      tags: [rain, fog, dusk]
+      capabilities: [camera-depth, deterministic-seed, foreground-background, restrained-rain]
+      preferredAsset: {id: vfx.rainy-dusk-depth, version: 0.1.0}
+      artifactRole: vfx
+    adaptation:
+      kind: atmospheric-treatment
+      assetId: vfx.rainwalk-restrained-blue-rain
+      providesCapabilities: [restrained-rain]
+      worldColor: [0.008, 0.014, 0.026]
+      fog: {density: 0.0045, color: [0.12, 0.18, 0.28]}
+      rain:
+        layers:
+          - {id: foreground, count: 30, opacity: 0.42, streakLengthMeters: 0.2}
+          - {id: midground, count: 72, opacity: 0.3, streakLengthMeters: 0.14}
+          - {id: background, count: 112, opacity: 0.18, streakLengthMeters: 0.09}
+      metadata: {creativeIntent: legible garment silhouette in restrained square-format rain}
+      publication:
+        assetId: vfx.rainwalk-restrained-blue-rain
+        version: 1.0.0
+        type: vfx
+        title: Rainwalk restrained blue rain
+        description: Deterministic restrained blue rain and fog treatment preserving the verified three-band camera-depth topology.
+        tags: [rain, fog, restrained, cold-blue]
+        capabilities: [camera-depth, deterministic-seed, foreground-background, restrained-rain]
+        generator: videoer.atmospheric-treatment.v1
+        renderers: [blender-headless]
+        verification:
+          checks: [vfx.schema, vfx.seed-topology-preserved, vfx.camera-relative-placement, visual.depth-separation]
+          shots: [rainwalk]
+
+geometry:
+  - id: ground
+    path: work/geometry/ground.json
+    materialBindings:
+      - {targetMaterialId: ground, material: rain-polished-stone}
+    recipe:
+      assetId: environment.rainwalk-square-ground
+      primitives:
+        - {kind: box, minimum: [-4, -0.12, -5], maximum: [4, 0, 3], materialId: ground}
+      materials:
+        - id: ground
+          baseColor: [0.04, 0.06, 0.08, 1]
+          roughness: 0.4
+          metallic: 0
+          emission: [0, 0, 0]
+          emissionStrength: 0
+      attachments: {}
+      metadata: {purpose: procedural surface-material and atmospheric conformance stage}
+  - id: walker
+    library:
+      type: character
+      query: parametric humanoid mannequin
+      tags: [humanoid, mannequin, procedural]
+      capabilities: [canonical-humanoid-rig, skinned-mesh, continuous-body-parameters]
+      preferredAsset: {id: character.humanoid-mannequin, version: 0.4.0}
+      artifactRole: geometry
+
+clothingSources:
+  - id: fitted-dress
+    path: work/clothing/fitted-dress.json
+    library:
+      type: clothing
+      query: Elara midnight period dress
+      tags: [long-dress, dark, period-inspired]
+      capabilities: [canonical-humanoid-fit, walk-deformation, reusable-material, target-character-fit]
+      preferredAsset: {id: clothing.elara-midnight-dress, version: 0.1.0}
+      artifactRole: geometry
+    adaptation:
+      kind: canonical-clothing-fit
+      assetId: clothing.rainwalk-fitted-midnight-dress
+      targetGeometry: walker
+      clearanceMeters: 0.012
+      skinningPolicy: long-dress-drape-v1
+      providesCapabilities: [target-character-fit]
+      metadata: {creativeIntent: independently composable rain silhouette with physical body clearance}
+      publication:
+        assetId: clothing.rainwalk-fitted-midnight-dress
+        version: 1.0.0
+        type: clothing
+        title: Rainwalk fitted midnight dress
+        description: Canonical long dress fitted to the parametric mannequin with explicit surface clearance and pelvis-dominant drape weights.
+        tags: [long-dress, dark, fitted, drape]
+        capabilities: [canonical-humanoid-fit, walk-deformation, reusable-material, target-character-fit, long-dress-drape]
+        generator: videoer.canonical-clothing-fit.v1
+        renderers: [blender-headless]
+        verification:
+          checks: [clothing.topology-preserved, clothing.target-skeleton, clothing.surface-clearance, clothing.hem-weight-bound, visual.walk-deformation]
+          shots: [rainwalk]
+
+motions:
+  - id: neutral-walk
+    library:
+      type: motion
+      query: natural neutral walk
+      tags: [humanoid, walk, naturalistic, neutral]
+      capabilities: [canonical-humanoid-motion, phase-based-locomotion, heel-toe-foot-mechanics]
+      preferredAsset: {id: motion.walk-natural-neutral, version: 1.1.1}
+      artifactRole: motion
+
+motionTimelines:
+  - id: continuous-walk
+    clipId: motion.rainwalk-continuous
+    path: work/motions/continuous-walk.json
+    frames: 96
+    layers:
+      - id: gait
+        motion: neutral-walk
+        mode: base
+        startFrame: 0
+        endFrame: 96
+        playback: loop
+        weight: 1
+    metadata: {purpose: repeat the verified phase gait without campaign-specific animation code}
+
+overlays: []
+
+soundtrackPath: work/audio/soundtrack.wav
+soundtrack:
+  schemaVersion: 1
+  id: audio.rainwalk-square
+  durationSeconds: 4
+  sampleRate: 48000
+  channels: 2
+  cues:
+    - id: rain-tone
+      kind: tone-bed
+      startSeconds: 0
+      endSeconds: 4
+      gain: 0.05
+      frequencyHz: 92
+      purpose: restrained low dawn ambience
+    - id: pulse
+      kind: tonal-accent
+      startSeconds: 0.4
+      endSeconds: 3.8
+      gain: 0.07
+      frequencyHz: 184
+      purpose: measured walking cadence
+
+shots:
+  - id: rainwalk
+    frames: 96
+    entities:
+      - id: stage
+        geometry: ground
+        role: environment
+      - id: walker
+        geometry: walker
+        role: character
+        transform: {position: [0, 0, 1.1], rotation: [0, 0, 0], scale: [1, 1, 1]}
+        motion: {source: continuous-walk, startFrame: 0, endFrame: 96}
+        wardrobe:
+          - {clothing: fitted-dress}
+    camera:
+      keyframes:
+        - time: 0
+          position: {world: [3.5, 1.65, 2.7]}
+          target: {world: [0, 0.9, 0.1]}
+          lensMillimeters: 52
+        - time: 4
+          position: {world: [3.5, 1.65, -1.04]}
+          target: {world: [0, 0.9, -3.64]}
+          lensMillimeters: 52
+    lights:
+      - id: cold-key
+        type: area
+        position: [2.8, 4.2, 2.2]
+        target: [0, 0.9, -0.4]
+        color: [0.42, 0.62, 1]
+        energy: 760
+        sizeMeters: 3
+      - id: soft-rim
+        type: area
+        position: [-3, 2.8, -1.5]
+        target: [0, 1, -0.4]
+        color: [0.28, 0.48, 0.86]
+        energy: 520
+        sizeMeters: 2.2
+      - id: face-fill
+        type: point
+        position: [1.4, 1.8, 0.8]
+        color: [0.7, 0.82, 1]
+        energy: 120
+    vfx: restrained-rain
+    renderGates:
+      - {id: rainwalk-visible, type: frame-visibility, maximumBlackPercentage: 82}
+      - {id: walker-framed, type: subject-framing, entityId: walker, minimumScreenHeightPercentage: 32, maximumScreenHeightPercentage: 90, marginPercentage: 2}
+      - {id: walker-highlight, type: subject-overexposure, entityId: walker, maximumWhitePercentage: 10}
+    qualityGates:
+      - {id: walker-forward, type: directional-motion, entityId: walker, minimumDistanceMeters: 1, minimumForwardDot: 0.9}
+    landmarks:
+      - {id: first-contact, progress: 0, description: fitted garment and procedural wet surface at first contact}
+      - {id: weight-transfer, progress: 0.5, description: garment follows the shared gait through mid-shot weight transfer}
+      - {id: final-contact, progress: 1, description: final grounded contact under restrained layered rain}
+    metadata:
+      campaignClass: square atmospheric fashion vignette
+      conformancePurpose: cross-domain VFX material clothing reuse and adaptation
+
+delivery:
+  id: edit.rainwalk-square
+  directory: delivery
+  codec: h264
+  pixelFormat: yuv420p
+  fastStart: true
+
+metadata:
+  campaignClass: square atmospheric fashion vignette
+  reusableSubsystems: [verified-library-resolution, atmospheric-vfx-treatment, procedural-surface-binding, canonical-clothing-fit, wardrobe-motion-synchronisation]

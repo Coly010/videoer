@@ -1,0 +1,10 @@
+{
+  "valid": true,
+  "issues": [],
+  "checks": {
+    "maximumContactErrorMeters": 2.3551386880256624e-16,
+    "minimumElbowBendRadians": 0.3352406747144433,
+    "doorOpenRadians": 0.78,
+    "handleTurnRadians": 0.42
+  }
+}

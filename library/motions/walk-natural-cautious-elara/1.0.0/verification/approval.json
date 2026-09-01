@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "campaign": "campaign.last-platform-multicharacter",
+  "sourceId": "elara-grounded-pose",
+  "asset": {
+    "id": "motion.walk-natural-cautious-elara",
+    "version": "1.0.0"
+  },
+  "reviewer": "codex-agentic-review",
+  "rationale": "Reviewed the regenerated three-shot delivery, contact sheets, framing reports, canonical forward direction, foot-contact constraints, joint limits, parent motion hash, and Elara target-geometry hash. The proportion-aware phase-gait re-synthesis preserves the intended cautious performance without backward travel or anatomically reversed knee motion.",
+  "approvedAt": "2026-08-31T00:57:41.602Z"
+}

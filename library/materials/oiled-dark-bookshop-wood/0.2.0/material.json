@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "id": "material.oiled-dark-bookshop-wood",
+  "shadingModel": "metallic-roughness",
+  "baseColor": {
+    "kind": "procedural-palette",
+    "colors": [
+      [
+        0.06,
+        0.014,
+        0.005,
+        1
+      ],
+      [
+        0.14,
+        0.038,
+        0.01,
+        1
+      ],
+      [
+        0.09,
+        0.022,
+        0.006,
+        1
+      ],
+      [
+        0.19,
+        0.065,
+        0.016,
+        1
+      ]
+    ],
+    "scaleMeters": 0.17,
+    "seed": 2316
+  },
+  "normal": {
+    "kind": "procedural-noise",
+    "strength": 0.2,
+    "scaleMeters": 0.016
+  },
+  "roughness": {
+    "minimum": 0.28,
+    "maximum": 0.52,
+    "variationScaleMeters": 0.13,
+    "wetness": 0.08
+  },
+  "pattern": {
+    "kind": "directional-wood",
+    "grainAxis": "x",
+    "grainWidthMeters": 0.014,
+    "longitudinalScaleMeters": 0.62,
+    "distortion": 5.2,
+    "ringContrast": 0.58
+  },
+  "metallic": 0,
+  "metadata": {
+    "generator": "videoer.old-city-surface-library.v3",
+    "coordinateScale": "object-space-metres",
+    "layeredResponse": [
+      "surface-specific-pattern",
+      "palette",
+      "micro-normal",
+      "roughness-variation",
+      "wet-coat"
+    ]
+  }
+}

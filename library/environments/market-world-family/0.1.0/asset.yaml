@@ -1,0 +1,120 @@
+schemaVersion: 1
+id: environment.market-world-family
+version: 0.1.0
+type: environment
+title: Portable market stall and physical merchandising family
+description: Renderer-independent market-world family combining a reusable
+  structural stall with physical merchandise inventory and authored
+  merchandising clusters across unrelated hosts.
+status: verified
+tags:
+  - market
+  - stall
+  - merchandising
+  - produce
+  - inhabited-environment
+capabilities:
+  - portable-set-dressing-family
+  - explicit-member-versions
+  - deterministic-seeded-layout
+  - authored-physical-merchandising
+  - navigation-clearance-preservation
+  - cross-environment-transfer
+  - medium-background-quality-tier
+source:
+  kind: procedural
+  generator: videoer.market-world-family.v1
+  sourceAssets:
+    - prop.modular-market-stall@0.1.0
+    - prop.produce-basket@0.1.0
+    - prop.tied-provision-sack@0.1.0
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: dressing-family
+    path: family.json
+    mediaType: application/json
+    sha256: 818613a6276cb6f81b1c79a43d2b7480077a27b4627cd9739246ca0316f357ac
+  - role: historic-market-square-host
+    path: verification/historic-market-square/host-geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: 87bf12086f1094a9c203b6aeaafddf85d58d43c5e76f09902aa8206c02097355
+  - role: historic-market-square-layout-request
+    path: verification/historic-market-square/layout-request.json
+    mediaType: application/json
+    sha256: df3bf1bac56aeac6d5d78c34f7e4393182a5b7150894572b28786fd0f5602121
+  - role: historic-market-square-layout-report
+    path: verification/historic-market-square/layout-report.json
+    mediaType: application/json
+    sha256: 0e847b50e952aa63143d26cc9bc240ccbde364e26e42adf1e98bdd1e789dcba6
+  - role: historic-market-square-contact-sheet
+    path: verification/historic-market-square/contact-sheet.png
+    mediaType: image/png
+    sha256: af3528239bbbbb9540f749569281c833522776a7f2c1f8d74ef37152b269edb8
+  - role: historic-market-square-render-report
+    path: verification/historic-market-square/scene-render.json
+    mediaType: application/json
+    sha256: 4f10b0c357f6941844f383103b1d4992b90920b210e57337b0d31332159cac33
+  - role: contemporary-pop-up-host
+    path: verification/contemporary-pop-up/host-geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: 8146cf7d6e15ecbd816d8ed807f2d26230026079e93331a7ca31c40b5758a07a
+  - role: contemporary-pop-up-layout-request
+    path: verification/contemporary-pop-up/layout-request.json
+    mediaType: application/json
+    sha256: e4de1f5d0242a9055ac6847825bf1bfa108cc07521934740456b7ada3bc0dc13
+  - role: contemporary-pop-up-layout-report
+    path: verification/contemporary-pop-up/layout-report.json
+    mediaType: application/json
+    sha256: 37d770735a0d200c16641d09babf9d445f994348bd48c91cff7666569496e7ca
+  - role: contemporary-pop-up-contact-sheet
+    path: verification/contemporary-pop-up/contact-sheet.png
+    mediaType: image/png
+    sha256: 7458a9a915e891778b9b0ee765b0c8d5aa8ec9405ac3a89adb294acb38a6a899
+  - role: contemporary-pop-up-render-report
+    path: verification/contemporary-pop-up/scene-render.json
+    mediaType: application/json
+    sha256: 7ad264cfad3f56ac6d4650d526d2a27ab5c46a420e53ddfd32be4cd7fa3f8188
+  - role: qualitative-review
+    path: verification/family-candidate-review.json
+    mediaType: application/json
+    sha256: b5cfdee1388594c846e7f4b2784c99c3a91d3867ef61d22796eeb908979285e6
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - three-3d
+    - blender-headless
+  requires:
+    - id: prop.modular-market-stall
+      version: 0.1.0
+    - id: prop.produce-basket
+      version: 0.1.0
+    - id: prop.tied-provision-sack
+      version: 0.1.0
+verification:
+  checks:
+    - family.schema-and-explicit-versions
+    - layout.deterministic-seed
+    - layout.required-variant-coverage
+    - layout.navigation-clearance
+    - merchandising.physical-inventory
+    - visual.historic-market-square-accepted
+    - visual.contemporary-pop-up-accepted
+    - layout.required-variant-coverage-accepted
+    - layout.every-entity-inspectable
+    - merchandising.complete-physical-stall-cluster-accepted
+    - family.medium-background-shot-distance-accepted
+  artifacts:
+    - verification/historic-market-square/layout-report.json
+    - verification/historic-market-square/contact-sheet.png
+    - verification/historic-market-square/scene-render.json
+    - verification/contemporary-pop-up/layout-report.json
+    - verification/contemporary-pop-up/contact-sheet.png
+    - verification/contemporary-pop-up/scene-render.json
+    - verification/family-candidate-review.json
+  verifiedAt: 2026-09-01T10:03:00.000Z

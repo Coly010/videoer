@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "assetId": "prop.projecting-supported-canopy",
+  "decision": "accepted",
+  "reviewer": "codex-visual-review",
+  "reviewedAt": "2026-09-01T07:45:35.000Z",
+  "intendedShotDistance": "medium",
+  "evidence": [
+    "verification/old-city-shopfront/contact-sheet.png",
+    "verification/old-city-shopfront/scene-render.json",
+    "verification/old-city-shopfront/host-contract-report.json",
+    "verification/contemporary-gallery-entrance/contact-sheet.png",
+    "verification/contemporary-gallery-entrance/scene-render.json",
+    "verification/contemporary-gallery-entrance/host-contract-report.json"
+  ],
+  "strengths": [
+    "The exact same canopy geometry integrates with old-city plaster/timber and a contemporary gallery facade without host-specific mesh edits.",
+    "Elevated views show staggered overlapping physical slate rows, column joints, metal flashing, fascia and the measurable frontward roof fall.",
+    "Frontal and glancing views retain three complete double-rail iron load paths and a coherent supported projection rather than floating slab geometry.",
+    "Timber, slate, iron and flashing remain materially distinct under both cool/warm lighting topologies without clipped highlights."
+  ],
+  "limitations": [
+    "Accepted for background and medium use only; tile chips, individual fasteners, bracket welds, flashing folds and timber joinery are insufficient for close or hero-close inspection.",
+    "The canopy exposes rainwater attachment points but does not include a gutter; campaigns must compose a compatible separately verified rainwater asset.",
+    "Snow, standing water, wind loading, structural engineering calculations and animated damage are not implemented.",
+    "Host compatibility assumes a vertical facade, the declared clear wall span, mount-height range and unobstructed projecting volume."
+  ],
+  "notes": "Accepted after rejecting V1 for a cropped 99.8%-width frontal inspection and for a slate covering that read as one smooth sheet. V2 widens only the frontal camera and adds staggered physical slate inventory over the continuous underlay. Acceptance must independently count physical slate components, verify drainage mathematics, construction semantics, all rainwater/practical anchors, host span-height-clearance, exact geometry reuse, distinct pixels and every render gate."
+}

@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "kind": "cool-interior",
+  "source": {
+    "asset": "vfx.rainy-dusk-depth@0.2.0",
+    "path": "/Users/colum/dev/personal/videoer/library/vfx/rainy-dusk-depth/0.2.0/verification/rainy-dusk-vfx-probe.mp4",
+    "filename": "rainy-dusk-vfx-probe.mp4",
+    "sha256": "5260b39faa7ba18173b070b1d18c9837117f27f6737737ae1336ddbce4e3d530",
+    "media": {
+      "codec": "h264",
+      "width": 360,
+      "height": 640,
+      "pixelFormat": "yuv420p",
+      "frameRate": "24/1",
+      "frames": 12,
+      "durationSeconds": 0.5,
+      "audioStreamCount": 0
+    },
+    "midpoint": {
+      "frame": 5,
+      "sha256": "9a774679d0c94ac64cc7ce4d828f0d127cfead02fdd44108db44c5f177de86c5",
+      "black": 22,
+      "white": 0
+    }
+  },
+  "output": {
+    "path": "/Users/colum/dev/personal/videoer/work/vfx/soft-atmospheric-finish-v1/verification/cool-interior/cool-interior-finished.mp4",
+    "sha256": "f96357da09650b6a5acabdb5672a31e1205c645b5ac614cb2bacb399097dcc38",
+    "media": {
+      "codec": "h264",
+      "width": 360,
+      "height": 640,
+      "pixelFormat": "yuv420p",
+      "frameRate": "24/1",
+      "frames": 12,
+      "durationSeconds": 0.5,
+      "audioStreamCount": 0
+    },
+    "midpoint": {
+      "frame": 5,
+      "sha256": "bb874a755ebe04e25b7919a9601400490dce66c128e769d40819961b62c8ca46",
+      "black": 37,
+      "white": 0
+    }
+  },
+  "profileId": "vfx.soft-atmospheric-finish",
+  "filter": "[0:v]format=gbrp,eq=contrast=1.04:saturation=0.97:brightness=0:gamma=1,colorchannelmixer=rr=1.01:gg=1:bb=0.99:pc=lum:pa=1,split=2[graded][bright];[bright]lutrgb=r='if(gte(val,204),val,0)':g='if(gte(val,204),val,0)':b='if(gte(val,204),val,0)',gblur=sigma=7.5[glow];[graded][glow]blend=all_mode=screen:all_opacity=0.055[bloomed];[bloomed]vignette=angle=0.06:eval=init:dither=0,noise=alls=2:all_seed=53921:allf=t+u,format=yuv420p[finished]",
+  "verification": {
+    "deliveryTopologyPreserved": true,
+    "pixelsChanged": true,
+    "blackCoveragePreserved": true,
+    "highlightDetailPreserved": true
+  }
+}

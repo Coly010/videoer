@@ -1,0 +1,71 @@
+schemaVersion: 1
+id: prop.pedestal-side-table
+version: 0.1.0
+type: prop
+title: Pedestal side table
+description: Project-owned walnut pedestal table with a physical support
+  surface, named tabletop anchors and brushed-brass inlay.
+status: verified
+tags:
+  - table
+  - pedestal
+  - interaction-surface
+  - interior-furnishing
+  - portable
+  - inhabited-environment
+capabilities:
+  - physical-tabletop
+  - tabletop-anchors
+  - cross-era-furnishing
+source:
+  kind: procedural
+  generator: videoer.interior-furnishings.v1
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: geometry
+    path: geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: b5a7a587effcbea9a4202cc63c7d8eccc15e66cf7343a303234a243df6cfbcb2
+  - role: validation
+    path: validation.json
+    mediaType: application/json
+    sha256: fbd16344fc73543a52dbbf1b4e2bb934a8008a9851f6c029f791088655afbf81
+  - role: historic-library-chamber-family-contact-sheet
+    path: verification/historic-library-chamber-family-contact-sheet.png
+    mediaType: image/png
+    sha256: 47a75c5e4a95b3c20f5ca691a961f3fed831e833dbee325bafda00b365c35f0f
+  - role: contemporary-reading-loft-family-contact-sheet
+    path: verification/contemporary-reading-loft-family-contact-sheet.png
+    mediaType: image/png
+    sha256: 076e10817f8da7afe8e1419ac378986e6c2e0a1151d0fdbb7b514ea0702670e1
+  - role: family-transfer-summary
+    path: verification/family-transfer-summary.json
+    mediaType: application/json
+    sha256: 6f43cfea9dc6dc4871ad6c3a13414fa237045f3d8788d12183291491fff4fa4c
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - three-3d
+    - blender-headless
+  requires: []
+verification:
+  checks:
+    - geometry.topology
+    - geometry.material-groups
+    - attachments.tabletop-semantic
+    - prop.physical-tabletop-and-pedestal
+    - visual.historic-library-chamber-furnishing-transfer-accepted
+    - visual.contemporary-reading-loft-furnishing-transfer-accepted
+    - prop.physical-furnishing-semantics-accepted
+    - prop.medium-background-shot-distance-accepted
+  artifacts:
+    - verification/historic-library-chamber-family-contact-sheet.png
+    - verification/contemporary-reading-loft-family-contact-sheet.png
+    - verification/family-transfer-summary.json
+  verifiedAt: 2026-09-01T12:35:00.000Z

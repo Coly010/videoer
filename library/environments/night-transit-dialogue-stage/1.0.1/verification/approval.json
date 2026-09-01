@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "campaign": "campaign.last-platform-multicharacter",
+  "sourceId": "dialogue-platform",
+  "asset": {
+    "id": "environment.night-transit-dialogue-stage",
+    "version": "1.0.1"
+  },
+  "reviewer": "codex-visual-and-mechanical-review",
+  "rationale": "Reviewed exact delivery, semantic contact sheet, compatibility reports, temporal cloth/body collision metrics, silhouette stability, and reusable lineage.",
+  "approvedAt": "2026-08-31T04:28:37.471Z"
+}

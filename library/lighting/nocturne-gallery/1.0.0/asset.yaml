@@ -1,0 +1,149 @@
+schemaVersion: 1
+id: lighting.nocturne-gallery
+version: 1.0.0
+type: lighting
+title: Nocturne sculptural gallery lighting
+description: Bounded cinematic gallery transformation of a verified interior
+  rig, preserving light topology and coherent AgX exposure while relocating,
+  recolouring, and rebalancing its key, fill, and rim roles.
+status: verified
+tags:
+  - lighting-rig
+  - gallery
+  - exhibition
+  - sculptural
+  - coherent-exposure
+capabilities:
+  - reusable-rig
+  - coherent-exposure
+  - key-fill-rim
+  - sculptural-gallery-stage
+source:
+  kind: procedural
+  generator: videoer.lighting-rig-transform.v1
+  sourceAsset: environment.warm-bookshop-lighting@0.1.0
+  references:
+    - provenance/cinematic-campaign.yaml
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: lighting
+    path: lighting.json
+    mediaType: application/vnd.videoer.lighting+json
+    sha256: db5f5a30a79442759ff14db71e7a7982b8f1c233e9a86947c7f880cdfd6ceeb2
+  - role: source-campaign
+    path: provenance/cinematic-campaign.yaml
+    mediaType: application/yaml
+    sha256: 4f66ad35ea5fe2baa4dfd1b51c08dca71c3a0cefee4f7836ae41ddd7f0fc1121
+  - role: verification-lighting-adaptation-compatibility
+    path: verification/adaptation/verification-lighting-adaptation-compatibility.json
+    mediaType: application/json
+    sha256: 9989c7c8664664b2cf7916f5d0d6c9c7e2574c408421b1c279bc1d13709f3893
+  - role: verification-threshold-scene-render
+    path: verification/shots/threshold/scene-render.json
+    mediaType: application/json
+    sha256: 8a45b7ba89a400420e60400ed3f95e218382d8d43fdafb6d21637123d780b23d
+  - role: verification-threshold-contact-sheet
+    path: verification/shots/threshold/contact-sheet.png
+    mediaType: image/png
+    sha256: f1575d41d6efe86bb97e049dd8904f496c26ada36a1c0942d54fc99ac272d00f
+  - role: verification-threshold-framing-report
+    path: verification/shots/threshold/framing-report.json
+    mediaType: application/json
+    sha256: 5a365ef925b23e5c98e330bad41186ea6c16f7a45a739080e5fd01bfbf09fc71
+  - role: verification-central-work-scene-render
+    path: verification/shots/central-work/scene-render.json
+    mediaType: application/json
+    sha256: 66c499bd5f35fa2fe1fa882af3c4d24fa83aa0b7c367734c89301d5a65c0f8c9
+  - role: verification-central-work-contact-sheet
+    path: verification/shots/central-work/contact-sheet.png
+    mediaType: image/png
+    sha256: bfad802c845a4a8a396ba2dab1ae8ca6345e0e4a3111b7878b5156762e141bd7
+  - role: verification-central-work-framing-report
+    path: verification/shots/central-work/framing-report.json
+    mediaType: application/json
+    sha256: 743afa30e4aa6ed249cd1986e317ed95568568c9375b018ad145f6a3f99957bb
+  - role: verification-material-dialogue-scene-render
+    path: verification/shots/material-dialogue/scene-render.json
+    mediaType: application/json
+    sha256: 4f0d9d7c5eea4052a948736aa965b030ead9be0087b1d1a77fb2ab131e9c102e
+  - role: verification-material-dialogue-contact-sheet
+    path: verification/shots/material-dialogue/contact-sheet.png
+    mediaType: image/png
+    sha256: f54a130e5415d15f00867285a010a216021a4ae7b81c19e89eae80b700ba1746
+  - role: verification-material-dialogue-framing-report
+    path: verification/shots/material-dialogue/framing-report.json
+    mediaType: application/json
+    sha256: 7957c5a4d4db76be2af2d70fa45c3cdea2b7fadac4517facf47b8dd74992bd46
+  - role: verification-spatial-reveal-scene-render
+    path: verification/shots/spatial-reveal/scene-render.json
+    mediaType: application/json
+    sha256: a0c8bfc233e7b0f18ec43b8a7252f71b2cf3909440ac9d69bb98c001fb29476f
+  - role: verification-spatial-reveal-contact-sheet
+    path: verification/shots/spatial-reveal/contact-sheet.png
+    mediaType: image/png
+    sha256: b566a746153f53ca8d76fb6ecd610ae2863c148cec6ad4f85f21c98f13e383b9
+  - role: verification-spatial-reveal-framing-report
+    path: verification/shots/spatial-reveal/framing-report.json
+    mediaType: application/json
+    sha256: 0aca70a18532f750389ed27d673536722dd00b3a4b99d76bb405ff73e5dda813
+  - role: verification-invitation-scene-render
+    path: verification/shots/invitation/scene-render.json
+    mediaType: application/json
+    sha256: cfccf8f15c66ece2075056277c416cacc78d528a8b1773105051e0797d22b35d
+  - role: verification-invitation-contact-sheet
+    path: verification/shots/invitation/contact-sheet.png
+    mediaType: image/png
+    sha256: 51a3e77aa8633eaa0b95507010ea46f5c6d657435f27d1da24005df8e12475e4
+  - role: verification-invitation-framing-report
+    path: verification/shots/invitation/framing-report.json
+    mediaType: application/json
+    sha256: 1aeaae73b30d680004deff54e3f6c9d1fb29d8b31a125324a5ab0441136f2708
+  - role: verification-campaign-delivery
+    path: verification/campaign-delivery-report.json
+    mediaType: application/json
+    sha256: a56f36e000587f92fbc552361bc7cc18190ba4dc3bc83046690fa67726a419a8
+  - role: verification-approval
+    path: verification/approval.json
+    mediaType: application/json
+    sha256: 0d23886fb5c4de5d4db17d975131a6b4c34cd40c10455098b5bc3ded41a98be6
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - blender-headless
+  requires:
+    - id: environment.warm-bookshop-lighting
+      version: 0.1.0
+verification:
+  checks:
+    - lighting.parent-hash
+    - lighting.output-hash
+    - lighting.topology-preserved
+    - lighting.exposure-preserved
+    - lighting.semantic-transform
+    - campaign.delivery.verified
+    - review.operator-approved
+  artifacts:
+    - verification/adaptation/verification-lighting-adaptation-compatibility.json
+    - verification/shots/threshold/scene-render.json
+    - verification/shots/threshold/contact-sheet.png
+    - verification/shots/threshold/framing-report.json
+    - verification/shots/central-work/scene-render.json
+    - verification/shots/central-work/contact-sheet.png
+    - verification/shots/central-work/framing-report.json
+    - verification/shots/material-dialogue/scene-render.json
+    - verification/shots/material-dialogue/contact-sheet.png
+    - verification/shots/material-dialogue/framing-report.json
+    - verification/shots/spatial-reveal/scene-render.json
+    - verification/shots/spatial-reveal/contact-sheet.png
+    - verification/shots/spatial-reveal/framing-report.json
+    - verification/shots/invitation/scene-render.json
+    - verification/shots/invitation/contact-sheet.png
+    - verification/shots/invitation/framing-report.json
+    - verification/campaign-delivery-report.json
+    - verification/approval.json
+  verifiedAt: 2026-08-31T05:44:59.182Z

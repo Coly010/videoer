@@ -1,0 +1,256 @@
+{
+  "schemaVersion": 1,
+  "id": "environment.market-world-family",
+  "title": "Portable market stall and physical merchandising family",
+  "tags": [
+    "market",
+    "stall",
+    "merchandising",
+    "produce",
+    "inhabited-environment"
+  ],
+  "intendedShotDistance": [
+    "background",
+    "medium"
+  ],
+  "variants": [
+    {
+      "id": "market-stall",
+      "geometryAssetId": "prop.modular-market-stall",
+      "geometryVersion": "0.1.0",
+      "weight": 0.28,
+      "footprintRadiusMeters": 1.86,
+      "heightMeters": 2.84,
+      "scale": {
+        "minimum": 0.98,
+        "maximum": 1.03
+      },
+      "yawDegrees": {
+        "minimum": -5,
+        "maximum": 5
+      },
+      "tags": [
+        "structure",
+        "canopy",
+        "display-surfaces"
+      ]
+    },
+    {
+      "id": "produce-basket",
+      "geometryAssetId": "prop.produce-basket",
+      "geometryVersion": "0.1.0",
+      "weight": 0.45,
+      "footprintRadiusMeters": 0.47,
+      "heightMeters": 0.81,
+      "scale": {
+        "minimum": 0.92,
+        "maximum": 1.08
+      },
+      "yawDegrees": {
+        "minimum": -35,
+        "maximum": 35
+      },
+      "tags": [
+        "inventory",
+        "produce",
+        "carryable"
+      ]
+    },
+    {
+      "id": "provision-sack",
+      "geometryAssetId": "prop.tied-provision-sack",
+      "geometryVersion": "0.1.0",
+      "weight": 0.27,
+      "footprintRadiusMeters": 0.41,
+      "heightMeters": 0.94,
+      "scale": {
+        "minimum": 0.9,
+        "maximum": 1.1
+      },
+      "yawDegrees": {
+        "minimum": -30,
+        "maximum": 30
+      },
+      "tags": [
+        "inventory",
+        "dry-provisions",
+        "carryable"
+      ]
+    }
+  ],
+  "clusters": [
+    {
+      "id": "complete-merchandised-stall",
+      "weight": 0.54,
+      "yawDegrees": {
+        "minimum": -12,
+        "maximum": 12
+      },
+      "members": [
+        {
+          "variantId": "market-stall",
+          "offset": [
+            0,
+            0,
+            0
+          ],
+          "yawOffsetDegrees": 0,
+          "scaleMultiplier": 1
+        },
+        {
+          "variantId": "produce-basket",
+          "offset": [
+            -0.78,
+            1.09,
+            -0.62
+          ],
+          "yawOffsetDegrees": -7,
+          "scaleMultiplier": 0.72
+        },
+        {
+          "variantId": "produce-basket",
+          "offset": [
+            0.76,
+            1.09,
+            -0.62
+          ],
+          "yawOffsetDegrees": 9,
+          "scaleMultiplier": 0.68
+        },
+        {
+          "variantId": "provision-sack",
+          "offset": [
+            -0.93,
+            0.42,
+            -0.12
+          ],
+          "yawOffsetDegrees": -12,
+          "scaleMultiplier": 0.74
+        },
+        {
+          "variantId": "provision-sack",
+          "offset": [
+            0.92,
+            0.42,
+            -0.08
+          ],
+          "yawOffsetDegrees": 14,
+          "scaleMultiplier": 0.7
+        }
+      ]
+    },
+    {
+      "id": "produce-display-trio",
+      "weight": 0.19,
+      "yawDegrees": {
+        "minimum": -28,
+        "maximum": 28
+      },
+      "members": [
+        {
+          "variantId": "produce-basket",
+          "offset": [
+            -0.58,
+            0,
+            0.05
+          ],
+          "yawOffsetDegrees": -10,
+          "scaleMultiplier": 1
+        },
+        {
+          "variantId": "produce-basket",
+          "offset": [
+            0,
+            0,
+            -0.1
+          ],
+          "yawOffsetDegrees": 6,
+          "scaleMultiplier": 0.92
+        },
+        {
+          "variantId": "produce-basket",
+          "offset": [
+            0.56,
+            0,
+            0.08
+          ],
+          "yawOffsetDegrees": 16,
+          "scaleMultiplier": 0.86
+        }
+      ]
+    },
+    {
+      "id": "provision-cache",
+      "weight": 0.15,
+      "yawDegrees": {
+        "minimum": -22,
+        "maximum": 22
+      },
+      "members": [
+        {
+          "variantId": "provision-sack",
+          "offset": [
+            -0.38,
+            0,
+            0
+          ],
+          "yawOffsetDegrees": -9,
+          "scaleMultiplier": 1
+        },
+        {
+          "variantId": "provision-sack",
+          "offset": [
+            0.38,
+            0,
+            0.08
+          ],
+          "yawOffsetDegrees": 11,
+          "scaleMultiplier": 0.91
+        }
+      ]
+    },
+    {
+      "id": "side-stock",
+      "weight": 0.12,
+      "yawDegrees": {
+        "minimum": -25,
+        "maximum": 25
+      },
+      "members": [
+        {
+          "variantId": "produce-basket",
+          "offset": [
+            -0.36,
+            0,
+            0
+          ],
+          "yawOffsetDegrees": -8,
+          "scaleMultiplier": 0.92
+        },
+        {
+          "variantId": "provision-sack",
+          "offset": [
+            0.39,
+            0,
+            0.04
+          ],
+          "yawOffsetDegrees": 10,
+          "scaleMultiplier": 0.94
+        }
+      ]
+    }
+  ],
+  "placement": {
+    "surface": "ground",
+    "distribution": "edge-band",
+    "edgeBandMeters": 1.4,
+    "minimumSpacingMeters": 0.22,
+    "preserveNavigationClearance": true
+  },
+  "metadata": {
+    "generator": "videoer.market-world-family.v1",
+    "assetResolution": "stable-id-and-explicit-version",
+    "layoutOutput": "renderer-independent-transforms",
+    "clusterSemantics": "authored-physical-merchandising"
+  }
+}

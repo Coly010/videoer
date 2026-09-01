@@ -1,0 +1,76 @@
+schemaVersion: 1
+id: prop.significant-book
+version: 0.1.0
+type: prop
+title: Significant hardback book
+description: Project-owned human-scale hardback with articulated covers,
+  bilateral grips, spine, and gaze target.
+status: verified
+tags:
+  - book
+  - hardback
+  - significant
+capabilities:
+  - openable-cover
+  - left-hand-grip
+  - right-hand-grip
+  - gaze-target
+  - named-interaction-points
+source:
+  kind: procedural
+  generator: videoer.read-book-synthesis.v1
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: geometry
+    path: geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: 7587c6118dcb9927cccdc4f0d43d6010acada17975afc848ceedfc2fa23b66f8
+  - role: preview
+    path: verification/interaction.mp4
+    mediaType: video/mp4
+    sha256: 110edab93de447719e5d84cddd989ad9d47682840b2f4304326c3fd43306fb40
+  - role: blender-source
+    path: verification/interaction.blend
+    mediaType: application/x-blender
+    sha256: e2c7aa6b9a015acb0a5c65d2e2c6c94b5a08fc0c1067f1eb15538c1ae303f11f
+  - role: verification-verification-contact-sheet
+    path: verification/contact-sheet.png
+    mediaType: image/png
+    sha256: 5de61b078c884da2d79dc3bbd0469db392e06e71f9b1d940851e2822d8181c3f
+  - role: verification-verification-contact-sheet-opposite
+    path: verification/contact-sheet-opposite.png
+    mediaType: image/png
+    sha256: cad738e25569629c1849940c68a8fb9efc3f04b297c4f0ce292238c6c1180067
+  - role: verification-verification-interaction-opposite
+    path: verification/interaction-opposite.mp4
+    mediaType: video/mp4
+    sha256: 769ed0b7bbe69ab12abf0b4204ed9b304fc46156a45016484d45cfddaffec73b
+  - role: verification-verification-interaction-probe
+    path: verification/interaction-probe.json
+    mediaType: application/json
+    sha256: 127aa7a3c079df51601de51ec7d1307d7d43128d81e49be2a9fd4b0db561efe5
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - three-3d
+    - blender-headless
+  requires: []
+verification:
+  checks:
+    - geometry.topology
+    - skeleton.hierarchy
+    - attachments.named
+    - visual.scale
+    - visual.interaction-two-view
+  artifacts:
+    - verification/contact-sheet.png
+    - verification/contact-sheet-opposite.png
+    - verification/interaction-opposite.mp4
+    - verification/interaction-probe.json
+  verifiedAt: 2026-08-30T21:03:34.724Z

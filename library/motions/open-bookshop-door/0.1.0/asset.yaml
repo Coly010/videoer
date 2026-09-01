@@ -1,0 +1,93 @@
+schemaVersion: 1
+id: motion.open-bookshop-door
+version: 0.1.0
+type: motion
+title: Phased bookshop door interaction
+description: Canonical-humanoid reach, grasp, handle turn, door opening,
+  release, and threshold passage synchronized to an articulated door.
+status: verified
+tags:
+  - door
+  - reach
+  - interaction
+capabilities:
+  - canonical-humanoid
+  - hand-ik
+  - target-resolution
+  - phase-sequencing
+  - root-motion
+source:
+  kind: procedural
+  generator: videoer.open-door-synthesis.v1
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: actor-motion
+    path: actor-motion.json
+    mediaType: application/vnd.videoer.motion+json
+    sha256: 50bc018aa71ec975d659f1612751ed59375d3f062758ce36d848ac197dab017b
+  - role: target-motion
+    path: target-motion.json
+    mediaType: application/vnd.videoer.motion+json
+    sha256: 69f2643e8bdf384d697ef79919bd97bab6251ec73385355294e2bbd9bfe0e48b
+  - role: interaction
+    path: interaction.json
+    mediaType: application/json
+    sha256: ba10d006beb9a43c383420310d55f412074b7913d76edeeeec89579f5a568a9c
+  - role: verification
+    path: verification.json
+    mediaType: application/json
+    sha256: 0e59d2e5e2d9a381e959f74a18b54b5cb867260c9eeacd68ea2df972314287fc
+  - role: preview
+    path: verification/interaction.mp4
+    mediaType: video/mp4
+    sha256: b82fc6360c9f08e092816ce4a7beae06627d21dbd6ff403b59a45442f3decc1e
+  - role: verification-verification-contact-sheet
+    path: verification/contact-sheet.png
+    mediaType: image/png
+    sha256: 75f44ff54fbc64fc2b60bd558beb2037870b87ab3845a42e9af3f4943f8a6048
+  - role: verification-verification-contact-sheet-opposite
+    path: verification/contact-sheet-opposite.png
+    mediaType: image/png
+    sha256: 1a503c79d5a8e4d79b053d83cdf9b00946227f756e9b640a9cb06aea882935a4
+  - role: verification-verification-interaction-opposite
+    path: verification/interaction-opposite.mp4
+    mediaType: video/mp4
+    sha256: acbf0ba8ba3522d5c154d3850670730e7038158297642ff758294bfe09a21311
+  - role: verification-verification-interaction
+    path: verification/interaction.blend
+    mediaType: application/x-blender
+    sha256: 6ad7946e955b5225fa2210fa2eac091df916780ac49d80b361d74660369155cb
+  - role: verification-verification-interaction-probe
+    path: verification/interaction-probe.json
+    mediaType: application/json
+    sha256: 68901b2a8e0fd0a2d9773b8e461d1bd7fa3cdba73f69a66c6f05e4b8eb2aeac7
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  skeleton: videoer.canonical-humanoid.v1
+  renderers:
+    - three-3d
+    - blender-headless
+  requires:
+    - id: prop.bookshop-door
+      version: 0.1.0
+verification:
+  checks:
+    - interaction.phase-coverage
+    - ik.reachability
+    - attachment.contact-error
+    - visual.pose-two-view
+    - door.handle-turn
+    - door.threshold-step
+  artifacts:
+    - verification/contact-sheet.png
+    - verification/contact-sheet-opposite.png
+    - verification/interaction-opposite.mp4
+    - verification/interaction.blend
+    - verification/interaction-probe.json
+  verifiedAt: 2026-08-30T21:03:32.512Z

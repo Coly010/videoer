@@ -1,0 +1,103 @@
+schemaVersion: 1
+id: environment.old-city-bookshop
+version: 0.1.0
+type: environment
+title: Continuous old-city bookshop
+description: Deterministic wet street, bookshop facade, aligned door/window
+  openings, and spatially continuous warm interior with named paths and blocking
+  points.
+status: verified
+tags:
+  - old-city
+  - narrow-street
+  - bookshop
+  - warm-interior
+capabilities:
+  - deterministic-seed
+  - named-paths
+  - promotable-asset
+  - exterior-continuity
+  - named-interaction-points
+source:
+  kind: procedural
+  generator: videoer.old-city-bookshop.v1
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: geometry
+    path: geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: 5f752556820158b92f6072b52e9867372bba9612b037108b17ef515a2f060b41
+  - role: validation
+    path: validation.json
+    mediaType: application/json
+    sha256: 33faa059858fd84614a1ab9d0aaadbbde2a34f35a3b7854c3e9fa737a8cf18ec
+  - role: turntable
+    path: verification/turntable.mp4
+    mediaType: video/mp4
+    sha256: e13b8f55f8ed6fb1233959bfd1518cc98061a52b1dc791c1285efbfe37bc5f86
+  - role: blender-source
+    path: verification/mannequin.blend
+    mediaType: application/x-blender
+    sha256: 801e3b0a20448ee678af77118c647d3dbe3e1f68ea4ed2472d92cd6e5cd92812
+  - role: verification-verification-street-front
+    path: verification/street-front.png
+    mediaType: image/png
+    sha256: 1c2f9eed3c6cfb41c9c3005535e883ed1ee9cb004445ce14cbc95bd5634c0e29
+  - role: verification-verification-street-three-quarter
+    path: verification/street-three-quarter.png
+    mediaType: image/png
+    sha256: 036a06b66e2de994cf2d35e3328b02b12ed60912081b324ae5a8c30e728d9cb9
+  - role: verification-verification-threshold
+    path: verification/threshold.png
+    mediaType: image/png
+    sha256: 626c8e072c799c8a46baeb5bb3813bbe723c38fafc110c2b8381cf743b82270c
+  - role: verification-verification-interior-shelves
+    path: verification/interior-shelves.png
+    mediaType: image/png
+    sha256: 36f1deb279fdaa5776f992309419c642f8afa279464424e83138e6789bb410a0
+  - role: verification-verification-interior-facade
+    path: verification/interior-facade.png
+    mediaType: image/png
+    sha256: 0dc369a65b29a338f7f957b0c69ef400f7ed818658bf2ddacc34f33e2f843e64
+  - role: verification-verification-continuity-overhead
+    path: verification/continuity-overhead.png
+    mediaType: image/png
+    sha256: def36c278b2b125b3fbf6555af5d118ab3b2d52219ba9748f16b5462e440489c
+  - role: verification-verification-contact-sheet
+    path: verification/contact-sheet.png
+    mediaType: image/png
+    sha256: ec3d4aed82c88e48a9451f5cc6968f1f31fdc66a9290932170e1ffba3b08012d
+  - role: verification-verification-probe
+    path: verification/probe.json
+    mediaType: application/json
+    sha256: 1027b934362aaa2ca812483b120404c35c3c05e9571646ffc4c5a9ebebd31214
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - three-3d
+    - blender-headless
+  requires: []
+verification:
+  checks:
+    - geometry.topology
+    - geometry.material-groups
+    - attachments.named-paths
+    - continuity.exterior-interior
+    - visual.canonical-views
+    - visual.turntable
+  artifacts:
+    - verification/street-front.png
+    - verification/street-three-quarter.png
+    - verification/threshold.png
+    - verification/interior-shelves.png
+    - verification/interior-facade.png
+    - verification/continuity-overhead.png
+    - verification/contact-sheet.png
+    - verification/probe.json
+  verifiedAt: 2026-08-30T21:16:45.730Z

@@ -1,0 +1,147 @@
+schemaVersion: 1
+id: environment.interior-furnishing-family
+version: 0.1.0
+type: environment
+title: Cross-era inhabited-interior furnishing family
+description: Renderer-independent cross-era interior furnishing family combining
+  interaction-ready seating, a physical support table and supported decorative
+  inventory into authored inhabited-room vignettes.
+status: verified
+tags:
+  - interior
+  - furniture
+  - seating
+  - tabletop
+  - inhabited-environment
+capabilities:
+  - portable-set-dressing-family
+  - explicit-member-versions
+  - deterministic-seeded-layout
+  - authored-furniture-recipes
+  - navigation-clearance-preservation
+  - tabletop-support-semantics
+  - cross-era-transfer
+  - verified-lighting-rig-reuse
+  - medium-background-quality-tier
+  - layout-aware-verified-lighting-rig-reuse
+  - exact-tabletop-support
+source:
+  kind: procedural
+  generator: videoer.interior-furnishing-family.v1
+  sourceAssets:
+    - prop.upholstered-reading-chair@0.1.0
+    - prop.pedestal-side-table@0.1.0
+    - prop.decorative-vessel-set@0.1.0
+    - lighting.bookshop-warm-interior@0.1.0
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: dressing-family
+    path: family.json
+    mediaType: application/json
+    sha256: 602119b2696554120550dcca5b863aca126f5a910a2440927588bab01e2d5383
+  - role: historic-library-chamber-host
+    path: verification/historic-library-chamber/host-geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: 00b0aa8be8406ff4adfd946cfba3d45620a9a4d9a8935cc42ae2189a51fe27a1
+  - role: historic-library-chamber-layout-request
+    path: verification/historic-library-chamber/layout-request.json
+    mediaType: application/json
+    sha256: 65be172bea982b740d6690b6c829ac537c4f43375a74d3446dc310bc2912ae06
+  - role: historic-library-chamber-layout-report
+    path: verification/historic-library-chamber/layout-report.json
+    mediaType: application/json
+    sha256: 38116192d63a20d5f21d0186383e925a80d67254bb4fde0d2fb72091e6f491ab
+  - role: historic-library-chamber-lighting-rig
+    path: verification/historic-library-chamber/adapted-lighting-rig.json
+    mediaType: application/vnd.videoer.lighting+json
+    sha256: c6f7e9a9c45a9e31a1bc1e97835904583cf46dfe111fa7a63893ffeea5469f79
+  - role: historic-library-chamber-lighting-report
+    path: verification/historic-library-chamber/lighting-adaptation-report.json
+    mediaType: application/json
+    sha256: ecc21fd59497087438c87d6fa47de59e5f123518d6cacf22b254027fc82054a8
+  - role: historic-library-chamber-contact-sheet
+    path: verification/historic-library-chamber/contact-sheet.png
+    mediaType: image/png
+    sha256: 47a75c5e4a95b3c20f5ca691a961f3fed831e833dbee325bafda00b365c35f0f
+  - role: historic-library-chamber-render-report
+    path: verification/historic-library-chamber/scene-render.json
+    mediaType: application/json
+    sha256: 9ed8dc43db0516cbf7c59f52439ae72e697dec808dfcf5e1cb7f0a64945e29d4
+  - role: contemporary-reading-loft-host
+    path: verification/contemporary-reading-loft/host-geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: 10b5bf1c36eb242b02b33fcdf54a70dd17a1321c9615849830978987f9b51887
+  - role: contemporary-reading-loft-layout-request
+    path: verification/contemporary-reading-loft/layout-request.json
+    mediaType: application/json
+    sha256: 09d7673867614410c18e087e7549abc812bd2a39c992e3dc6ce41884e8c764a2
+  - role: contemporary-reading-loft-layout-report
+    path: verification/contemporary-reading-loft/layout-report.json
+    mediaType: application/json
+    sha256: 95898d7c780a94fb73c2ef864e4a7084fb404f8184ca110e00eb01a1404a8195
+  - role: contemporary-reading-loft-lighting-rig
+    path: verification/contemporary-reading-loft/adapted-lighting-rig.json
+    mediaType: application/vnd.videoer.lighting+json
+    sha256: 55ad27f485ad58713f382abea73cc1fe58e12337ef423e457b70d2e30ceb2afc
+  - role: contemporary-reading-loft-lighting-report
+    path: verification/contemporary-reading-loft/lighting-adaptation-report.json
+    mediaType: application/json
+    sha256: e0c13d77653b59bd20b6c3854a236ba0e930ada1d3981783efdad3127349098a
+  - role: contemporary-reading-loft-contact-sheet
+    path: verification/contemporary-reading-loft/contact-sheet.png
+    mediaType: image/png
+    sha256: 076e10817f8da7afe8e1419ac378986e6c2e0a1151d0fdbb7b514ea0702670e1
+  - role: contemporary-reading-loft-render-report
+    path: verification/contemporary-reading-loft/scene-render.json
+    mediaType: application/json
+    sha256: 0f64c54dedd03fa655600ed861be20eaa824b26c9b576f9b46de8f3bae4a2138
+  - role: qualitative-review
+    path: verification/family-candidate-review.json
+    mediaType: application/json
+    sha256: 940971ee538ab679783da7ff9692e00ff7791810e6d16d11772bc9c54e259412
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - three-3d
+    - blender-headless
+  requires:
+    - id: prop.upholstered-reading-chair
+      version: 0.1.0
+    - id: prop.pedestal-side-table
+      version: 0.1.0
+    - id: prop.decorative-vessel-set
+      version: 0.1.0
+verification:
+  checks:
+    - family.schema-and-explicit-versions
+    - layout.deterministic-seed
+    - layout.required-variant-coverage
+    - layout.navigation-clearance
+    - furnishing.tabletop-support-semantics
+    - lighting.verified-parent-bounded-adaptation
+    - visual.historic-library-chamber-accepted
+    - visual.contemporary-reading-loft-accepted
+    - layout.required-variant-coverage-accepted
+    - layout.complete-reading-corner-recipe-accepted
+    - layout.navigation-clearance-accepted
+    - furnishing.exact-tabletop-support-accepted
+    - camera.host-shell-clearance-accepted
+    - lighting.layout-aware-verified-parent-adaptation-accepted
+    - family.medium-background-shot-distance-accepted
+  artifacts:
+    - verification/historic-library-chamber/layout-report.json
+    - verification/historic-library-chamber/lighting-adaptation-report.json
+    - verification/historic-library-chamber/contact-sheet.png
+    - verification/historic-library-chamber/scene-render.json
+    - verification/contemporary-reading-loft/layout-report.json
+    - verification/contemporary-reading-loft/lighting-adaptation-report.json
+    - verification/contemporary-reading-loft/contact-sheet.png
+    - verification/contemporary-reading-loft/scene-render.json
+    - verification/family-candidate-review.json
+  verifiedAt: 2026-09-01T12:35:00.000Z

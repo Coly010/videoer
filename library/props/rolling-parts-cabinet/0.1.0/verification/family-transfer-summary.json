@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "familyId": "environment.workshop-world-family",
+  "memberAssetId": "prop.rolling-parts-cabinet",
+  "acceptedAt": "2026-09-01T11:05:00.000Z",
+  "transferSummaries": [
+    {
+      "kind": "historic-forge-workroom",
+      "requestId": "layout.historic-forge-workroom-workshop-world",
+      "hostAssetId": "environment.historic-forge-workroom-host",
+      "adaptedLightingRigId": "lighting.historic-forge-workroom-workstation",
+      "sourceLightingRigId": "lighting.bookshop-warm-interior",
+      "completeWorkstationCount": 1,
+      "physicalToolDisplayCount": 1,
+      "landmarkHashes": [
+        "a8b07e57061e475b0974f48d893d2a9f2e5911f8b2186462dbbae655cc97ca9f",
+        "b97268f6eb778e3c18091a8bde2e313d4cffe13a746a8579e5c2d232a579e471",
+        "faaa3893be97c84f4a74f50b5709ba3fe38cde8bd87204cce55db6eef8b5db8f"
+      ]
+    },
+    {
+      "kind": "contemporary-maker-lab",
+      "requestId": "layout.contemporary-maker-lab-workshop-world",
+      "hostAssetId": "environment.contemporary-maker-lab-host",
+      "adaptedLightingRigId": "lighting.contemporary-maker-lab-workstation",
+      "sourceLightingRigId": "lighting.bookshop-warm-interior",
+      "completeWorkstationCount": 1,
+      "physicalToolDisplayCount": 1,
+      "landmarkHashes": [
+        "1c8735dd07db7e60516dc87f0068cdffa6a912c15fba046221d082b0c0bdfd0f",
+        "b59adda9af79332b2154b0517c9c586948f8e867e14dceb70fc3e37d4f672533",
+        "590c0b0741dfc49cf8e08893a10dd4ffb1f31715b42b863e9214430fa3f3764d"
+      ]
+    }
+  ],
+  "intendedShotDistance": "medium",
+  "limitations": [
+    "The hand tools and peg pattern are simplified medium-distance silhouettes and are not accepted for close-up or hero insert photography.",
+    "The verification hosts intentionally prove transfer and lighting response; they are not publishable finished room environments.",
+    "Drawers, wheels, vise and loose tools are static geometry in this release; no animated interaction or physics behavior is claimed."
+  ]
+}

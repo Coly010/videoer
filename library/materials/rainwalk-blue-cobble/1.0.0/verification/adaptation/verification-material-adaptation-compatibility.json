@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "adaptationKind": "surface-treatment",
+  "sourceId": "rain-polished-stone",
+  "baseAsset": {
+    "id": "material.wet-old-city-cobble",
+    "version": "0.1.0"
+  },
+  "baseArtifact": "/Users/colum/dev/personal/videoer/library/materials/wet-old-city-cobble/0.1.0/material.json",
+  "baseMaterialSha256": "8be86ea960244bd4f8a212a2879b6b5c92d8058109a1691578b02a25a61e2624",
+  "adaptedAssetId": "material.rainwalk-blue-cobble",
+  "adaptedArtifact": "/Users/colum/dev/personal/videoer/campaigns/rainwalk-square-crossdomain-conformance/work/materials/rain-polished-stone.json",
+  "adaptedMaterialSha256": "68848dc1c2b10beec4a7633cca83146052ad8eeae96b83cb654070a492963141",
+  "requestedCapabilities": [
+    "procedural",
+    "albedo",
+    "normal",
+    "roughness",
+    "cold-blue-treatment"
+  ],
+  "missingBaseCapabilities": [
+    "cold-blue-treatment"
+  ],
+  "providedCapabilities": [
+    "cold-blue-treatment"
+  ],
+  "operations": {
+    "changedFields": [
+      "baseColor.colors",
+      "baseColor.scaleMeters",
+      "baseColor.seed",
+      "normal.strength",
+      "normal.scaleMeters",
+      "roughness.minimum",
+      "roughness.maximum",
+      "roughness.variationScaleMeters",
+      "roughness.wetness",
+      "metallic"
+    ],
+    "shadingModelChanged": false,
+    "baseColorModelChanged": false,
+    "normalModelChanged": false
+  },
+  "compatibility": {
+    "shadingModelPreserved": true,
+    "baseColorModelPreserved": true,
+    "normalModelPreserved": true
+  },
+  "validation": {
+    "valid": true,
+    "issues": [],
+    "shadingModelPreserved": true,
+    "baseColorModelPreserved": true,
+    "normalModelPreserved": true,
+    "changedFields": [
+      "baseColor.colors",
+      "baseColor.scaleMeters",
+      "baseColor.seed",
+      "normal.strength",
+      "normal.scaleMeters",
+      "roughness.minimum",
+      "roughness.maximum",
+      "roughness.variationScaleMeters",
+      "roughness.wetness",
+      "metallic"
+    ]
+  }
+}

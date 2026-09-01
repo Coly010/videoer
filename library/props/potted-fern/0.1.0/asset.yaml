@@ -1,0 +1,72 @@
+schemaVersion: 1
+id: prop.potted-fern
+version: 0.1.0
+type: prop
+title: Weathered terracotta potted fern
+description: Project-owned broad fern silhouette with swept stems, paired
+  leaflets, soil, weathered terracotta planter and named placement/foliage
+  anchors.
+status: verified
+tags:
+  - vegetation
+  - planter
+  - set-dressing
+  - portable
+  - inhabited-environment
+capabilities:
+  - portable-geometry
+  - ground-placement
+  - surface-normal-alignment
+  - named-foliage-anchor
+  - medium-background-quality-tier
+source:
+  kind: procedural
+  generator: videoer.potted-vegetation.v1
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: geometry
+    path: geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: 75f195a12ccb7eec9d44528f809cb1d4172feb8ecfcad49a91a08f5549944ab3
+  - role: validation
+    path: validation.json
+    mediaType: application/json
+    sha256: 01be222cf0aef8b6ee9248bf4846bf2cbe72eab58f0066616021ec97dd822cb0
+  - role: historic-courtyard-family-contact-sheet
+    path: verification/historic-courtyard-family-contact-sheet.png
+    mediaType: image/png
+    sha256: e2710a1b845d31b7a736423e6c539707d36b6b964499a6a6b8750df883d159fd
+  - role: contemporary-rooftop-family-contact-sheet
+    path: verification/contemporary-rooftop-family-contact-sheet.png
+    mediaType: image/png
+    sha256: 690895f31b39b8f3f86ea430723328a9feb0d3a50de28191ff01bc47f0eacce3
+  - role: family-transfer-summary
+    path: verification/family-transfer-summary.json
+    mediaType: application/json
+    sha256: 69c8ca37f0574895487f0a5bc384ff3a4e00670ef170b4ecaaad308d67241224
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - three-3d
+    - blender-headless
+  requires: []
+verification:
+  checks:
+    - geometry.topology
+    - geometry.material-groups
+    - attachments.ground-pot-and-foliage
+    - visual.historic-courtyard-family-transfer-accepted
+    - visual.contemporary-rooftop-family-transfer-accepted
+    - prop.non-flat-placement-accepted
+    - prop.medium-background-shot-distance-accepted
+  artifacts:
+    - verification/historic-courtyard-family-contact-sheet.png
+    - verification/contemporary-rooftop-family-contact-sheet.png
+    - verification/family-transfer-summary.json
+  verifiedAt: 2026-09-01T08:40:11.000Z

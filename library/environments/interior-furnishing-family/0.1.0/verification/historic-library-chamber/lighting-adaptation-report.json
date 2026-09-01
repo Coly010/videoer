@@ -1,0 +1,63 @@
+{
+  "valid": true,
+  "issues": [],
+  "adaptation": {
+    "kind": "lighting-rig-transform-v1",
+    "assetId": "lighting.historic-library-chamber-reading-corner",
+    "transform": {
+      "translation": [
+        3.6202917038789257,
+        0.05,
+        -3.3609353476977035
+      ],
+      "yawRadians": -0.18,
+      "uniformScale": 1.2
+    },
+    "energyScale": 1.3,
+    "purposeEnergyScale": {
+      "key": 1.25,
+      "fill": 0.85,
+      "rim": 1.18,
+      "practical": 1,
+      "environment": 1
+    },
+    "colorMultiply": [
+      1,
+      0.82,
+      0.62
+    ],
+    "worldColor": [
+      0.015,
+      0.008,
+      0.004
+    ],
+    "metadata": {
+      "context": "historic-library-chamber",
+      "purpose": "portable-furnishing-silhouette-and-surface-separation",
+      "layoutFocus": [
+        3.635962126518138,
+        -0.43078954281796866
+      ]
+    }
+  },
+  "topologyPreserved": true,
+  "exposurePreserved": true,
+  "spatialTransformMatched": true,
+  "energyTransformMatched": true,
+  "colorTransformMatched": true,
+  "sizeTransformMatched": true,
+  "nonBlackWorld": true,
+  "roleCoverage": {
+    "key": 1,
+    "fill": 1,
+    "rim": 1,
+    "practical": 0,
+    "environment": 0
+  },
+  "baseLightCount": 3,
+  "adaptedLightCount": 3,
+  "energyRange": {
+    "minimum": 331.5,
+    "maximum": 698.75
+  }
+}

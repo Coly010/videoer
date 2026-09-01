@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "assetId": "prop.projecting-hanging-sign",
+  "decision": "accepted",
+  "reviewer": "codex-visual-review",
+  "reviewedAt": "2026-09-01T07:31:41.000Z",
+  "intendedShotDistance": "medium",
+  "evidence": [
+    "verification/old-city-bookshop/contact-sheet.png",
+    "verification/old-city-bookshop/scene-render.json",
+    "verification/old-city-bookshop/host-contract-report.json",
+    "verification/adaptive-reuse-cafe/contact-sheet.png",
+    "verification/adaptive-reuse-cafe/scene-render.json",
+    "verification/adaptive-reuse-cafe/host-contract-report.json"
+  ],
+  "strengths": [
+    "The exact same sign geometry reads as supported facade hardware in an old-city bookshop and an adaptive-reuse brick cafe without host-specific mesh edits.",
+    "Smooth bracket rails, a triangular load path, alternating closed chain links and independent frame members replace the former fused rectangular sign proxy.",
+    "Both camera sides show physical raised page surfaces, gold page outlines and a central fold that read as an open-book emblem at the accepted medium distance.",
+    "Weathered wood, dark iron and restrained gold remain distinct under both cool/warm lighting topologies without clipped or emissive-looking highlights."
+  ],
+  "limitations": [
+    "Accepted for background and medium use only; welds, bolts, hinge pins, chain wear and wood edge damage are insufficient for close or hero-close inspection.",
+    "The canonical emblem proves a replaceable two-sided content slot but does not provide arbitrary typography, texture baking, localisation or campaign logo fitting.",
+    "The sign is currently static; wind-driven hinge motion, collision stops and chain dynamics are not yet implemented.",
+    "Host compatibility assumes a vertical facade with the declared mounting-height range and a clear projecting volume."
+  ],
+  "notes": "Accepted after rejecting V1 because its book mark read as a diamond and V2 because the revised outline still read as a shield. V3 adds two raised page surfaces with contrasting fill, independent outlines and a central fold. Acceptance must independently prove content triangles on both physical faces, opposed face attachments, campaign-replacement semantics, host clearance, exact geometry reuse, distinct pixels and every render gate."
+}

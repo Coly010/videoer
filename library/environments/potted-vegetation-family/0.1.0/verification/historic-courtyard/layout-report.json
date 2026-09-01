@@ -1,0 +1,208 @@
+{
+  "schemaVersion": 1,
+  "requestId": "layout.historic-courtyard-potted-vegetation",
+  "familyId": "environment.potted-vegetation-family",
+  "seed": 12720,
+  "attempts": 9,
+  "instances": [
+    {
+      "id": "layout.historic-courtyard-potted-vegetation.cluster-001.member-01",
+      "clusterId": "layout.historic-courtyard-potted-vegetation.cluster-001",
+      "recipeId": "shrub-pair",
+      "variantId": "potted-shrub",
+      "geometryAssetId": "prop.potted-shrub",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          -3.2275738341546467,
+          -0.1856544300492788,
+          1.9024924522273703
+        ],
+        "rotation": [
+          -4.0259744386342374e-16,
+          1.0172854403573708,
+          0.059928155121207395
+        ],
+        "scale": [
+          1.0296377230715006,
+          1.0296377230715006,
+          1.0296377230715006
+        ]
+      },
+      "footprintRadiusMeters": 0.5765971249200403,
+      "heightMeters": 1.595938470760826,
+      "surface": {
+        "geometryAssetId": "environment.historic-courtyard-planting-surface",
+        "triangleIndex": 1,
+        "normal": [
+          -0.05989229072794672,
+          0.9982048454657787,
+          0
+        ],
+        "slopeDegrees": 3.4336303624505082
+      }
+    },
+    {
+      "id": "layout.historic-courtyard-potted-vegetation.cluster-001.member-02",
+      "clusterId": "layout.historic-courtyard-potted-vegetation.cluster-001",
+      "recipeId": "shrub-pair",
+      "variantId": "potted-shrub",
+      "geometryAssetId": "prop.potted-shrub",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          -2.308373855390109,
+          -0.13050243132340653,
+          2.2280249376098182
+        ],
+        "rotation": [
+          -3.1415926535897922,
+          1.3028462455405807,
+          -3.0816644984685846
+        ],
+        "scale": [
+          0.8284614255577325,
+          0.8284614255577325,
+          0.8284614255577325
+        ]
+      },
+      "footprintRadiusMeters": 0.46393839831233025,
+      "heightMeters": 1.2841152096144854,
+      "surface": {
+        "geometryAssetId": "environment.historic-courtyard-planting-surface",
+        "triangleIndex": 1,
+        "normal": [
+          -0.05989229072794672,
+          0.9982048454657787,
+          0
+        ],
+        "slopeDegrees": 3.4336303624505082
+      }
+    },
+    {
+      "id": "layout.historic-courtyard-potted-vegetation.cluster-002.member-01",
+      "clusterId": "layout.historic-courtyard-potted-vegetation.cluster-002",
+      "recipeId": "fern-corner",
+      "variantId": "potted-fern",
+      "geometryAssetId": "prop.potted-fern",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          2.3884588677390726,
+          0.15130753206434439,
+          -2.29956500363322
+        ],
+        "rotation": [
+          3.5291633600252037e-16,
+          -0.9520471300289645,
+          0.059928155121207444
+        ],
+        "scale": [
+          1.04715188419912,
+          1.04715188419912,
+          1.04715188419912
+        ]
+      },
+      "footprintRadiusMeters": 0.7748923943073489,
+      "heightMeters": 1.4136550436688122,
+      "surface": {
+        "geometryAssetId": "environment.historic-courtyard-planting-surface",
+        "triangleIndex": 0,
+        "normal": [
+          -0.05989229072794672,
+          0.9982048454657787,
+          0
+        ],
+        "slopeDegrees": 3.4336303624505082
+      }
+    },
+    {
+      "id": "layout.historic-courtyard-potted-vegetation.cluster-003.member-01",
+      "clusterId": "layout.historic-courtyard-potted-vegetation.cluster-003",
+      "recipeId": "shrub-pair",
+      "variantId": "potted-shrub",
+      "geometryAssetId": "prop.potted-shrub",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          2.3694275633206563,
+          0.1501656537992394,
+          1.3691625608181224
+        ],
+        "rotation": [
+          -7.424249574834648e-17,
+          0.2908820929746187,
+          0.059928155121207624
+        ],
+        "scale": [
+          0.9755024423869326,
+          0.9755024423869326,
+          0.9755024423869326
+        ]
+      },
+      "footprintRadiusMeters": 0.5462813677366823,
+      "heightMeters": 1.5120287856997456,
+      "surface": {
+        "geometryAssetId": "environment.historic-courtyard-planting-surface",
+        "triangleIndex": 0,
+        "normal": [
+          -0.05989229072794672,
+          0.9982048454657787,
+          0
+        ],
+        "slopeDegrees": 3.4336303624505082
+      }
+    },
+    {
+      "id": "layout.historic-courtyard-potted-vegetation.cluster-003.member-02",
+      "clusterId": "layout.historic-courtyard-potted-vegetation.cluster-003",
+      "recipeId": "shrub-pair",
+      "variantId": "potted-shrub",
+      "geometryAssetId": "prop.potted-shrub",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          3.3031275325783347,
+          0.20618765195470007,
+          1.6504175472774045
+        ],
+        "rotation": [
+          7.947845845799848e-16,
+          -1.255672755577279,
+          0.059928155121207076
+        ],
+        "scale": [
+          1.0079027723086997,
+          1.0079027723086997,
+          1.0079027723086997
+        ]
+      },
+      "footprintRadiusMeters": 0.5644255524928719,
+      "heightMeters": 1.5622492970784847,
+      "surface": {
+        "geometryAssetId": "environment.historic-courtyard-planting-surface",
+        "triangleIndex": 0,
+        "normal": [
+          -0.05989229072794672,
+          0.9982048454657787,
+          0
+        ],
+        "slopeDegrees": 3.4336303624505082
+      }
+    }
+  ],
+  "verification": {
+    "requestedClusterCount": 3,
+    "placedClusterCount": 3,
+    "placedCount": 5,
+    "requiredVariantIds": [
+      "potted-fern",
+      "potted-shrub"
+    ],
+    "allRequiredVariantsPresent": true,
+    "exclusionCount": 2,
+    "deterministic": true,
+    "overlapFree": true,
+    "navigationClearancePreserved": true
+  }
+}

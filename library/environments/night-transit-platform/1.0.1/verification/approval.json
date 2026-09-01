@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "campaign": "campaign.after-hours-character",
+  "sourceId": "platform",
+  "asset": {
+    "id": "environment.night-transit-platform",
+    "version": "1.0.1"
+  },
+  "reviewer": "codex-agentic-review",
+  "rationale": "Reviewed the unchanged four-shot visual evidence and delivery checks; approved patch release adds a hashed embedded declarative source for complete immutable provenance.",
+  "approvedAt": "2026-08-31T00:17:57.271Z"
+}

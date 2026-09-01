@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "assetId": "lighting.bookshop-dusk-exterior",
+  "decision": "accepted",
+  "reviewer": "Codex visual QA",
+  "reviewedAt": "2026-09-01T10:50:37Z",
+  "portableWithoutEnvironment": true,
+  "sourceEvidenceDirectory": "verification",
+  "transferEvidenceDirectory": "verification/transfer/transit-platform",
+  "evidence": [
+    "verification/contact-sheet.png",
+    "verification/scene-render.json",
+    "verification/transfer/transit-platform/contact-sheet.png",
+    "verification/transfer/transit-platform/scene-render.json",
+    "verification/transfer/transit-platform/lighting-adaptation-report.json",
+    "verification/transfer/transit-platform/transfer-definition.json"
+  ],
+  "strengths": [
+    "The old-city source retains a clear cool environmental wash, warm doorway/window practicals, threshold rim and wet-ground response without clipped highlights.",
+    "The unchanged five-light topology transfers into the unrelated abstract night-transit enclosure and continues to model diffuse, glossy, metallic and structured witness surfaces.",
+    "Warm key, cool environmental fill and cyan host practicals remain spatially separable in the transit transfer rather than collapsing into a uniform colour wash.",
+    "Source semantic frames hold 19 to 20 percent black coverage and zero clipped-white coverage; transfer frames hold 7 percent black and zero clipped white with 90 to 91 percent witness-region midtones.",
+    "Both cameras maintain exact declarative target, position and lens execution through their moves."
+  ],
+  "limitations": [
+    "The rig is accepted specifically for overcast/dusk exterior or night-enclosure staging with warm motivated practicals; it is not daylight, moonlight, candlelight, firelight or a neutral product-studio rig.",
+    "Host emissive fixtures and visible practical geometry remain separate assets and must be synchronized with the light sources in a campaign.",
+    "Hero faces, skin and macro reflective products still require shot-specific evidence and may need a dedicated rig or bounded supplements.",
+    "The old-city source set has simplified surfaces, so this release establishes lighting portability and medium-distance response rather than hero-close material fidelity."
+  ],
+  "notes": "Accepted only after a first-class lighting transfer into the verified night-transit platform. The generalized acceptance path now resolves arbitrary declared transfer directories, reads every review artifact, requires the transfer to consume the candidate rig, reconstructs the bounded adaptation from live inputs, compares the persisted adapted rig and report, and contains the preview inside the candidate."
+}

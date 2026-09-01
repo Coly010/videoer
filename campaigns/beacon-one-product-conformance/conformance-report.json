@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "status": "superseded",
+  "supersededBy": "declarative-build-report.json",
+  "supersessionReason": "The accepted campaign was migrated from bespoke TypeScript orchestration to cinematic-campaign.yaml; the 363-line orchestrator and 66-line asset factory measured below were deleted.",
+  "campaign": "beacon-one-product",
+  "materiallyDifferentFromBenchmark": [
+    "non-narrative product launch",
+    "no character, gait, door, bookshop, or story interaction",
+    "three semantic product shots rather than eight-beat narrative grammar"
+  ],
+  "reusedSystems": [
+    "geometry",
+    "semantic attachments",
+    "cinematic shot assembly",
+    "product reveal template",
+    "lighting",
+    "atmosphere",
+    "editorial overlays",
+    "provider-free audio plan/render",
+    "frame visibility gates",
+    "frame-exact edit assembly"
+  ],
+  "effortEvidence": {
+    "metric": "checked-in orchestration source lines",
+    "benchmarkOrchestrationLines": 746,
+    "productOrchestrationLines": 363,
+    "orchestrationReductionPercent": 51.3,
+    "newProductAssetFactoryLines": 66,
+    "caveat": "Shot counts and creative scope differ; this is evidence of reduced bespoke orchestration, not a universal productivity claim."
+  },
+  "scenes": ["scene.signal-silhouette", "scene.interface-detail", "scene.beacon-end-frame"]
+}

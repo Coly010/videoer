@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "campaign": "campaign.voices-of-midnight-documentary",
+  "sourceFile": "/Users/colum/dev/personal/videoer/campaigns/voices-of-midnight-documentary-conformance/cinematic-campaign.yaml",
+  "sourceLines": 159,
+  "bespokeOrchestrationSourceFiles": 0,
+  "generatedGeometry": 0,
+  "adaptedGeometry": 0,
+  "reusedAudioSources": 1,
+  "generatedMotionSources": 0,
+  "adaptedMotionSources": 0,
+  "generatedMotionTimelines": 0,
+  "derivedMotionTimelines": 0,
+  "motionReport": "/Users/colum/dev/personal/videoer/campaigns/voices-of-midnight-documentary-conformance/work/motions/motion-build-report.json",
+  "assetManifestFile": "/Users/colum/dev/personal/videoer/campaigns/voices-of-midnight-documentary-conformance/work/asset-manifest.yaml",
+  "publicationCandidatesDeclared": 0,
+  "scenes": ["scene.witness-testimony", "scene.platform-cutaway", "scene.documentary-resolve"],
+  "editPlanFile": "/Users/colum/dev/personal/videoer/campaigns/voices-of-midnight-documentary-conformance/work/edit/edit-plan.json",
+  "delivery": "/Users/colum/dev/personal/videoer/campaigns/voices-of-midnight-documentary-conformance/delivery/voices-of-midnight-documentary.mp4"
+}

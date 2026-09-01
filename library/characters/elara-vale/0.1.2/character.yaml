@@ -1,0 +1,48 @@
+schemaVersion: 1
+id: character.elara-vale
+version: 0.1.2
+title: Elara Vale
+description: Original recurring old-city heroine with stable proportions, a
+  readable basic face, pulled-back dark hair, and a fitted midnight dress.
+body:
+  height: 1.7
+  shoulderWidth: 0.39
+  hipWidth: 0.34
+  torsoLength: 0.48
+  chestDepth: 0.21
+  armLength: 0.6
+  legLength: 0.86
+  headScale: 0.96
+  handScale: 0.92
+  footScale: 0.94
+appearance:
+  skin:
+    - 0.62
+    - 0.38
+    - 0.27
+    - 1
+  hair:
+    - 0.022
+    - 0.009
+    - 0.006
+    - 1
+  eyes:
+    - 0.035
+    - 0.11
+    - 0.095
+    - 1
+  dress:
+    - 0.012
+    - 0.018
+    - 0.04
+    - 1
+  leather:
+    - 0.018
+    - 0.014
+    - 0.012
+    - 1
+hair:
+  style: long-pulled-back
+wardrobe:
+  preset: long-dark-dress
+references: []

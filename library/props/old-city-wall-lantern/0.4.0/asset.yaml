@@ -1,0 +1,119 @@
+schemaVersion: 1
+id: prop.old-city-wall-lantern
+version: 0.4.0
+type: prop
+title: Portable old-city wall lantern practical
+description: Project-owned wall-mounted lantern with separate 8 mm glazing,
+  metal frame and bracket, candle/flame source, named mount, and
+  renderer-independent local practical emitter.
+status: deprecated
+tags:
+  - lantern
+  - wall-light
+  - practical
+  - old-city
+  - portable-set-dressing
+capabilities:
+  - portable-geometry
+  - named-wall-mount
+  - physical-glazing
+  - local-practical-emitter
+  - inverse-square-falloff
+  - cross-environment-transfer
+  - medium-background-quality-tier
+source:
+  kind: procedural
+  generator: videoer.portable-wall-lantern.v4
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: geometry
+    path: geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: bc572cdbe21f032e5aa69e2ee5f6802e3717606c1b0a85c9cf535a239a4ee15d
+  - role: practical-fixture
+    path: fixture.json
+    mediaType: application/vnd.videoer.practical-fixture+json
+    sha256: bacdcbe3e00b1c97468b7388823d4bbba1881262082ec54fcbe6083540d5ebe6
+  - role: validation
+    path: validation.json
+    mediaType: application/json
+    sha256: 1b8d272a6216f0a17acba8541ec4a79f74c545002dfce360e53880b077595ae4
+  - role: blender-source
+    path: verification/facade/wall-lantern-facade-probe.blend
+    mediaType: application/x-blender
+    sha256: 48faa58c277ecbe06f6f91bb1d76c64bf0a86c2a7007831a3267bb4011f42049
+  - role: transfer-blender-source
+    path: verification/warehouse/wall-lantern-warehouse-probe.blend
+    mediaType: application/x-blender
+    sha256: e5b31acdb68751ee1af49bafd95b17ca969b9bdfd03c8770ec5c500383a9922d
+  - role: verification-verification-facade-contact-sheet
+    path: verification/facade/contact-sheet.png
+    mediaType: image/png
+    sha256: 5b9f5c25a5f6f58d0c2ce490f39f878b5b2b4760bdc4c68b473e9bb5cf2f28b6
+  - role: verification-verification-facade-scene-probe
+    path: verification/facade/scene-probe.json
+    mediaType: application/json
+    sha256: 97e5742c9daa61348dbeeb4134fac4291a6f9a6a303c62bb3a025a48edd558f3
+  - role: verification-verification-warehouse-contact-sheet
+    path: verification/warehouse/contact-sheet.png
+    mediaType: image/png
+    sha256: b60dd4e4c6b3e32ae1538176f7169b13379c4dd3b4f0361098a52160b1a4209f
+  - role: verification-verification-warehouse-scene-probe
+    path: verification/warehouse/scene-probe.json
+    mediaType: application/json
+    sha256: dba213cd99ed74fed5b5ec04f6b0274ce2217cb2a1d76f9b1aaecde4d5bd89d6
+  - role: facade-contact-sheet
+    path: verification/facade/contact-sheet.png
+    mediaType: image/png
+    sha256: 5b9f5c25a5f6f58d0c2ce490f39f878b5b2b4760bdc4c68b473e9bb5cf2f28b6
+  - role: facade-probe-report
+    path: verification/facade/scene-probe.json
+    mediaType: application/json
+    sha256: 97e5742c9daa61348dbeeb4134fac4291a6f9a6a303c62bb3a025a48edd558f3
+  - role: warehouse-transfer-contact-sheet
+    path: verification/warehouse/contact-sheet.png
+    mediaType: image/png
+    sha256: b60dd4e4c6b3e32ae1538176f7169b13379c4dd3b4f0361098a52160b1a4209f
+  - role: warehouse-transfer-probe-report
+    path: verification/warehouse/scene-probe.json
+    mediaType: application/json
+    sha256: dba213cd99ed74fed5b5ec04f6b0274ce2217cb2a1d76f9b1aaecde4d5bd89d6
+  - role: qualitative-review
+    path: verification/fixture-candidate-review.json
+    mediaType: application/json
+    sha256: 9ee0d1a0f2ff3e2d9fb5903e6f313dbba05644ea506545da074aff4c6ae4ce8c
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - blender-headless
+  requires: []
+verification:
+  checks:
+    - geometry.topology
+    - fixture.geometry-binding
+    - fixture.mount-attachment
+    - fixture.local-emitter-schema
+    - fixture.inverse-square-falloff
+    - visual.facade-geometry-light-pool-accepted
+    - visual.unrelated-warehouse-transfer-accepted
+    - fixture.medium-background-shot-distance-accepted
+  artifacts:
+    - verification/facade/contact-sheet.png
+    - verification/facade/scene-probe.json
+    - verification/warehouse/contact-sheet.png
+    - verification/warehouse/scene-probe.json
+    - verification/fixture-candidate-review.json
+  verifiedAt: 2026-09-01T04:46:36.000Z
+deprecatedBy:
+  id: prop.old-city-wall-lantern
+  version: 0.5.0
+deprecatedAt: 2026-09-01T05:14:50.749Z
+deprecationReason: Published witness omitted execution of the declared frontal
+  fixture-framing gate; 0.5.0 passes the corrected full-temporal framing
+  evidence and adds verified shared-signal modulation.

@@ -1,0 +1,283 @@
+schemaVersion: 1
+id: campaign.night-signal-library-reuse
+fps: 24
+resolution: { width: 640, height: 360, percentage: 100 }
+assetLibrary: ../../library
+
+geometry:
+  - id: platform
+    library:
+      type: environment
+      query: abstract night transit platform
+      tags: [transit, platform, night]
+      capabilities: [deterministic-geometry, semantic-camera-anchors]
+      preferredAsset: { id: environment.night-transit-platform, version: 1.0.1 }
+      artifactRole: geometry
+  - id: signal-orb
+    path: work/props/signal-orb.json
+    recipe:
+      assetId: prop.night-signal-orb
+      metadata: { generator: videoer.declarative-geometry.v1, projectOwned: true }
+      primitives:
+        - {
+            kind: ellipsoid,
+            start: [0, 0.25, 0],
+            end: [0, 1.35, 0],
+            radiusX: 0.42,
+            radiusZ: 0.42,
+            materialId: signal-core,
+            latSegments: 14,
+            radialSegments: 24,
+          }
+        - {
+            kind: capsule,
+            start: [0, 0, 0],
+            end: [0, 0.25, 0],
+            radiusX: 0.08,
+            radiusZ: 0.08,
+            materialId: signal-stand,
+            capSegments: 6,
+            radialSegments: 16,
+          }
+      materials:
+        - {
+            id: signal-core,
+            baseColor: [0.015, 0.16, 0.3, 1],
+            roughness: 0.2,
+            metallic: 0.08,
+            emission: [0.01, 0.32, 0.65],
+            emissionStrength: 1.35,
+          }
+        - {
+            id: signal-stand,
+            baseColor: [0.08, 0.09, 0.12, 1],
+            roughness: 0.34,
+            metallic: 0.55,
+            emission: [0, 0, 0],
+            emissionStrength: 0,
+          }
+      attachments:
+        orb-focus: { position: [0, 0.78, 0] }
+
+overlays:
+  - id: night-signal-copy
+    path: work/editorial/night-signal-copy.png
+    width: 640
+    height: 360
+    font: { family: Cormorant Garamond, licence: OFL-1.1 }
+    lines:
+      - {
+          text: NIGHT SIGNAL,
+          y: 42,
+          fontSize: 48,
+          color: '0xf1eee5',
+          borderWidth: 2,
+          borderColor: '0x02050a@0.95',
+        }
+      - {
+          text: SHARED WORLDS · NEW STORIES,
+          y: 298,
+          fontSize: 20,
+          color: '0x6fe2f4',
+          borderWidth: 2,
+          borderColor: '0x02050a@0.95',
+        }
+
+soundtrackPath: work/audio/soundtrack.wav
+soundtrack:
+  schemaVersion: 1
+  id: audio.night-signal-library-reuse
+  durationSeconds: 6
+  sampleRate: 48000
+  channels: 2
+  cues:
+    - {
+        id: platform-air,
+        kind: noise-bed,
+        startSeconds: 0,
+        endSeconds: 6,
+        gain: 0.035,
+        seed: 1107,
+        purpose: Shared environment atmosphere,
+      }
+    - {
+        id: signal-tone,
+        kind: tone-bed,
+        startSeconds: 0,
+        endSeconds: 6,
+        gain: 0.045,
+        frequencyHz: 82.41,
+        purpose: Restrained signal foundation,
+      }
+    - {
+        id: reveal-accent,
+        kind: tonal-accent,
+        startSeconds: 3,
+        endSeconds: 6,
+        gain: 0.065,
+        frequencyHz: 329.63,
+        purpose: New prop reveal,
+      }
+  metadata: { providerFree: true, campaignClass: library-reuse-proof }
+
+shots:
+  - id: shared-platform
+    frames: 72
+    entities:
+      - { id: platform, geometry: platform, role: environment }
+      - {
+          id: orb,
+          geometry: signal-orb,
+          role: prop,
+          transform: { position: [0, 0, -0.8], rotation: [0, 0, 0], scale: [1, 1, 1] },
+        }
+    camera:
+      keyframes:
+        - {
+            time: 0,
+            position: { entityId: platform, attachmentId: establish-camera },
+            target: { entityId: platform, attachmentId: establish-focus },
+            lensMillimeters: 46,
+          }
+        - {
+            time: 3,
+            position:
+              { entityId: platform, attachmentId: establish-camera, offset: [-0.65, -0.12, 1.1] },
+            target: { entityId: orb, attachmentId: orb-focus },
+            lensMillimeters: 52,
+          }
+    lights: &signal-lights
+      - {
+          id: cyan-key,
+          type: area,
+          position: [2.6, 3.1, -2],
+          target: [1.2, 1, -1.4],
+          color: [0.12, 0.7, 1],
+          energy: 620,
+          sizeMeters: 2.3,
+        }
+      - {
+          id: amber-fill,
+          type: area,
+          position: [-2.7, 2.4, 0.8],
+          target: [0, 1, -1],
+          color: [1, 0.25, 0.04],
+          energy: 390,
+          sizeMeters: 2,
+        }
+    atmosphere: &signal-air
+      worldColor: [0.003, 0.007, 0.015]
+      fogColor: [0.035, 0.08, 0.12]
+      fogDensity: 0.005
+      rain: { enabled: false }
+    renderGates:
+      - { id: shared-world-visible, type: frame-visibility, maximumBlackPercentage: 78 }
+      - { id: shared-world-detail, type: frame-overexposure, maximumWhitePercentage: 14 }
+      - {
+          id: orb-local-detail,
+          type: subject-overexposure,
+          entityId: orb,
+          maximumWhitePercentage: 28,
+          whiteThreshold: 238,
+        }
+    landmarks:
+      - {
+          id: inherited-world,
+          progress: 0,
+          description: Published platform establishes without campaign-local geometry,
+        }
+      - {
+          id: signal-emerges,
+          progress: 0.5,
+          description: New signal enters the inherited visual rhythm,
+        }
+      - {
+          id: reuse-proven,
+          progress: 1,
+          description: Published semantic camera anchor frames a new campaign-owned subject,
+        }
+    metadata: { campaignClass: library-reuse-proof, grammar: inherited-world-establish }
+
+  - id: new-story
+    frames: 72
+    entities:
+      - { id: platform, geometry: platform, role: environment }
+      - {
+          id: orb,
+          geometry: signal-orb,
+          role: prop,
+          transform: { position: [0, 0, -0.8], rotation: [0, 0, 0], scale: [1, 1, 1] },
+        }
+    camera:
+      keyframes:
+        - {
+            time: 0,
+            position: { entityId: platform, attachmentId: portrait-camera },
+            target: { entityId: orb, attachmentId: orb-focus },
+            lensMillimeters: 38,
+          }
+        - {
+            time: 3,
+            position:
+              { entityId: platform, attachmentId: portrait-camera, offset: [0.45, 0.08, 0.65] },
+            target: { entityId: orb, attachmentId: orb-focus },
+            lensMillimeters: 36,
+          }
+    lights: *signal-lights
+    atmosphere: *signal-air
+    overlays:
+      [
+        {
+          overlay: night-signal-copy,
+          startSeconds: 0,
+          endSeconds: 3,
+          fadeInSeconds: 0.45,
+          fadeOutSeconds: 0,
+        },
+      ]
+    renderGates:
+      - { id: new-story-visible, type: frame-visibility, maximumBlackPercentage: 80 }
+      - { id: orb-highlight-detail, type: frame-overexposure, maximumWhitePercentage: 14 }
+      - {
+          id: orb-close-detail,
+          type: subject-overexposure,
+          entityId: orb,
+          maximumWhitePercentage: 28,
+          whiteThreshold: 238,
+        }
+      - {
+          id: orb-composition,
+          type: subject-framing,
+          entityId: orb,
+          minimumScreenHeightPercentage: 40,
+          maximumScreenHeightPercentage: 88,
+          marginPercentage: 2,
+        }
+    landmarks:
+      - {
+          id: orb-arrival,
+          progress: 0,
+          description: New campaign-owned prop occupies the published environment,
+        }
+      - {
+          id: shared-light,
+          progress: 0.5,
+          description: Shared lighting rhythm supports a different story object,
+        }
+      - {
+          id: campaign-resolve,
+          progress: 1,
+          description: New editorial identity resolves over reused world,
+        }
+    metadata: { campaignClass: library-reuse-proof, grammar: new-subject-resolve }
+
+delivery:
+  id: edit.night-signal-library-reuse
+  directory: delivery
+  codec: h264
+  pixelFormat: yuv420p
+  fastStart: true
+
+metadata:
+  purpose: Prove a newly published declarative environment is resolved and used by another campaign without copying its recipe
+  bespokeOrchestrationSourceFiles: 0

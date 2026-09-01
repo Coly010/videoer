@@ -1,0 +1,155 @@
+{
+  "schemaVersion": 1,
+  "source": "/Users/colum/dev/personal/videoer/campaigns/after-hours-character-conformance/work/scenes/signal-attention/scene.json",
+  "manifest": "/Users/colum/dev/personal/videoer/campaigns/after-hours-character-conformance/work/scenes/signal-attention/verification/resolved-scene.json",
+  "video": "/Users/colum/dev/personal/videoer/campaigns/after-hours-character-conformance/work/scenes/signal-attention/verification/signal-attention.mp4",
+  "blend": "/Users/colum/dev/personal/videoer/campaigns/after-hours-character-conformance/work/scenes/signal-attention/verification/signal-attention.blend",
+  "frames": [
+    {
+      "id": "grounded",
+      "progress": 0,
+      "description": "Character settles without foot sliding",
+      "path": "/Users/colum/dev/personal/videoer/campaigns/after-hours-character-conformance/work/scenes/signal-attention/verification/000-grounded.png"
+    },
+    {
+      "id": "orient",
+      "progress": 0.55,
+      "description": "Head and torso turn toward the semantic signal target",
+      "path": "/Users/colum/dev/personal/videoer/campaigns/after-hours-character-conformance/work/scenes/signal-attention/verification/055-orient.png"
+    },
+    {
+      "id": "attention",
+      "progress": 1,
+      "description": "Target-derived attention holds",
+      "path": "/Users/colum/dev/personal/videoer/campaigns/after-hours-character-conformance/work/scenes/signal-attention/verification/100-attention.png"
+    }
+  ],
+  "contactSheet": "/Users/colum/dev/personal/videoer/campaigns/after-hours-character-conformance/work/scenes/signal-attention/verification/contact-sheet.png",
+  "media": {
+    "streams": [
+      {
+        "index": 0,
+        "codec_name": "h264",
+        "codec_long_name": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+        "profile": "High",
+        "codec_type": "video",
+        "codec_tag_string": "avc1",
+        "codec_tag": "0x31637661",
+        "mime_codec_string": "avc1.64001e",
+        "width": 640,
+        "height": 360,
+        "coded_width": 640,
+        "coded_height": 360,
+        "has_b_frames": 0,
+        "sample_aspect_ratio": "1:1",
+        "display_aspect_ratio": "16:9",
+        "pix_fmt": "yuv420p",
+        "level": 30,
+        "color_range": "tv",
+        "color_space": "bt709",
+        "color_transfer": "bt709",
+        "color_primaries": "bt709",
+        "chroma_location": "left",
+        "field_order": "progressive",
+        "is_avc": "true",
+        "nal_length_size": "4",
+        "id": "0x1",
+        "r_frame_rate": "24/1",
+        "avg_frame_rate": "24/1",
+        "time_base": "1/12288",
+        "start_pts": 0,
+        "start_time": "0.000000",
+        "duration_ts": 24576,
+        "duration": "2.000000",
+        "bit_rate": "269108",
+        "bits_per_raw_sample": "8",
+        "nb_frames": "48",
+        "extradata_size": 51,
+        "disposition": {
+          "default": 1,
+          "dub": 0,
+          "original": 0,
+          "comment": 0,
+          "lyrics": 0,
+          "karaoke": 0,
+          "forced": 0,
+          "hearing_impaired": 0,
+          "visual_impaired": 0,
+          "clean_effects": 0,
+          "attached_pic": 0,
+          "timed_thumbnails": 0,
+          "non_diegetic": 0,
+          "captions": 0,
+          "descriptions": 0,
+          "metadata": 0,
+          "dependent": 0,
+          "still_image": 0,
+          "multilayer": 0
+        },
+        "tags": {
+          "language": "und",
+          "handler_name": "VideoHandler"
+        }
+      }
+    ],
+    "format": {
+      "filename": "/Users/colum/dev/personal/videoer/campaigns/after-hours-character-conformance/work/scenes/signal-attention/verification/signal-attention.mp4",
+      "nb_streams": 1,
+      "nb_programs": 0,
+      "nb_stream_groups": 0,
+      "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+      "format_long_name": "QuickTime / MOV",
+      "start_time": "0.000000",
+      "duration": "2.000000",
+      "size": "68402",
+      "bit_rate": "273608",
+      "probe_score": 100,
+      "tags": {
+        "major_brand": "isom",
+        "minor_version": "512",
+        "compatible_brands": "isomiso2avc1mp41",
+        "date": "2026/08/31 01:14:45",
+        "encoder": "Lavf61.7.102"
+      }
+    }
+  },
+  "verification": {
+    "schemaVersion": 1,
+    "status": "pass",
+    "checks": []
+  },
+  "renderChecks": [
+    {
+      "id": "attention-visible",
+      "status": "pass",
+      "message": "Semantic frames retain the required visible image coverage",
+      "measurements": {
+        "maximumBlackPercentage": 38,
+        "allowedBlackPercentage": 72,
+        "perFrameBlackPercentage": [
+          38,
+          36,
+          35
+        ]
+      }
+    },
+    {
+      "id": "attention-highlight-detail",
+      "status": "pass",
+      "message": "Semantic frames retain highlight detail within the declared limit",
+      "measurements": {
+        "maximumWhitePercentage": 0,
+        "allowedWhitePercentage": 16,
+        "perFrameWhitePercentage": [
+          0,
+          0,
+          0
+        ]
+      }
+    }
+  ],
+  "blender": {
+    "stdout": "Blender 4.5.13 LTS (hash daeeeca98fb0 built 2026-08-25 01:30:50)\nFra:1 Mem:50.99M (Peak 50.99M) | Time:00:00.05 | Rendering 1 / 64 samples\nFra:1 Mem:51.28M (Peak 51.28M) | Time:00:00.06 | Rendering 25 / 64 samples\nFra:1 Mem:51.23M (Peak 51.28M) | Time:00:00.17 | Rendering 50 / 64 samples\nFra:1 Mem:51.36M (Peak 51.36M) | Time:00:00.17 | Rendering 64 / 64 samples\nAppend frame 1\nTime: 00:00.29 (Saving: 00:00.03)\n\nFra:2 Mem:51.37M (Peak 54.88M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:2 Mem:51.31M (Peak 54.88M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:2 Mem:51.25M (Peak 54.88M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:2 Mem:51.38M (Peak 54.88M) | Time:00:00.11 | Rendering 64 / 64 samples\nAppend frame 2\nTime: 00:00.20 (Saving: 00:00.00)\n\nFra:3 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:3 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:3 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:3 Mem:51.38M (Peak 54.89M) | Time:00:00.12 | Rendering 64 / 64 samples\nAppend frame 3\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:4 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:4 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:4 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:4 Mem:51.38M (Peak 54.89M) | Time:00:00.12 | Rendering 64 / 64 samples\nAppend frame 4\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:5 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:5 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:5 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:5 Mem:51.38M (Peak 54.89M) | Time:00:00.12 | Rendering 64 / 64 samples\nAppend frame 5\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:6 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:6 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:6 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:6 Mem:51.38M (Peak 54.89M) | Time:00:00.12 | Rendering 64 / 64 samples\nAppend frame 6\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:7 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:7 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:7 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:7 Mem:51.38M (Peak 54.89M) | Time:00:00.12 | Rendering 64 / 64 samples\nAppend frame 7\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:8 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:8 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:8 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:8 Mem:51.38M (Peak 54.89M) | Time:00:00.12 | Rendering 64 / 64 samples\nAppend frame 8\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:9 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:9 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:9 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:9 Mem:51.38M (Peak 54.89M) | Time:00:00.12 | Rendering 64 / 64 samples\nAppend frame 9\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:10 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:10 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:10 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:10 Mem:51.38M (Peak 54.89M) | Time:00:00.12 | Rendering 64 / 64 samples\nAppend frame 10\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:11 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:11 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:11 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:11 Mem:51.38M (Peak 54.89M) | Time:00:00.12 | Rendering 64 / 64 samples\nAppend frame 11\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:12 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:12 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:12 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:12 Mem:51.38M (Peak 54.89M) | Time:00:00.12 | Rendering 64 / 64 samples\nAppend frame 12\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:13 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:13 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:13 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:13 Mem:51.38M (Peak 54.89M) | Time:00:00.12 | Rendering 64 / 64 samples\nAppend frame 13\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:14 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:14 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:14 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:14 Mem:51.38M (Peak 54.89M) | Time:00:00.12 | Rendering 64 / 64 samples\nAppend frame 14\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:15 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:15 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:15 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:15 Mem:51.38M (Peak 54.89M) | Time:00:00.12 | Rendering 64 / 64 samples\nAppend frame 15\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:16 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:16 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:16 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:16 Mem:51.38M (Peak 54.89M) | Time:00:00.11 | Rendering 64 / 64 samples\nAppend frame 16\nTime: 00:00.20 (Saving: 00:00.00)\n\nFra:17 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:17 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:17 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:17 Mem:51.38M (Peak 54.89M) | Time:00:00.12 | Rendering 64 / 64 samples\nAppend frame 17\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:18 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:18 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:18 Mem:51.25M (Peak 54.89M) | Time:00:00.12 | Rendering 50 / 64 samples\nFra:18 Mem:51.38M (Peak 54.89M) | Time:00:00.12 | Rendering 64 / 64 samples\nAppend frame 18\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:19 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:19 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:19 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:19 Mem:51.38M (Peak 54.89M) | Time:00:00.12 | Rendering 64 / 64 samples\nAppend frame 19\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:20 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:20 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:20 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:20 Mem:51.38M (Peak 54.89M) | Time:00:00.12 | Rendering 64 / 64 samples\nAppend frame 20\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:21 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:21 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:21 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:21 Mem:51.38M (Peak 54.89M) | Time:00:00.12 | Rendering 64 / 64 samples\nAppend frame 21\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:22 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:22 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:22 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:22 Mem:51.38M (Peak 54.89M) | Time:00:00.12 | Rendering 64 / 64 samples\nAppend frame 22\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:23 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:23 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:23 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:23 Mem:51.38M (Peak 54.89M) | Time:00:00.12 | Rendering 64 / 64 samples\nAppend frame 23\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:24 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:24 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:24 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:24 Mem:51.38M (Peak 54.89M) | Time:00:00.12 | Rendering 64 / 64 samples\nAppend frame 24\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:25 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:25 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:25 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:25 Mem:51.38M (Peak 54.89M) | Time:00:00.12 | Rendering 64 / 64 samples\nAppend frame 25\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:26 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:26 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:26 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:26 Mem:51.38M (Peak 54.89M) | Time:00:00.12 | Rendering 64 / 64 samples\nAppend frame 26\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:27 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:27 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:27 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:27 Mem:51.38M (Peak 54.89M) | Time:00:00.12 | Rendering 64 / 64 samples\nAppend frame 27\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:28 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:28 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:28 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:28 Mem:51.38M (Peak 54.89M) | Time:00:00.11 | Rendering 64 / 64 samples\nAppend frame 28\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:29 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:29 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:29 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:29 Mem:51.38M (Peak 54.89M) | Time:00:00.11 | Rendering 64 / 64 samples\nAppend frame 29\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:30 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:30 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:30 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:30 Mem:51.38M (Peak 54.89M) | Time:00:00.12 | Rendering 64 / 64 samples\nAppend frame 30\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:31 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:31 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:31 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:31 Mem:51.38M (Peak 54.89M) | Time:00:00.12 | Rendering 64 / 64 samples\nAppend frame 31\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:32 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:32 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:32 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:32 Mem:51.38M (Peak 54.89M) | Time:00:00.11 | Rendering 64 / 64 samples\nAppend frame 32\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:33 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:33 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:33 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:33 Mem:51.38M (Peak 54.89M) | Time:00:00.12 | Rendering 64 / 64 samples\nAppend frame 33\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:34 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:34 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:34 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:34 Mem:51.38M (Peak 54.89M) | Time:00:00.12 | Rendering 64 / 64 samples\nAppend frame 34\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:35 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:35 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:35 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:35 Mem:51.38M (Peak 54.89M) | Time:00:00.12 | Rendering 64 / 64 samples\nAppend frame 35\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:36 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:36 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:36 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:36 Mem:51.38M (Peak 54.89M) | Time:00:00.12 | Rendering 64 / 64 samples\nAppend frame 36\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:37 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:37 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:37 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:37 Mem:51.38M (Peak 54.89M) | Time:00:00.12 | Rendering 64 / 64 samples\nAppend frame 37\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:38 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:38 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:38 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:38 Mem:51.38M (Peak 54.89M) | Time:00:00.12 | Rendering 64 / 64 samples\nAppend frame 38\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:39 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:39 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:39 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:39 Mem:51.38M (Peak 54.89M) | Time:00:00.11 | Rendering 64 / 64 samples\nAppend frame 39\nTime: 00:00.20 (Saving: 00:00.00)\n\nFra:40 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:40 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:40 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:40 Mem:51.38M (Peak 54.89M) | Time:00:00.11 | Rendering 64 / 64 samples\nAppend frame 40\nTime: 00:00.20 (Saving: 00:00.00)\n\nFra:41 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:41 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:41 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:41 Mem:51.38M (Peak 54.89M) | Time:00:00.11 | Rendering 64 / 64 samples\nAppend frame 41\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:42 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:42 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:42 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:42 Mem:51.38M (Peak 54.89M) | Time:00:00.12 | Rendering 64 / 64 samples\nAppend frame 42\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:43 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:43 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:43 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:43 Mem:51.38M (Peak 54.89M) | Time:00:00.12 | Rendering 64 / 64 samples\nAppend frame 43\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:44 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:44 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:44 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:44 Mem:51.38M (Peak 54.89M) | Time:00:00.12 | Rendering 64 / 64 samples\nAppend frame 44\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:45 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:45 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:45 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:45 Mem:51.38M (Peak 54.89M) | Time:00:00.12 | Rendering 64 / 64 samples\nAppend frame 45\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:46 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:46 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:46 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:46 Mem:51.38M (Peak 54.89M) | Time:00:00.11 | Rendering 64 / 64 samples\nAppend frame 46\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:47 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:47 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:47 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:47 Mem:51.38M (Peak 54.89M) | Time:00:00.11 | Rendering 64 / 64 samples\nAppend frame 47\nTime: 00:00.21 (Saving: 00:00.00)\n\nFra:48 Mem:51.38M (Peak 54.89M) | Time:00:00.00 | Rendering 1 / 64 samples\nFra:48 Mem:51.31M (Peak 54.89M) | Time:00:00.00 | Rendering 25 / 64 samples\nFra:48 Mem:51.25M (Peak 54.89M) | Time:00:00.11 | Rendering 50 / 64 samples\nFra:48 Mem:51.38M (Peak 54.89M) | Time:00:00.11 | Rendering 64 / 64 samples\nAppend frame 48\nTime: 00:00.20 (Saving: 00:00.00)\n\nInfo: Saved as \"signal-attention.blend\"\n\nBlender quit\n",
+    "stderr": ""
+  }
+}

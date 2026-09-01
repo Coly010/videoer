@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 1,
+  "id": "lighting.moonlit-exterior.rooftop-transfer",
+  "exposure": {
+    "look": "AgX - Medium High Contrast",
+    "coherentAcrossShots": true
+  },
+  "worldColor": [
+    0.001,
+    0.003,
+    0.01
+  ],
+  "lights": [
+    {
+      "id": "moon-directional-key",
+      "type": "area",
+      "position": [
+        -5.26827272271202,
+        8.35,
+        -3.3951776755994256
+      ],
+      "target": [
+        0.0957697658311355,
+        1.7,
+        0.994246908683093
+      ],
+      "color": [
+        0.3008,
+        0.4704,
+        1
+      ],
+      "energy": 921.1999999999999,
+      "sizeMeters": 3.2,
+      "angleDegrees": 45,
+      "purpose": "key"
+    },
+    {
+      "id": "night-sky-fill",
+      "type": "area",
+      "position": [
+        3.6290181674979882,
+        7.15,
+        -1.4462767507225331
+      ],
+      "target": [
+        0.08379854510224355,
+        1.85,
+        0.8949660450977064
+      ],
+      "color": [
+        0.11279999999999998,
+        0.196,
+        0.46
+      ],
+      "energy": 274.104,
+      "sizeMeters": 6.5,
+      "angleDegrees": 45,
+      "purpose": "environment"
+    },
+    {
+      "id": "silver-edge-rim",
+      "type": "spot",
+      "position": [
+        4.922545249040292,
+        4.65,
+        3.4339678834445544
+      ],
+      "target": [
+        0.29433149300190875,
+        1.8,
+        0.9703044672253092
+      ],
+      "color": [
+        0.423,
+        0.6272,
+        1
+      ],
+      "energy": 397.808,
+      "sizeMeters": 0.45,
+      "angleDegrees": 52,
+      "purpose": "rim"
+    },
+    {
+      "id": "warm-aperture-practical",
+      "type": "point",
+      "position": [
+        3.1337976799084046,
+        2.5,
+        3.468350057965136
+      ],
+      "target": [
+        0.377411074371083,
+        1.65,
+        0.4063028864123448
+      ],
+      "color": [
+        0.94,
+        0.3626,
+        0.105
+      ],
+      "energy": 347.424,
+      "sizeMeters": 0.18,
+      "angleDegrees": 45,
+      "purpose": "practical"
+    },
+    {
+      "id": "cool-ground-bounce",
+      "type": "area",
+      "position": [
+        -0.9618439988875801,
+        1.03,
+        -1.0941623243642773
+      ],
+      "target": [
+        0.08978415546668952,
+        1.75,
+        0.9446064768903997
+      ],
+      "color": [
+        0.11279999999999998,
+        0.2352,
+        0.58
+      ],
+      "energy": 126.33600000000001,
+      "sizeMeters": 3.4,
+      "angleDegrees": 45,
+      "purpose": "fill"
+    }
+  ],
+  "metadata": {
+    "context": "unrelated-contemporary-rooftop-transfer",
+    "contrastStrategy": "cool-directional-key-and-sky-fill-with-warm-local-depth-cue",
+    "intendedShotDistance": "background-to-medium",
+    "motionDependency": "none",
+    "sourceCandidate": "lighting.moonlit-exterior@0.1.0",
+    "derivedFrom": "lighting.moonlit-exterior",
+    "lightingAdaptation": "lighting-rig-transform-v1"
+  }
+}

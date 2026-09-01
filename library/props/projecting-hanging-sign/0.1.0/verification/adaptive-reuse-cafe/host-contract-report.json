@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "kind": "adaptive-reuse-cafe",
+  "host": {
+    "kind": "vertical-facade-mount",
+    "facadePlaneZ": 0,
+    "mountHeightMeters": 3.35,
+    "clearanceVolumeAvailable": true
+  },
+  "asset": {
+    "kind": "vertical-facade-mount",
+    "facadePlaneZ": 0,
+    "exteriorNormal": [
+      0,
+      0,
+      -1
+    ],
+    "requiredMountHeightMeters": {
+      "minimum": 2.35,
+      "maximum": 4.8
+    },
+    "requiredClearanceVolumeMeters": {
+      "minimum": [
+        -0.14,
+        -1.05,
+        -1.08
+      ],
+      "maximum": [
+        0.14,
+        0.43,
+        0.06
+      ]
+    }
+  },
+  "exactPortableGeometryReused": true
+}

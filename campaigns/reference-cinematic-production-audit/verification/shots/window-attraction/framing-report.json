@@ -1,0 +1,276 @@
+{
+  "schemaVersion": 1,
+  "cameraContract": {
+    "valid": true,
+    "trackingConstraint": "TRACK_TO",
+    "trackAxis": "TRACK_NEGATIVE_Z",
+    "upAxis": "UP_Y",
+    "interpolationImplementation": "frame-baked-declarative-v1",
+    "maximumPositionErrorMeters": 0,
+    "maximumTargetErrorMeters": 0,
+    "maximumLensErrorMillimeters": 3.603278770469842e-06,
+    "positionToleranceMeters": 1e-05,
+    "targetToleranceMeters": 1e-05,
+    "lensToleranceMillimeters": 0.005,
+    "samples": [
+      {
+        "landmarkId": "walking",
+        "frame": 1,
+        "positionErrorMeters": 0.0,
+        "targetErrorMeters": 0.0,
+        "lensErrorMillimeters": 0.0,
+        "actualLensMillimeters": 64.0,
+        "expectedLensMillimeters": 64
+      },
+      {
+        "landmarkId": "notice",
+        "frame": 19,
+        "positionErrorMeters": 0.0,
+        "targetErrorMeters": 0.0,
+        "lensErrorMillimeters": 3.603278770469842e-06,
+        "actualLensMillimeters": 65.5549545288086,
+        "expectedLensMillimeters": 65.55495813208736
+      },
+      {
+        "landmarkId": "orient",
+        "frame": 31,
+        "positionErrorMeters": 0.0,
+        "targetErrorMeters": 0.0,
+        "lensErrorMillimeters": 8.439518381919697e-07,
+        "actualLensMillimeters": 67.24697875976562,
+        "expectedLensMillimeters": 67.24697960371746
+      },
+      {
+        "landmarkId": "attention",
+        "frame": 43,
+        "positionErrorMeters": 0.0,
+        "targetErrorMeters": 0.0,
+        "lensErrorMillimeters": 0.0,
+        "actualLensMillimeters": 68.0,
+        "expectedLensMillimeters": 68.0
+      }
+    ]
+  },
+  "samples": [
+    {
+      "landmarkId": "walking",
+      "progress": 0,
+      "frame": 1,
+      "entities": {
+        "bookshop-set": {
+          "minimumX": -695.4215087890625,
+          "maximumX": 630.6143798828125,
+          "minimumY": -280.6949768066406,
+          "maximumY": 116.158203125,
+          "widthPercentage": 132603.5888671875,
+          "heightPercentage": 39685.31799316406
+        },
+        "elara": {
+          "minimumX": -0.8488873243331909,
+          "maximumX": 0.9780092239379883,
+          "minimumY": -0.5056041479110718,
+          "maximumY": 0.9176836609840393,
+          "widthPercentage": 182.68965482711792,
+          "heightPercentage": 142.3287808895111
+        },
+        "elara-hair": {
+          "minimumX": -0.02212444134056568,
+          "maximumX": 0.3007941246032715,
+          "minimumY": 0.805677056312561,
+          "maximumY": 1.0269768238067627,
+          "widthPercentage": 32.29185659438372,
+          "heightPercentage": 22.129976749420166
+        },
+        "canopy": {
+          "minimumX": -0.4542039930820465,
+          "maximumX": 885.8296508789062,
+          "minimumY": 1.1523667573928833,
+          "maximumY": 780.8228149414062,
+          "widthPercentage": 88628.38548719883,
+          "heightPercentage": 77967.04481840134
+        },
+        "sign": {
+          "minimumX": -0.3855661451816559,
+          "maximumX": 0.44488027691841125,
+          "minimumY": 1.1601580381393433,
+          "maximumY": 1.8491345643997192,
+          "widthPercentage": 83.04464221000671,
+          "heightPercentage": 68.8976526260376
+        },
+        "fern": {
+          "minimumX": -0.12728507816791534,
+          "maximumX": 0.5620207786560059,
+          "minimumY": 0.07649628072977066,
+          "maximumY": 0.5689334869384766,
+          "widthPercentage": 68.93058568239212,
+          "heightPercentage": 49.24372062087059
+        }
+      }
+    },
+    {
+      "landmarkId": "notice",
+      "progress": 0.42,
+      "frame": 19,
+      "entities": {
+        "bookshop-set": {
+          "minimumX": -24379.298828125,
+          "maximumX": 2466.233642578125,
+          "minimumY": -9735.234375,
+          "maximumY": 303.1686096191406,
+          "widthPercentage": 2684553.2470703125,
+          "heightPercentage": 1003840.2984619141
+        },
+        "elara": {
+          "minimumX": -1.2043529748916626,
+          "maximumX": 1.0651280879974365,
+          "minimumY": -0.6550653576850891,
+          "maximumY": 0.9769388437271118,
+          "widthPercentage": 226.9481062889099,
+          "heightPercentage": 163.2004201412201
+        },
+        "elara-hair": {
+          "minimumX": -0.11870865523815155,
+          "maximumX": 0.26395609974861145,
+          "minimumY": 0.8450575470924377,
+          "maximumY": 1.1066404581069946,
+          "widthPercentage": 38.2664754986763,
+          "heightPercentage": 26.15829110145569
+        },
+        "canopy": {
+          "minimumX": -0.6417385935783386,
+          "maximumX": 259.504638671875,
+          "minimumY": 1.1863116025924683,
+          "maximumY": 237.9510040283203,
+          "widthPercentage": 26014.637726545334,
+          "heightPercentage": 23676.469242572784
+        },
+        "sign": {
+          "minimumX": -0.5802431702613831,
+          "maximumX": 0.2925472557544708,
+          "minimumY": 1.1950156688690186,
+          "maximumY": 1.9131380319595337,
+          "widthPercentage": 87.27904260158539,
+          "heightPercentage": 71.81223630905151
+        },
+        "fern": {
+          "minimumX": -0.295848548412323,
+          "maximumX": 0.4114112854003906,
+          "minimumY": 0.08511229604482651,
+          "maximumY": 0.5876150727272034,
+          "widthPercentage": 70.72598338127136,
+          "heightPercentage": 50.250277668237686
+        }
+      }
+    },
+    {
+      "landmarkId": "orient",
+      "progress": 0.72,
+      "frame": 31,
+      "entities": {
+        "bookshop-set": {
+          "minimumX": -1469.3428955078125,
+          "maximumX": 293.9132080078125,
+          "minimumY": -372.45550537109375,
+          "maximumY": 673.77685546875,
+          "widthPercentage": 176325.6103515625,
+          "heightPercentage": 104623.23608398438
+        },
+        "elara": {
+          "minimumX": -1.6213929653167725,
+          "maximumX": 0.9865075349807739,
+          "minimumY": -0.8322473168373108,
+          "maximumY": 1.0398846864700317,
+          "widthPercentage": 260.79005002975464,
+          "heightPercentage": 187.21320033073425
+        },
+        "elara-hair": {
+          "minimumX": -0.3707544207572937,
+          "maximumX": 0.19127516448497772,
+          "minimumY": 0.8913214802742004,
+          "maximumY": 1.1757776737213135,
+          "widthPercentage": 56.20295852422714,
+          "heightPercentage": 28.445619344711304
+        },
+        "canopy": {
+          "minimumX": -0.884486734867096,
+          "maximumX": 79.87548828125,
+          "minimumY": 1.2305984497070312,
+          "maximumY": 80.07051086425781,
+          "widthPercentage": 8075.99750161171,
+          "heightPercentage": 7883.991241455078
+        },
+        "sign": {
+          "minimumX": -0.833164393901825,
+          "maximumX": 0.09725462645292282,
+          "minimumY": 1.2405776977539062,
+          "maximumY": 1.997299075126648,
+          "widthPercentage": 93.04190203547478,
+          "heightPercentage": 75.67213773727417
+        },
+        "fern": {
+          "minimumX": -0.5086698532104492,
+          "maximumX": 0.22282743453979492,
+          "minimumY": 0.09811139106750488,
+          "maximumY": 0.6129680871963501,
+          "widthPercentage": 73.14972877502441,
+          "heightPercentage": 51.48566961288452
+        }
+      }
+    },
+    {
+      "landmarkId": "attention",
+      "progress": 1,
+      "frame": 43,
+      "entities": {
+        "bookshop-set": {
+          "minimumX": -25309.75,
+          "maximumX": 1262794.625,
+          "minimumY": -431577.96875,
+          "maximumY": 370.6528015136719,
+          "widthPercentage": 128810437.5,
+          "heightPercentage": 43194862.15515137
+        },
+        "elara": {
+          "minimumX": -1.4602705240249634,
+          "maximumX": 1.1568834781646729,
+          "minimumY": -1.0893160104751587,
+          "maximumY": 1.0587596893310547,
+          "widthPercentage": 261.7154002189636,
+          "heightPercentage": 214.80756998062134
+        },
+        "elara-hair": {
+          "minimumX": -0.25418323278427124,
+          "maximumX": 0.3554946482181549,
+          "minimumY": 0.8964369893074036,
+          "maximumY": 1.2084386348724365,
+          "widthPercentage": 60.967788100242615,
+          "heightPercentage": 31.200164556503296
+        },
+        "canopy": {
+          "minimumX": -1.0093460083007812,
+          "maximumX": 61.265647888183594,
+          "minimumY": 1.2533926963806152,
+          "maximumY": 64.19318389892578,
+          "widthPercentage": 6227.4993896484375,
+          "heightPercentage": 6293.979120254517
+        },
+        "sign": {
+          "minimumX": -0.9637109637260437,
+          "maximumX": -0.002182937925681472,
+          "minimumY": 1.2640658617019653,
+          "maximumY": 2.041135311126709,
+          "widthPercentage": 96.15280258003622,
+          "heightPercentage": 77.70694494247437
+        },
+        "fern": {
+          "minimumX": -0.6158310770988464,
+          "maximumX": 0.12864340841770172,
+          "minimumY": 0.10519256442785263,
+          "maximumY": 0.6262537240982056,
+          "widthPercentage": 74.44744855165482,
+          "heightPercentage": 52.106115967035294
+        }
+      }
+    }
+  ]
+}

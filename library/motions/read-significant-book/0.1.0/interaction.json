@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "id": "interaction.read-significant-book",
+  "type": "read-book",
+  "actor": "character.elara-vale",
+  "target": "prop.significant-book",
+  "hand": "both",
+  "phases": [
+    {
+      "id": "hold-low",
+      "start": 0,
+      "end": 0.16,
+      "constraint": "attach"
+    },
+    {
+      "id": "raise",
+      "start": 0.16,
+      "end": 0.48,
+      "constraint": "attach"
+    },
+    {
+      "id": "settle",
+      "start": 0.48,
+      "end": 0.64,
+      "constraint": "attach"
+    },
+    {
+      "id": "read",
+      "start": 0.64,
+      "end": 1,
+      "constraint": "attach"
+    }
+  ],
+  "invariants": [
+    "contact",
+    "gaze",
+    "joint-limits"
+  ],
+  "metadata": {
+    "effectors": {
+      "left": "left-hand-grip",
+      "right": "right-hand-grip"
+    },
+    "targets": {
+      "left": "left-grip",
+      "right": "right-grip"
+    }
+  }
+}

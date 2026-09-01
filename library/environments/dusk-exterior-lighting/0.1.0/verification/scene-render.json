@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "source": "/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/lighting/dusk-exterior/verification/scene.json",
+  "manifest": "/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/lighting/dusk-exterior/verification/resolved-scene.json",
+  "video": "/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/lighting/dusk-exterior/verification/exterior-lighting-probe.mp4",
+  "blend": "/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/lighting/dusk-exterior/verification/exterior-lighting-probe.blend",
+  "frames": [
+    {
+      "id": "exposure-start",
+      "progress": 0,
+      "description": "Rig establishes controlled exposure and color contrast",
+      "path": "/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/lighting/dusk-exterior/verification/000-exposure-start.png"
+    },
+    {
+      "id": "exposure-mid",
+      "progress": 0.5,
+      "description": "Warm practicals separate from cool dusk key",
+      "path": "/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/lighting/dusk-exterior/verification/050-exposure-mid.png"
+    },
+    {
+      "id": "exposure-end",
+      "progress": 1,
+      "description": "Exposure remains coherent through camera movement",
+      "path": "/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/lighting/dusk-exterior/verification/100-exposure-end.png"
+    }
+  ],
+  "contactSheet": "/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/lighting/dusk-exterior/verification/contact-sheet.png",
+  "media": {
+    "streams": [
+      {
+        "index": 0,
+        "codec_name": "h264",
+        "codec_long_name": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+        "profile": "High",
+        "codec_type": "video",
+        "codec_tag_string": "avc1",
+        "codec_tag": "0x31637661",
+        "mime_codec_string": "avc1.64001e",
+        "width": 360,
+        "height": 640,
+        "coded_width": 360,
+        "coded_height": 640,
+        "has_b_frames": 0,
+        "sample_aspect_ratio": "1:1",
+        "display_aspect_ratio": "9:16",
+        "pix_fmt": "yuv420p",
+        "level": 30,
+        "color_range": "tv",
+        "color_space": "bt709",
+        "color_transfer": "bt709",
+        "color_primaries": "bt709",
+        "chroma_location": "left",
+        "field_order": "progressive",
+        "is_avc": "true",
+        "nal_length_size": "4",
+        "id": "0x1",
+        "r_frame_rate": "24/1",
+        "avg_frame_rate": "24/1",
+        "time_base": "1/12288",
+        "start_pts": 0,
+        "start_time": "0.000000",
+        "duration_ts": 6144,
+        "duration": "0.500000",
+        "bit_rate": "422624",
+        "bits_per_raw_sample": "8",
+        "nb_frames": "12",
+        "extradata_size": 51,
+        "disposition": {
+          "default": 1,
+          "dub": 0,
+          "original": 0,
+          "comment": 0,
+          "lyrics": 0,
+          "karaoke": 0,
+          "forced": 0,
+          "hearing_impaired": 0,
+          "visual_impaired": 0,
+          "clean_effects": 0,
+          "attached_pic": 0,
+          "timed_thumbnails": 0,
+          "non_diegetic": 0,
+          "captions": 0,
+          "descriptions": 0,
+          "metadata": 0,
+          "dependent": 0,
+          "still_image": 0,
+          "multilayer": 0
+        },
+        "tags": {
+          "language": "und",
+          "handler_name": "VideoHandler"
+        }
+      }
+    ],
+    "format": {
+      "filename": "/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/lighting/dusk-exterior/verification/exterior-lighting-probe.mp4",
+      "nb_streams": 1,
+      "nb_programs": 0,
+      "nb_stream_groups": 0,
+      "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+      "format_long_name": "QuickTime / MOV",
+      "start_time": "0.000000",
+      "duration": "0.500000",
+      "size": "27387",
+      "bit_rate": "438192",
+      "probe_score": 100,
+      "tags": {
+        "major_brand": "isom",
+        "minor_version": "512",
+        "compatible_brands": "isomiso2avc1mp41",
+        "date": "2026/08/30 23:32:22",
+        "encoder": "Lavf61.7.102"
+      }
+    }
+  },
+  "verification": {
+    "schemaVersion": 1,
+    "status": "pass",
+    "checks": []
+  },
+  "blender": {
+    "stdout": "Blender 4.5.13 LTS (hash daeeeca98fb0 built 2026-08-25 01:30:50)\nFra:1 Mem:49.53M (Peak 49.53M) | Time:00:00.10 | Rendering 1 / 64 samples\nFra:1 Mem:49.61M (Peak 49.61M) | Time:00:00.38 | Rendering 25 / 64 samples\nFra:1 Mem:49.61M (Peak 49.61M) | Time:00:00.57 | Rendering 50 / 64 samples\nFra:1 Mem:49.61M (Peak 49.61M) | Time:00:00.68 | Rendering 64 / 64 samples\nAppend frame 1\nTime: 00:00.72 (Saving: 00:00.03)\n\nFra:2 Mem:49.68M (Peak 53.19M) | Time:00:00.02 | Rendering 1 / 64 samples\nFra:2 Mem:49.62M (Peak 53.19M) | Time:00:00.24 | Rendering 25 / 64 samples\nFra:2 Mem:49.68M (Peak 53.19M) | Time:00:00.49 | Rendering 50 / 64 samples\nFra:2 Mem:49.62M (Peak 53.19M) | Time:00:00.63 | Rendering 64 / 64 samples\nAppend frame 2\nTime: 00:00.65 (Saving: 00:00.00)\n\nFra:3 Mem:49.62M (Peak 53.19M) | Time:00:00.03 | Rendering 1 / 64 samples\nFra:3 Mem:49.62M (Peak 53.19M) | Time:00:00.26 | Rendering 25 / 64 samples\nFra:3 Mem:49.68M (Peak 53.19M) | Time:00:00.50 | Rendering 50 / 64 samples\nFra:3 Mem:49.62M (Peak 53.19M) | Time:00:00.64 | Rendering 64 / 64 samples\nAppend frame 3\nTime: 00:00.66 (Saving: 00:00.00)\n\nFra:4 Mem:49.62M (Peak 53.19M) | Time:00:00.04 | Rendering 1 / 64 samples\nFra:4 Mem:49.62M (Peak 53.19M) | Time:00:00.26 | Rendering 25 / 64 samples\nFra:4 Mem:49.68M (Peak 53.19M) | Time:00:00.51 | Rendering 50 / 64 samples\nFra:4 Mem:49.62M (Peak 53.19M) | Time:00:00.64 | Rendering 64 / 64 samples\nAppend frame 4\nTime: 00:00.66 (Saving: 00:00.00)\n\nFra:5 Mem:49.62M (Peak 53.19M) | Time:00:00.03 | Rendering 1 / 64 samples\nFra:5 Mem:49.62M (Peak 53.19M) | Time:00:00.26 | Rendering 25 / 64 samples\nFra:5 Mem:49.68M (Peak 53.19M) | Time:00:00.50 | Rendering 50 / 64 samples\nFra:5 Mem:49.62M (Peak 53.19M) | Time:00:00.64 | Rendering 64 / 64 samples\nAppend frame 5\nTime: 00:00.66 (Saving: 00:00.00)\n\nFra:6 Mem:49.62M (Peak 53.19M) | Time:00:00.03 | Rendering 1 / 64 samples\nFra:6 Mem:49.62M (Peak 53.19M) | Time:00:00.26 | Rendering 25 / 64 samples\nFra:6 Mem:49.68M (Peak 53.19M) | Time:00:00.50 | Rendering 50 / 64 samples\nFra:6 Mem:49.62M (Peak 53.19M) | Time:00:00.64 | Rendering 64 / 64 samples\nAppend frame 6\nTime: 00:00.66 (Saving: 00:00.00)\n\nFra:7 Mem:49.62M (Peak 53.19M) | Time:00:00.03 | Rendering 1 / 64 samples\nFra:7 Mem:49.62M (Peak 53.19M) | Time:00:00.25 | Rendering 25 / 64 samples\nFra:7 Mem:49.68M (Peak 53.19M) | Time:00:00.49 | Rendering 50 / 64 samples\nFra:7 Mem:49.62M (Peak 53.19M) | Time:00:00.62 | Rendering 64 / 64 samples\nAppend frame 7\nTime: 00:00.63 (Saving: 00:00.00)\n\nFra:8 Mem:49.62M (Peak 53.19M) | Time:00:00.03 | Rendering 1 / 64 samples\nFra:8 Mem:49.62M (Peak 53.19M) | Time:00:00.25 | Rendering 25 / 64 samples\nFra:8 Mem:49.68M (Peak 53.19M) | Time:00:00.49 | Rendering 50 / 64 samples\nFra:8 Mem:49.62M (Peak 53.19M) | Time:00:00.62 | Rendering 64 / 64 samples\nAppend frame 8\nTime: 00:00.64 (Saving: 00:00.00)\n\nFra:9 Mem:49.62M (Peak 53.19M) | Time:00:00.03 | Rendering 1 / 64 samples\nFra:9 Mem:49.62M (Peak 53.19M) | Time:00:00.25 | Rendering 25 / 64 samples\nFra:9 Mem:49.68M (Peak 53.19M) | Time:00:00.49 | Rendering 50 / 64 samples\nFra:9 Mem:49.62M (Peak 53.19M) | Time:00:00.62 | Rendering 64 / 64 samples\nAppend frame 9\nTime: 00:00.64 (Saving: 00:00.00)\n\nFra:10 Mem:49.62M (Peak 53.19M) | Time:00:00.03 | Rendering 1 / 64 samples\nFra:10 Mem:49.62M (Peak 53.19M) | Time:00:00.26 | Rendering 25 / 64 samples\nFra:10 Mem:49.68M (Peak 53.19M) | Time:00:00.49 | Rendering 50 / 64 samples\nFra:10 Mem:49.62M (Peak 53.19M) | Time:00:00.62 | Rendering 64 / 64 samples\nAppend frame 10\nTime: 00:00.64 (Saving: 00:00.00)\n\nFra:11 Mem:49.62M (Peak 53.19M) | Time:00:00.03 | Rendering 1 / 64 samples\nFra:11 Mem:49.62M (Peak 53.19M) | Time:00:00.25 | Rendering 25 / 64 samples\nFra:11 Mem:49.68M (Peak 53.19M) | Time:00:00.48 | Rendering 50 / 64 samples\nFra:11 Mem:49.62M (Peak 53.19M) | Time:00:00.61 | Rendering 64 / 64 samples\nAppend frame 11\nTime: 00:00.63 (Saving: 00:00.00)\n\nFra:12 Mem:49.62M (Peak 53.19M) | Time:00:00.03 | Rendering 1 / 64 samples\nFra:12 Mem:49.62M (Peak 53.19M) | Time:00:00.25 | Rendering 25 / 64 samples\nFra:12 Mem:49.68M (Peak 53.19M) | Time:00:00.48 | Rendering 50 / 64 samples\nFra:12 Mem:49.62M (Peak 53.19M) | Time:00:00.61 | Rendering 64 / 64 samples\nAppend frame 12\nTime: 00:00.63 (Saving: 00:00.00)\n\nInfo: Saved as \"exterior-lighting-probe.blend\"\n\nBlender quit\n",
+    "stderr": ""
+  }
+}

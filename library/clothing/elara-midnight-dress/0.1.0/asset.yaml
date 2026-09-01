@@ -1,0 +1,109 @@
+schemaVersion: 1
+id: clothing.elara-midnight-dress
+version: 0.1.0
+type: clothing
+title: Elara midnight period dress
+description: Project-owned fitted long dark dress extracted with canonical
+  humanoid skin weights and verified on neutral and cautious gait.
+status: verified
+tags:
+  - long-dress
+  - dark
+  - period-inspired
+  - woman
+capabilities:
+  - canonical-humanoid-fit
+  - walk-deformation
+  - reusable-material
+source:
+  kind: procedural
+  generator: videoer.material-geometry-extractor.v1
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: geometry
+    path: geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: 3d0c682942faf69ff2f617d9fc1efdfaceb78139015fb036fc56af74ce3757c3
+  - role: preview
+    path: verification/turntable.mp4
+    mediaType: video/mp4
+    sha256: c6249aa70359cb1126894919a4e8b12e94f324a5e75e35c37e2b60f3f43267fd
+  - role: blender-source
+    path: verification/mannequin.blend
+    mediaType: application/x-blender
+    sha256: 8829e03fd7dee64f535484ba3b9f1c2b7176c99d4a39e7d59c509aee0661b881
+  - role: neutral-walk-preview
+    path: verification/walk-neutral/walk.mp4
+    mediaType: video/mp4
+    sha256: 825f909893cc4591420a5328d87d615803f8b6f580f538947f1ea39fcc94de7d
+  - role: cautious-walk-preview
+    path: verification/walk-cautious/walk.mp4
+    mediaType: video/mp4
+    sha256: a3cf11c45ba01c3296ca62885a5fe17082358d9760e7df86d4c1d1b87b62a5a6
+  - role: verification-verification-contact-sheet
+    path: verification/contact-sheet.png
+    mediaType: image/png
+    sha256: a0a8ffb525c3df4f5945148b7601f24b2123045da53827c7775b30e2f169cb27
+  - role: verification-verification-walk-neutral-contact-sheet
+    path: verification/walk-neutral/contact-sheet.png
+    mediaType: image/png
+    sha256: 082863cfffdd05e8e36eb43d88e1ff3cd80fb49b7fe66dc0ccfd76c7509b4922
+  - role: verification-verification-walk-neutral-contact-sheet-three-quarter
+    path: verification/walk-neutral/contact-sheet-three-quarter.png
+    mediaType: image/png
+    sha256: 8e8af8b535ee57a60dfc252889f77b71d78db1c36e1ee1b6e5ee4d3d0c7a0486
+  - role: verification-verification-walk-neutral-motion-probe
+    path: verification/walk-neutral/motion-probe.json
+    mediaType: application/json
+    sha256: 80d5709d310a149de94e416511f2200be6ef780ee3a439b8e24500ff109b40da
+  - role: verification-verification-walk-cautious-contact-sheet
+    path: verification/walk-cautious/contact-sheet.png
+    mediaType: image/png
+    sha256: e8bcc06d95364a680664507c9781718520f2993cf86747b9f1babdc0e85c8e37
+  - role: verification-verification-walk-cautious-contact-sheet-three-quarter
+    path: verification/walk-cautious/contact-sheet-three-quarter.png
+    mediaType: image/png
+    sha256: f1e2f0e067f92dfd5758cd3e59837a8732095bf199015d5877340e15acd2ae09
+  - role: verification-verification-walk-cautious-motion-probe
+    path: verification/walk-cautious/motion-probe.json
+    mediaType: application/json
+    sha256: b623bf6af2e6793d1e0f3e8f6e2e8235f0ddc904f2110566ec44f51614657713
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  skeleton: videoer.canonical-humanoid.v1
+  renderers:
+    - three-3d
+    - blender-headless
+  requires:
+    - id: character.elara-vale
+      version: 0.1.2
+verification:
+  checks:
+    - geometry.topology
+    - skin.weights-normalized
+    - clothing.canonical-humanoid-fit
+    - visual.canonical-views
+    - visual.turntable
+    - motion.canonical-forward-direction
+    - motion.anatomical-knee-polarity
+    - motion.anatomical-foot-direction
+    - motion.planted-contact-error
+    - motion.swing-clearance
+    - visual.neutral-walk-deformation
+    - visual.cautious-walk-deformation
+  artifacts:
+    - verification/contact-sheet.png
+    - verification/turntable.mp4
+    - verification/walk-neutral/contact-sheet.png
+    - verification/walk-neutral/contact-sheet-three-quarter.png
+    - verification/walk-neutral/motion-probe.json
+    - verification/walk-cautious/contact-sheet.png
+    - verification/walk-cautious/contact-sheet-three-quarter.png
+    - verification/walk-cautious/motion-probe.json
+  verifiedAt: 2026-08-30T22:22:14.128Z

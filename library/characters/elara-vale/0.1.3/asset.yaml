@@ -1,0 +1,170 @@
+schemaVersion: 1
+id: character.elara-vale
+version: 0.1.3
+type: character
+title: Elara Vale
+description: Original recurring old-city heroine with stable proportions, a
+  readable basic face, pulled-back dark hair, and a pelvis-dominant long dress
+  that remains controlled during gait.
+status: verified
+tags:
+  - humanoid
+  - woman
+  - recurring
+  - procedural
+  - project-owned
+capabilities:
+  - canonical-humanoid-rig
+  - skinned-mesh
+  - continuous-body-parameters
+  - stable-material-palette
+  - basic-face
+  - mesh-hair
+  - fitted-long-dress
+  - long-dress-drape-skinning
+  - walk-deformation
+  - motion-retargeting
+  - hand-attachments
+  - foot-contact-points
+  - gaze-target
+  - identity-reference
+source:
+  kind: procedural
+  generator: videoer.character-factory.v1
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: definition
+    path: character.yaml
+    mediaType: application/yaml
+    sha256: 119fb88b955b34893d00eec925ae34bae63466b94c0ce0676a9330bf8b9cc66b
+  - role: geometry
+    path: geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: 89a0a4a6cbd07bfe3690ec0f158ff3e26f5c601e3cfa994e40c89aa87e17d24d
+  - role: validation
+    path: validation.json
+    mediaType: application/json
+    sha256: c851735e5a80b00fc8f282235d1d6682546833055a5e597c307a537d43aafa15
+  - role: blender-source
+    path: verification/body/mannequin.blend
+    mediaType: application/x-blender
+    sha256: 48aa87fa4fc51be2f6bb13914f53956127c182103c87285d23623e77eb32bb0a
+  - role: turntable
+    path: verification/body/turntable.mp4
+    mediaType: video/mp4
+    sha256: d24fcfa2d87184d21e803ce765ce46cf9dd0e512d5c981b71a627aff5ed9d9e3
+  - role: identity-reference
+    path: verification/body/contact-sheet.png
+    mediaType: image/png
+    sha256: a6883de7576716143215bc6bd5c27fffe17a79dde40340305e61b779f453e938
+  - role: identity-face-reference
+    path: verification/body/face-close-up.png
+    mediaType: image/png
+    sha256: c932ec09171a31862cabdc57ebc2ad6db0e715819c5940f6325e2def675edbf2
+  - role: neutral-walk-preview
+    path: verification/walk-neutral/walk.mp4
+    mediaType: video/mp4
+    sha256: a7306a322886a95ffb4e0a1efaaffdcdacd818d8ee4cbf5182fdefbb7ee0370f
+  - role: cautious-walk-preview
+    path: verification/walk-cautious/walk.mp4
+    mediaType: video/mp4
+    sha256: f7fa745794d7df47baf2ec29e4fc55418021277a63f797bb703095e1a3106ab1
+  - role: verification-verification-body-front
+    path: verification/body/front.png
+    mediaType: image/png
+    sha256: 59b31a4cd19bb078bf2b6d7e08f5b6c477bbb058d4faa099be52d6b851e90205
+  - role: verification-verification-body-three-quarter-left
+    path: verification/body/three-quarter-left.png
+    mediaType: image/png
+    sha256: 26600f060a4a70cc89a15bc9279961dc1f4fe2abe781d8edf9ae5cace17c9f46
+  - role: verification-verification-body-left
+    path: verification/body/left.png
+    mediaType: image/png
+    sha256: e7d5030927db69e1ce0f664acc231ccd5e2cff68993559040f562776a05a8493
+  - role: verification-verification-body-right
+    path: verification/body/right.png
+    mediaType: image/png
+    sha256: d145c59d01a2a61f678e437385e2034e95016276f5f04708d43ea0ab240938e4
+  - role: verification-verification-body-three-quarter-right
+    path: verification/body/three-quarter-right.png
+    mediaType: image/png
+    sha256: 1b13ffb260aef208bfe3c5238de2144acc21f41798b767498b12b11b48517339
+  - role: verification-verification-body-back
+    path: verification/body/back.png
+    mediaType: image/png
+    sha256: e3225589878c5a7e3db09f12b44f6a607968330fe9585596fe5f6844f83dd644
+  - role: verification-verification-body-probe
+    path: verification/body/probe.json
+    mediaType: application/json
+    sha256: ca42b0db15c843da2a00df9a5cf88472f5a81df34e65baeb1402369498f4f949
+  - role: verification-verification-walk-neutral-contact-sheet
+    path: verification/walk-neutral/contact-sheet.png
+    mediaType: image/png
+    sha256: fb4629c14b976c1a51d2ecd11324f95ff70f9deb419cbf7253db9a7025807004
+  - role: verification-verification-walk-neutral-contact-sheet-three-quarter
+    path: verification/walk-neutral/contact-sheet-three-quarter.png
+    mediaType: image/png
+    sha256: 948b5045c34fc8aec8ebac26bf0b1cac4ebf133dbfa41f79f1e78bc751764324
+  - role: verification-verification-walk-neutral-motion-probe
+    path: verification/walk-neutral/motion-probe.json
+    mediaType: application/json
+    sha256: fa69cbd30b0689bd1e8a8b24f09e536bc3d320095593ff01d720311917749b76
+  - role: verification-verification-walk-cautious-contact-sheet
+    path: verification/walk-cautious/contact-sheet.png
+    mediaType: image/png
+    sha256: 742c49f45c6b377110dec15506b3c822bfc26f1d3a4228dc691b701e58614669
+  - role: verification-verification-walk-cautious-contact-sheet-three-quarter
+    path: verification/walk-cautious/contact-sheet-three-quarter.png
+    mediaType: image/png
+    sha256: 6e8d306ef7924234d5a4690da96745911261aef44ea680421e791cc7965ca8f2
+  - role: verification-verification-walk-cautious-motion-probe
+    path: verification/walk-cautious/motion-probe.json
+    mediaType: application/json
+    sha256: 3dd98728c34be47f385274333f9b03266165bac858329530be7f1a90962ebcea
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  skeleton: videoer.canonical-humanoid.v1
+  renderers:
+    - three-3d
+    - blender-headless
+  requires: []
+verification:
+  checks:
+    - geometry.indices
+    - geometry.material-groups
+    - skeleton.hierarchy
+    - skin.weights-normalized
+    - clothing.long-dress-drape-skinning
+    - visual.semantic-canonical-views
+    - visual.turntable
+    - motion.canonical-forward-direction
+    - motion.anatomical-knee-polarity
+    - motion.anatomical-foot-direction
+    - motion.planted-contact-error
+    - motion.swing-clearance
+    - visual.neutral-walk-deformation
+    - visual.cautious-walk-deformation
+  artifacts:
+    - verification/body/front.png
+    - verification/body/three-quarter-left.png
+    - verification/body/left.png
+    - verification/body/right.png
+    - verification/body/three-quarter-right.png
+    - verification/body/back.png
+    - verification/body/face-close-up.png
+    - verification/body/contact-sheet.png
+    - verification/body/turntable.mp4
+    - verification/body/probe.json
+    - verification/walk-neutral/contact-sheet.png
+    - verification/walk-neutral/contact-sheet-three-quarter.png
+    - verification/walk-neutral/motion-probe.json
+    - verification/walk-cautious/contact-sheet.png
+    - verification/walk-cautious/contact-sheet-three-quarter.png
+    - verification/walk-cautious/motion-probe.json
+  verifiedAt: 2026-08-31T03:27:28.360Z

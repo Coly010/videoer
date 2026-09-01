@@ -1,0 +1,65 @@
+schemaVersion: 1
+id: vfx.rainy-dusk-depth
+version: 0.1.0
+type: vfx
+title: Camera-depth rainy dusk atmosphere
+description: Deterministic camera-relative foreground, midground, and background
+  rain with restrained volumetric dusk fog and atmospheric separation.
+status: verified
+tags:
+  - rain
+  - fog
+  - dusk
+capabilities:
+  - camera-depth
+  - deterministic-seed
+  - foreground-background
+source:
+  kind: procedural
+  generator: videoer.camera-depth-rain.v1
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: vfx
+    path: vfx.json
+    mediaType: application/vnd.videoer.vfx+json
+    sha256: 7c112b2961b181fbbceaa7186703f08199f672734bf9db97adb88f110a207dc6
+  - role: preview
+    path: verification/rainy-dusk-vfx-probe.mp4
+    mediaType: video/mp4
+    sha256: 1801eb89870d802fd9b814e4aec4c86acc163ddd74b2943d54a062ce22548025
+  - role: blender-source
+    path: verification/rainy-dusk-vfx-probe.blend
+    mediaType: application/x-blender
+    sha256: 649bc881685c44e6a8b90e3ee0c08c2dc902fc702b43778df42bd8309ca6892b
+  - role: verification-verification-contact-sheet
+    path: verification/contact-sheet.png
+    mediaType: image/png
+    sha256: ae0d3821ad55578b2d315653497b6a1f3e01ccc8b81c3dc3c78dfbfe8c6c3650
+  - role: verification-verification-scene-render
+    path: verification/scene-render.json
+    mediaType: application/json
+    sha256: 722444a33fe4062e6482e5ce1a1473e66d505bd81e3dc7c0c3b6d6d92ea86cee
+compatibility:
+  coordinateSystem: camera-relative-right-handed-metres
+  renderers:
+    - blender-headless
+  requires: []
+verification:
+  checks:
+    - vfx.three-depth-bands
+    - vfx.non-overlapping-depth-intervals
+    - vfx.unique-deterministic-seeds
+    - vfx.camera-relative-continuity
+    - visual.foreground-background-scale-separation
+    - visual.restrained-volumetric-fog
+  artifacts:
+    - verification/contact-sheet.png
+    - verification/rainy-dusk-vfx-probe.mp4
+    - verification/scene-render.json
+  verifiedAt: 2026-08-30T22:28:31.460Z

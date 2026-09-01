@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "id": "layout.historic-courtyard-potted-vegetation",
+  "familyId": "environment.potted-vegetation-family",
+  "seed": 12720,
+  "clusterCount": 3,
+  "requiredVariantIds": [
+    "potted-fern",
+    "potted-shrub"
+  ],
+  "zone": {
+    "minimum": [
+      -4.7,
+      -3.1
+    ],
+    "maximum": [
+      4.7,
+      3.1
+    ],
+    "groundY": 0
+  },
+  "surfaceQuery": {
+    "kind": "triangle-mesh",
+    "geometryAssetId": "environment.historic-courtyard-planting-surface",
+    "maximumSlopeDegrees": 8,
+    "alignToSurfaceNormal": true,
+    "verticalOffsetMeters": 0.008
+  },
+  "exclusions": [
+    {
+      "id": "primary-circulation",
+      "kind": "corridor",
+      "start": [
+        -4.6,
+        -0.4
+      ],
+      "end": [
+        4.6,
+        -0.4
+      ],
+      "halfWidthMeters": 0.72,
+      "clearanceMeters": 0.18
+    },
+    {
+      "id": "door-or-service-clearance",
+      "kind": "rectangle",
+      "minimum": [
+        -1.55,
+        1.7
+      ],
+      "maximum": [
+        1.55,
+        3.2
+      ],
+      "clearanceMeters": 0.2
+    }
+  ],
+  "maximumAttemptsPerInstance": 900
+}

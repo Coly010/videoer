@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "id": "material.warm-lime-plaster-interior",
+  "shadingModel": "metallic-roughness",
+  "baseColor": {
+    "kind": "procedural-palette",
+    "colors": [
+      [
+        0.3,
+        0.22,
+        0.16,
+        1
+      ],
+      [
+        0.46,
+        0.35,
+        0.25,
+        1
+      ],
+      [
+        0.24,
+        0.17,
+        0.115,
+        1
+      ]
+    ],
+    "scaleMeters": 0.72,
+    "seed": 2315
+  },
+  "normal": {
+    "kind": "procedural-noise",
+    "strength": 0.18,
+    "scaleMeters": 0.055
+  },
+  "roughness": {
+    "minimum": 0.67,
+    "maximum": 0.86,
+    "variationScaleMeters": 0.46,
+    "wetness": 0
+  },
+  "pattern": {
+    "kind": "mineral-plaster",
+    "trowelScaleMeters": 0.78,
+    "aggregateScaleMeters": 0.022,
+    "trowelContrast": 0.24,
+    "porosity": 0.48
+  },
+  "metallic": 0,
+  "metadata": {
+    "generator": "videoer.old-city-surface-library.v3",
+    "coordinateScale": "object-space-metres",
+    "layeredResponse": [
+      "surface-specific-pattern",
+      "palette",
+      "micro-normal",
+      "roughness-variation",
+      "wet-coat"
+    ]
+  }
+}

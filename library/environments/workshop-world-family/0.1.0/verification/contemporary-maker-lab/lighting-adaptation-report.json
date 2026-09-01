@@ -1,0 +1,59 @@
+{
+  "valid": true,
+  "issues": [],
+  "adaptation": {
+    "kind": "lighting-rig-transform-v1",
+    "assetId": "lighting.contemporary-maker-lab-workstation",
+    "transform": {
+      "translation": [
+        2.9,
+        0.2,
+        -2
+      ],
+      "yawRadians": 0.18,
+      "uniformScale": 1.38
+    },
+    "energyScale": 1.42,
+    "purposeEnergyScale": {
+      "key": 1.08,
+      "fill": 1.28,
+      "rim": 0.92,
+      "practical": 1,
+      "environment": 1
+    },
+    "colorMultiply": [
+      0.82,
+      0.94,
+      1.12
+    ],
+    "worldColor": [
+      0.014,
+      0.022,
+      0.032
+    ],
+    "metadata": {
+      "context": "contemporary-maker-lab",
+      "purpose": "portable-workstation-material-and-silhouette-separation"
+    }
+  },
+  "topologyPreserved": true,
+  "exposurePreserved": true,
+  "spatialTransformMatched": true,
+  "energyTransformMatched": true,
+  "colorTransformMatched": true,
+  "sizeTransformMatched": true,
+  "nonBlackWorld": true,
+  "roleCoverage": {
+    "key": 1,
+    "fill": 1,
+    "rim": 1,
+    "practical": 0,
+    "environment": 0
+  },
+  "baseLightCount": 3,
+  "adaptedLightCount": 3,
+  "energyRange": {
+    "minimum": 300.472,
+    "maximum": 659.4480000000001
+  }
+}

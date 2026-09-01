@@ -1,0 +1,71 @@
+schemaVersion: 1
+id: prop.modular-market-stall
+version: 0.1.0
+type: prop
+title: Modular striped-canopy market stall
+description: Project-owned timber market structure with physical striped canopy,
+  counter, stock shelf and named display/hanging anchors.
+status: verified
+tags:
+  - stall
+  - structure
+  - canopy
+  - market
+  - portable
+  - inhabited-environment
+capabilities:
+  - portable-geometry
+  - ground-placement
+  - named-merchandising-attachments
+  - medium-background-quality-tier
+source:
+  kind: procedural
+  generator: videoer.market-world-assets.v1
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: geometry
+    path: geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: 0b99ba1c05bafe28dd8a864953504778c297a29c0ebd8e8fd32db493cf1d8f1a
+  - role: validation
+    path: validation.json
+    mediaType: application/json
+    sha256: 900ec2c90e33701c8b8d500f0a2f71e8d2eb3cdcc870117620cdf34957211d84
+  - role: historic-market-square-family-contact-sheet
+    path: verification/historic-market-square-family-contact-sheet.png
+    mediaType: image/png
+    sha256: af3528239bbbbb9540f749569281c833522776a7f2c1f8d74ef37152b269edb8
+  - role: contemporary-pop-up-family-contact-sheet
+    path: verification/contemporary-pop-up-family-contact-sheet.png
+    mediaType: image/png
+    sha256: 7458a9a915e891778b9b0ee765b0c8d5aa8ec9405ac3a89adb294acb38a6a899
+  - role: family-transfer-summary
+    path: verification/family-transfer-summary.json
+    mediaType: application/json
+    sha256: bb662ee5ea60832121b08caa2a95db01bb6e596ed39cc494a761832fb460a6d8
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - three-3d
+    - blender-headless
+  requires: []
+verification:
+  checks:
+    - geometry.topology
+    - geometry.material-groups
+    - attachments.market-semantic
+    - visual.historic-market-square-family-transfer-accepted
+    - visual.contemporary-pop-up-family-transfer-accepted
+    - prop.physical-merchandising-semantics-accepted
+    - prop.medium-background-shot-distance-accepted
+  artifacts:
+    - verification/historic-market-square-family-contact-sheet.png
+    - verification/contemporary-pop-up-family-contact-sheet.png
+    - verification/family-transfer-summary.json
+  verifiedAt: 2026-09-01T10:03:00.000Z

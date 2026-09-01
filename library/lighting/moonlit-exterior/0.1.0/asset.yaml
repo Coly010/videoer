@@ -1,0 +1,134 @@
+schemaVersion: 1
+id: lighting.moonlit-exterior
+version: 0.1.0
+type: lighting
+title: Moonlit exterior lighting rig
+description: Reusable moonlit exterior rig with directional cool key, broad
+  night-sky fill, silver edge separation, restrained ground bounce, and a
+  motivated warm aperture.
+status: verified
+tags:
+  - lighting-rig
+  - moonlight
+  - night-exterior
+  - warm-practical
+  - cinematic
+capabilities:
+  - reusable-rig
+  - coherent-exposure
+  - directional-moon-key
+  - night-sky-fill
+  - warm-aperture-depth-cue
+  - background-medium-shot-lighting
+  - renderer-independent
+source:
+  kind: procedural
+  generator: videoer.moonlit-exterior-lighting.v1
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: lighting-rig
+    path: lighting-rig.json
+    mediaType: application/vnd.videoer.lighting+json
+    sha256: db1f131181c1f8e7a94684275940940f6e15b425476ba86dcb9a26f9df37ea59
+  - role: source-host
+    path: verification/source/courtyard/courtyard-host.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: aa8133935e0c3d0c4b544abd0698edd48d38cd7693ac8799066e7a9102b60250
+  - role: source-witness
+    path: verification/source/courtyard/lighting-witness.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: f18d55f0229818c0093db85a32da63902eddedd42466dcc9d083dc101e361f1f
+  - role: source-preview
+    path: verification/source/courtyard/moonlit-courtyard-lighting-probe.mp4
+    mediaType: video/mp4
+    sha256: 9a757880e0ce377d688ebd85c914f92c0066a8d47e1990faafa73afa798b640e
+  - role: source-blender
+    path: verification/source/courtyard/moonlit-courtyard-lighting-probe.blend
+    mediaType: application/x-blender
+    sha256: 36821c4512b27cd731b71962b9fcd97b929999c8112a78228434b8849f3e685f
+  - role: transfer-host
+    path: verification/transfer/rooftop/rooftop-host.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: 83d806f4dc9ef30a1ccc5969c8c08ff6f9af38d7c44710767051106c3f52319e
+  - role: verification-verification-source-courtyard-contact-sheet
+    path: verification/source/courtyard/contact-sheet.png
+    mediaType: image/png
+    sha256: 0a6e850e8e36c68d7475f565171435bb1babf24507e3ca6f865ebe54c6395f7b
+  - role: verification-verification-source-courtyard-scene-render
+    path: verification/source/courtyard/scene-render.json
+    mediaType: application/json
+    sha256: 9e20e4914f7f5f17335a1ac4664a0ed6b7a3c064a74b9d49f8df52e4cff3e040
+  - role: verification-verification-transfer-rooftop-contact-sheet
+    path: verification/transfer/rooftop/contact-sheet.png
+    mediaType: image/png
+    sha256: f496b8a6fa8dffc08e1e281d5484bd9d220602161264080448e90a0399be4ce5
+  - role: verification-verification-transfer-rooftop-scene-render
+    path: verification/transfer/rooftop/scene-render.json
+    mediaType: application/json
+    sha256: aa1cbfa0e50bca7fbaa65ff553f90a9484ee10a7257c7aeffd8a513d6b27a4d7
+  - role: verification-verification-transfer-rooftop-lighting-adaptation-report
+    path: verification/transfer/rooftop/lighting-adaptation-report.json
+    mediaType: application/json
+    sha256: 297f3ea43ee21af395c802e36c8c689bceeb21f3ddd089c7b1414dcefdb87093
+  - role: transfer-definition
+    path: verification/transfer/rooftop/transfer-definition.json
+    mediaType: application/vnd.videoer.lighting-transfer-probe+json
+    sha256: de07e2cdaa2f23186ef6df95a950df8cdd38f3f14815641cbb56731dd37cdfe3
+  - role: transfer-lighting-rig
+    path: verification/transfer/rooftop/adapted-lighting-rig.json
+    mediaType: application/vnd.videoer.lighting+json
+    sha256: 6f765e750556cfae19d16fe6cd78a0cdaf5588c5352b04278608e9d6197f5d87
+  - role: transfer-adaptation-report
+    path: verification/transfer/rooftop/lighting-adaptation-report.json
+    mediaType: application/json
+    sha256: 297f3ea43ee21af395c802e36c8c689bceeb21f3ddd089c7b1414dcefdb87093
+  - role: transfer-contact-sheet
+    path: verification/transfer/rooftop/contact-sheet.png
+    mediaType: image/png
+    sha256: f496b8a6fa8dffc08e1e281d5484bd9d220602161264080448e90a0399be4ce5
+  - role: transfer-preview
+    path: verification/transfer/rooftop/moonlit-contemporary-rooftop.mp4
+    mediaType: video/mp4
+    sha256: dee4e65f50a38425aa95902bdbe1522e217334914d1341d996acd0779adf3a65
+  - role: transfer-scene-render
+    path: verification/transfer/rooftop/scene-render.json
+    mediaType: application/json
+    sha256: aa1cbfa0e50bca7fbaa65ff553f90a9484ee10a7257c7aeffd8a513d6b27a4d7
+  - role: qualitative-review
+    path: verification/lighting-candidate-review.json
+    mediaType: application/json
+    sha256: 586fec529329d6984f3e9ea4555f1500f733c0c1ab52ef04ba0fed377fa85c75
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - blender-headless
+  requires: []
+verification:
+  checks:
+    - lighting.reusable-rig-schema
+    - lighting.agx-coherent-exposure
+    - lighting.moonlit-source-frame-visible
+    - lighting.moonlit-source-highlight-detail
+    - lighting.moonlit-source-witness-tonal-balance
+    - lighting.bounded-unrelated-rooftop-transfer-generated
+    - visual.source-lighting-evidence-accepted
+    - lighting.unrelated-environment-transfer-reconstructed
+    - visual.unrelated-environment-transfer-accepted
+  artifacts:
+    - verification/source/courtyard/contact-sheet.png
+    - verification/source/courtyard/scene-render.json
+    - verification/transfer/rooftop/contact-sheet.png
+    - verification/transfer/rooftop/scene-render.json
+    - verification/transfer/rooftop/lighting-adaptation-report.json
+    - verification/source/courtyard/courtyard-host.json
+    - verification/source/courtyard/lighting-witness.json
+    - verification/transfer/rooftop/rooftop-host.json
+    - verification/transfer/rooftop/transfer-definition.json
+    - verification/lighting-candidate-review.json
+  verifiedAt: 2026-09-01T15:06:00.000Z

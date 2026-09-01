@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "familyAssetId": "environment.potted-vegetation-family",
+  "memberAssetIds": [
+    "prop.potted-fern",
+    "prop.potted-shrub"
+  ],
+  "decision": "accepted",
+  "reviewer": "Codex visual review",
+  "reviewedAt": "2026-09-01T08:40:11.000Z",
+  "intendedShotDistance": "medium",
+  "evidence": [
+    "verification/historic-courtyard/contact-sheet.png",
+    "verification/historic-courtyard/scene-render.json",
+    "verification/contemporary-rooftop/contact-sheet.png",
+    "verification/contemporary-rooftop/scene-render.json",
+    "verification/historic-courtyard/layout-report.json",
+    "verification/contemporary-rooftop/layout-report.json"
+  ],
+  "strengths": [
+    "The final fern has a dense compound silhouette with swept frond stems and repeated tapered leaflets rather than bead or capsule foliage.",
+    "The shrub remains visibly distinct through an upright branching structure, broader leaves and galvanized planter while the fern uses terracotta.",
+    "Both variants are present and inspectable in both unrelated hosts while preserving a clear circulation corridor and door/service clearance.",
+    "Every instance is visibly grounded on the live 3.43-degree host surface and carries regenerated supporting triangle, normal and slope evidence."
+  ],
+  "limitations": [
+    "The procedural species are designed for medium/background habitation and are not botanically exact hero-close plant scans.",
+    "Leaves do not yet include translucency, vein normals, damage, seasonal states, growth variation or wind animation.",
+    "Current surface querying supports static geometry and chooses the highest upward-facing hit; animated ground and soil-suitability semantics remain future work."
+  ],
+  "notes": "V1 passed mechanical gates but was visually rejected because ellipsoidal foliage read as bead clusters and sparse geometric sprigs. V2 introduced reusable lanceolate leaf topology but was rejected because narrow, frequently edge-on leaves read as bare twigs; it also exposed that the historic seed sampled only one family variant. V3 increases actual compound-leaf area and density, brightens bounded foliage separation, adds rooftop skyline context, and requires both silhouettes in every transfer. The accepted historic render has 45% maximum black coverage, the rooftop has 61%, both retain 0% clipped whites, every entity is inspectable, and all layouts regenerate exactly from live non-flat surface triangles."
+}

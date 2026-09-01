@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "id": "vfx.rainwalk-restrained-blue-rain",
+  "placement": "camera-relative",
+  "worldColor": [
+    0.008,
+    0.014,
+    0.026
+  ],
+  "fog": {
+    "density": 0.0045,
+    "color": [
+      0.12,
+      0.18,
+      0.28
+    ]
+  },
+  "rain": {
+    "enabled": true,
+    "layers": [
+      {
+        "id": "foreground",
+        "count": 30,
+        "seed": 1701,
+        "depthMinimumMeters": 0.45,
+        "depthMaximumMeters": 2.2,
+        "horizontalSpanMeters": 6.4,
+        "verticalSpanMeters": 5.2,
+        "streakLengthMeters": 0.2,
+        "streakRadiusMeters": 0.0055,
+        "fallSpeedMetersPerSecond": 10.5,
+        "opacity": 0.42,
+        "color": [
+          0.42,
+          0.62,
+          0.86
+        ]
+      },
+      {
+        "id": "midground",
+        "count": 72,
+        "seed": 1702,
+        "depthMinimumMeters": 2.2,
+        "depthMaximumMeters": 6.5,
+        "horizontalSpanMeters": 10,
+        "verticalSpanMeters": 6.5,
+        "streakLengthMeters": 0.14,
+        "streakRadiusMeters": 0.0035,
+        "fallSpeedMetersPerSecond": 8.5,
+        "opacity": 0.3,
+        "color": [
+          0.35,
+          0.55,
+          0.8
+        ]
+      },
+      {
+        "id": "background",
+        "count": 112,
+        "seed": 1703,
+        "depthMinimumMeters": 6.5,
+        "depthMaximumMeters": 16,
+        "horizontalSpanMeters": 18,
+        "verticalSpanMeters": 9,
+        "streakLengthMeters": 0.09,
+        "streakRadiusMeters": 0.002,
+        "fallSpeedMetersPerSecond": 7,
+        "opacity": 0.18,
+        "color": [
+          0.3,
+          0.48,
+          0.72
+        ]
+      }
+    ]
+  },
+  "metadata": {
+    "generator": "videoer.camera-depth-rain.v1",
+    "deterministicSeeds": [
+      1701,
+      1702,
+      1703
+    ],
+    "separation": "foreground-midground-background",
+    "creativeIntent": "legible garment silhouette in restrained square-format rain",
+    "derivedFrom": "vfx.rainy-dusk-depth@0.1.0",
+    "sourceVfx": "vfx.rainy-dusk-depth",
+    "adaptationGenerator": "videoer.atmospheric-treatment.v1"
+  }
+}

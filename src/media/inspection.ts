@@ -54,14 +54,18 @@ export async function inspectImage(path: string): Promise<ImageInspection> {
 
 export function contactSheetArgs(inputs: string[], output: string, columns = 3): string[] {
   if (!inputs.length) throw new Error('Contact sheet requires at least one input');
+  if (inputs.length === 1) return ['-i', inputs[0]!, '-frames:v', '1', '-y', output];
   const actualColumns = Math.min(columns, inputs.length);
-  const layout = inputs.map((_, index) => {
-    const column = index % actualColumns;
-    const row = Math.floor(index / actualColumns);
-    const x = column === 0 ? '0' : Array.from({ length: column }, (_, i) => `w${i}`).join('+');
-    const y = row === 0 ? '0' : Array.from({ length: row }, (_, i) => `h${i * actualColumns}`).join('+');
-    return `${x}_${y}`;
-  }).join('|');
+  const layout = inputs
+    .map((_, index) => {
+      const column = index % actualColumns;
+      const row = Math.floor(index / actualColumns);
+      const x = column === 0 ? '0' : Array.from({ length: column }, (_, i) => `w${i}`).join('+');
+      const y =
+        row === 0 ? '0' : Array.from({ length: row }, (_, i) => `h${i * actualColumns}`).join('+');
+      return `${x}_${y}`;
+    })
+    .join('|');
   return [
     ...inputs.flatMap((input) => ['-i', input]),
     '-filter_complex',
@@ -98,15 +102,59 @@ async function runFfmpeg(args: string[]): Promise<void> {
   return new Promise((resolve, reject) => {
     const child = spawn('ffmpeg', args);
     let error = '';
-    child.stderr.on('data', (data) => { error += String(data); });
+    child.stderr.on('data', (data) => {
+      error += String(data);
+    });
     child.on('error', reject);
-    child.on('close', (code) => code === 0 ? resolve() : reject(new Error(`ffmpeg failed (${code}): ${error.trim()}`)));
+    child.on('close', (code) =>
+      code === 0 ? resolve() : reject(new Error(`ffmpeg failed (${code}): ${error.trim()}`)),
+    );
   });
 }
 
 export async function extractVideoFrame(video: string, seconds: number, output: string) {
   await mkdir(dirname(output), { recursive: true });
-  await runFfmpeg(['-v', 'error', '-ss', String(seconds), '-i', video, '-frames:v', '1', '-q:v', '2', '-y', output]);
+  await runFfmpeg([
+    '-v',
+    'error',
+    '-ss',
+    String(seconds),
+    '-i',
+    video,
+    '-frames:v',
+    '1',
+    '-q:v',
+    '2',
+    '-y',
+    output,
+  ]);
+  return inspectImage(output);
+}
+
+export async function extractVideoFrameByIndex(
+  video: string,
+  zeroBasedFrameIndex: number,
+  output: string,
+) {
+  if (!Number.isInteger(zeroBasedFrameIndex) || zeroBasedFrameIndex < 0)
+    throw new Error('Video frame index must be a non-negative integer');
+  await mkdir(dirname(output), { recursive: true });
+  await runFfmpeg([
+    '-v',
+    'error',
+    '-i',
+    video,
+    '-vf',
+    `select=eq(n\\,${zeroBasedFrameIndex})`,
+    '-frames:v',
+    '1',
+    '-fps_mode',
+    'vfr',
+    '-q:v',
+    '2',
+    '-y',
+    output,
+  ]);
   return inspectImage(output);
 }
 
@@ -114,4 +162,77 @@ export async function createContactSheet(inputs: string[], output: string, colum
   await mkdir(dirname(output), { recursive: true });
   await runFfmpeg(['-v', 'error', ...contactSheetArgs(inputs, output, columns)]);
   return inspectImage(output);
+}
+
+export async function inspectBlackPixelPercentage(path: string, threshold = 32) {
+  return inspectPixelPercentage(path, `blackframe=amount=0:threshold=${threshold}`, 'black');
+}
+
+export async function inspectWhitePixelPercentage(path: string, threshold = 245) {
+  return inspectPixelPercentage(
+    path,
+    `negate,blackframe=amount=0:threshold=${Math.max(32, 255 - threshold)}`,
+    'white',
+  );
+}
+
+export async function inspectWhitePixelPercentageInRegion(
+  path: string,
+  region: { x: number; y: number; width: number; height: number },
+  threshold = 245,
+) {
+  const x = Math.max(0, Math.floor(region.x));
+  const y = Math.max(0, Math.floor(region.y));
+  const width = Math.max(1, Math.floor(region.width));
+  const height = Math.max(1, Math.floor(region.height));
+  return inspectPixelPercentage(
+    path,
+    `crop=${width}:${height}:${x}:${y},negate,blackframe=amount=0:threshold=${Math.max(32, 255 - threshold)}`,
+    'white-region',
+  );
+}
+
+export async function inspectBlackPixelPercentageInRegion(
+  path: string,
+  region: { x: number; y: number; width: number; height: number },
+  threshold = 32,
+) {
+  const x = Math.max(0, Math.floor(region.x));
+  const y = Math.max(0, Math.floor(region.y));
+  const width = Math.max(1, Math.floor(region.width));
+  const height = Math.max(1, Math.floor(region.height));
+  return inspectPixelPercentage(
+    path,
+    `crop=${width}:${height}:${x}:${y},blackframe=amount=0:threshold=${threshold}`,
+    'black-region',
+  );
+}
+
+async function inspectPixelPercentage(path: string, filter: string, label: string) {
+  return new Promise<number>((resolve, reject) => {
+    const child = spawn('ffmpeg', [
+      '-hide_banner',
+      '-i',
+      path,
+      '-vf',
+      filter,
+      '-frames:v',
+      '1',
+      '-f',
+      'null',
+      '-',
+    ]);
+    let error = '';
+    child.stderr.on('data', (data) => {
+      error += String(data);
+    });
+    child.on('error', reject);
+    child.on('close', (code) => {
+      if (code !== 0) return reject(new Error(`ffmpeg ${label}-pixel inspection failed: ${error}`));
+      const match = /pblack:(\d+)/.exec(error);
+      if (!match)
+        return reject(new Error(`ffmpeg did not report ${label}-pixel coverage for ${path}`));
+      resolve(Number(match[1]));
+    });
+  });
 }

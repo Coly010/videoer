@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "campaign": "campaign.after-hours-character",
+  "sourceId": "platform",
+  "asset": {
+    "id": "environment.night-transit-platform",
+    "version": "1.0.0"
+  },
+  "reviewer": "codex-agentic-review",
+  "rationale": "Reviewed all four semantic contact sheets, structured render reports, framing evidence, delivery verification, project ownership, and declared reusable platform capabilities.",
+  "approvedAt": "2026-08-31T00:15:50.774Z"
+}

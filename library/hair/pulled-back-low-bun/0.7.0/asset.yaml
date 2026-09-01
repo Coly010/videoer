@@ -1,0 +1,116 @@
+schemaVersion: 1
+id: hair.pulled-back-low-bun
+version: 0.7.0
+type: hair
+title: Pulled-back low bun
+description: Separable canonical-humanoid low-bun hair with dedicated fitted
+  scalp topology, continuous crown-to-nape strand-group cards, surface-ribbon
+  bun detail, and UV-directed fiber response.
+status: verified
+tags:
+  - hair
+  - pulled-back
+  - low-bun
+  - mesh-hair
+  - canonical-humanoid
+capabilities:
+  - separable-hair-geometry
+  - canonical-head-anchor
+  - target-fit-profile
+  - dedicated-scalp-topology
+  - layered-flow-cards
+  - anisotropic-material
+  - renderer-independent
+  - surface-ribbon-bun-detail
+  - cross-character-head-fit
+  - medium-shot-quality-tier
+source:
+  kind: procedural
+  generator: videoer.layered-mesh-hair.v7
+  sourceAsset: character.production-human-foundation
+  references: []
+  licence:
+    spdx: CC0-1.0
+    name: CC0-compatible procedural derivative
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: definition
+    path: hair.json
+    mediaType: application/vnd.videoer.hair+json
+    sha256: 1b4c10014b77c17b5cf2b6ff6cad3bb7a9f310b6f19aa1ff398cb5d238c15ea9
+  - role: geometry
+    path: geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: 82dee663a977e8b9d443be9f6f79a73bd8772ee5122bb2369d80faca725faea9
+  - role: validation
+    path: validation.json
+    mediaType: application/json
+    sha256: 4d2b4afd9feb463c6e50ff2619df8ada6d2ec9ae9b2325e3dd9e4864a4ee1062
+  - role: isolated-turntable
+    path: verification/isolated/turntable.mp4
+    mediaType: video/mp4
+    sha256: 39cbb9b9ae8b7020b21b148576a49cabe1cbe9b183529d5dca620598295171bf
+  - role: fitted-preview
+    path: verification/fitted/pulled-back-hair-fit-probe.mp4
+    mediaType: video/mp4
+    sha256: 18464ebc10dafa15f781e102ef1bc227b83f0b3e726ad0b8668011faa93b06db
+  - role: fitted-contact-sheet
+    path: verification/fitted/contact-sheet.png
+    mediaType: image/png
+    sha256: 9c807b7d36d27eba4fed9213b0510b7586fdb11692ec13d9212f407963be03f8
+  - role: blender-source
+    path: verification/fitted/pulled-back-hair-fit-probe.blend
+    mediaType: application/x-blender
+    sha256: 384ddb78c8eb9ea46adc5cbd620388ea7889378cabb42dc8e4bb4d3015da1814
+  - role: verification-verification-isolated-contact-sheet
+    path: verification/isolated/contact-sheet.png
+    mediaType: image/png
+    sha256: 245170be1477b46e9daf11eb73c880f349c4eccc192ad943584b1edf92381264
+  - role: verification-verification-fitted-scene-render
+    path: verification/fitted/scene-render.json
+    mediaType: application/json
+    sha256: 8a7be37d87f3e21833282991e7aa4a0a6dabc926137c73491796604245925faf
+  - role: qualitative-review
+    path: verification/hair-candidate-review.json
+    mediaType: application/json
+    sha256: 7b69b537fe36a18c8f4271c4f3827f21a2092dd96886a35b25323d135161360b
+  - role: transfer-fitted-contact-sheet
+    path: verification/transfer/contact-sheet.png
+    mediaType: image/png
+    sha256: afd5f8330bb7b7b3d0d1965962dac05a9938ce613e01acaf8cac11e6f64c646e
+  - role: transfer-render-report
+    path: verification/transfer/scene-render.json
+    mediaType: application/json
+    sha256: e4cbb001f0836cd0de37c5a7b836637e5213e73a2fd58b908fa2bfc5fec9633a
+  - role: transfer-validation
+    path: verification/transfer/validation.json
+    mediaType: application/json
+    sha256: 3079d6f401da7d1805632759a8248e2a629faca82a107328d0a273df88fe88fe
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  skeleton: canonical-humanoid-v1
+  renderers:
+    - three-3d
+    - blender-headless
+  requires: []
+verification:
+  checks:
+    - hair.geometry-schema
+    - hair.head-bone-ownership
+    - hair.target-fit-profile
+    - hair.separate-from-character-topology
+    - visual.fitted-canonical-views-accepted
+    - visual.continuous-scalp-and-flow-accepted
+    - visual.unrelated-character-transfer-accepted
+    - hair.medium-shot-distance-accepted
+  artifacts:
+    - verification/isolated/contact-sheet.png
+    - verification/fitted/contact-sheet.png
+    - verification/fitted/scene-render.json
+    - verification/hair-candidate-review.json
+    - verification/transfer/contact-sheet.png
+    - verification/transfer/scene-render.json
+    - verification/transfer/validation.json
+  verifiedAt: 2026-09-01T14:25:00.000Z

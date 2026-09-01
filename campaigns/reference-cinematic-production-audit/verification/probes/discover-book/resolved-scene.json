@@ -1,0 +1,382 @@
+{
+  "schemaVersion": 1,
+  "id": "scene.discover-book",
+  "durationSeconds": 2.2083333333333335,
+  "fps": 24,
+  "resolution": {
+    "width": 540,
+    "height": 960,
+    "percentage": 100
+  },
+  "renderProfile": {
+    "engine": "cycles-cpu",
+    "samples": 128,
+    "seed": 1729,
+    "denoise": true,
+    "intent": "deterministic-final"
+  },
+  "entities": [
+    {
+      "id": "bookshop-set",
+      "role": "environment",
+      "geometryPath": "/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-production-audit/work/geometry/bookshop-production-surfaces.json",
+      "transform": {
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "visible": true
+    },
+    {
+      "id": "elara",
+      "role": "character",
+      "geometryPath": "/Users/colum/dev/personal/videoer/.videoer-cache/deformations/ab0728e04ae1-ab0728e04ae1-b11e9c9ef75b/geometry.json",
+      "transform": {
+        "position": [
+          0.45,
+          0,
+          2.25
+        ],
+        "rotation": [
+          0,
+          3.141592653589793,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "motion": {
+        "path": "/Users/colum/dev/personal/videoer/.videoer-cache/deformations/ab0728e04ae1-ab0728e04ae1-b11e9c9ef75b/motion.json",
+        "startSeconds": 0,
+        "endSeconds": 2.2083333333333335,
+        "sourceStartSeconds": 0,
+        "sourceEndSeconds": 3.2
+      },
+      "visible": true
+    },
+    {
+      "id": "elara-hair",
+      "role": "prop",
+      "geometryPath": "/Users/colum/dev/personal/videoer/library/hair/pulled-back-low-bun/0.7.0/geometry.json",
+      "transform": {
+        "position": [
+          0.45,
+          0,
+          2.25
+        ],
+        "rotation": [
+          0,
+          3.141592653589793,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "motion": {
+        "path": "/Users/colum/dev/personal/videoer/library/motions/read-significant-book/0.1.0/actor-motion.json",
+        "startSeconds": 0,
+        "endSeconds": 2.2083333333333335,
+        "sourceStartSeconds": 0,
+        "sourceEndSeconds": 3.2
+      },
+      "visible": true
+    },
+    {
+      "id": "significant-book",
+      "role": "prop",
+      "geometryPath": "/Users/colum/dev/personal/videoer/library/props/significant-book/0.1.0/geometry.json",
+      "transform": {
+        "position": [
+          0.45,
+          1.17,
+          2.62
+        ],
+        "rotation": [
+          0,
+          3.141592653589793,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "motion": {
+        "path": "/Users/colum/dev/personal/videoer/library/motions/read-significant-book/0.1.0/target-motion.json",
+        "startSeconds": 0,
+        "endSeconds": 2.2083333333333335,
+        "sourceStartSeconds": 0,
+        "sourceEndSeconds": 3.2
+      },
+      "visible": true
+    },
+    {
+      "id": "reading-chair",
+      "role": "set-dressing",
+      "geometryPath": "/Users/colum/dev/personal/videoer/library/props/upholstered-reading-chair/0.1.0/geometry.json",
+      "transform": {
+        "position": [
+          2.5,
+          0,
+          2.8
+        ],
+        "rotation": [
+          0,
+          -0.7,
+          0
+        ],
+        "scale": [
+          0.82,
+          0.82,
+          0.82
+        ]
+      },
+      "visible": true
+    },
+    {
+      "id": "side-table",
+      "role": "set-dressing",
+      "geometryPath": "/Users/colum/dev/personal/videoer/library/props/pedestal-side-table/0.1.0/geometry.json",
+      "transform": {
+        "position": [
+          3.55,
+          0,
+          2.72
+        ],
+        "rotation": [
+          0,
+          0.1,
+          0
+        ],
+        "scale": [
+          0.82,
+          0.82,
+          0.82
+        ]
+      },
+      "visible": true
+    },
+    {
+      "id": "vessels",
+      "role": "set-dressing",
+      "geometryPath": "/Users/colum/dev/personal/videoer/library/props/decorative-vessel-set/0.1.0/geometry.json",
+      "transform": {
+        "position": [
+          3.55,
+          0.6514,
+          2.72
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          0.72,
+          0.72,
+          0.72
+        ]
+      },
+      "visible": true
+    }
+  ],
+  "camera": {
+    "keyframes": [
+      {
+        "time": 0,
+        "position": [
+          -0.95,
+          1.5,
+          4.2
+        ],
+        "target": [
+          0.45,
+          1.2,
+          2.42
+        ],
+        "lensMillimeters": 68,
+        "easing": "ease-in-out"
+      },
+      {
+        "time": 2.2083333333333335,
+        "position": [
+          -0.72,
+          1.5,
+          3.85
+        ],
+        "target": [
+          0.45,
+          1.28,
+          2.48
+        ],
+        "lensMillimeters": 76,
+        "easing": "ease-in-out"
+      }
+    ]
+  },
+  "lights": [
+    {
+      "id": "warm-reading-key",
+      "type": "area",
+      "position": [
+        -1.5,
+        2.5,
+        3.4
+      ],
+      "target": [
+        0.45,
+        1.2,
+        2.4
+      ],
+      "color": [
+        1,
+        0.7,
+        0.46
+      ],
+      "energy": 430,
+      "sizeMeters": 1.25,
+      "angleDegrees": 45
+    },
+    {
+      "id": "cool-window-fill",
+      "type": "area",
+      "position": [
+        2.15,
+        2.05,
+        3.05
+      ],
+      "target": [
+        0.45,
+        1.2,
+        2.4
+      ],
+      "color": [
+        0.34,
+        0.57,
+        1
+      ],
+      "energy": 300,
+      "sizeMeters": 2.9,
+      "angleDegrees": 45
+    },
+    {
+      "id": "shelf-rim",
+      "type": "spot",
+      "position": [
+        0.55,
+        2.75,
+        1.15
+      ],
+      "target": [
+        0.45,
+        1.25,
+        2.5
+      ],
+      "color": [
+        1,
+        0.62,
+        0.34
+      ],
+      "energy": 230,
+      "sizeMeters": 1,
+      "angleDegrees": 42
+    }
+  ],
+  "atmosphere": {
+    "worldColor": [
+      0.009,
+      0.006,
+      0.004
+    ],
+    "fogDensity": 0.004,
+    "fogColor": [
+      0.16,
+      0.2,
+      0.28
+    ],
+    "rain": {
+      "enabled": false,
+      "layers": [],
+      "windMetersPerSecond": [
+        0,
+        0
+      ],
+      "count": 0,
+      "seed": 1701,
+      "boundsMinimum": [
+        -5,
+        0,
+        -5
+      ],
+      "boundsMaximum": [
+        5,
+        5,
+        5
+      ],
+      "streakLengthMeters": 0.14,
+      "fallSpeedMetersPerSecond": 8
+    },
+    "aerosols": []
+  },
+  "overlays": [],
+  "finishProfilePath": "/Users/colum/dev/personal/videoer/library/vfx/soft-atmospheric-finish/0.1.0/finish-profile.json",
+  "renderGates": [],
+  "qualityGates": [],
+  "landmarks": [
+    {
+      "id": "hold-low",
+      "progress": 0,
+      "description": "Book rests in a stable two-hand hold"
+    },
+    {
+      "id": "raise",
+      "progress": 0.2,
+      "description": "Both hands raise the book together"
+    },
+    {
+      "id": "grasp",
+      "progress": 0.4,
+      "description": "Both grips remain registered on the covers"
+    },
+    {
+      "id": "settle",
+      "progress": 0.58,
+      "description": "Book settles at reading height"
+    },
+    {
+      "id": "read",
+      "progress": 0.78,
+      "description": "Head and gaze orient to the pages"
+    },
+    {
+      "id": "complete",
+      "progress": 1,
+      "description": "Reading pose holds without prop drift"
+    }
+  ],
+  "metadata": {
+    "declarativeCampaign": "campaign.reference-cinematic-production-audit",
+    "templateSource": "../../../cinematic-campaign.yaml",
+    "campaignClass": "reference-cinematic",
+    "grammar": "bilateral-prop-reading"
+  }
+}

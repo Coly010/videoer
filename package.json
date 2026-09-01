@@ -14,11 +14,12 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "format": "prettier --check .",
-    "test": "vitest run",
+    "test": "vitest run --maxWorkers=2",
     "check": "npm run typecheck && npm run lint && npm test && npm run build",
     "video": "npm run build --silent && node dist/cli.js"
   },
   "dependencies": {
+    "@fontsource/cormorant-garamond": "^5.3.0",
     "@remotion/bundler": "4.0.518",
     "@remotion/renderer": "4.0.518",
     "@types/react": "^19.2.18",
@@ -28,6 +29,7 @@
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "remotion": "4.0.518",
+    "three": "^0.185.1",
     "yaml": "^2.8.1",
     "zod": "4.4.3"
   },
@@ -35,6 +37,7 @@
     "@eslint/js": "^9.34.0",
     "@remotion/cli": "4.0.518",
     "@types/node": "^24.3.0",
+    "@types/three": "^0.185.4",
     "eslint": "^9.34.0",
     "prettier": "^3.6.2",
     "tsx": "^4.20.5",

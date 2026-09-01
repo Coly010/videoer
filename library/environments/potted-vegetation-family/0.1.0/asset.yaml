@@ -1,0 +1,122 @@
+schemaVersion: 1
+id: environment.potted-vegetation-family
+version: 0.1.0
+type: environment
+title: Portable inhabited-space potted vegetation
+description: Renderer-independent explicit-version planted dressing family with
+  authored clusters, navigation clearance, live triangle height/slope queries,
+  surface-normal alignment and cross-host evidence.
+status: verified
+tags:
+  - vegetation
+  - planter
+  - courtyard
+  - interior
+  - inhabited-environment
+capabilities:
+  - portable-set-dressing-family
+  - explicit-member-versions
+  - deterministic-seeded-layout
+  - authored-vegetation-clusters
+  - navigation-clearance-preservation
+  - geometry-bound-surface-placement
+  - surface-normal-alignment
+  - cross-environment-transfer
+  - medium-background-quality-tier
+source:
+  kind: procedural
+  generator: videoer.potted-vegetation-family.v1
+  sourceAssets:
+    - prop.potted-fern@0.1.0
+    - prop.potted-shrub@0.1.0
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: dressing-family
+    path: family.json
+    mediaType: application/json
+    sha256: 2a55a057ad6966629693c14d71c1b01138338686d3d1ef4a4d67d7a26f2e2d72
+  - role: historic-courtyard-surface
+    path: verification/historic-courtyard/surface-geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: c1f08765a9fbf24384b42c4fc9a5e020eb9eb4e4033dcf7a5253ba8b131bca3a
+  - role: historic-courtyard-layout-request
+    path: verification/historic-courtyard/layout-request.json
+    mediaType: application/json
+    sha256: 38aa36907cae8cc08310e94751213eed2f84044206ab0ca48759797572615513
+  - role: historic-courtyard-layout-report
+    path: verification/historic-courtyard/layout-report.json
+    mediaType: application/json
+    sha256: ce2952fcbf50eda2db02f0f46594a07b2dc08a185bcafca993991fad5839c8a5
+  - role: historic-courtyard-contact-sheet
+    path: verification/historic-courtyard/contact-sheet.png
+    mediaType: image/png
+    sha256: e2710a1b845d31b7a736423e6c539707d36b6b964499a6a6b8750df883d159fd
+  - role: historic-courtyard-render-report
+    path: verification/historic-courtyard/scene-render.json
+    mediaType: application/json
+    sha256: cc46504541823babf0d13d8dc91a4e7b9a4dd5e8753f2ea003982150581a9706
+  - role: contemporary-rooftop-surface
+    path: verification/contemporary-rooftop/surface-geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: 47170ee5d84113391e61738cb00539aad56474b4a17e27839a15792a10e4544e
+  - role: contemporary-rooftop-layout-request
+    path: verification/contemporary-rooftop/layout-request.json
+    mediaType: application/json
+    sha256: 551a455bfd4d1221a7aace382a62e6a04dbe58236767bdc5bdf29bbfbbd12495
+  - role: contemporary-rooftop-layout-report
+    path: verification/contemporary-rooftop/layout-report.json
+    mediaType: application/json
+    sha256: cb43eefc0b7f77cf667e5262f29b956aed346eb73c69c331160bc49d88e00eb2
+  - role: contemporary-rooftop-contact-sheet
+    path: verification/contemporary-rooftop/contact-sheet.png
+    mediaType: image/png
+    sha256: 690895f31b39b8f3f86ea430723328a9feb0d3a50de28191ff01bc47f0eacce3
+  - role: contemporary-rooftop-render-report
+    path: verification/contemporary-rooftop/scene-render.json
+    mediaType: application/json
+    sha256: a25a5ef83a95219d1ba0b3457b9433b7545a6dd1dec180ac613bbbf3e5a1905f
+  - role: qualitative-review
+    path: verification/family-candidate-review.json
+    mediaType: application/json
+    sha256: 6d7908ff28acf3d9afc02b1d2d6eaca13b9dd834eaa68617ed4ce44e3e3c843f
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - three-3d
+    - blender-headless
+  requires:
+    - id: prop.potted-fern
+      version: 0.1.0
+    - id: prop.potted-shrub
+      version: 0.1.0
+verification:
+  checks:
+    - family.schema-and-explicit-versions
+    - layout.deterministic-seed
+    - layout.overlap-free
+    - layout.navigation-clearance
+    - layout.live-triangle-surface-evidence
+    - layout.surface-normal-alignment
+    - visual.historic-courtyard-accepted
+    - visual.contemporary-rooftop-accepted
+    - layout.live-triangle-surface-regeneration-accepted
+    - layout.required-variant-coverage-accepted
+    - layout.every-entity-inspectable
+    - family.medium-background-shot-distance-accepted
+  artifacts:
+    - verification/historic-courtyard/surface-geometry.json
+    - verification/historic-courtyard/layout-report.json
+    - verification/historic-courtyard/contact-sheet.png
+    - verification/historic-courtyard/scene-render.json
+    - verification/contemporary-rooftop/surface-geometry.json
+    - verification/contemporary-rooftop/layout-report.json
+    - verification/contemporary-rooftop/contact-sheet.png
+    - verification/contemporary-rooftop/scene-render.json
+    - verification/family-candidate-review.json
+  verifiedAt: 2026-09-01T08:40:11.000Z

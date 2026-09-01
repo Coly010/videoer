@@ -1,0 +1,147 @@
+{
+  "schemaVersion": 1,
+  "adaptationKind": "lighting-rig-transform-v1",
+  "sourceId": "nocturne-lighting",
+  "baseAsset": {
+    "id": "environment.warm-bookshop-lighting",
+    "version": "0.1.0"
+  },
+  "baseArtifact": "/Users/colum/dev/personal/videoer/library/environments/warm-bookshop-lighting/0.1.0/lighting-rig.json",
+  "baseArtifactRole": "lighting-rig",
+  "baseLightingSha256": "7f98811a249c29a52d490557d399ec9b901e8b619a2d9b53b1116fc631ac96d9",
+  "adaptedAssetId": "lighting.nocturne-gallery",
+  "adaptedArtifact": "/Users/colum/dev/personal/videoer/campaigns/nocturne-exhibition-conformance/work/lighting/nocturne-gallery.json",
+  "adaptedLightingSha256": "db5f5a30a79442759ff14db71e7a7982b8f1c233e9a86947c7f880cdfd6ceeb2",
+  "requestedCapabilities": [
+    "reusable-rig",
+    "face-key",
+    "coherent-exposure",
+    "sculptural-gallery-stage"
+  ],
+  "missingBaseCapabilities": [
+    "sculptural-gallery-stage"
+  ],
+  "providedCapabilities": [
+    "sculptural-gallery-stage"
+  ],
+  "adaptation": {
+    "kind": "lighting-rig-transform-v1",
+    "assetId": "lighting.nocturne-gallery",
+    "transform": {
+      "translation": [
+        0,
+        0.15,
+        -2.4
+      ],
+      "yawRadians": 0,
+      "uniformScale": 1
+    },
+    "energyScale": 0.92,
+    "purposeEnergyScale": {
+      "key": 1.15,
+      "fill": 0.9,
+      "rim": 1.25,
+      "practical": 1,
+      "environment": 1
+    },
+    "colorMultiply": [
+      0.92,
+      0.88,
+      1
+    ],
+    "worldColor": [
+      0.004,
+      0.006,
+      0.014
+    ],
+    "metadata": {
+      "context": "contemporary-night-exhibition",
+      "campaign": "campaign.nocturne-exhibition"
+    }
+  },
+  "operations": {
+    "lightTopologyChanged": false,
+    "exposureChanged": false,
+    "spatialTransformMatched": true,
+    "energyTransformMatched": true,
+    "colorTransformMatched": true,
+    "sizeTransformMatched": true
+  },
+  "compatibility": {
+    "topologyPreserved": true,
+    "exposurePreserved": true,
+    "nonBlackWorld": true,
+    "baseLightCount": 3,
+    "adaptedLightCount": 3,
+    "roleCoverage": {
+      "key": 1,
+      "fill": 1,
+      "rim": 1,
+      "practical": 0,
+      "environment": 0
+    },
+    "energyRange": {
+      "minimum": 281.52000000000004,
+      "maximum": 719.4399999999999
+    }
+  },
+  "validation": {
+    "valid": true,
+    "issues": [],
+    "adaptation": {
+      "kind": "lighting-rig-transform-v1",
+      "assetId": "lighting.nocturne-gallery",
+      "transform": {
+        "translation": [
+          0,
+          0.15,
+          -2.4
+        ],
+        "yawRadians": 0,
+        "uniformScale": 1
+      },
+      "energyScale": 0.92,
+      "purposeEnergyScale": {
+        "key": 1.15,
+        "fill": 0.9,
+        "rim": 1.25,
+        "practical": 1,
+        "environment": 1
+      },
+      "colorMultiply": [
+        0.92,
+        0.88,
+        1
+      ],
+      "worldColor": [
+        0.004,
+        0.006,
+        0.014
+      ],
+      "metadata": {
+        "context": "contemporary-night-exhibition",
+        "campaign": "campaign.nocturne-exhibition"
+      }
+    },
+    "topologyPreserved": true,
+    "exposurePreserved": true,
+    "spatialTransformMatched": true,
+    "energyTransformMatched": true,
+    "colorTransformMatched": true,
+    "sizeTransformMatched": true,
+    "nonBlackWorld": true,
+    "roleCoverage": {
+      "key": 1,
+      "fill": 1,
+      "rim": 1,
+      "practical": 0,
+      "environment": 0
+    },
+    "baseLightCount": 3,
+    "adaptedLightCount": 3,
+    "energyRange": {
+      "minimum": 281.52000000000004,
+      "maximum": 719.4399999999999
+    }
+  }
+}

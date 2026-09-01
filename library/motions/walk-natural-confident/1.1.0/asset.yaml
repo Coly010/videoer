@@ -1,0 +1,96 @@
+schemaVersion: 1
+id: motion.walk-natural-confident
+version: 1.1.0
+type: motion
+title: Natural confident walk
+description: Research-grounded confident human walk with longer stride, higher
+  cadence, open posture, stronger pelvis and arm motion, articulated feet, and
+  contact-constrained legs.
+status: verified
+tags:
+  - humanoid
+  - walk
+  - locomotion
+  - naturalistic
+  - confident
+  - procedural
+  - project-owned
+capabilities:
+  - canonical-humanoid-motion
+  - phase-based-locomotion
+  - heel-toe-foot-mechanics
+  - planted-contact-constraints
+  - whole-body-counter-motion
+  - proportion-aware-retargeting
+source:
+  kind: procedural
+  generator: videoer.phase-gait.v1
+  references:
+    - https://peerj.com/articles/4640/
+    - https://pmc.ncbi.nlm.nih.gov/articles/PMC4994968/
+    - https://pmc.ncbi.nlm.nih.gov/articles/PMC5545133/
+    - https://pmc.ncbi.nlm.nih.gov/articles/PMC2843703/
+    - https://pmc.ncbi.nlm.nih.gov/articles/PMC10192365/
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: motion
+    path: motion.json
+    mediaType: application/vnd.videoer.motion+json
+    sha256: 6b54cb8f718564c8e7d2c3ee3fc61c1cd052acb6f368ea03d3bb014b98f19bef
+  - role: side-preview
+    path: verification/walk.mp4
+    mediaType: video/mp4
+    sha256: 28937e8736edf692be89e7b6b1d3ceed559499c4dc3d2e94e536b57eea6760dc
+  - role: three-quarter-preview
+    path: verification/walk-three-quarter.mp4
+    mediaType: video/mp4
+    sha256: 92a815fd2d270f79a0402b09e34313f2a25c3cb830f172131175b667c17552a5
+  - role: blender-source
+    path: verification/walk.blend
+    mediaType: application/x-blender
+    sha256: 56f6adb6dae81a648fdaf7601d30bfcc985120e91731cbce96b018fbf3e1ca12
+  - role: verification-verification-contact-sheet
+    path: verification/contact-sheet.png
+    mediaType: image/png
+    sha256: 6777a28c8810c93beb4447d1e7015aea720521ecae35fe3547081eba48a6024e
+  - role: verification-verification-contact-sheet-three-quarter
+    path: verification/contact-sheet-three-quarter.png
+    mediaType: image/png
+    sha256: 269e27e0812fd512363e6b773d72fa9f69f058298ced54ffc3f1e21e7cd4af0f
+  - role: verification-verification-motion-probe
+    path: verification/motion-probe.json
+    mediaType: application/json
+    sha256: 8c60749abb246784d0e815966dae8607ab85c43d9bd2c87fc4c0437d66a00448
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  skeleton: videoer.canonical-humanoid.v1
+  renderers:
+    - three-3d
+    - blender-headless
+  requires:
+    - id: character.humanoid-mannequin
+      version: 0.4.0
+verification:
+  checks:
+    - motion.eight-phase-model
+    - motion.canonical-forward-direction
+    - motion.anatomical-foot-direction
+    - motion.anatomical-knee-polarity
+    - motion.heel-toe-contact-order
+    - motion.planted-contact-error
+    - motion.swing-clearance
+    - motion.ground-penetration
+    - motion.joint-limits
+    - motion.pelvis-continuity
+    - visual.side-eight-phases
+    - visual.three-quarter-eight-phases
+  artifacts:
+    - verification/contact-sheet.png
+    - verification/contact-sheet-three-quarter.png
+    - verification/motion-probe.json
+  verifiedAt: 2026-08-30T19:55:01.000Z

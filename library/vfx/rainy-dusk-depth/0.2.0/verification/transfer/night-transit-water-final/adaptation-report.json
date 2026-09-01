@@ -1,0 +1,10 @@
+{
+  "valid": true,
+  "issues": [],
+  "placementPreserved": true,
+  "deterministicLayerTopologyPreserved": true,
+  "changedFields": [
+    "rain.groundSplashes.boundsMinimum",
+    "rain.groundSplashes.boundsMaximum"
+  ]
+}

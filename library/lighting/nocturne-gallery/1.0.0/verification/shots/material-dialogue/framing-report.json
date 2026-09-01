@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "samples": [
+    {
+      "landmarkId": "metal-surface",
+      "progress": 0,
+      "frame": 1,
+      "entities": {
+        "gallery": {
+          "minimumX": -12.676631927490234,
+          "maximumX": 1608.1529541015625,
+          "minimumY": -430.8768310546875,
+          "maximumY": 1005.1657104492188,
+          "widthPercentage": 162082.95860290527,
+          "heightPercentage": 143604.25415039062
+        }
+      }
+    },
+    {
+      "landmarkId": "luminous-junction",
+      "progress": 0.52,
+      "frame": 50,
+      "entities": {
+        "gallery": {
+          "minimumX": -94.89009094238281,
+          "maximumX": 357.28778076171875,
+          "minimumY": -36.961124420166016,
+          "maximumY": 124.88756561279297,
+          "widthPercentage": 45217.787170410156,
+          "heightPercentage": 16184.869003295898
+        }
+      }
+    },
+    {
+      "landmarkId": "tactile-hold",
+      "progress": 1,
+      "frame": 96,
+      "entities": {
+        "gallery": {
+          "minimumX": -3.5663623809814453,
+          "maximumX": 35.776119232177734,
+          "minimumY": -52.167930603027344,
+          "maximumY": 5.235438823699951,
+          "widthPercentage": 3934.248161315918,
+          "heightPercentage": 5740.3369426727295
+        }
+      }
+    }
+  ]
+}

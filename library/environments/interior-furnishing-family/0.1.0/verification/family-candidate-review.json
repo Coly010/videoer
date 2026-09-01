@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "familyAssetId": "environment.interior-furnishing-family",
+  "memberAssetIds": [
+    "prop.upholstered-reading-chair",
+    "prop.pedestal-side-table",
+    "prop.decorative-vessel-set"
+  ],
+  "decision": "accepted",
+  "reviewer": "Codex visual production review",
+  "reviewedAt": "2026-09-01T12:35:00.000Z",
+  "intendedShotDistance": "medium",
+  "evidence": [
+    "verification/historic-library-chamber/contact-sheet.png",
+    "verification/historic-library-chamber/scene-render.json",
+    "verification/contemporary-reading-loft/contact-sheet.png",
+    "verification/contemporary-reading-loft/scene-render.json"
+  ],
+  "strengths": [
+    "The same chair, pedestal table and supported vessel set retain coherent scale, silhouette and material hierarchy in unrelated warm historical and cool contemporary rooms.",
+    "Rounded renderer-independent upholstery, physical piping, visible timber framing, brushed-brass accents and glazed-ceramic vessels remain readable at medium distance without external textures or renderer-owned bevels.",
+    "The vessel tray is exactly supported at the canonical 0.77 metre tabletop height in both seeded layouts, and the authored reading-corner recipe preserves its declared circulation corridor.",
+    "Layout-aware bounded adaptation of the verified warm-interior rig separates upholstery, timber, brass and ceramic while retaining zero clipped-white coverage and passing the tightened black-coverage limit in every semantic frame."
+  ],
+  "limitations": [
+    "This release is accepted only for background and medium social-video framing; upholstery seams, joinery and vessel glaze are not hero-close inventory.",
+    "The chair, table and vessels are static geometry in this release; occupant seating, object pickup and dynamic upholstery behavior are semantic anchors rather than accepted animation.",
+    "The two rooms are verification hosts built to prove transfer, lighting response and circulation; they are not themselves publishable finished environments."
+  ],
+  "notes": "V1 was rejected for inflated ellipsoidal cushions. V2 replaced them with tailored but visibly box-built upholstery. V3 exposed a camera outside the room shell and underlit modern materials despite passing permissive gates. V4 added live camera clearance, tightened black coverage and corrected exposure. V5 introduced a reusable renderer-independent rounded-box surface. V6 made lighting adaptation layout-aware. V7 fixes tabletop scaling so supported inventory is exactly grounded and is accepted only at medium/background distance."
+}

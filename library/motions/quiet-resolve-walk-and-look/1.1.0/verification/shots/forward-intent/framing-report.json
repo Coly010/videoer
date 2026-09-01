@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "samples": [
+    {
+      "landmarkId": "committed-step",
+      "progress": 0,
+      "frame": 1,
+      "entities": {
+        "platform": {
+          "minimumX": -0.4320046603679657,
+          "maximumX": 830.8082885742188,
+          "minimumY": -19.339981079101562,
+          "maximumY": 337.335693359375,
+          "widthPercentage": 83124.02932345867,
+          "heightPercentage": 35667.567443847656
+        },
+        "elara": {
+          "minimumX": 0.25645479559898376,
+          "maximumX": 0.4765893816947937,
+          "minimumY": 0.0785340890288353,
+          "maximumY": 0.760193943977356,
+          "widthPercentage": 22.013458609580994,
+          "heightPercentage": 68.16598549485207
+        }
+      }
+    },
+    {
+      "landmarkId": "attention-shifts",
+      "progress": 0.68,
+      "frame": 49,
+      "entities": {
+        "platform": {
+          "minimumX": -0.7299269437789917,
+          "maximumX": 2746.833251953125,
+          "minimumY": -3.5972344875335693,
+          "maximumY": 1744.232421875,
+          "widthPercentage": 274756.3178896904,
+          "heightPercentage": 174782.96563625336
+        },
+        "elara": {
+          "minimumX": 0.18254484236240387,
+          "maximumX": 0.40233930945396423,
+          "minimumY": 0.07556936144828796,
+          "maximumY": 0.7539424300193787,
+          "widthPercentage": 21.979446709156036,
+          "heightPercentage": 67.83730685710907
+        }
+      }
+    },
+    {
+      "landmarkId": "resolve-direction",
+      "progress": 1,
+      "frame": 72,
+      "entities": {
+        "platform": {
+          "minimumX": -0.8539181351661682,
+          "maximumX": 412.70086669921875,
+          "minimumY": -2.5776383876800537,
+          "maximumY": 279.5545654296875,
+          "widthPercentage": 41355.47848343849,
+          "heightPercentage": 28213.220381736755
+        },
+        "elara": {
+          "minimumX": 0.20205004513263702,
+          "maximumX": 0.4194597601890564,
+          "minimumY": 0.08669421821832657,
+          "maximumY": 0.7533818483352661,
+          "widthPercentage": 21.740971505641937,
+          "heightPercentage": 66.66876301169395
+        }
+      }
+    }
+  ]
+}

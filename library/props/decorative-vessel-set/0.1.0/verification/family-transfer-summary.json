@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "familyId": "environment.interior-furnishing-family",
+  "memberAssetId": "prop.decorative-vessel-set",
+  "acceptedAt": "2026-09-01T12:35:00.000Z",
+  "transferSummaries": [
+    {
+      "kind": "historic-library-chamber",
+      "requestId": "layout.historic-library-chamber-interior-furnishing",
+      "hostAssetId": "environment.historic-library-chamber-host",
+      "sourceLightingRigId": "lighting.bookshop-warm-interior",
+      "adaptedLightingRigId": "lighting.historic-library-chamber-reading-corner",
+      "supportErrorMeters": 0,
+      "cameraClearanceAccepted": true,
+      "layoutFocus": [
+        3.635962126518138,
+        -0.43078954281796866
+      ],
+      "landmarkHashes": [
+        "5617543038cfc67d961c0e053a13c8b68343c164c30624052ae1f840f91c843d",
+        "8237e1cf16734a020e54d0c07db2fe5cb38983992211a90ea5a63bb14502249b",
+        "9c5184cd2c8dea0b7948b3e5400af2f44df2b763741d85312acf190db5e1ce89"
+      ]
+    },
+    {
+      "kind": "contemporary-reading-loft",
+      "requestId": "layout.contemporary-reading-loft-interior-furnishing",
+      "hostAssetId": "environment.contemporary-reading-loft-host",
+      "sourceLightingRigId": "lighting.bookshop-warm-interior",
+      "adaptedLightingRigId": "lighting.contemporary-reading-loft-reading-corner",
+      "supportErrorMeters": 0,
+      "cameraClearanceAccepted": true,
+      "layoutFocus": [
+        -2.5260876842576896,
+        0.5636756697128793
+      ],
+      "landmarkHashes": [
+        "dcb757d78398e01d8acad89cab083bd591d2143a83f0b7f28dcba28f0657ccbf",
+        "22a76df8dfafe1746c747726cabae57caf101349078e77a1cac04135a3ef3af1",
+        "d97e4b3d9ff744be8b7fac7368b09965b61ba3f626a41136404be06fa571ede2"
+      ]
+    }
+  ],
+  "intendedShotDistance": "medium",
+  "limitations": [
+    "This release is accepted only for background and medium social-video framing; upholstery seams, joinery and vessel glaze are not hero-close inventory.",
+    "The chair, table and vessels are static geometry in this release; occupant seating, object pickup and dynamic upholstery behavior are semantic anchors rather than accepted animation.",
+    "The two rooms are verification hosts built to prove transfer, lighting response and circulation; they are not themselves publishable finished environments."
+  ]
+}

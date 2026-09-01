@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "cueId": "last-call-dialogue",
+  "assetId": "audio.last-call-dialogue",
+  "engine": "espeak-ng",
+  "text": "The next train leaves at midnight.",
+  "voice": {
+    "voice": "en+f3",
+    "rate": 150,
+    "pitch": 45
+  },
+  "durationSeconds": 2.403129,
+  "intervalSeconds": 2.5,
+  "audioSha256": "c852a3bbb4c95573eb74e26021f6c7a1062abacb1f7907014b999f3020210de8",
+  "eventsSha256": "1b844d7406717497a6d964c1973c8052fc1680d22ed2ebaaf8f13762b6174aef",
+  "verification": {
+    "valid": true,
+    "phonemeCount": 25,
+    "wordCount": 6,
+    "monotonicEvents": true,
+    "fitsDeclaredInterval": true
+  }
+}

@@ -1,0 +1,140 @@
+schemaVersion: 1
+id: prop.projecting-neon-blade-sign
+version: 0.1.0
+type: prop
+title: Portable projecting neon blade sign practical
+description: Project-owned two-sided projecting neon sign with a physical
+  cabinet, replaceable face-treatment slots, structural wall bracket, local area
+  emitters, and bounded deterministic electrical instability.
+status: verified
+tags:
+  - neon
+  - blade-sign
+  - practical
+  - wayfinding
+  - portable-set-dressing
+capabilities:
+  - portable-geometry
+  - named-wall-mount
+  - replaceable-two-sided-face-treatment
+  - declared-wall-clearance-contract
+  - local-practical-emitter
+  - inverse-square-falloff
+  - cross-environment-transfer
+  - seeded-electrical-instability
+  - authored-colour-preservation
+  - visible-source-emission-binding
+  - medium-background-quality-tier
+source:
+  kind: procedural
+  generator: videoer.projecting-neon-blade-sign.v1
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: geometry
+    path: geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: d1d3dc027c6e3d2e1e1b543db668b07be5f947350079c87aca0ae40514da855e
+  - role: practical-fixture
+    path: fixture.json
+    mediaType: application/vnd.videoer.practical-fixture+json
+    sha256: 55c430d64ee902abca12e8d4077276716665805f2604cc36918f26b658f63a39
+  - role: validation
+    path: validation.json
+    mediaType: application/json
+    sha256: 6579d76f817f25e74a69fe041e1e3443a5120f9077ef9a08dd85fdfc3f7951ca
+  - role: blender-source
+    path: verification/facade/neon-blade-sign-facade-probe.blend
+    mediaType: application/x-blender
+    sha256: 24be1f57285c1136fdbcd26b887bf4674412e8f83fd855a96f0178f0c076c12c
+  - role: temporal-preview
+    path: verification/facade/neon-blade-sign-facade-probe.mp4
+    mediaType: video/mp4
+    sha256: 02af87e80ed2425847cebb3f5c6f8901b5841fa0ec2bd5296d491353f024b74b
+  - role: temporal-render-report
+    path: verification/facade/scene-render.json
+    mediaType: application/json
+    sha256: 7f278e9f9b579763197e7914f7dfcc1dbb6393dbd1edcfc0dbfc375395d6daa9
+  - role: fixture-modulation-report
+    path: verification/facade/fixture-modulation-report.json
+    mediaType: application/json
+    sha256: 9affbd149c36da22df1dd549e6bd67417930c604f6c08b3fe8d979a83a7438aa
+  - role: transfer-blender-source
+    path: verification/warehouse/neon-blade-sign-warehouse-probe.blend
+    mediaType: application/x-blender
+    sha256: b2a840ee288bf9c213e3cd7750f4a7f365b7a946db64ca43882180db356dda33
+  - role: verification-verification-facade-contact-sheet
+    path: verification/facade/contact-sheet.png
+    mediaType: image/png
+    sha256: ce2a2818fd114b12dd98707b7538e2455a4233981897d621fb03a1edd5060d42
+  - role: verification-verification-warehouse-contact-sheet
+    path: verification/warehouse/contact-sheet.png
+    mediaType: image/png
+    sha256: 4c2be73f11b26dc83f182adb6ba96bdb1a8192a9c86bf6775625656c3e3aa5b3
+  - role: verification-verification-warehouse-scene-probe
+    path: verification/warehouse/scene-probe.json
+    mediaType: application/json
+    sha256: c995b7541af1bd7f0d4ed66caf41d7e36932c499cbd570d8368247672a50e7f4
+  - role: facade-contact-sheet
+    path: verification/facade/contact-sheet.png
+    mediaType: image/png
+    sha256: ce2a2818fd114b12dd98707b7538e2455a4233981897d621fb03a1edd5060d42
+  - role: facade-temporal-render-report
+    path: verification/facade/scene-render.json
+    mediaType: application/json
+    sha256: 7f278e9f9b579763197e7914f7dfcc1dbb6393dbd1edcfc0dbfc375395d6daa9
+  - role: facade-temporal-preview
+    path: verification/facade/neon-blade-sign-facade-probe.mp4
+    mediaType: video/mp4
+    sha256: 02af87e80ed2425847cebb3f5c6f8901b5841fa0ec2bd5296d491353f024b74b
+  - role: fixture-modulation-report
+    path: verification/facade/fixture-modulation-report.json
+    mediaType: application/json
+    sha256: 9affbd149c36da22df1dd549e6bd67417930c604f6c08b3fe8d979a83a7438aa
+  - role: warehouse-transfer-contact-sheet
+    path: verification/warehouse/contact-sheet.png
+    mediaType: image/png
+    sha256: 4c2be73f11b26dc83f182adb6ba96bdb1a8192a9c86bf6775625656c3e3aa5b3
+  - role: warehouse-transfer-probe-report
+    path: verification/warehouse/scene-probe.json
+    mediaType: application/json
+    sha256: c995b7541af1bd7f0d4ed66caf41d7e36932c499cbd570d8368247672a50e7f4
+  - role: qualitative-review
+    path: verification/fixture-candidate-review.json
+    mediaType: application/json
+    sha256: 50e53f2d2d4d9b97f306666a0767f95ca71c10ba5ff166b5ff21e6ac604e48c0
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - blender-headless
+  requires: []
+verification:
+  checks:
+    - geometry.topology
+    - fixture.geometry-binding
+    - fixture.mount-attachment
+    - fixture.local-emitter-schema
+    - fixture.authored-colour-preserved
+    - fixture.seeded-electrical-instability
+    - fixture.visible-source-and-useful-light-shared-signal
+    - prop.host-clearance-contract
+    - prop.replaceable-face-treatment-contract
+    - visual.facade-geometry-light-pool-accepted
+    - visual.unrelated-warehouse-transfer-accepted
+    - fixture.medium-background-shot-distance-accepted
+    - fixture.seeded-temporal-modulation-accepted
+    - fixture.visible-source-and-useful-light-shared-signal-accepted
+  artifacts:
+    - verification/facade/contact-sheet.png
+    - verification/facade/scene-render.json
+    - verification/facade/neon-blade-sign-facade-probe.mp4
+    - verification/facade/fixture-modulation-report.json
+    - verification/warehouse/contact-sheet.png
+    - verification/warehouse/scene-probe.json
+    - verification/fixture-candidate-review.json
+  verifiedAt: 2026-09-01T08:09:50.000Z

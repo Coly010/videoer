@@ -1,0 +1,196 @@
+{
+  "schemaVersion": 1,
+  "id": "environment.workshop-world-family",
+  "title": "Portable workshop workstation and tool-storage family",
+  "tags": [
+    "workshop",
+    "workbench",
+    "tools",
+    "craft",
+    "inhabited-interior"
+  ],
+  "intendedShotDistance": [
+    "background",
+    "medium"
+  ],
+  "variants": [
+    {
+      "id": "joiners-workbench",
+      "geometryAssetId": "prop.joiners-workbench",
+      "geometryVersion": "0.1.0",
+      "weight": 0.34,
+      "footprintRadiusMeters": 1.25,
+      "heightMeters": 1.04,
+      "scale": {
+        "minimum": 0.98,
+        "maximum": 1.03
+      },
+      "yawDegrees": {
+        "minimum": -4,
+        "maximum": 4
+      },
+      "tags": [
+        "work-surface",
+        "vise",
+        "interaction-anchors"
+      ]
+    },
+    {
+      "id": "freestanding-tool-board",
+      "geometryAssetId": "prop.freestanding-tool-board",
+      "geometryVersion": "0.1.0",
+      "weight": 0.32,
+      "footprintRadiusMeters": 0.96,
+      "heightMeters": 2.12,
+      "scale": {
+        "minimum": 0.97,
+        "maximum": 1.04
+      },
+      "yawDegrees": {
+        "minimum": -5,
+        "maximum": 5
+      },
+      "tags": [
+        "tool-display",
+        "storage",
+        "silhouette"
+      ]
+    },
+    {
+      "id": "rolling-parts-cabinet",
+      "geometryAssetId": "prop.rolling-parts-cabinet",
+      "geometryVersion": "0.1.0",
+      "weight": 0.34,
+      "footprintRadiusMeters": 0.64,
+      "heightMeters": 1.02,
+      "scale": {
+        "minimum": 0.94,
+        "maximum": 1.06
+      },
+      "yawDegrees": {
+        "minimum": -12,
+        "maximum": 12
+      },
+      "tags": [
+        "drawers",
+        "portable-storage",
+        "parts"
+      ]
+    }
+  ],
+  "clusters": [
+    {
+      "id": "complete-craft-workstation",
+      "weight": 0.58,
+      "yawDegrees": {
+        "minimum": -10,
+        "maximum": 10
+      },
+      "members": [
+        {
+          "variantId": "joiners-workbench",
+          "offset": [
+            0,
+            0,
+            0
+          ],
+          "yawOffsetDegrees": 0,
+          "scaleMultiplier": 1
+        },
+        {
+          "variantId": "freestanding-tool-board",
+          "offset": [
+            0,
+            0,
+            0.84
+          ],
+          "yawOffsetDegrees": 0,
+          "scaleMultiplier": 1
+        },
+        {
+          "variantId": "rolling-parts-cabinet",
+          "offset": [
+            1.67,
+            0,
+            0.22
+          ],
+          "yawOffsetDegrees": -5,
+          "scaleMultiplier": 0.94
+        }
+      ]
+    },
+    {
+      "id": "bench-and-cabinet",
+      "weight": 0.24,
+      "yawDegrees": {
+        "minimum": -18,
+        "maximum": 18
+      },
+      "members": [
+        {
+          "variantId": "joiners-workbench",
+          "offset": [
+            -0.48,
+            0,
+            0
+          ],
+          "yawOffsetDegrees": 0,
+          "scaleMultiplier": 1
+        },
+        {
+          "variantId": "rolling-parts-cabinet",
+          "offset": [
+            1.32,
+            0,
+            0.18
+          ],
+          "yawOffsetDegrees": -8,
+          "scaleMultiplier": 1
+        }
+      ]
+    },
+    {
+      "id": "tool-storage-bay",
+      "weight": 0.18,
+      "yawDegrees": {
+        "minimum": -16,
+        "maximum": 16
+      },
+      "members": [
+        {
+          "variantId": "freestanding-tool-board",
+          "offset": [
+            -0.56,
+            0,
+            0
+          ],
+          "yawOffsetDegrees": 0,
+          "scaleMultiplier": 1
+        },
+        {
+          "variantId": "rolling-parts-cabinet",
+          "offset": [
+            0.86,
+            0,
+            -0.06
+          ],
+          "yawOffsetDegrees": 7,
+          "scaleMultiplier": 1
+        }
+      ]
+    }
+  ],
+  "placement": {
+    "surface": "ground",
+    "distribution": "edge-band",
+    "edgeBandMeters": 2.15,
+    "minimumSpacingMeters": 0.22,
+    "preserveNavigationClearance": true
+  },
+  "metadata": {
+    "generator": "videoer.workshop-world-family.v1",
+    "assetResolution": "stable-id-and-explicit-version",
+    "layoutOutput": "renderer-independent-authored-workstation-transforms",
+    "workstationSemantics": true
+  }
+}

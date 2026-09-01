@@ -1,0 +1,65 @@
+schemaVersion: 1
+id: environment.warm-bookshop-lighting
+version: 0.1.0
+type: environment
+title: Warm bookshop interior lighting rig
+description: Reusable warm bookshop interior rig with a readable face key, cool
+  window fill, shelf rim, and coherent AgX exposure.
+status: verified
+tags:
+  - lighting-rig
+  - warm-interior
+  - cool-fill
+capabilities:
+  - reusable-rig
+  - face-key
+  - coherent-exposure
+source:
+  kind: procedural
+  generator: videoer.bookshop-lighting-rig.v1
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: lighting-rig
+    path: lighting-rig.json
+    mediaType: application/vnd.videoer.lighting+json
+    sha256: 7f98811a249c29a52d490557d399ec9b901e8b619a2d9b53b1116fc631ac96d9
+  - role: preview
+    path: verification/interior-lighting-probe.mp4
+    mediaType: video/mp4
+    sha256: 38ec3232d2d33575184014560ab6b4cd9176b6127352e5f7e39f03212fcca9f4
+  - role: blender-source
+    path: verification/interior-lighting-probe.blend
+    mediaType: application/x-blender
+    sha256: 3a6e58ca6e6819223a39b0dc6c73cc9efdcb966f6e752bec3316624addbcd10b
+  - role: verification-verification-contact-sheet
+    path: verification/contact-sheet.png
+    mediaType: image/png
+    sha256: 5fdd894f99a745b53525fcaedb978f61ad7cabb3956b99d957adff341e81f0cb
+  - role: verification-verification-scene-render
+    path: verification/scene-render.json
+    mediaType: application/json
+    sha256: 615b1bea1740060be7ac16ea1d9aaa714e168bb7e5483b2deec5033d634e1676
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - blender-headless
+  requires:
+    - id: environment.old-city-bookshop
+      version: 0.2.1
+verification:
+  checks:
+    - lighting.reusable-rig-schema
+    - lighting.agx-coherent-exposure
+    - lighting.readable-face-key
+    - visual.camera-movement-exposure-continuity
+  artifacts:
+    - verification/contact-sheet.png
+    - verification/interior-lighting-probe.mp4
+    - verification/scene-render.json
+  verifiedAt: 2026-08-30T22:32:39.383Z

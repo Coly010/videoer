@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "id": "material.old-city-window-glazing",
+  "shadingModel": "metallic-roughness",
+  "baseColor": {
+    "kind": "procedural-palette",
+    "colors": [
+      [
+        0.72,
+        0.82,
+        0.84,
+        1
+      ],
+      [
+        0.88,
+        0.94,
+        0.92,
+        1
+      ],
+      [
+        0.62,
+        0.74,
+        0.78,
+        1
+      ]
+    ],
+    "scaleMeters": 0.9,
+    "seed": 2317
+  },
+  "normal": {
+    "kind": "procedural-noise",
+    "strength": 0.06,
+    "scaleMeters": 0.012
+  },
+  "roughness": {
+    "minimum": 0.035,
+    "maximum": 0.14,
+    "variationScaleMeters": 0.34,
+    "wetness": 0.06
+  },
+  "pattern": {
+    "kind": "architectural-glazing",
+    "ior": 1.52,
+    "transmission": 0.94,
+    "thicknessMeters": 0.008,
+    "microScratchScaleMeters": 0.003,
+    "dirtAmount": 0.12
+  },
+  "metallic": 0,
+  "metadata": {
+    "generator": "videoer.old-city-surface-library.v3",
+    "coordinateScale": "object-space-metres",
+    "layeredResponse": [
+      "surface-specific-pattern",
+      "palette",
+      "micro-normal",
+      "roughness-variation",
+      "wet-coat"
+    ]
+  }
+}

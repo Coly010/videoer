@@ -1,0 +1,120 @@
+schemaVersion: 1
+id: motion.quiet-resolve.walk-and-look
+version: 1.0.0
+type: motion
+title: Elara quiet-resolve walk and look
+description: Multi-parent performance combining Elara's verified
+  proportion-specific cautious gait with a masked late rightward head turn on an
+  exact 72-frame timeline.
+status: verified
+tags:
+  - humanoid
+  - performance
+  - walk
+  - head-turn
+  - elara-vale
+  - layered
+capabilities:
+  - canonical-humanoid
+  - root-motion
+  - foot-contact
+  - elara-proportions
+  - forward-cautious-travel
+  - late-right-attention-shift
+  - masked-head-performance
+source:
+  kind: procedural
+  generator: videoer.motion-timeline.v1
+  sourceAssets:
+    - motion.walk-natural-cautious-elara@1.0.0
+    - motion.turn-orientation@0.1.0
+  references:
+    - provenance/cinematic-campaign.yaml
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: motion
+    path: motion.json
+    mediaType: application/vnd.videoer.motion+json
+    sha256: 6fa2a1ac3c2e549f52de8155945fd2781d45688aa82fc5933ff70f7899817f69
+  - role: source-campaign
+    path: provenance/cinematic-campaign.yaml
+    mediaType: application/yaml
+    sha256: a156134124a1e1f3c0dc163b4bf20a9b3d8892bed42e8c70b0d4b590cb3d4de7
+  - role: verification-layered-performance-compatibility
+    path: verification/adaptation/verification-layered-performance-compatibility.json
+    mediaType: application/json
+    sha256: 8d3870d71a8a92748ccec76bb1d29376c99aaaf3db43862dcef24b17dad9f62f
+  - role: verification-forward-intent-scene-render
+    path: verification/shots/forward-intent/scene-render.json
+    mediaType: application/json
+    sha256: 10149e4b8cac800e31111f2cb63881a3069be2093b3a5dd21d97f174ea24b3ae
+  - role: verification-forward-intent-contact-sheet
+    path: verification/shots/forward-intent/contact-sheet.png
+    mediaType: image/png
+    sha256: badcc8ac084ac39fee453ea507c256452a7f07efd808e5cb8d7091eb78824fda
+  - role: verification-forward-intent-framing-report
+    path: verification/shots/forward-intent/framing-report.json
+    mediaType: application/json
+    sha256: f2c1a9d220c9cf68d84ad7cfa90a31c4d10e8404a9e0139c431cdfd2f96f2deb
+  - role: verification-quiet-resolve-scene-render
+    path: verification/shots/quiet-resolve/scene-render.json
+    mediaType: application/json
+    sha256: 6f26221b5c6350098f0cd2b68e80287e82de76c1d2549568a1d35867f6de253f
+  - role: verification-quiet-resolve-contact-sheet
+    path: verification/shots/quiet-resolve/contact-sheet.png
+    mediaType: image/png
+    sha256: cde1089bda0265044572b2f9eedd4ad41bc55dd2bb128905b98cec3701809274
+  - role: verification-quiet-resolve-framing-report
+    path: verification/shots/quiet-resolve/framing-report.json
+    mediaType: application/json
+    sha256: 4f6dcf393823b3dc7698092a260d900592016fbe84296407ab590a27fdd408a1
+  - role: verification-campaign-delivery
+    path: verification/campaign-delivery-report.json
+    mediaType: application/json
+    sha256: f64e681e6020cc3738d37f41faf42204f34f9a26cf6e733e0e4ff4161a133a1a
+  - role: verification-approval
+    path: verification/approval.json
+    mediaType: application/json
+    sha256: 48d6ae0344209a903949e8b2deb03fbf87d8cdae038d4f9f4d22f56f17e199d0
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - three-3d
+    - blender-headless
+  requires:
+    - id: motion.walk-natural-cautious-elara
+      version: 1.0.0
+    - id: motion.turn-orientation
+      version: 0.1.0
+    - id: character.elara-vale
+      version: 0.1.2
+verification:
+  checks:
+    - motion.multi-parent-lineage
+    - motion.source-artifact-hashes
+    - motion.target-geometry-hash
+    - motion.base-coverage
+    - motion.exact-frame-grid
+    - motion.masked-layer-contribution
+    - motion.target-compatible
+    - visual.forward-travel
+    - visual.attention-shift
+    - visual.subject-framing
+    - campaign.delivery.verified
+    - review.operator-approved
+  artifacts:
+    - verification/adaptation/verification-layered-performance-compatibility.json
+    - verification/shots/forward-intent/scene-render.json
+    - verification/shots/forward-intent/contact-sheet.png
+    - verification/shots/forward-intent/framing-report.json
+    - verification/shots/quiet-resolve/scene-render.json
+    - verification/shots/quiet-resolve/contact-sheet.png
+    - verification/shots/quiet-resolve/framing-report.json
+    - verification/campaign-delivery-report.json
+    - verification/approval.json
+  verifiedAt: 2026-08-31T01:13:59.945Z

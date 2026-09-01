@@ -1,0 +1,176 @@
+{
+  "schemaVersion": 1,
+  "id": "environment.contemporary-rooftop-planting-surface",
+  "units": "meters",
+  "coordinateSystem": {
+    "handedness": "right",
+    "up": "y",
+    "forward": "-z"
+  },
+  "positions": [
+    [
+      -6,
+      0.27,
+      -4.5
+    ],
+    [
+      6,
+      0.27,
+      -4.5
+    ],
+    [
+      6,
+      -0.27,
+      4.5
+    ],
+    [
+      -6,
+      -0.27,
+      4.5
+    ]
+  ],
+  "normals": [
+    [
+      0,
+      0.9982048454657787,
+      0.059892290727946725
+    ],
+    [
+      0,
+      0.9982048454657787,
+      0.059892290727946725
+    ],
+    [
+      0,
+      0.9982048454657787,
+      0.059892290727946725
+    ],
+    [
+      0,
+      0.9982048454657787,
+      0.059892290727946725
+    ]
+  ],
+  "uvs": [
+    [
+      0,
+      0
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      0,
+      1
+    ]
+  ],
+  "indices": [
+    0,
+    1,
+    2,
+    0,
+    2,
+    3
+  ],
+  "skinIndices": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0
+    ]
+  ],
+  "skinWeights": [
+    [
+      1,
+      0,
+      0,
+      0
+    ],
+    [
+      1,
+      0,
+      0,
+      0
+    ],
+    [
+      1,
+      0,
+      0,
+      0
+    ],
+    [
+      1,
+      0,
+      0,
+      0
+    ]
+  ],
+  "materials": [
+    {
+      "id": "rooftop-concrete",
+      "baseColor": [
+        0.19,
+        0.205,
+        0.215,
+        1
+      ],
+      "roughness": 0.68,
+      "metallic": 0,
+      "emission": [
+        0,
+        0,
+        0
+      ],
+      "emissionStrength": 0
+    }
+  ],
+  "materialGroups": [
+    {
+      "materialId": "rooftop-concrete",
+      "start": 0,
+      "count": 6
+    }
+  ],
+  "skeleton": [
+    {
+      "id": "root",
+      "restPosition": [
+        0,
+        0,
+        0
+      ],
+      "constraints": {}
+    }
+  ],
+  "morphTargets": [],
+  "attachments": {},
+  "metadata": {
+    "generator": "videoer.vegetation-surface-witness.v1",
+    "verificationOnly": true,
+    "surfaceQueryTarget": true
+  }
+}

@@ -1,0 +1,92 @@
+schemaVersion: 1
+id: motion.last-call-line
+version: 1.0.0
+type: motion
+title: Last Call spoken facial performance
+description: Exact-frame English viseme performance derived from immutable
+  native phoneme events and synchronized provider-free speech audio for the
+  Elara speaking rig.
+status: verified
+tags:
+  - speech
+  - dialogue
+  - viseme
+  - facial-animation
+  - elara-vale
+capabilities:
+  - canonical-humanoid
+  - canonical-english-visemes
+  - exact-frame-phoneme-timing
+  - audiovisual-sync
+source:
+  kind: procedural
+  generator: videoer.espeak-viseme.v1
+  references:
+    - provenance/cinematic-campaign.yaml
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: motion
+    path: motion.json
+    mediaType: application/vnd.videoer.motion+json
+    sha256: 44df32625d70acdb66e422a33f2e959c9884d6ff11748f0a4759b9bca3c1609c
+  - role: source-campaign
+    path: provenance/cinematic-campaign.yaml
+    mediaType: application/yaml
+    sha256: c32d3c114aff16d2e138e2079d634507aa5f2f13eb4a85001c1cb77a9dfd5f64
+  - role: verification-speech-performance-compatibility
+    path: verification/adaptation/verification-speech-performance-compatibility.json
+    mediaType: application/json
+    sha256: 3f1ee4253479da73387567b0254465311d5181035cf08da150b1194c4c77df40
+  - role: verification-last-call-closeup-scene-render
+    path: verification/shots/last-call-closeup/scene-render.json
+    mediaType: application/json
+    sha256: 47d2e356e9e0be53148a6a339f3e0cb5b76f45abc07c0494e463e86cc09a5380
+  - role: verification-last-call-closeup-contact-sheet
+    path: verification/shots/last-call-closeup/contact-sheet.png
+    mediaType: image/png
+    sha256: 516d9c14eb271b8f204dba5d47593d0f4bc4b02e89cbecaccec8a3831e23fb55
+  - role: verification-last-call-closeup-framing-report
+    path: verification/shots/last-call-closeup/framing-report.json
+    mediaType: application/json
+    sha256: d2aec3b1616aa25ec6378e986812f9d4542a6e9e86f45e833af00a3e36d98cf0
+  - role: verification-campaign-delivery
+    path: verification/campaign-delivery-report.json
+    mediaType: application/json
+    sha256: 86069348283d25627dc8811132e09952a255477c3cdc8e546a51f9e97930e6b1
+  - role: verification-approval
+    path: verification/approval.json
+    mediaType: application/json
+    sha256: 76b8f38dc6c7d7bbf0406975d0bf491d9c5ecd4c124bca6fadb4c13643bbb9df
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - three-3d
+    - blender-headless
+  requires:
+    - id: audio.last-call-dialogue
+      version: 1.0.0
+    - id: character.elara-vale-speaking
+      version: 1.0.0
+verification:
+  checks:
+    - speech.audio-hash
+    - speech.event-ledger-hash
+    - speech.target-geometry-hash
+    - speech.exact-frame-grid
+    - speech.one-frame-av-sync
+    - visual.viseme-peaks
+    - campaign.delivery.verified
+    - review.operator-approved
+  artifacts:
+    - verification/adaptation/verification-speech-performance-compatibility.json
+    - verification/shots/last-call-closeup/scene-render.json
+    - verification/shots/last-call-closeup/contact-sheet.png
+    - verification/shots/last-call-closeup/framing-report.json
+    - verification/campaign-delivery-report.json
+    - verification/approval.json
+  verifiedAt: 2026-08-31T01:57:49.104Z

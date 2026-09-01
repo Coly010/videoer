@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "campaign": "campaign.nocturne-exhibition",
+  "sourceId": "nocturne-lighting",
+  "asset": {
+    "id": "lighting.nocturne-gallery",
+    "version": "1.0.0"
+  },
+  "reviewer": "codex-autonomous-production",
+  "rationale": "Reviewed five-shot rendered exhibition evidence, delivery conformance, coherent exposure, bounded transform report, and independent approval-time semantic verification.",
+  "approvedAt": "2026-08-31T05:44:59.182Z"
+}

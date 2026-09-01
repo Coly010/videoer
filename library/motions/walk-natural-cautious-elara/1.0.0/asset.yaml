@@ -1,0 +1,126 @@
+schemaVersion: 1
+id: motion.walk-natural-cautious-elara
+version: 1.0.0
+type: motion
+title: Elara-proportioned cautious gait
+description: Research gait re-synthesized from the verified cautious phase
+  design against Elara Vale's exact height, leg, arm, hip, and foot proportions
+  with repeated biomechanics and skeleton compatibility evidence.
+status: verified
+tags:
+  - humanoid
+  - walk
+  - cautious
+  - naturalistic
+  - elara-vale
+  - retargeted
+capabilities:
+  - canonical-humanoid
+  - root-motion
+  - foot-contact
+  - planted-contact-constraints
+  - elara-proportions
+  - dialogue-grounded-pose
+source:
+  kind: procedural
+  generator: videoer.phase-gait-retarget.v1
+  sourceAsset: motion.walk-natural-cautious@1.1.1
+  references:
+    - provenance/cinematic-campaign.yaml
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: motion
+    path: motion.json
+    mediaType: application/vnd.videoer.motion+json
+    sha256: 0b7ae0a197875cf7d4b594e2beac08d497cd53434e5ec6e703df1e5661b89efb
+  - role: source-campaign
+    path: provenance/cinematic-campaign.yaml
+    mediaType: application/yaml
+    sha256: 7c756ed1bc433cbbc16f7cd2910bf1107d5e2269c658e806b940c3405254acf6
+  - role: verification-motion-adaptation-compatibility
+    path: verification/adaptation/verification-motion-adaptation-compatibility.json
+    mediaType: application/json
+    sha256: 0e34a1c9a7d231fd3845f6724712c91a88cf0e753f8b4167c67ef9c8051e00cc
+  - role: verification-last-train-wide-scene-render
+    path: verification/shots/last-train-wide/scene-render.json
+    mediaType: application/json
+    sha256: f07a1f76402d7b8a9e6ceda82dddd3baf70c1d0afd5f3d2a065e1cc14ff364d6
+  - role: verification-last-train-wide-contact-sheet
+    path: verification/shots/last-train-wide/contact-sheet.png
+    mediaType: image/png
+    sha256: 209b783b9759050fd5178dc8754f90bc72ad94e76e653beb0914cdd8372200a5
+  - role: verification-last-train-wide-framing-report
+    path: verification/shots/last-train-wide/framing-report.json
+    mediaType: application/json
+    sha256: cd05b27161ee5fa20c0264af54dff5104f5cd141e9403c1a4ae1dbbfe837d810
+  - role: verification-exchanged-look-scene-render
+    path: verification/shots/exchanged-look/scene-render.json
+    mediaType: application/json
+    sha256: eacfcf485394cb5ea9fb24eb0dc80acbb817c42fd195a6dc6a5de728d1dad3e4
+  - role: verification-exchanged-look-contact-sheet
+    path: verification/shots/exchanged-look/contact-sheet.png
+    mediaType: image/png
+    sha256: 6222505c1e463340da70e7e43a3bd2fa9f03c59f7b3f3a17a9883c81c0947b0d
+  - role: verification-exchanged-look-framing-report
+    path: verification/shots/exchanged-look/framing-report.json
+    mediaType: application/json
+    sha256: e6f34c93df2eeabe9db24aa16024569977a06797979ffcc6151c753df3c9bdf4
+  - role: verification-shared-silence-scene-render
+    path: verification/shots/shared-silence/scene-render.json
+    mediaType: application/json
+    sha256: ecf418a17ad1d6fd241ee6661a985bb8a54aa6b3256c5995dd1afe2cef7b142c
+  - role: verification-shared-silence-contact-sheet
+    path: verification/shots/shared-silence/contact-sheet.png
+    mediaType: image/png
+    sha256: 61627b42f90edc515811260f38fb45c2ab678091ad62f8dd67b74b6e06215978
+  - role: verification-shared-silence-framing-report
+    path: verification/shots/shared-silence/framing-report.json
+    mediaType: application/json
+    sha256: 08418e8965a1a55dccc239d003839fd6f16ff1c0a73b4ec9d1dc2865326742f2
+  - role: verification-campaign-delivery
+    path: verification/campaign-delivery-report.json
+    mediaType: application/json
+    sha256: e42122bda51a07577db0e0d529f871dae34104eeaba04fe3850615fffeecd3c2
+  - role: verification-approval
+    path: verification/approval.json
+    mediaType: application/json
+    sha256: 8efea2a476e54c90cfaf27894138859f48f3a5754096145c3cbf1d6ea8dd3a65
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - three-3d
+    - blender-headless
+  requires:
+    - id: motion.walk-natural-cautious
+      version: 1.1.1
+    - id: character.elara-vale
+      version: 0.1.2
+verification:
+  checks:
+    - motion.parent-hash
+    - motion.target-geometry-hash
+    - motion.skeleton-compatible
+    - motion.biomechanics
+    - motion.canonical-forward-direction
+    - visual.multi-character-performance
+    - campaign.delivery.verified
+    - review.operator-approved
+  artifacts:
+    - verification/adaptation/verification-motion-adaptation-compatibility.json
+    - verification/shots/last-train-wide/scene-render.json
+    - verification/shots/last-train-wide/contact-sheet.png
+    - verification/shots/last-train-wide/framing-report.json
+    - verification/shots/exchanged-look/scene-render.json
+    - verification/shots/exchanged-look/contact-sheet.png
+    - verification/shots/exchanged-look/framing-report.json
+    - verification/shots/shared-silence/scene-render.json
+    - verification/shots/shared-silence/contact-sheet.png
+    - verification/shots/shared-silence/framing-report.json
+    - verification/campaign-delivery-report.json
+    - verification/approval.json
+  verifiedAt: 2026-08-31T00:57:41.602Z

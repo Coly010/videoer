@@ -1,0 +1,236 @@
+{
+  "schemaVersion": 1,
+  "cameraContract": {
+    "valid": true,
+    "trackingConstraint": "TRACK_TO",
+    "trackAxis": "TRACK_NEGATIVE_Z",
+    "upAxis": "UP_Y",
+    "interpolationImplementation": "frame-baked-declarative-v1",
+    "maximumPositionErrorMeters": 0,
+    "maximumTargetErrorMeters": 0,
+    "maximumLensErrorMillimeters": 2.242084633508057e-07,
+    "positionToleranceMeters": 1e-05,
+    "targetToleranceMeters": 1e-05,
+    "lensToleranceMillimeters": 0.005,
+    "samples": [
+      {
+        "landmarkId": "establish",
+        "frame": 1,
+        "positionErrorMeters": 0.0,
+        "targetErrorMeters": 0.0,
+        "lensErrorMillimeters": 0.0,
+        "actualLensMillimeters": 46.0,
+        "expectedLensMillimeters": 46
+      },
+      {
+        "landmarkId": "push",
+        "frame": 17,
+        "positionErrorMeters": 0.0,
+        "targetErrorMeters": 0.0,
+        "lensErrorMillimeters": 2.242084633508057e-07,
+        "actualLensMillimeters": 48.85725402832031,
+        "expectedLensMillimeters": 48.857254252528776
+      },
+      {
+        "landmarkId": "settle",
+        "frame": 34,
+        "positionErrorMeters": 0.0,
+        "targetErrorMeters": 0.0,
+        "lensErrorMillimeters": 0.0,
+        "actualLensMillimeters": 52.0,
+        "expectedLensMillimeters": 52.0
+      }
+    ]
+  },
+  "samples": [
+    {
+      "landmarkId": "establish",
+      "progress": 0,
+      "frame": 1,
+      "entities": {
+        "bookshop-set": {
+          "minimumX": -792.9109497070312,
+          "maximumX": 270.3312683105469,
+          "minimumY": -632.3601684570312,
+          "maximumY": 5.440300464630127,
+          "widthPercentage": 106324.22180175781,
+          "heightPercentage": 63780.04689216614
+        },
+        "canopy": {
+          "minimumX": -0.9801477193832397,
+          "maximumX": 0.19667664170265198,
+          "minimumY": 0.4557160437107086,
+          "maximumY": 0.7365144491195679,
+          "widthPercentage": 117.68243610858917,
+          "heightPercentage": 28.079840540885925
+        },
+        "sign": {
+          "minimumX": -0.9079835414886475,
+          "maximumX": -0.24073553085327148,
+          "minimumY": 0.4434112012386322,
+          "maximumY": 0.8768622875213623,
+          "widthPercentage": 66.7248010635376,
+          "heightPercentage": 43.34510862827301
+        },
+        "lantern": {
+          "minimumX": 0.043489813804626465,
+          "maximumX": 0.20767459273338318,
+          "minimumY": 0.5942721366882324,
+          "maximumY": 0.698236882686615,
+          "widthPercentage": 16.41847789287567,
+          "heightPercentage": 10.396474599838257
+        },
+        "barrel": {
+          "minimumX": 0.49600353837013245,
+          "maximumX": 0.6401764154434204,
+          "minimumY": 0.3849899470806122,
+          "maximumY": 0.4914892017841339,
+          "widthPercentage": 14.417287707328796,
+          "heightPercentage": 10.649925470352173
+        },
+        "crate": {
+          "minimumX": 0.47912660241127014,
+          "maximumX": 0.6061338782310486,
+          "minimumY": 0.3959559500217438,
+          "maximumY": 0.4720790982246399,
+          "widthPercentage": 12.700727581977844,
+          "heightPercentage": 7.612314820289612
+        },
+        "fern": {
+          "minimumX": -0.6372930407524109,
+          "maximumX": -0.16656504571437836,
+          "minimumY": -0.1434556245803833,
+          "maximumY": 0.15094353258609772,
+          "widthPercentage": 47.07279950380325,
+          "heightPercentage": 29.439915716648102
+        }
+      }
+    },
+    {
+      "landmarkId": "push",
+      "progress": 0.5,
+      "frame": 17,
+      "entities": {
+        "bookshop-set": {
+          "minimumX": -39740.42578125,
+          "maximumX": 102249.28125,
+          "minimumY": -123286.7109375,
+          "maximumY": 3.5896222591400146,
+          "widthPercentage": 14198970.703125,
+          "heightPercentage": 12329030.055975914
+        },
+        "canopy": {
+          "minimumX": -1.3267545700073242,
+          "maximumX": 0.1581232100725174,
+          "minimumY": 0.4487859606742859,
+          "maximumY": 0.7694214582443237,
+          "widthPercentage": 148.48777800798416,
+          "heightPercentage": 32.063549757003784
+        },
+        "sign": {
+          "minimumX": -1.2234163284301758,
+          "maximumX": -0.39611658453941345,
+          "minimumY": 0.4339464604854584,
+          "maximumY": 0.966564953327179,
+          "widthPercentage": 82.72997438907623,
+          "heightPercentage": 53.26184928417206
+        },
+        "lantern": {
+          "minimumX": -0.009500973857939243,
+          "maximumX": 0.1747380644083023,
+          "minimumY": 0.5997150540351868,
+          "maximumY": 0.7159357070922852,
+          "widthPercentage": 18.423903826624155,
+          "heightPercentage": 11.622065305709839
+        },
+        "barrel": {
+          "minimumX": 0.49692392349243164,
+          "maximumX": 0.6572220921516418,
+          "minimumY": 0.3655654788017273,
+          "maximumY": 0.48396599292755127,
+          "widthPercentage": 16.02981686592102,
+          "heightPercentage": 11.840051412582397
+        },
+        "crate": {
+          "minimumX": 0.47815847396850586,
+          "maximumX": 0.6189083456993103,
+          "minimumY": 0.3778066635131836,
+          "maximumY": 0.4622400403022766,
+          "widthPercentage": 14.074987173080444,
+          "heightPercentage": 8.443337678909302
+        },
+        "fern": {
+          "minimumX": -0.865100622177124,
+          "maximumX": -0.29081058502197266,
+          "minimumY": -0.2699821889400482,
+          "maximumY": 0.08650821447372437,
+          "widthPercentage": 57.42900371551514,
+          "heightPercentage": 35.64904034137726
+        }
+      }
+    },
+    {
+      "landmarkId": "settle",
+      "progress": 1,
+      "frame": 34,
+      "entities": {
+        "bookshop-set": {
+          "minimumX": -926.5487060546875,
+          "maximumX": 985.2772827148438,
+          "minimumY": -852.2333374023438,
+          "maximumY": 4.2414116859436035,
+          "widthPercentage": 191182.59887695312,
+          "heightPercentage": 85647.47490882874
+        },
+        "canopy": {
+          "minimumX": -1.8679553270339966,
+          "maximumX": 0.10956082493066788,
+          "minimumY": 0.44269445538520813,
+          "maximumY": 0.8618611097335815,
+          "widthPercentage": 197.75161519646645,
+          "heightPercentage": 41.91666543483734
+        },
+        "sign": {
+          "minimumX": -1.7054954767227173,
+          "maximumX": -0.6278106570243835,
+          "minimumY": 0.42414620518684387,
+          "maximumY": 1.1089011430740356,
+          "widthPercentage": 107.76848196983337,
+          "heightPercentage": 68.47549378871918
+        },
+        "lantern": {
+          "minimumX": -0.07455401867628098,
+          "maximumX": 0.13450612127780914,
+          "minimumY": 0.6063948273658752,
+          "maximumY": 0.7376570105552673,
+          "widthPercentage": 20.906013995409012,
+          "heightPercentage": 13.126218318939209
+        },
+        "barrel": {
+          "minimumX": 0.4982348382472992,
+          "maximumX": 0.678113579750061,
+          "minimumY": 0.3416290283203125,
+          "maximumY": 0.47448503971099854,
+          "widthPercentage": 17.987874150276184,
+          "heightPercentage": 13.285601139068604
+        },
+        "crate": {
+          "minimumX": 0.47717607021331787,
+          "maximumX": 0.634492814540863,
+          "minimumY": 0.35543301701545715,
+          "maximumY": 0.44990986585617065,
+          "widthPercentage": 15.731674432754517,
+          "heightPercentage": 9.44768488407135
+        },
+        "fern": {
+          "minimumX": -1.1974124908447266,
+          "maximumX": -0.4674302041530609,
+          "minimumY": -0.4494481682777405,
+          "maximumY": -0.0011784565867856145,
+          "widthPercentage": 72.99822866916656,
+          "heightPercentage": 44.826971169095486
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "id": "material.rain-aged-mineral-plaster",
+  "shadingModel": "metallic-roughness",
+  "baseColor": {
+    "kind": "procedural-palette",
+    "colors": [
+      [
+        0.11,
+        0.12,
+        0.13,
+        1
+      ],
+      [
+        0.18,
+        0.17,
+        0.16,
+        1
+      ],
+      [
+        0.075,
+        0.085,
+        0.095,
+        1
+      ],
+      [
+        0.22,
+        0.2,
+        0.17,
+        1
+      ]
+    ],
+    "scaleMeters": 0.85,
+    "seed": 2312
+  },
+  "normal": {
+    "kind": "procedural-noise",
+    "strength": 0.28,
+    "scaleMeters": 0.042
+  },
+  "roughness": {
+    "minimum": 0.46,
+    "maximum": 0.78,
+    "variationScaleMeters": 0.52,
+    "wetness": 0.24
+  },
+  "pattern": {
+    "kind": "mineral-plaster",
+    "trowelScaleMeters": 0.62,
+    "aggregateScaleMeters": 0.018,
+    "trowelContrast": 0.38,
+    "porosity": 0.66
+  },
+  "weathering": {
+    "verticalStreaks": {
+      "amount": 0.28,
+      "widthMeters": 0.12,
+      "lengthMeters": 1.2
+    },
+    "lowerDamp": {
+      "amount": 0.34,
+      "heightMeters": 0.72
+    },
+    "surfaceDirt": {
+      "amount": 0.18,
+      "scaleMeters": 0.64
+    }
+  },
+  "metallic": 0,
+  "metadata": {
+    "generator": "videoer.old-city-surface-library.v3",
+    "coordinateScale": "object-space-metres",
+    "layeredResponse": [
+      "surface-specific-pattern",
+      "palette",
+      "micro-normal",
+      "roughness-variation",
+      "wet-coat"
+    ]
+  }
+}

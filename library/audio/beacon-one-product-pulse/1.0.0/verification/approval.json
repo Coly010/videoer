@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "campaign": "campaign.beacon-one-product",
+  "sourceId": "product-pulse",
+  "asset": {
+    "id": "audio.beacon-one-product-pulse",
+    "version": "1.0.0"
+  },
+  "reviewer": "codex-visual-mechanical-audio-review",
+  "rationale": "Reviewed the nine-second product delivery, passing media and scene reports, preserved source-envelope evidence, exact 48 kHz sample-aligned interface and brand accents with measurable interval-local contribution, safe peak, and deterministic approval-time re-render.",
+  "approvedAt": "2026-08-31T05:15:24.590Z"
+}

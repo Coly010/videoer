@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "samples": [
+    {
+      "landmarkId": "installation-return",
+      "progress": 0,
+      "frame": 1,
+      "entities": {
+        "gallery": {
+          "minimumX": -0.9771566390991211,
+          "maximumX": 1.9771573543548584,
+          "minimumY": -0.4527249336242676,
+          "maximumY": 1.3559471368789673,
+          "widthPercentage": 295.43139934539795,
+          "heightPercentage": 180.8672070503235
+        }
+      }
+    },
+    {
+      "landmarkId": "dates-arrive",
+      "progress": 0.48,
+      "frame": 47,
+      "entities": {
+        "gallery": {
+          "minimumX": -1.126783013343811,
+          "maximumX": 2.126784086227417,
+          "minimumY": -0.5558898448944092,
+          "maximumY": 1.4276412725448608,
+          "widthPercentage": 325.3567099571228,
+          "heightPercentage": 198.353111743927
+        }
+      }
+    },
+    {
+      "landmarkId": "invitation-hold",
+      "progress": 1,
+      "frame": 96,
+      "entities": {
+        "gallery": {
+          "minimumX": -1.3114066123962402,
+          "maximumX": 2.3114075660705566,
+          "minimumY": -0.6870524287223816,
+          "maximumY": 1.51047682762146,
+          "widthPercentage": 362.2814178466797,
+          "heightPercentage": 219.75292563438416
+        }
+      }
+    }
+  ]
+}

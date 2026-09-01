@@ -1,0 +1,345 @@
+schemaVersion: 1
+id: campaign.quiet-resolve-performance
+fps: 24
+resolution: { width: 640, height: 360, percentage: 100 }
+assetLibrary: ../../library
+
+geometry:
+  - id: platform
+    library:
+      type: environment
+      query: abstract night transit platform
+      tags: [transit, platform, night]
+      capabilities:
+        [deterministic-geometry, semantic-camera-anchors, runway-blocking, cinematic-light-rhythm]
+      preferredAsset: { id: environment.night-transit-platform, version: 1.0.1 }
+      artifactRole: geometry
+  - id: elara
+    library:
+      type: character
+      query: Elara Vale recurring heroine
+      tags: [humanoid, woman, recurring]
+      capabilities: [canonical-humanoid-rig, motion-retargeting, walk-deformation, gaze-target]
+      preferredAsset: { id: character.elara-vale, version: 0.1.4 }
+      artifactRole: geometry
+
+motions:
+  - id: cautious-elara-gait
+    library:
+      type: motion
+      query: Elara proportioned cautious gait
+      tags: [humanoid, walk, cautious, elara-vale]
+      capabilities: [canonical-humanoid, root-motion, foot-contact, elara-proportions]
+      preferredAsset: { id: motion.walk-natural-cautious-elara, version: 1.1.0 }
+      artifactRole: motion
+  - id: right-head-turn
+    library:
+      type: motion
+      query: bidirectional head orientation turn
+      tags: [turn, gaze, head]
+      capabilities: [canonical-humanoid, additive-blend, gaze-target]
+      preferredAsset: { id: motion.turn-orientation, version: 0.1.0 }
+      artifactRole: motion-head-right
+
+motionTimelines:
+  - id: walk-and-resolve
+    clipId: motion.quiet-resolve.walk-and-look
+    path: work/motions/walk-and-resolve.json
+    frames: 72
+    layers:
+      - {
+          id: grounded-travel,
+          motion: cautious-elara-gait,
+          mode: base,
+          startFrame: 0,
+          endFrame: 72,
+          playback: loop,
+        }
+      - {
+          id: deliberate-look,
+          motion: right-head-turn,
+          mode: additive,
+          startFrame: 36,
+          endFrame: 72,
+          playback: once,
+          fadeInFrames: 6,
+          joints: [neck, head],
+          minimumContribution: 0.2,
+        }
+    metadata:
+      { purpose: Continuous proportion-correct travel with a late independent attention shift }
+    derivation:
+      kind: layered-performance
+      targetGeometry: elara
+      providesCapabilities:
+        [
+          elara-proportions,
+          forward-cautious-travel,
+          late-right-attention-shift,
+          masked-head-performance,
+        ]
+      publication:
+        assetId: motion.quiet-resolve.walk-and-look
+        version: 1.1.0
+        type: motion
+        title: Elara quiet-resolve walk and look
+        description: Multi-parent performance combining Elara's verified proportion-specific cautious gait with a masked late rightward head turn on an exact 72-frame timeline.
+        tags: [humanoid, performance, walk, head-turn, elara-vale, layered]
+        capabilities:
+          [
+            canonical-humanoid,
+            root-motion,
+            foot-contact,
+            elara-proportions,
+            forward-cautious-travel,
+            late-right-attention-shift,
+            masked-head-performance,
+          ]
+        generator: videoer.motion-timeline.v1
+        renderers: [three-3d, blender-headless]
+        verification:
+          checks:
+            [
+              motion.multi-parent-lineage,
+              motion.source-artifact-hashes,
+              motion.target-geometry-hash,
+              motion.base-coverage,
+              motion.exact-frame-grid,
+              motion.masked-layer-contribution,
+              motion.target-compatible,
+              visual.forward-travel,
+              visual.attention-shift,
+              visual.subject-framing,
+            ]
+          shots: [forward-intent, quiet-resolve]
+
+overlays:
+  - id: resolve-copy
+    path: work/editorial/resolve-copy.png
+    width: 640
+    height: 360
+    font: { family: Cormorant Garamond, licence: OFL-1.1 }
+    lines:
+      - {
+          text: QUIET RESOLVE,
+          y: 42,
+          fontSize: 48,
+          color: '0xf2efe8',
+          borderWidth: 2,
+          borderColor: '0x02050a@0.95',
+        }
+      - {
+          text: THE NEXT STEP IS YOURS,
+          y: 298,
+          fontSize: 21,
+          color: '0x69dbea',
+          borderWidth: 2,
+          borderColor: '0x02050a@0.95',
+        }
+
+soundtrackPath: work/audio/soundtrack.wav
+soundtrack:
+  schemaVersion: 1
+  id: audio.quiet-resolve-performance
+  durationSeconds: 6
+  sampleRate: 48000
+  channels: 2
+  cues:
+    - {
+        id: platform-air,
+        kind: noise-bed,
+        startSeconds: 0,
+        endSeconds: 6,
+        gain: 0.035,
+        seed: 3108,
+        purpose: Continuous nocturnal space,
+      }
+    - {
+        id: forward-pulse,
+        kind: tone-bed,
+        startSeconds: 0,
+        endSeconds: 6,
+        gain: 0.042,
+        frequencyHz: 73.42,
+        purpose: Restrained forward momentum,
+      }
+    - {
+        id: attention-cue,
+        kind: tonal-accent,
+        startSeconds: 1.5,
+        endSeconds: 3,
+        gain: 0.06,
+        frequencyHz: 293.66,
+        purpose: Mark the independent attention shift,
+      }
+    - {
+        id: resolve-cue,
+        kind: tonal-accent,
+        startSeconds: 3,
+        endSeconds: 6,
+        gain: 0.055,
+        frequencyHz: 146.83,
+        purpose: Hold the manifesto resolution,
+      }
+  metadata: { providerFree: true, campaignClass: brand-manifesto }
+
+shots:
+  - id: forward-intent
+    frames: 72
+    entities:
+      - { id: platform, geometry: platform, role: environment }
+      - id: elara
+        geometry: elara
+        role: character
+        transform: { position: [0, 0, 2.3], rotation: [0, 0, 0], scale: [1, 1, 1] }
+        motion: { source: walk-and-resolve, startFrame: 0, endFrame: 72 }
+    camera:
+      keyframes:
+        - {
+            time: 0,
+            position: { entityId: platform, attachmentId: runway-camera },
+            target: { entityId: platform, attachmentId: runway-focus, offset: [0, 0, 1.1] },
+            lensMillimeters: 28,
+          }
+        - {
+            time: 3,
+            position: { entityId: platform, attachmentId: runway-camera, offset: [-0.35, 0, -1.6] },
+            target: { entityId: platform, attachmentId: runway-focus, offset: [0, 0, -0.8] },
+            lensMillimeters: 24,
+          }
+    lights: &resolve-lights
+      - {
+          id: cyan-key,
+          type: area,
+          position: [2.8, 3.2, -2],
+          target: [0, 1, 0],
+          color: [0.16, 0.72, 1],
+          energy: 650,
+          sizeMeters: 2.5,
+        }
+      - {
+          id: amber-rim,
+          type: area,
+          position: [-3, 2.5, 1.8],
+          target: [0, 1, 0],
+          color: [1, 0.28, 0.05],
+          energy: 470,
+          sizeMeters: 2,
+        }
+    atmosphere: &resolve-air
+      worldColor: [0.003, 0.007, 0.015]
+      fogColor: [0.035, 0.08, 0.12]
+      fogDensity: 0.006
+      rain: { enabled: false }
+    qualityGates:
+      - {
+          id: body-faces-travel,
+          type: directional-motion,
+          entityId: elara,
+          minimumDistanceMeters: 1.2,
+          minimumForwardDot: 0.9,
+        }
+    renderGates:
+      - { id: walk-visible, type: frame-visibility, maximumBlackPercentage: 75 }
+      - { id: walk-highlight-detail, type: frame-overexposure, maximumWhitePercentage: 16 }
+      - {
+          id: walk-full-body,
+          type: subject-framing,
+          entityId: elara,
+          minimumScreenHeightPercentage: 35,
+          maximumScreenHeightPercentage: 92,
+          marginPercentage: 2,
+        }
+    landmarks:
+      - { id: committed-step, progress: 0, description: Proportion-correct cautious gait begins }
+      - {
+          id: attention-shifts,
+          progress: 0.68,
+          description: Masked head layer becomes visibly active without changing leg mechanics,
+        }
+      - {
+          id: resolve-direction,
+          progress: 1,
+          description: Forward travel and rightward attention coexist,
+        }
+    metadata: { campaignClass: brand-manifesto, grammar: layered-performance-reveal }
+
+  - id: quiet-resolve
+    frames: 72
+    entities:
+      - { id: platform, geometry: platform, role: environment }
+      - id: elara
+        geometry: elara
+        role: character
+        transform: { position: [0, 0, 0.68], rotation: [0, 0, 0], scale: [1, 1, 1] }
+        motion:
+          {
+            source: walk-and-resolve,
+            startFrame: 0,
+            endFrame: 72,
+            sourceStartSeconds: 1.5,
+            sourceEndSeconds: 3,
+          }
+    camera:
+      keyframes:
+        - {
+            time: 0,
+            position: { entityId: platform, attachmentId: resolve-camera, offset: [0, 0, -2.2] },
+            target: { entityId: platform, attachmentId: resolve-focus, offset: [0, -0.15, 0.6] },
+            lensMillimeters: 52,
+          }
+        - {
+            time: 3,
+            position:
+              { entityId: platform, attachmentId: resolve-camera, offset: [-0.2, 0.05, -2] },
+            target: { entityId: platform, attachmentId: resolve-focus, offset: [0, -0.1, 0.25] },
+            lensMillimeters: 56,
+          }
+    lights: *resolve-lights
+    atmosphere: *resolve-air
+    overlays:
+      [
+        {
+          overlay: resolve-copy,
+          startSeconds: 0.3,
+          endSeconds: 3,
+          fadeInSeconds: 0.5,
+          fadeOutSeconds: 0,
+        },
+      ]
+    renderGates:
+      - { id: resolve-visible, type: frame-visibility, maximumBlackPercentage: 75 }
+      - { id: resolve-highlight-detail, type: frame-overexposure, maximumWhitePercentage: 16 }
+      - {
+          id: resolve-full-body,
+          type: subject-framing,
+          entityId: elara,
+          minimumScreenHeightPercentage: 32,
+          maximumScreenHeightPercentage: 92,
+          marginPercentage: 2,
+        }
+    landmarks:
+      - {
+          id: attention-held,
+          progress: 0,
+          description: Late performance interval carries the established rightward look,
+        }
+      - {
+          id: manifesto-arrives,
+          progress: 0.5,
+          description: Original brand manifesto becomes primary,
+        }
+      - { id: final-resolve, progress: 1, description: Character and message hold together }
+    metadata: { campaignClass: brand-manifesto, grammar: identity-manifesto-resolution }
+
+delivery:
+  id: edit.quiet-resolve-performance
+  directory: delivery
+  codec: h264
+  pixelFormat: yuv420p
+  fastStart: true
+
+metadata:
+  conformancePurpose: reusable-multi-parent-layered-performance
+  campaignClass: brand-manifesto
+  bespokeOrchestrationSourceFiles: 0

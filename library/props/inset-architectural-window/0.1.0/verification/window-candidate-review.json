@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "assetId": "prop.inset-architectural-window",
+  "decision": "accepted",
+  "reviewer": "codex-visual-review",
+  "reviewedAt": "2026-09-01T07:17:00.000Z",
+  "intendedShotDistance": "medium",
+  "evidence": [
+    "verification/old-city-brick/contact-sheet.png",
+    "verification/old-city-brick/scene-render.json",
+    "verification/old-city-brick/host-opening-report.json",
+    "verification/contemporary-plaster/contact-sheet.png",
+    "verification/contemporary-plaster/scene-render.json",
+    "verification/contemporary-plaster/host-opening-report.json"
+  ],
+  "strengths": [
+    "The same project-owned module reads as an inset cross window in dark masonry and contemporary plaster without geometry-specific host hacks.",
+    "Deep reveals, projecting sill, cross mullions, physical glazing and visible room depth prevent a facade-card reading.",
+    "Three useful inspection angles retain the window silhouette and show angle-varying glazing response without clipped highlights."
+  ],
+  "limitations": [
+    "The module has no operable sash, hinges, latch, fasteners, seals or weathering variants and is not accepted for hero close-ups.",
+    "The verification room is deliberately simple; campaign interiors must supply their own depth, dressing and motivated light.",
+    "Compatibility is currently limited to rectangular openings and wall thicknesses between 0.22 and 0.42 metres."
+  ],
+  "notes": "Accepted for background and medium architectural use. Acceptance must independently prove that both host witnesses contain a real clear aperture rather than trusting the review or the persisted opening report."
+}

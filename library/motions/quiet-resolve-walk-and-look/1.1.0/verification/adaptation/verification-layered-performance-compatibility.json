@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "sourceId": "walk-and-resolve",
+  "derivationKind": "layered-performance",
+  "derivedAssetId": "motion.quiet-resolve.walk-and-look",
+  "derivedArtifact": "/Users/colum/dev/personal/videoer/campaigns/quiet-resolve-performance-conformance/work/motions/walk-and-resolve.json",
+  "derivedMotionSha256": "1570f04f91b719d2c08f8bc70e3709538e5325174cb485be7e893faeb9787b78",
+  "skeleton": {
+    "output": "videoer.canonical-humanoid.v1",
+    "targetJoints": [
+      "root",
+      "hips",
+      "spine",
+      "chest",
+      "neck",
+      "head",
+      "left-clavicle",
+      "left-upper-arm",
+      "left-forearm",
+      "left-hand",
+      "right-clavicle",
+      "right-upper-arm",
+      "right-forearm",
+      "right-hand",
+      "left-thigh",
+      "left-shin",
+      "left-foot",
+      "left-toe",
+      "right-thigh",
+      "right-shin",
+      "right-foot",
+      "right-toe"
+    ],
+    "compatible": true
+  },
+  "targetGeometry": {
+    "sourceId": "elara",
+    "libraryAsset": {
+      "id": "character.elara-vale",
+      "version": "0.1.4"
+    },
+    "sha256": "ab0728e04ae1dabf73f92b124a8c5e10565357bdca3f91b225b44a33ac240c42"
+  },
+  "layers": [
+    {
+      "id": "grounded-travel",
+      "sourceId": "cautious-elara-gait",
+      "libraryAsset": {
+        "id": "motion.walk-natural-cautious-elara",
+        "version": "1.1.0"
+      },
+      "artifactRole": "motion",
+      "artifactSha256": "d1523872939e99a06600b3232ac48140994b6006c2656f575f4ba24183113bfd",
+      "mode": "base",
+      "startFrame": 0,
+      "endFrame": 72,
+      "playback": "loop",
+      "sourceStartSeconds": 0,
+      "sourceEndSeconds": 1.3043478260869565,
+      "weight": 1,
+      "fadeInFrames": 0,
+      "fadeOutFrames": 0
+    },
+    {
+      "id": "deliberate-look",
+      "sourceId": "right-head-turn",
+      "libraryAsset": {
+        "id": "motion.turn-orientation",
+        "version": "0.1.0"
+      },
+      "artifactRole": "motion-head-right",
+      "artifactSha256": "216325be3260bb4b7b08835ad4dc5a36d06fcb526df5a2d1771c5f192c6054e7",
+      "mode": "additive",
+      "startFrame": 36,
+      "endFrame": 72,
+      "playback": "once",
+      "sourceStartSeconds": 0,
+      "sourceEndSeconds": 1.4,
+      "weight": 1,
+      "fadeInFrames": 6,
+      "fadeOutFrames": 0,
+      "joints": [
+        "neck",
+        "head"
+      ],
+      "minimumContribution": 0.2
+    }
+  ],
+  "providedCapabilities": [
+    "elara-proportions",
+    "forward-cautious-travel",
+    "late-right-attention-shift",
+    "masked-head-performance"
+  ],
+  "compositionVerification": {
+    "valid": true,
+    "issues": [],
+    "checks": {
+      "frameCount": 72,
+      "expectedSamplesPerTrack": 73,
+      "baseCoverageComplete": true,
+      "nonBaseLayersMasked": true,
+      "finiteSamples": true,
+      "exactFrameGrid": true,
+      "metadataLineageComplete": true,
+      "layerContributions": {
+        "deliberate-look": 0.34
+      }
+    }
+  },
+  "targetValidation": {
+    "valid": true,
+    "issues": [],
+    "stats": {
+      "tracks": 18,
+      "morphTracks": 0,
+      "durationSeconds": 3,
+      "loop": false
+    }
+  }
+}

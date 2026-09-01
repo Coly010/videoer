@@ -1,0 +1,71 @@
+schemaVersion: 1
+id: prop.decorative-vessel-set
+version: 0.1.0
+type: prop
+title: Decorative vessel and tray set
+description: Project-owned three-vessel tabletop set with physical tray,
+  reactive glazed ceramic, aged brass and support/carry anchors.
+status: verified
+tags:
+  - vessels
+  - ceramic
+  - tabletop
+  - interior-furnishing
+  - portable
+  - inhabited-environment
+capabilities:
+  - tabletop-inventory
+  - physical-vessels
+  - tabletop-support-anchor
+source:
+  kind: procedural
+  generator: videoer.interior-furnishings.v1
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: geometry
+    path: geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: 86e7fef6a8a489db6584ac57befe2687ede1150934c6e4ccc415c7900b07e816
+  - role: validation
+    path: validation.json
+    mediaType: application/json
+    sha256: 759bdc0162ae9a38258259e75cfb17531b8f7295b89143c6987019aba12542b9
+  - role: historic-library-chamber-family-contact-sheet
+    path: verification/historic-library-chamber-family-contact-sheet.png
+    mediaType: image/png
+    sha256: 47a75c5e4a95b3c20f5ca691a961f3fed831e833dbee325bafda00b365c35f0f
+  - role: contemporary-reading-loft-family-contact-sheet
+    path: verification/contemporary-reading-loft-family-contact-sheet.png
+    mediaType: image/png
+    sha256: 076e10817f8da7afe8e1419ac378986e6c2e0a1151d0fdbb7b514ea0702670e1
+  - role: family-transfer-summary
+    path: verification/family-transfer-summary.json
+    mediaType: application/json
+    sha256: 44b983ffa29da7b0a7842c20e8df331bbd2382614d462bc864ec336a760e4e6d
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - three-3d
+    - blender-headless
+  requires: []
+verification:
+  checks:
+    - geometry.topology
+    - geometry.material-groups
+    - attachments.tabletop-inventory-semantic
+    - prop.physical-tray-and-vessels
+    - visual.historic-library-chamber-furnishing-transfer-accepted
+    - visual.contemporary-reading-loft-furnishing-transfer-accepted
+    - prop.physical-furnishing-semantics-accepted
+    - prop.medium-background-shot-distance-accepted
+  artifacts:
+    - verification/historic-library-chamber-family-contact-sheet.png
+    - verification/contemporary-reading-loft-family-contact-sheet.png
+    - verification/family-transfer-summary.json
+  verifiedAt: 2026-09-01T12:35:00.000Z

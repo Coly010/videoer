@@ -1,0 +1,288 @@
+{
+  "schemaVersion": 1,
+  "requestId": "layout.old-city-alley-street-storage",
+  "familyId": "environment.street-storage-family",
+  "seed": 9381,
+  "attempts": 21,
+  "instances": [
+    {
+      "id": "layout.old-city-alley-street-storage.cluster-001.member-01",
+      "clusterId": "layout.old-city-alley-street-storage.cluster-001",
+      "recipeId": "barrel-pair",
+      "variantId": "barrel",
+      "geometryAssetId": "prop.storage-barrel",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          3.6347388087554404,
+          0,
+          1.158722590354598
+        ],
+        "rotation": [
+          0,
+          -0.14890287198452248,
+          0
+        ],
+        "scale": [
+          1.072895412412472,
+          1.072895412412472,
+          1.072895412412472
+        ]
+      },
+      "footprintRadiusMeters": 0.4291581649649889,
+      "heightMeters": 0.9924282564815368
+    },
+    {
+      "id": "layout.old-city-alley-street-storage.cluster-001.member-02",
+      "clusterId": "layout.old-city-alley-street-storage.cluster-001",
+      "recipeId": "barrel-pair",
+      "variantId": "barrel",
+      "geometryAssetId": "prop.storage-barrel",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          4.312095885498039,
+          0,
+          1.0246055124460722
+        ],
+        "rotation": [
+          0,
+          2.54732110223852,
+          0
+        ],
+        "scale": [
+          0.9323794707778842,
+          0.9323794707778842,
+          0.9323794707778842
+        ]
+      },
+      "footprintRadiusMeters": 0.3729517883111537,
+      "heightMeters": 0.8624510104695429
+    },
+    {
+      "id": "layout.old-city-alley-street-storage.cluster-002.member-01",
+      "clusterId": "layout.old-city-alley-street-storage.cluster-002",
+      "recipeId": "crate-corner",
+      "variantId": "slatted-crate",
+      "geometryAssetId": "prop.slatted-storage-crate",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          -3.5829972614181673,
+          0,
+          -2.574425858556581
+        ],
+        "rotation": [
+          0,
+          -0.14825802143374994,
+          0
+        ],
+        "scale": [
+          1.0454950191080572,
+          1.0454950191080572,
+          1.0454950191080572
+        ]
+      },
+      "footprintRadiusMeters": 0.49138265898078687,
+      "heightMeters": 0.6063871110826732
+    },
+    {
+      "id": "layout.old-city-alley-street-storage.cluster-002.member-02",
+      "clusterId": "layout.old-city-alley-street-storage.cluster-002",
+      "recipeId": "crate-corner",
+      "variantId": "slatted-crate",
+      "geometryAssetId": "prop.slatted-storage-crate",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          -2.8437837121360374,
+          0,
+          -2.3703098901520585
+        ],
+        "rotation": [
+          0,
+          0.5027393615354675,
+          0
+        ],
+        "scale": [
+          1.0077760757468643,
+          1.0077760757468643,
+          1.0077760757468643
+        ]
+      },
+      "footprintRadiusMeters": 0.4736547556010262,
+      "heightMeters": 0.5845101239331812
+    },
+    {
+      "id": "layout.old-city-alley-street-storage.cluster-003.member-01",
+      "clusterId": "layout.old-city-alley-street-storage.cluster-003",
+      "recipeId": "barrel-pair",
+      "variantId": "barrel",
+      "geometryAssetId": "prop.storage-barrel",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          3.181005653050523,
+          0,
+          -2.3967769057179047
+        ],
+        "rotation": [
+          0,
+          -2.298385103273624,
+          0
+        ],
+        "scale": [
+          0.9249982470693067,
+          0.9249982470693067,
+          0.9249982470693067
+        ]
+      },
+      "footprintRadiusMeters": 0.3699992988277227,
+      "heightMeters": 0.8556233785391087
+    },
+    {
+      "id": "layout.old-city-alley-street-storage.cluster-003.member-02",
+      "clusterId": "layout.old-city-alley-street-storage.cluster-003",
+      "recipeId": "barrel-pair",
+      "variantId": "barrel",
+      "geometryAssetId": "prop.storage-barrel",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          3.6783032912706073,
+          0,
+          -1.9177204800009275
+        ],
+        "rotation": [
+          0,
+          3.003023797141418,
+          0
+        ],
+        "scale": [
+          0.9384750831786544,
+          0.9384750831786544,
+          0.9384750831786544
+        ]
+      },
+      "footprintRadiusMeters": 0.37539003327146175,
+      "heightMeters": 0.8680894519402553
+    },
+    {
+      "id": "layout.old-city-alley-street-storage.cluster-004.member-01",
+      "clusterId": "layout.old-city-alley-street-storage.cluster-004",
+      "recipeId": "crate-corner",
+      "variantId": "slatted-crate",
+      "geometryAssetId": "prop.slatted-storage-crate",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          0.07173874157687743,
+          0,
+          -2.0813988442586
+        ],
+        "rotation": [
+          0,
+          -0.06689397236715361,
+          0
+        ],
+        "scale": [
+          0.8961038696020842,
+          0.8961038696020842,
+          0.8961038696020842
+        ]
+      },
+      "footprintRadiusMeters": 0.42116881871297956,
+      "heightMeters": 0.5197402443692088
+    },
+    {
+      "id": "layout.old-city-alley-street-storage.cluster-004.member-02",
+      "clusterId": "layout.old-city-alley-street-storage.cluster-004",
+      "recipeId": "crate-corner",
+      "variantId": "slatted-crate",
+      "geometryAssetId": "prop.slatted-storage-crate",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          0.8357036813030987,
+          0,
+          -2.1481638865270742
+        ],
+        "rotation": [
+          0,
+          0.15198629332095326,
+          0
+        ],
+        "scale": [
+          0.9693886064328253,
+          0.9693886064328253,
+          0.9693886064328253
+        ]
+      },
+      "footprintRadiusMeters": 0.45561264502342785,
+      "heightMeters": 0.5622453917310386
+    },
+    {
+      "id": "layout.old-city-alley-street-storage.cluster-005.member-01",
+      "clusterId": "layout.old-city-alley-street-storage.cluster-005",
+      "recipeId": "mixed-cache",
+      "variantId": "barrel",
+      "geometryAssetId": "prop.storage-barrel",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          -3.3890004964662523,
+          0,
+          0.9771618257059047
+        ],
+        "rotation": [
+          0,
+          -1.0140162847309646,
+          0
+        ],
+        "scale": [
+          1.0209441326837987,
+          1.0209441326837987,
+          1.0209441326837987
+        ]
+      },
+      "footprintRadiusMeters": 0.4083776530735195,
+      "heightMeters": 0.9443733227325138
+    },
+    {
+      "id": "layout.old-city-alley-street-storage.cluster-005.member-02",
+      "clusterId": "layout.old-city-alley-street-storage.cluster-005",
+      "recipeId": "mixed-cache",
+      "variantId": "slatted-crate",
+      "geometryAssetId": "prop.slatted-storage-crate",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          -2.608263045994222,
+          0,
+          1.3465519087217246
+        ],
+        "rotation": [
+          0,
+          0.2810666260303555,
+          0
+        ],
+        "scale": [
+          1.0256004479885101,
+          1.0256004479885101,
+          1.0256004479885101
+        ]
+      },
+      "footprintRadiusMeters": 0.4820322105545997,
+      "heightMeters": 0.5948482598333359
+    }
+  ],
+  "verification": {
+    "requestedClusterCount": 5,
+    "placedClusterCount": 5,
+    "placedCount": 10,
+    "exclusionCount": 2,
+    "deterministic": true,
+    "overlapFree": true,
+    "navigationClearancePreserved": true
+  }
+}

@@ -1,0 +1,76 @@
+schemaVersion: 1
+id: prop.bookshop-door
+version: 0.1.0
+type: prop
+title: Articulated glazed bookshop door
+description: Project-owned hinged wooden door with glazed panel, animated
+  handle, threshold, approach point, and collision-ready mesh.
+status: verified
+tags:
+  - wooden
+  - glazed
+  - bookshop
+  - door
+capabilities:
+  - hinge
+  - handle-interaction-point
+  - collision-volume
+  - named-interaction-points
+source:
+  kind: procedural
+  generator: videoer.open-door-synthesis.v1
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: geometry
+    path: geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: eac5a1e72f5d38cb5c5fa0219dc6a89046be8672f94a9b0a069b4b920f78c9de
+  - role: preview
+    path: verification/interaction.mp4
+    mediaType: video/mp4
+    sha256: b82fc6360c9f08e092816ce4a7beae06627d21dbd6ff403b59a45442f3decc1e
+  - role: blender-source
+    path: verification/interaction.blend
+    mediaType: application/x-blender
+    sha256: 6ad7946e955b5225fa2210fa2eac091df916780ac49d80b361d74660369155cb
+  - role: verification-verification-contact-sheet
+    path: verification/contact-sheet.png
+    mediaType: image/png
+    sha256: 75f44ff54fbc64fc2b60bd558beb2037870b87ab3845a42e9af3f4943f8a6048
+  - role: verification-verification-contact-sheet-opposite
+    path: verification/contact-sheet-opposite.png
+    mediaType: image/png
+    sha256: 1a503c79d5a8e4d79b053d83cdf9b00946227f756e9b640a9cb06aea882935a4
+  - role: verification-verification-interaction-opposite
+    path: verification/interaction-opposite.mp4
+    mediaType: video/mp4
+    sha256: acbf0ba8ba3522d5c154d3850670730e7038158297642ff758294bfe09a21311
+  - role: verification-verification-interaction-probe
+    path: verification/interaction-probe.json
+    mediaType: application/json
+    sha256: 68901b2a8e0fd0a2d9773b8e461d1bd7fa3cdba73f69a66c6f05e4b8eb2aeac7
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - three-3d
+    - blender-headless
+  requires: []
+verification:
+  checks:
+    - geometry.topology
+    - skeleton.hierarchy
+    - attachments.named
+    - visual.scale
+    - visual.interaction-two-view
+  artifacts:
+    - verification/contact-sheet.png
+    - verification/contact-sheet-opposite.png
+    - verification/interaction-opposite.mp4
+    - verification/interaction-probe.json
+  verifiedAt: 2026-08-30T21:03:32.512Z

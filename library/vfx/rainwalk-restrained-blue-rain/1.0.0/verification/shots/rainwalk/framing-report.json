@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "samples": [
+    {
+      "landmarkId": "first-contact",
+      "progress": 0,
+      "frame": 1,
+      "entities": {
+        "stage": {
+          "minimumX": -0.6277463436126709,
+          "maximumX": 2.6225099563598633,
+          "minimumY": 0.1628309190273285,
+          "maximumY": 0.5232633352279663,
+          "widthPercentage": 325.0256299972534,
+          "heightPercentage": 36.04324162006378
+        },
+        "walker": {
+          "minimumX": 0.12661625444889069,
+          "maximumX": 0.35908958315849304,
+          "minimumY": 0.12108471989631653,
+          "maximumY": 0.7453615069389343,
+          "widthPercentage": 23.247332870960236,
+          "heightPercentage": 62.42767870426178
+        },
+        "walker--fitted-dress": {
+          "minimumX": 0.061673253774642944,
+          "maximumX": 0.3632415235042572,
+          "minimumY": 0.1283586621284485,
+          "maximumY": 0.6534317135810852,
+          "widthPercentage": 30.156826972961426,
+          "heightPercentage": 52.50730514526367
+        }
+      }
+    },
+    {
+      "landmarkId": "weight-transfer",
+      "progress": 0.5,
+      "frame": 49,
+      "entities": {
+        "stage": {
+          "minimumX": -1.3312265872955322,
+          "maximumX": 2.6731927394866943,
+          "minimumY": -0.03447970002889633,
+          "maximumY": 0.49713534116744995,
+          "widthPercentage": 400.44193267822266,
+          "heightPercentage": 53.16150411963463
+        },
+        "walker": {
+          "minimumX": 0.12396134436130524,
+          "maximumX": 0.31454986333847046,
+          "minimumY": 0.1252148300409317,
+          "maximumY": 0.7508715987205505,
+          "widthPercentage": 19.058851897716522,
+          "heightPercentage": 62.56567686796188
+        },
+        "walker--fitted-dress": {
+          "minimumX": 0.06250235438346863,
+          "maximumX": 0.35868164896965027,
+          "minimumY": 0.1304081678390503,
+          "maximumY": 0.658474862575531,
+          "widthPercentage": 29.617929458618164,
+          "heightPercentage": 52.80666947364807
+        }
+      }
+    },
+    {
+      "landmarkId": "final-contact",
+      "progress": 1,
+      "frame": 96,
+      "entities": {
+        "stage": {
+          "minimumX": -2.403097629547119,
+          "maximumX": 2.771108388900757,
+          "minimumY": -0.41393882036209106,
+          "maximumY": 0.46530434489250183,
+          "widthPercentage": 517.4206018447876,
+          "heightPercentage": 87.92431652545929
+        },
+        "walker": {
+          "minimumX": 0.07087972015142441,
+          "maximumX": 0.3717799484729767,
+          "minimumY": 0.14196482300758362,
+          "maximumY": 0.7477617859840393,
+          "widthPercentage": 30.090022832155228,
+          "heightPercentage": 60.57969629764557
+        },
+        "walker--fitted-dress": {
+          "minimumX": 0.05914498120546341,
+          "maximumX": 0.3606310188770294,
+          "minimumY": 0.12812736630439758,
+          "maximumY": 0.6556633114814758,
+          "widthPercentage": 30.1486037671566,
+          "heightPercentage": 52.753594517707825
+        }
+      }
+    }
+  ]
+}

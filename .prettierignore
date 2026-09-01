@@ -1,5 +1,6 @@
 node_modules/
 dist/
 package-lock.json
+library/
 codex-goal-bootstrap-ai-marketing-video-generator.md
 codex-goal-agent-operated-verification-architecture.md

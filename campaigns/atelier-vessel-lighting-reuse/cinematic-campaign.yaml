@@ -1,0 +1,286 @@
+schemaVersion: 1
+id: campaign.atelier-vessel
+fps: 24
+resolution: { width: 360, height: 360, percentage: 100 }
+assetLibrary: ../../library
+
+geometry:
+  - id: vessel
+    path: work/product/geometry.json
+    recipe:
+      assetId: prop.atelier-vessel
+      metadata:
+        {
+          generator: videoer.declarative-geometry.v1,
+          productClass: fragrance-vessel,
+          projectOwned: true,
+        }
+      primitives:
+        - { kind: box, minimum: [-0.62, 0, -0.28], maximum: [0.62, 1.55, 0.28], materialId: glass }
+        - {
+            kind: box,
+            minimum: [-0.48, 0.18, -0.3],
+            maximum: [0.48, 0.76, -0.28],
+            materialId: liquid,
+          }
+        - {
+            kind: box,
+            minimum: [-0.34, 1.55, -0.18],
+            maximum: [0.34, 1.9, 0.18],
+            materialId: collar,
+          }
+        - {
+            kind: capsule,
+            start: [0, 1.9, 0],
+            end: [0, 2.28, 0],
+            radiusX: 0.4,
+            radiusZ: 0.28,
+            materialId: cap,
+          }
+        - {
+            kind: box,
+            minimum: [-0.38, 0.83, -0.305],
+            maximum: [0.38, 1.28, -0.295],
+            materialId: label,
+          }
+        - { kind: box, minimum: [-3.5, -0.2, -3.5], maximum: [3.5, 0, 3.5], materialId: ground }
+      materials:
+        - {
+            id: glass,
+            baseColor: [0.16, 0.18, 0.22, 1],
+            roughness: 0.12,
+            metallic: 0.25,
+            emission: [0, 0, 0],
+            emissionStrength: 0,
+          }
+        - {
+            id: liquid,
+            baseColor: [0.48, 0.1, 0.025, 1],
+            roughness: 0.2,
+            metallic: 0.12,
+            emission: [0.18, 0.025, 0],
+            emissionStrength: 0.5,
+          }
+        - {
+            id: collar,
+            baseColor: [0.72, 0.55, 0.24, 1],
+            roughness: 0.2,
+            metallic: 0.8,
+            emission: [0, 0, 0],
+            emissionStrength: 0,
+          }
+        - {
+            id: cap,
+            baseColor: [0.035, 0.04, 0.055, 1],
+            roughness: 0.16,
+            metallic: 0.7,
+            emission: [0, 0, 0],
+            emissionStrength: 0,
+          }
+        - {
+            id: label,
+            baseColor: [0.82, 0.78, 0.68, 1],
+            roughness: 0.62,
+            metallic: 0,
+            emission: [0, 0, 0],
+            emissionStrength: 0,
+          }
+        - {
+            id: ground,
+            baseColor: [0.025, 0.028, 0.038, 1],
+            roughness: 0.28,
+            metallic: 0.15,
+            emission: [0, 0, 0],
+            emissionStrength: 0,
+          }
+      attachments:
+        product-focus: { position: [0, 1.08, 0] }
+        label-focus: { position: [0, 1.05, -0.3] }
+        camera-hero: { position: [2.6, 1.9, -4.6] }
+        camera-label: { position: [-1.05, 1.25, -2.45] }
+
+lightingSources:
+  - id: published-gallery-rig
+    library:
+      type: lighting
+      query: sculptural gallery stage key fill rim
+      tags: [lighting-rig, gallery, sculptural]
+      capabilities: [reusable-rig, coherent-exposure, key-fill-rim, sculptural-gallery-stage]
+      preferredAsset: { id: lighting.nocturne-gallery, version: 1.0.0 }
+      artifactRole: lighting
+
+overlays:
+  - id: product-title
+    path: work/editorial/product-title.png
+    width: 360
+    height: 360
+    font: { family: Cormorant Garamond, licence: OFL-1.1 }
+    lines:
+      - {
+          text: VESPER Nº 4,
+          y: 66,
+          fontSize: 35,
+          color: '0xfff7e8',
+          borderWidth: 2,
+          borderColor: '0x02030a@0.92',
+        }
+      - {
+          text: ATELIER EDITION,
+          y: 306,
+          fontSize: 16,
+          color: '0xffb06c',
+          borderWidth: 2,
+          borderColor: '0x02030a@0.95',
+        }
+
+soundtrackPath: work/audio/soundtrack.wav
+soundtrack:
+  schemaVersion: 1
+  id: audio.atelier-vessel
+  durationSeconds: 6
+  sampleRate: 48000
+  channels: 2
+  cues:
+    - {
+        id: atelier-room,
+        kind: noise-bed,
+        startSeconds: 0,
+        endSeconds: 6,
+        gain: 0.012,
+        seed: 404,
+        purpose: Quiet product-stage air,
+      }
+    - {
+        id: amber-tone,
+        kind: tone-bed,
+        startSeconds: 0,
+        endSeconds: 6,
+        gain: 0.045,
+        frequencyHz: 82.41,
+        purpose: Restrained luxury foundation,
+      }
+    - {
+        id: resolve,
+        kind: tonal-accent,
+        startSeconds: 3,
+        endSeconds: 5.9,
+        gain: 0.08,
+        frequencyHz: 164.81,
+        purpose: Product identity resolve,
+      }
+  metadata: { providerFree: true, reuseProof: lighting.nocturne-gallery@1.0.0 }
+
+shots:
+  - id: vessel-form
+    frames: 72
+    entities: [{ id: vessel, geometry: vessel, role: prop }]
+    camera:
+      keyframes:
+        - {
+            time: 0,
+            position: { entityId: vessel, attachmentId: camera-hero },
+            target: { entityId: vessel, attachmentId: product-focus },
+            lensMillimeters: 62,
+          }
+        - {
+            time: 3,
+            position: { entityId: vessel, attachmentId: camera-hero, offset: [-0.55, 0.05, 0.55] },
+            target: { entityId: vessel, attachmentId: product-focus },
+            lensMillimeters: 70,
+          }
+    lighting: published-gallery-rig
+    lights:
+      [
+        {
+          id: amber-product-edge,
+          type: area,
+          position: [2, 2.5, -1.4],
+          target: [0, 1, 0],
+          color: [1, 0.25, 0.04],
+          energy: 290,
+          sizeMeters: 1,
+        },
+      ]
+    atmosphere:
+      &atelier-atmosphere {
+        worldColor: [0.002, 0.003, 0.009],
+        fogColor: [0.025, 0.035, 0.065],
+        fogDensity: 0.004,
+        rain: { enabled: false },
+      }
+    renderGates: [{ id: vessel-visible, type: frame-visibility, maximumBlackPercentage: 82 }]
+    qualityGates: &product-camera-clearance
+      - {
+          id: camera-clears-product-stage,
+          type: camera-path-clearance,
+          obstacleEntityIds: [vessel],
+          sampleCount: 37,
+          minimumCameraClearanceMeters: 0.15,
+          targetOcclusionToleranceMeters: 0.5,
+        }
+    landmarks:
+      - { id: silhouette, progress: 0, description: Bottle, collar, and cap separate in silhouette }
+      - { id: liquid-edge, progress: 0.5, description: Amber contents catch the reused gallery key }
+      - { id: complete-form, progress: 1, description: Square product composition resolves }
+    metadata: { template: semantic-product-shot, reusesPublishedLightingWithoutAdaptation: true }
+
+  - id: atelier-identity
+    frames: 72
+    entities: [{ id: vessel, geometry: vessel, role: prop }]
+    camera:
+      keyframes:
+        - {
+            time: 0,
+            position: { entityId: vessel, attachmentId: camera-label },
+            target: { entityId: vessel, attachmentId: label-focus },
+            lensMillimeters: 78,
+          }
+        - {
+            time: 3,
+            position: { entityId: vessel, attachmentId: camera-label, offset: [0.22, 0.05, 0.35] },
+            target: { entityId: vessel, attachmentId: label-focus },
+            lensMillimeters: 86,
+          }
+    lighting: published-gallery-rig
+    lights: []
+    atmosphere: *atelier-atmosphere
+    overlays:
+      [
+        {
+          overlay: product-title,
+          startSeconds: 0.25,
+          endSeconds: 3,
+          fadeInSeconds: 0.45,
+          fadeOutSeconds: 0,
+        },
+      ]
+    renderGates:
+      - { id: label-visible, type: frame-visibility, maximumBlackPercentage: 82 }
+      - {
+          id: editorial-lockup-visible,
+          type: overlay-visibility,
+          overlayId: product-title,
+          landmarkIds: [name-lockup, atelier-hold],
+          minimumOpacity: 0.95,
+        }
+    qualityGates: *product-camera-clearance
+    landmarks:
+      - { id: label-plane, progress: 0, description: Physical label plane is readable before copy }
+      - { id: name-lockup, progress: 0.5, description: Product title joins the physical label }
+      - { id: atelier-hold, progress: 1, description: Brand and edition hold in the square format }
+    metadata:
+      { template: product-identity-end-frame, reusesPublishedLightingWithoutAdaptation: true }
+
+delivery:
+  {
+    id: edit.atelier-vessel,
+    directory: delivery-declarative,
+    codec: h264,
+    pixelFormat: yuv420p,
+    fastStart: true,
+  }
+metadata:
+  conformancePurpose: direct-cross-campaign-lighting-reuse
+  materiallyDifferentFromSourceCampaign: true
+  bespokeOrchestrationSourceFiles: 0
+  sourceLightingAsset: lighting.nocturne-gallery@1.0.0

@@ -1,0 +1,182 @@
+{
+  "schemaVersion": 1,
+  "adaptationKind": "cinematic-audio-treatment-v1",
+  "sourceId": "product-pulse",
+  "baseAsset": {
+    "id": "audio.rainy-bookshop-score",
+    "version": "0.1.0"
+  },
+  "baseArtifact": "/Users/colum/dev/personal/videoer/library/audio/rainy-bookshop-score/0.1.0/soundtrack.wav",
+  "baseArtifactRole": "master",
+  "baseAudioSha256": "3041465e30faaedfe92c0bec74ee79d85ce0cdc4ac57e3380ba075202475e455",
+  "adaptedAssetId": "audio.beacon-one-product-pulse",
+  "adaptedArtifact": "/Users/colum/dev/personal/videoer/campaigns/beacon-one-product-conformance/work/audio/product-pulse.wav",
+  "adaptedAudioSha256": "b549b6ac541b830938394930eb7a040e356e2a83f7a89684af987024d17c43a5",
+  "requestedCapabilities": [
+    "provider-free",
+    "frame-synchronized",
+    "stereo-48khz",
+    "exact-duration"
+  ],
+  "missingBaseCapabilities": [],
+  "providedCapabilities": [
+    "deterministic-treatment",
+    "temporal-envelope-preserved",
+    "frame-synchronized-accents",
+    "product-launch-pulse"
+  ],
+  "treatment": {
+    "kind": "cinematic-audio-treatment-v1",
+    "assetId": "audio.beacon-one-product-pulse",
+    "sourceStartSeconds": 0,
+    "durationSeconds": 9,
+    "highpassHz": 60,
+    "lowpassHz": 11000,
+    "gainDb": -1,
+    "compressor": {
+      "thresholdDb": -20,
+      "ratio": 2.5,
+      "attackMs": 18,
+      "releaseMs": 220
+    },
+    "stereoWidth": 1.2,
+    "fadeInSeconds": 0.12,
+    "fadeOutSeconds": 0.35,
+    "targetIntegratedLufs": -18,
+    "truePeakDb": -1.5,
+    "accents": [
+      {
+        "id": "interface-lock",
+        "kind": "tonal-accent",
+        "startSeconds": 2.72,
+        "endSeconds": 3.42,
+        "gain": 0.24,
+        "frequencyHz": 392
+      },
+      {
+        "id": "brand-resolve",
+        "kind": "tonal-accent",
+        "startSeconds": 6,
+        "endSeconds": 8.85,
+        "gain": 0.14,
+        "frequencyHz": 196
+      }
+    ],
+    "metadata": {
+      "purpose": "Restrained electronic product-launch treatment from verified score"
+    }
+  },
+  "operations": {
+    "selectedIntervalChanged": true,
+    "temporalEnvelopeChanged": false,
+    "sampleRateChanged": false,
+    "channelLayoutChanged": false
+  },
+  "compatibility": {
+    "selectedIntervalPreserved": true,
+    "sampleRatePreservedAt48kHz": true,
+    "stereoPreserved": true,
+    "temporalEnvelopePreserved": true,
+    "accentSampleAlignmentPreserved": true,
+    "declaredAccentsContribute": true,
+    "deterministicRenderMatched": true
+  },
+  "validation": {
+    "valid": true,
+    "issues": [],
+    "treatment": {
+      "kind": "cinematic-audio-treatment-v1",
+      "assetId": "audio.beacon-one-product-pulse",
+      "sourceStartSeconds": 0,
+      "durationSeconds": 9,
+      "highpassHz": 60,
+      "lowpassHz": 11000,
+      "gainDb": -1,
+      "compressor": {
+        "thresholdDb": -20,
+        "ratio": 2.5,
+        "attackMs": 18,
+        "releaseMs": 220
+      },
+      "stereoWidth": 1.2,
+      "fadeInSeconds": 0.12,
+      "fadeOutSeconds": 0.35,
+      "targetIntegratedLufs": -18,
+      "truePeakDb": -1.5,
+      "accents": [
+        {
+          "id": "interface-lock",
+          "kind": "tonal-accent",
+          "startSeconds": 2.72,
+          "endSeconds": 3.42,
+          "gain": 0.24,
+          "frequencyHz": 392
+        },
+        {
+          "id": "brand-resolve",
+          "kind": "tonal-accent",
+          "startSeconds": 6,
+          "endSeconds": 8.85,
+          "gain": 0.14,
+          "frequencyHz": 196
+        }
+      ],
+      "metadata": {
+        "purpose": "Restrained electronic product-launch treatment from verified score"
+      }
+    },
+    "source": {
+      "durationSeconds": 15,
+      "sampleRate": 48000,
+      "channels": 2,
+      "channelLayout": "stereo",
+      "codec": "pcm_s24le",
+      "sha256": "3041465e30faaedfe92c0bec74ee79d85ce0cdc4ac57e3380ba075202475e455"
+    },
+    "adapted": {
+      "durationSeconds": 9,
+      "sampleRate": 48000,
+      "channels": 2,
+      "channelLayout": "stereo",
+      "codec": "pcm_s24le",
+      "sha256": "b549b6ac541b830938394930eb7a040e356e2a83f7a89684af987024d17c43a5"
+    },
+    "compatibility": {
+      "selectedIntervalPreserved": true,
+      "sampleRatePreservedAt48kHz": true,
+      "stereoPreserved": true,
+      "temporalEnvelopePreserved": true,
+      "accentSampleAlignmentPreserved": true,
+      "declaredAccentsContribute": true,
+      "deterministicRenderMatched": true
+    },
+    "metrics": {
+      "durationErrorSeconds": 0,
+      "temporalEnvelopeCorrelation": 0.8722952489543472,
+      "onsetDeltaSeconds": 0.02,
+      "endingDeltaSeconds": 0.02,
+      "activeWindowFraction": 0.9911111111111112,
+      "rms": 0.061841290860679306,
+      "samplePeak": 0.4132173955440521,
+      "deterministicRenderHash": "b549b6ac541b830938394930eb7a040e356e2a83f7a89684af987024d17c43a5",
+      "accents": [
+        {
+          "id": "interface-lock",
+          "startSample": 130560,
+          "endSample": 164160,
+          "insideDifferenceRms": 0.025405691600863492,
+          "outsideDifferenceRms": 0.00010732141794082869,
+          "contributionOverOutsideDb": 47.48481180715129
+        },
+        {
+          "id": "brand-resolve",
+          "startSample": 288000,
+          "endSample": 424800,
+          "insideDifferenceRms": 0.015499720693007176,
+          "outsideDifferenceRms": 0.00010732141794082869,
+          "contributionOverOutsideDb": 43.19266903173432
+        }
+      ]
+    }
+  }
+}

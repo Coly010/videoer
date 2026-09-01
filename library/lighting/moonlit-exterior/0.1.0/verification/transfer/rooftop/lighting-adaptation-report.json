@@ -1,0 +1,59 @@
+{
+  "valid": true,
+  "issues": [],
+  "adaptation": {
+    "kind": "lighting-rig-transform-v1",
+    "assetId": "lighting.moonlit-exterior.rooftop-transfer",
+    "transform": {
+      "translation": [
+        0,
+        0.75,
+        0.2
+      ],
+      "yawRadians": 0.12,
+      "uniformScale": 1
+    },
+    "energyScale": 0.94,
+    "purposeEnergyScale": {
+      "key": 1,
+      "fill": 1.12,
+      "rim": 0.92,
+      "practical": 0.88,
+      "environment": 1.08
+    },
+    "colorMultiply": [
+      0.94,
+      0.98,
+      1
+    ],
+    "worldColor": [
+      0.001,
+      0.003,
+      0.01
+    ],
+    "metadata": {
+      "context": "unrelated-contemporary-rooftop-transfer",
+      "sourceCandidate": "lighting.moonlit-exterior@0.1.0"
+    }
+  },
+  "topologyPreserved": true,
+  "exposurePreserved": true,
+  "spatialTransformMatched": true,
+  "energyTransformMatched": true,
+  "colorTransformMatched": true,
+  "sizeTransformMatched": true,
+  "nonBlackWorld": true,
+  "roleCoverage": {
+    "key": 1,
+    "fill": 1,
+    "rim": 1,
+    "practical": 1,
+    "environment": 1
+  },
+  "baseLightCount": 5,
+  "adaptedLightCount": 5,
+  "energyRange": {
+    "minimum": 126.33600000000001,
+    "maximum": 921.1999999999999
+  }
+}

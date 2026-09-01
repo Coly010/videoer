@@ -1,0 +1,2182 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-01T14:35:36.375Z",
+  "assets": [
+    {
+      "id": "audio.beacon-one-product-pulse",
+      "version": "1.0.0",
+      "type": "audio",
+      "title": "Beacon One restrained product pulse",
+      "status": "verified",
+      "tags": [
+        "cinematic-score",
+        "product-launch",
+        "restrained",
+        "deterministic",
+        "provider-free"
+      ],
+      "capabilities": [
+        "provider-free",
+        "exact-duration",
+        "stereo-48khz",
+        "deterministic-treatment",
+        "temporal-envelope-preserved",
+        "frame-synchronized-accents",
+        "product-launch-pulse"
+      ],
+      "metadataPath": "audio/beacon-one-product-pulse/1.0.0/asset.yaml"
+    },
+    {
+      "id": "audio.last-call-dialogue",
+      "version": "1.0.0",
+      "type": "audio",
+      "title": "Last Call provider-free dialogue",
+      "status": "verified",
+      "tags": [
+        "speech",
+        "dialogue",
+        "english",
+        "provider-free",
+        "phoneme-timing"
+      ],
+      "capabilities": [
+        "provider-free-speech",
+        "native-phoneme-events",
+        "word-events",
+        "deterministic-waveform"
+      ],
+      "metadataPath": "audio/last-call-dialogue/1.0.0/asset.yaml"
+    },
+    {
+      "id": "audio.rainy-bookshop-score",
+      "version": "0.1.0",
+      "type": "audio",
+      "title": "Deterministic rainy bookshop score and sound design",
+      "status": "verified",
+      "tags": [
+        "rain",
+        "cinematic-score",
+        "foley",
+        "deterministic"
+      ],
+      "capabilities": [
+        "provider-free",
+        "frame-synchronized",
+        "stereo-48khz",
+        "exact-duration"
+      ],
+      "metadataPath": "audio/rainy-bookshop-score/0.1.0/asset.yaml"
+    },
+    {
+      "id": "character.elara-vale-speaking",
+      "version": "1.0.0",
+      "type": "character",
+      "title": "Elara Vale speaking rig",
+      "status": "verified",
+      "tags": [
+        "humanoid",
+        "woman",
+        "recurring",
+        "speech",
+        "viseme",
+        "facial-animation"
+      ],
+      "capabilities": [
+        "canonical-humanoid-rig",
+        "gaze-target",
+        "identity-reference",
+        "canonical-english-visemes",
+        "mouth-only-morph-deformation",
+        "speech-performance-binding"
+      ],
+      "metadataPath": "characters/elara-vale-speaking/1.0.0/asset.yaml"
+    },
+    {
+      "id": "character.elara-vale",
+      "version": "0.1.0",
+      "type": "character",
+      "title": "Elara Vale",
+      "status": "verified",
+      "tags": [
+        "humanoid",
+        "woman",
+        "recurring",
+        "procedural",
+        "project-owned"
+      ],
+      "capabilities": [
+        "canonical-humanoid-rig",
+        "skinned-mesh",
+        "continuous-body-parameters",
+        "stable-material-palette",
+        "basic-face",
+        "mesh-hair",
+        "fitted-long-dress",
+        "walk-deformation",
+        "hand-attachments",
+        "foot-contact-points",
+        "gaze-target"
+      ],
+      "metadataPath": "characters/elara-vale/0.1.0/asset.yaml"
+    },
+    {
+      "id": "character.elara-vale",
+      "version": "0.1.1",
+      "type": "character",
+      "title": "Elara Vale",
+      "status": "verified",
+      "tags": [
+        "humanoid",
+        "woman",
+        "recurring",
+        "procedural",
+        "project-owned"
+      ],
+      "capabilities": [
+        "canonical-humanoid-rig",
+        "skinned-mesh",
+        "continuous-body-parameters",
+        "stable-material-palette",
+        "basic-face",
+        "mesh-hair",
+        "fitted-long-dress",
+        "walk-deformation",
+        "motion-retargeting",
+        "hand-attachments",
+        "foot-contact-points",
+        "gaze-target"
+      ],
+      "metadataPath": "characters/elara-vale/0.1.1/asset.yaml"
+    },
+    {
+      "id": "character.elara-vale",
+      "version": "0.1.2",
+      "type": "character",
+      "title": "Elara Vale",
+      "status": "verified",
+      "tags": [
+        "humanoid",
+        "woman",
+        "recurring",
+        "procedural",
+        "project-owned"
+      ],
+      "capabilities": [
+        "canonical-humanoid-rig",
+        "skinned-mesh",
+        "continuous-body-parameters",
+        "stable-material-palette",
+        "basic-face",
+        "mesh-hair",
+        "fitted-long-dress",
+        "walk-deformation",
+        "motion-retargeting",
+        "hand-attachments",
+        "foot-contact-points",
+        "gaze-target",
+        "identity-reference"
+      ],
+      "metadataPath": "characters/elara-vale/0.1.2/asset.yaml"
+    },
+    {
+      "id": "character.elara-vale",
+      "version": "0.1.3",
+      "type": "character",
+      "title": "Elara Vale",
+      "status": "verified",
+      "tags": [
+        "humanoid",
+        "woman",
+        "recurring",
+        "procedural",
+        "project-owned"
+      ],
+      "capabilities": [
+        "canonical-humanoid-rig",
+        "skinned-mesh",
+        "continuous-body-parameters",
+        "stable-material-palette",
+        "basic-face",
+        "mesh-hair",
+        "fitted-long-dress",
+        "long-dress-drape-skinning",
+        "walk-deformation",
+        "motion-retargeting",
+        "hand-attachments",
+        "foot-contact-points",
+        "gaze-target",
+        "identity-reference"
+      ],
+      "metadataPath": "characters/elara-vale/0.1.3/asset.yaml"
+    },
+    {
+      "id": "character.elara-vale",
+      "version": "0.1.4",
+      "type": "character",
+      "title": "Elara Vale",
+      "status": "verified",
+      "tags": [
+        "humanoid",
+        "woman",
+        "recurring",
+        "procedural",
+        "project-owned"
+      ],
+      "capabilities": [
+        "canonical-humanoid-rig",
+        "skinned-mesh",
+        "continuous-body-parameters",
+        "stable-material-palette",
+        "basic-face",
+        "mesh-hair",
+        "fitted-long-dress",
+        "long-dress-drape-skinning",
+        "pose-space-cloth-correction",
+        "temporal-cloth-body-collision",
+        "temporal-cloth-silhouette-stability",
+        "walk-deformation",
+        "motion-retargeting",
+        "hand-attachments",
+        "foot-contact-points",
+        "gaze-target",
+        "identity-reference"
+      ],
+      "metadataPath": "characters/elara-vale/0.1.4/asset.yaml"
+    },
+    {
+      "id": "character.humanoid-mannequin",
+      "version": "0.1.0",
+      "type": "character",
+      "title": "Parametric humanoid mannequin",
+      "status": "verified",
+      "tags": [
+        "humanoid",
+        "mannequin",
+        "procedural",
+        "project-owned"
+      ],
+      "capabilities": [
+        "canonical-humanoid-rig",
+        "skinned-mesh",
+        "continuous-body-parameters",
+        "hand-attachments",
+        "foot-contact-points",
+        "gaze-target"
+      ],
+      "metadataPath": "characters/humanoid-mannequin/0.1.0/asset.yaml"
+    },
+    {
+      "id": "character.humanoid-mannequin",
+      "version": "0.2.0",
+      "type": "character",
+      "title": "Parametric humanoid mannequin",
+      "status": "verified",
+      "tags": [
+        "humanoid",
+        "mannequin",
+        "procedural",
+        "project-owned"
+      ],
+      "capabilities": [
+        "canonical-humanoid-rig",
+        "skinned-mesh",
+        "continuous-body-parameters",
+        "hand-attachments",
+        "foot-contact-points",
+        "gaze-target"
+      ],
+      "metadataPath": "characters/humanoid-mannequin/0.2.0/asset.yaml"
+    },
+    {
+      "id": "character.humanoid-mannequin",
+      "version": "0.3.0",
+      "type": "character",
+      "title": "Parametric humanoid mannequin",
+      "status": "verified",
+      "tags": [
+        "humanoid",
+        "mannequin",
+        "procedural",
+        "project-owned"
+      ],
+      "capabilities": [
+        "canonical-humanoid-rig",
+        "skinned-mesh",
+        "continuous-body-parameters",
+        "hand-attachments",
+        "foot-contact-points",
+        "gaze-target"
+      ],
+      "metadataPath": "characters/humanoid-mannequin/0.3.0/asset.yaml"
+    },
+    {
+      "id": "character.humanoid-mannequin",
+      "version": "0.4.0",
+      "type": "character",
+      "title": "Parametric humanoid mannequin",
+      "status": "verified",
+      "tags": [
+        "humanoid",
+        "mannequin",
+        "procedural",
+        "project-owned"
+      ],
+      "capabilities": [
+        "canonical-humanoid-rig",
+        "skinned-mesh",
+        "continuous-body-parameters",
+        "hand-attachments",
+        "foot-contact-points",
+        "gaze-target"
+      ],
+      "metadataPath": "characters/humanoid-mannequin/0.4.0/asset.yaml"
+    },
+    {
+      "id": "clothing.elara-midnight-dress",
+      "version": "0.1.0",
+      "type": "clothing",
+      "title": "Elara midnight period dress",
+      "status": "verified",
+      "tags": [
+        "long-dress",
+        "dark",
+        "period-inspired",
+        "woman"
+      ],
+      "capabilities": [
+        "canonical-humanoid-fit",
+        "walk-deformation",
+        "reusable-material"
+      ],
+      "metadataPath": "clothing/elara-midnight-dress/0.1.0/asset.yaml"
+    },
+    {
+      "id": "clothing.rainwalk-fitted-midnight-dress",
+      "version": "1.0.0",
+      "type": "clothing",
+      "title": "Rainwalk fitted midnight dress",
+      "status": "verified",
+      "tags": [
+        "long-dress",
+        "dark",
+        "fitted",
+        "drape"
+      ],
+      "capabilities": [
+        "canonical-humanoid-fit",
+        "walk-deformation",
+        "reusable-material",
+        "target-character-fit",
+        "long-dress-drape"
+      ],
+      "metadataPath": "clothing/rainwalk-fitted-midnight-dress/1.0.0/asset.yaml"
+    },
+    {
+      "id": "editorial.nocturne-event-lockup",
+      "version": "1.0.0",
+      "type": "editorial",
+      "title": "Nocturne exhibition identity lockup",
+      "status": "verified",
+      "tags": [
+        "editorial",
+        "event-identity",
+        "exhibition",
+        "deterministic",
+        "safe-area"
+      ],
+      "capabilities": [
+        "event-identity-lockup",
+        "deterministic-render",
+        "measured-safe-area",
+        "contrast-verified",
+        "threshold-lines"
+      ],
+      "metadataPath": "editorial/nocturne-event-lockup/1.0.0/asset.yaml"
+    },
+    {
+      "id": "environment.dusk-exterior-lighting",
+      "version": "0.1.0",
+      "type": "environment",
+      "title": "Overcast dusk exterior lighting rig",
+      "status": "verified",
+      "tags": [
+        "lighting-rig",
+        "dusk",
+        "warm-practicals"
+      ],
+      "capabilities": [
+        "reusable-rig",
+        "coherent-exposure"
+      ],
+      "metadataPath": "environments/dusk-exterior-lighting/0.1.0/asset.yaml"
+    },
+    {
+      "id": "environment.interior-furnishing-family",
+      "version": "0.1.0",
+      "type": "environment",
+      "title": "Cross-era inhabited-interior furnishing family",
+      "status": "verified",
+      "tags": [
+        "interior",
+        "furniture",
+        "seating",
+        "tabletop",
+        "inhabited-environment"
+      ],
+      "capabilities": [
+        "portable-set-dressing-family",
+        "explicit-member-versions",
+        "deterministic-seeded-layout",
+        "authored-furniture-recipes",
+        "navigation-clearance-preservation",
+        "tabletop-support-semantics",
+        "cross-era-transfer",
+        "verified-lighting-rig-reuse",
+        "medium-background-quality-tier",
+        "layout-aware-verified-lighting-rig-reuse",
+        "exact-tabletop-support"
+      ],
+      "metadataPath": "environments/interior-furnishing-family/0.1.0/asset.yaml"
+    },
+    {
+      "id": "environment.market-world-family",
+      "version": "0.1.0",
+      "type": "environment",
+      "title": "Portable market stall and physical merchandising family",
+      "status": "verified",
+      "tags": [
+        "market",
+        "stall",
+        "merchandising",
+        "produce",
+        "inhabited-environment"
+      ],
+      "capabilities": [
+        "portable-set-dressing-family",
+        "explicit-member-versions",
+        "deterministic-seeded-layout",
+        "authored-physical-merchandising",
+        "navigation-clearance-preservation",
+        "cross-environment-transfer",
+        "medium-background-quality-tier"
+      ],
+      "metadataPath": "environments/market-world-family/0.1.0/asset.yaml"
+    },
+    {
+      "id": "environment.night-transit-dialogue-stage",
+      "version": "1.0.0",
+      "type": "environment",
+      "title": "Night transit dialogue stage",
+      "status": "verified",
+      "tags": [
+        "transit",
+        "platform",
+        "night",
+        "dialogue",
+        "two-character",
+        "staging"
+      ],
+      "capabilities": [
+        "deterministic-geometry",
+        "semantic-camera-anchors",
+        "dialogue-blocking-anchors",
+        "two-character-camera-anchors",
+        "cinematic-light-rhythm"
+      ],
+      "metadataPath": "environments/night-transit-dialogue-stage/1.0.0/asset.yaml"
+    },
+    {
+      "id": "environment.night-transit-dialogue-stage",
+      "version": "1.0.1",
+      "type": "environment",
+      "title": "Night transit dialogue stage",
+      "status": "verified",
+      "tags": [
+        "transit",
+        "platform",
+        "night",
+        "dialogue",
+        "two-character",
+        "staging"
+      ],
+      "capabilities": [
+        "deterministic-geometry",
+        "semantic-camera-anchors",
+        "dialogue-blocking-anchors",
+        "two-character-camera-anchors",
+        "cinematic-light-rhythm"
+      ],
+      "metadataPath": "environments/night-transit-dialogue-stage/1.0.1/asset.yaml"
+    },
+    {
+      "id": "environment.night-transit-platform",
+      "version": "1.0.0",
+      "type": "environment",
+      "title": "Abstract night transit platform",
+      "status": "deprecated",
+      "tags": [
+        "transit",
+        "platform",
+        "night",
+        "abstract",
+        "fashion",
+        "cyan-amber"
+      ],
+      "capabilities": [
+        "deterministic-geometry",
+        "enclosed-platform",
+        "semantic-camera-anchors",
+        "runway-blocking",
+        "signal-attention-target",
+        "cinematic-light-rhythm"
+      ],
+      "metadataPath": "environments/night-transit-platform/1.0.0/asset.yaml"
+    },
+    {
+      "id": "environment.night-transit-platform",
+      "version": "1.0.1",
+      "type": "environment",
+      "title": "Abstract night transit platform",
+      "status": "verified",
+      "tags": [
+        "transit",
+        "platform",
+        "night",
+        "abstract",
+        "fashion",
+        "cyan-amber"
+      ],
+      "capabilities": [
+        "deterministic-geometry",
+        "enclosed-platform",
+        "semantic-camera-anchors",
+        "runway-blocking",
+        "signal-attention-target",
+        "cinematic-light-rhythm"
+      ],
+      "metadataPath": "environments/night-transit-platform/1.0.1/asset.yaml"
+    },
+    {
+      "id": "environment.old-city-bookshop",
+      "version": "0.1.0",
+      "type": "environment",
+      "title": "Continuous old-city bookshop",
+      "status": "verified",
+      "tags": [
+        "old-city",
+        "narrow-street",
+        "bookshop",
+        "warm-interior"
+      ],
+      "capabilities": [
+        "deterministic-seed",
+        "named-paths",
+        "promotable-asset",
+        "exterior-continuity",
+        "named-interaction-points"
+      ],
+      "metadataPath": "environments/old-city-bookshop/0.1.0/asset.yaml"
+    },
+    {
+      "id": "environment.old-city-bookshop",
+      "version": "0.2.0",
+      "type": "environment",
+      "title": "Continuous old-city bookshop",
+      "status": "verified",
+      "tags": [
+        "old-city",
+        "narrow-street",
+        "bookshop",
+        "warm-interior"
+      ],
+      "capabilities": [
+        "deterministic-seed",
+        "named-paths",
+        "promotable-asset",
+        "exterior-continuity",
+        "named-interaction-points",
+        "procedural-wet-cobble",
+        "opposing-street-depth",
+        "tower-silhouette"
+      ],
+      "metadataPath": "environments/old-city-bookshop/0.2.0/asset.yaml"
+    },
+    {
+      "id": "environment.old-city-bookshop",
+      "version": "0.2.1",
+      "type": "environment",
+      "title": "Continuous old-city bookshop",
+      "status": "verified",
+      "tags": [
+        "old-city",
+        "narrow-street",
+        "bookshop",
+        "shelves",
+        "warm-interior"
+      ],
+      "capabilities": [
+        "deterministic-seed",
+        "named-paths",
+        "promotable-asset",
+        "exterior-continuity",
+        "named-interaction-points",
+        "procedural-wet-cobble",
+        "opposing-street-depth",
+        "tower-silhouette"
+      ],
+      "metadataPath": "environments/old-city-bookshop/0.2.1/asset.yaml"
+    },
+    {
+      "id": "environment.potted-vegetation-family",
+      "version": "0.1.0",
+      "type": "environment",
+      "title": "Portable inhabited-space potted vegetation",
+      "status": "verified",
+      "tags": [
+        "vegetation",
+        "planter",
+        "courtyard",
+        "interior",
+        "inhabited-environment"
+      ],
+      "capabilities": [
+        "portable-set-dressing-family",
+        "explicit-member-versions",
+        "deterministic-seeded-layout",
+        "authored-vegetation-clusters",
+        "navigation-clearance-preservation",
+        "geometry-bound-surface-placement",
+        "surface-normal-alignment",
+        "cross-environment-transfer",
+        "medium-background-quality-tier"
+      ],
+      "metadataPath": "environments/potted-vegetation-family/0.1.0/asset.yaml"
+    },
+    {
+      "id": "environment.street-storage-family",
+      "version": "0.1.0",
+      "type": "environment",
+      "title": "Portable street storage and edge dressing",
+      "status": "verified",
+      "tags": [
+        "street",
+        "storage",
+        "crate",
+        "barrel",
+        "inhabited-environment"
+      ],
+      "capabilities": [
+        "portable-set-dressing-family",
+        "explicit-member-versions",
+        "deterministic-seeded-layout",
+        "weighted-variation",
+        "overlap-free-placement",
+        "navigation-clearance-preservation",
+        "cross-environment-transfer",
+        "medium-background-quality-tier"
+      ],
+      "metadataPath": "environments/street-storage-family/0.1.0/asset.yaml"
+    },
+    {
+      "id": "environment.warm-bookshop-lighting",
+      "version": "0.1.0",
+      "type": "environment",
+      "title": "Warm bookshop interior lighting rig",
+      "status": "verified",
+      "tags": [
+        "lighting-rig",
+        "warm-interior",
+        "cool-fill"
+      ],
+      "capabilities": [
+        "reusable-rig",
+        "face-key",
+        "coherent-exposure"
+      ],
+      "metadataPath": "environments/warm-bookshop-lighting/0.1.0/asset.yaml"
+    },
+    {
+      "id": "environment.workshop-world-family",
+      "version": "0.1.0",
+      "type": "environment",
+      "title": "Portable workshop workstation and tool-storage family",
+      "status": "verified",
+      "tags": [
+        "workshop",
+        "workbench",
+        "tools",
+        "craft",
+        "inhabited-interior"
+      ],
+      "capabilities": [
+        "portable-set-dressing-family",
+        "explicit-member-versions",
+        "deterministic-seeded-layout",
+        "authored-physical-workstations",
+        "navigation-clearance-preservation",
+        "cross-environment-transfer",
+        "verified-lighting-rig-reuse",
+        "medium-background-quality-tier"
+      ],
+      "metadataPath": "environments/workshop-world-family/0.1.0/asset.yaml"
+    },
+    {
+      "id": "hair.pulled-back-low-bun",
+      "version": "0.7.0",
+      "type": "hair",
+      "title": "Pulled-back low bun",
+      "status": "verified",
+      "tags": [
+        "hair",
+        "pulled-back",
+        "low-bun",
+        "mesh-hair",
+        "canonical-humanoid"
+      ],
+      "capabilities": [
+        "separable-hair-geometry",
+        "canonical-head-anchor",
+        "target-fit-profile",
+        "dedicated-scalp-topology",
+        "layered-flow-cards",
+        "anisotropic-material",
+        "renderer-independent",
+        "surface-ribbon-bun-detail",
+        "cross-character-head-fit",
+        "medium-shot-quality-tier"
+      ],
+      "metadataPath": "hair/pulled-back-low-bun/0.7.0/asset.yaml"
+    },
+    {
+      "id": "lighting.bookshop-dusk-exterior",
+      "version": "0.1.0",
+      "type": "lighting",
+      "title": "Overcast dusk exterior lighting rig",
+      "status": "verified",
+      "tags": [
+        "lighting-rig",
+        "dusk",
+        "warm-practicals"
+      ],
+      "capabilities": [
+        "reusable-rig",
+        "coherent-exposure"
+      ],
+      "metadataPath": "lighting/bookshop-dusk-exterior/0.1.0/asset.yaml"
+    },
+    {
+      "id": "lighting.bookshop-warm-interior",
+      "version": "0.1.0",
+      "type": "lighting",
+      "title": "Warm bookshop interior lighting rig",
+      "status": "verified",
+      "tags": [
+        "lighting-rig",
+        "warm-interior",
+        "cool-fill"
+      ],
+      "capabilities": [
+        "reusable-rig",
+        "face-key",
+        "coherent-exposure"
+      ],
+      "metadataPath": "lighting/bookshop-warm-interior/0.1.0/asset.yaml"
+    },
+    {
+      "id": "lighting.firelit-interior",
+      "version": "0.1.0",
+      "type": "lighting",
+      "title": "Firelit interior lighting rig",
+      "status": "verified",
+      "tags": [
+        "lighting-rig",
+        "firelight",
+        "warm-interior",
+        "temporal-lighting",
+        "cinematic"
+      ],
+      "capabilities": [
+        "reusable-rig",
+        "coherent-exposure",
+        "correlated-seeded-fire-signal",
+        "visible-source-synchronization",
+        "warm-fire-cool-environment-separation",
+        "background-medium-shot-lighting",
+        "renderer-independent"
+      ],
+      "metadataPath": "lighting/firelit-interior/0.1.0/asset.yaml"
+    },
+    {
+      "id": "lighting.moonlit-exterior",
+      "version": "0.1.0",
+      "type": "lighting",
+      "title": "Moonlit exterior lighting rig",
+      "status": "verified",
+      "tags": [
+        "lighting-rig",
+        "moonlight",
+        "night-exterior",
+        "warm-practical",
+        "cinematic"
+      ],
+      "capabilities": [
+        "reusable-rig",
+        "coherent-exposure",
+        "directional-moon-key",
+        "night-sky-fill",
+        "warm-aperture-depth-cue",
+        "background-medium-shot-lighting",
+        "renderer-independent"
+      ],
+      "metadataPath": "lighting/moonlit-exterior/0.1.0/asset.yaml"
+    },
+    {
+      "id": "lighting.nocturne-gallery",
+      "version": "1.0.0",
+      "type": "lighting",
+      "title": "Nocturne sculptural gallery lighting",
+      "status": "verified",
+      "tags": [
+        "lighting-rig",
+        "gallery",
+        "exhibition",
+        "sculptural",
+        "coherent-exposure"
+      ],
+      "capabilities": [
+        "reusable-rig",
+        "coherent-exposure",
+        "key-fill-rim",
+        "sculptural-gallery-stage"
+      ],
+      "metadataPath": "lighting/nocturne-gallery/1.0.0/asset.yaml"
+    },
+    {
+      "id": "material.aged-limestone-trim",
+      "version": "0.2.0",
+      "type": "material",
+      "title": "Aged limestone trim",
+      "status": "verified",
+      "tags": [
+        "stone",
+        "limestone",
+        "trim",
+        "architectural"
+      ],
+      "capabilities": [
+        "procedural",
+        "albedo",
+        "normal",
+        "roughness",
+        "object-space-metre-scale",
+        "deterministic-seed",
+        "wet-coat",
+        "environmental-weathering",
+        "medium-background-quality-tier"
+      ],
+      "metadataPath": "materials/aged-limestone-trim/0.2.0/asset.yaml"
+    },
+    {
+      "id": "material.oiled-dark-bookshop-wood",
+      "version": "0.2.0",
+      "type": "material",
+      "title": "Oiled dark bookshop wood",
+      "status": "verified",
+      "tags": [
+        "wood",
+        "interior",
+        "shelving",
+        "bookshop"
+      ],
+      "capabilities": [
+        "procedural",
+        "albedo",
+        "normal",
+        "roughness",
+        "object-space-metre-scale",
+        "deterministic-seed",
+        "wet-coat",
+        "medium-background-quality-tier"
+      ],
+      "metadataPath": "materials/oiled-dark-bookshop-wood/0.2.0/asset.yaml"
+    },
+    {
+      "id": "material.old-city-dark-brick",
+      "version": "0.2.0",
+      "type": "material",
+      "title": "Rain-aged dark brick",
+      "status": "verified",
+      "tags": [
+        "brick",
+        "masonry",
+        "old-city",
+        "wet"
+      ],
+      "capabilities": [
+        "procedural",
+        "albedo",
+        "normal",
+        "roughness",
+        "object-space-metre-scale",
+        "deterministic-seed",
+        "wet-coat",
+        "environmental-weathering",
+        "medium-background-quality-tier"
+      ],
+      "metadataPath": "materials/old-city-dark-brick/0.2.0/asset.yaml"
+    },
+    {
+      "id": "material.old-city-window-glazing",
+      "version": "0.2.0",
+      "type": "material",
+      "title": "Old-city window glazing",
+      "status": "verified",
+      "tags": [
+        "glass",
+        "glazing",
+        "window",
+        "architectural"
+      ],
+      "capabilities": [
+        "procedural",
+        "albedo",
+        "normal",
+        "roughness",
+        "object-space-metre-scale",
+        "deterministic-seed",
+        "wet-coat",
+        "transmission",
+        "ior",
+        "physical-thickness",
+        "cycles-verified",
+        "medium-background-quality-tier"
+      ],
+      "metadataPath": "materials/old-city-window-glazing/0.2.0/asset.yaml"
+    },
+    {
+      "id": "material.rain-aged-mineral-plaster",
+      "version": "0.2.0",
+      "type": "material",
+      "title": "Rain-aged mineral plaster",
+      "status": "verified",
+      "tags": [
+        "plaster",
+        "facade",
+        "old-city",
+        "weathered"
+      ],
+      "capabilities": [
+        "procedural",
+        "albedo",
+        "normal",
+        "roughness",
+        "object-space-metre-scale",
+        "deterministic-seed",
+        "wet-coat",
+        "environmental-weathering",
+        "medium-background-quality-tier"
+      ],
+      "metadataPath": "materials/rain-aged-mineral-plaster/0.2.0/asset.yaml"
+    },
+    {
+      "id": "material.rainwalk-blue-cobble",
+      "version": "1.0.0",
+      "type": "material",
+      "title": "Rainwalk blue cobble surface",
+      "status": "verified",
+      "tags": [
+        "stone",
+        "cobble",
+        "wet",
+        "cold-blue"
+      ],
+      "capabilities": [
+        "procedural",
+        "albedo",
+        "normal",
+        "roughness",
+        "cold-blue-treatment"
+      ],
+      "metadataPath": "materials/rainwalk-blue-cobble/1.0.0/asset.yaml"
+    },
+    {
+      "id": "material.rise-of-demons-title-treatment",
+      "version": "0.1.0",
+      "type": "material",
+      "title": "Rise of Demons restrained editorial title treatment",
+      "status": "verified",
+      "tags": [
+        "typography",
+        "title",
+        "editorial"
+      ],
+      "capabilities": [
+        "vertical-safe-area",
+        "deterministic-render"
+      ],
+      "metadataPath": "materials/rise-of-demons-title-treatment/0.1.0/asset.yaml"
+    },
+    {
+      "id": "material.rise-of-demons-title-treatment",
+      "version": "0.1.1",
+      "type": "material",
+      "title": "Rise of Demons restrained editorial title treatment",
+      "status": "verified",
+      "tags": [
+        "typography",
+        "title",
+        "editorial"
+      ],
+      "capabilities": [
+        "vertical-safe-area",
+        "deterministic-render"
+      ],
+      "metadataPath": "materials/rise-of-demons-title-treatment/0.1.1/asset.yaml"
+    },
+    {
+      "id": "material.warm-lime-plaster-interior",
+      "version": "0.2.0",
+      "type": "material",
+      "title": "Warm lime-plaster interior",
+      "status": "verified",
+      "tags": [
+        "plaster",
+        "interior",
+        "warm",
+        "bookshop"
+      ],
+      "capabilities": [
+        "procedural",
+        "albedo",
+        "normal",
+        "roughness",
+        "object-space-metre-scale",
+        "deterministic-seed",
+        "medium-background-quality-tier"
+      ],
+      "metadataPath": "materials/warm-lime-plaster-interior/0.2.0/asset.yaml"
+    },
+    {
+      "id": "material.weathered-dark-exterior-wood",
+      "version": "0.2.0",
+      "type": "material",
+      "title": "Weathered dark exterior wood",
+      "status": "verified",
+      "tags": [
+        "wood",
+        "joinery",
+        "exterior",
+        "weathered"
+      ],
+      "capabilities": [
+        "procedural",
+        "albedo",
+        "normal",
+        "roughness",
+        "object-space-metre-scale",
+        "deterministic-seed",
+        "wet-coat",
+        "environmental-weathering",
+        "medium-background-quality-tier"
+      ],
+      "metadataPath": "materials/weathered-dark-exterior-wood/0.2.0/asset.yaml"
+    },
+    {
+      "id": "material.wet-old-city-cobble",
+      "version": "0.1.0",
+      "type": "material",
+      "title": "Procedural rain-darkened old-city cobble",
+      "status": "verified",
+      "tags": [
+        "stone",
+        "cobble",
+        "wet",
+        "old-city"
+      ],
+      "capabilities": [
+        "procedural",
+        "albedo",
+        "normal",
+        "roughness"
+      ],
+      "metadataPath": "materials/wet-old-city-cobble/0.1.0/asset.yaml"
+    },
+    {
+      "id": "motion.last-call-line",
+      "version": "1.0.0",
+      "type": "motion",
+      "title": "Last Call spoken facial performance",
+      "status": "verified",
+      "tags": [
+        "speech",
+        "dialogue",
+        "viseme",
+        "facial-animation",
+        "elara-vale"
+      ],
+      "capabilities": [
+        "canonical-humanoid",
+        "canonical-english-visemes",
+        "exact-frame-phoneme-timing",
+        "audiovisual-sync"
+      ],
+      "metadataPath": "motions/last-call-line/1.0.0/asset.yaml"
+    },
+    {
+      "id": "motion.open-bookshop-door",
+      "version": "0.1.0",
+      "type": "motion",
+      "title": "Phased bookshop door interaction",
+      "status": "verified",
+      "tags": [
+        "door",
+        "reach",
+        "interaction"
+      ],
+      "capabilities": [
+        "canonical-humanoid",
+        "hand-ik",
+        "target-resolution",
+        "phase-sequencing",
+        "root-motion"
+      ],
+      "metadataPath": "motions/open-bookshop-door/0.1.0/asset.yaml"
+    },
+    {
+      "id": "motion.open-bookshop-door",
+      "version": "0.2.0",
+      "type": "motion",
+      "title": "Phased bookshop door interaction",
+      "status": "verified",
+      "tags": [
+        "door",
+        "reach",
+        "interaction"
+      ],
+      "capabilities": [
+        "canonical-humanoid",
+        "hand-ik",
+        "target-resolution",
+        "phase-sequencing",
+        "root-motion"
+      ],
+      "metadataPath": "motions/open-bookshop-door/0.2.0/asset.yaml"
+    },
+    {
+      "id": "motion.quiet-resolve.walk-and-look",
+      "version": "1.0.0",
+      "type": "motion",
+      "title": "Elara quiet-resolve walk and look",
+      "status": "verified",
+      "tags": [
+        "humanoid",
+        "performance",
+        "walk",
+        "head-turn",
+        "elara-vale",
+        "layered"
+      ],
+      "capabilities": [
+        "canonical-humanoid",
+        "root-motion",
+        "foot-contact",
+        "elara-proportions",
+        "forward-cautious-travel",
+        "late-right-attention-shift",
+        "masked-head-performance"
+      ],
+      "metadataPath": "motions/quiet-resolve-walk-and-look/1.0.0/asset.yaml"
+    },
+    {
+      "id": "motion.quiet-resolve.walk-and-look",
+      "version": "1.1.0",
+      "type": "motion",
+      "title": "Elara quiet-resolve walk and look",
+      "status": "verified",
+      "tags": [
+        "humanoid",
+        "performance",
+        "walk",
+        "head-turn",
+        "elara-vale",
+        "layered"
+      ],
+      "capabilities": [
+        "canonical-humanoid",
+        "root-motion",
+        "foot-contact",
+        "elara-proportions",
+        "forward-cautious-travel",
+        "late-right-attention-shift",
+        "masked-head-performance"
+      ],
+      "metadataPath": "motions/quiet-resolve-walk-and-look/1.1.0/asset.yaml"
+    },
+    {
+      "id": "motion.read-significant-book",
+      "version": "0.1.0",
+      "type": "motion",
+      "title": "Two-handed book raise and read",
+      "status": "verified",
+      "tags": [
+        "book",
+        "hold",
+        "read"
+      ],
+      "capabilities": [
+        "canonical-humanoid",
+        "two-hand-ik",
+        "prop-attachment",
+        "gaze-target",
+        "additive-blend"
+      ],
+      "metadataPath": "motions/read-significant-book/0.1.0/asset.yaml"
+    },
+    {
+      "id": "motion.turn-orientation",
+      "version": "0.1.0",
+      "type": "motion",
+      "title": "Bidirectional head and body orientation turns",
+      "status": "verified",
+      "tags": [
+        "turn",
+        "gaze",
+        "head",
+        "body",
+        "orientation"
+      ],
+      "capabilities": [
+        "canonical-humanoid",
+        "additive-blend",
+        "gaze-target"
+      ],
+      "metadataPath": "motions/turn-orientation/0.1.0/asset.yaml"
+    },
+    {
+      "id": "motion.walk-casual",
+      "version": "0.1.0",
+      "type": "motion",
+      "title": "Canonical casual walk",
+      "status": "verified",
+      "tags": [
+        "humanoid",
+        "walk",
+        "locomotion",
+        "procedural",
+        "project-owned"
+      ],
+      "capabilities": [
+        "canonical-humanoid-motion",
+        "loopable-root-motion",
+        "planted-foot-contact",
+        "swing-foot-clearance",
+        "analytic-two-bone-ik"
+      ],
+      "metadataPath": "motions/walk-casual/0.1.0/asset.yaml"
+    },
+    {
+      "id": "motion.walk-natural-cautious-elara",
+      "version": "1.0.0",
+      "type": "motion",
+      "title": "Elara-proportioned cautious gait",
+      "status": "verified",
+      "tags": [
+        "humanoid",
+        "walk",
+        "cautious",
+        "naturalistic",
+        "elara-vale",
+        "retargeted"
+      ],
+      "capabilities": [
+        "canonical-humanoid",
+        "root-motion",
+        "foot-contact",
+        "planted-contact-constraints",
+        "elara-proportions",
+        "dialogue-grounded-pose"
+      ],
+      "metadataPath": "motions/walk-natural-cautious-elara/1.0.0/asset.yaml"
+    },
+    {
+      "id": "motion.walk-natural-cautious-elara",
+      "version": "1.1.0",
+      "type": "motion",
+      "title": "Elara-proportioned cautious gait",
+      "status": "verified",
+      "tags": [
+        "humanoid",
+        "walk",
+        "cautious",
+        "naturalistic",
+        "elara-vale",
+        "retargeted"
+      ],
+      "capabilities": [
+        "canonical-humanoid",
+        "root-motion",
+        "foot-contact",
+        "planted-contact-constraints",
+        "elara-proportions",
+        "dialogue-grounded-pose"
+      ],
+      "metadataPath": "motions/walk-natural-cautious-elara/1.1.0/asset.yaml"
+    },
+    {
+      "id": "motion.walk-natural-cautious",
+      "version": "1.0.0",
+      "type": "motion",
+      "title": "Natural cautious walk",
+      "status": "verified",
+      "tags": [
+        "humanoid",
+        "walk",
+        "locomotion",
+        "naturalistic",
+        "cautious",
+        "procedural",
+        "project-owned"
+      ],
+      "capabilities": [
+        "canonical-humanoid-motion",
+        "phase-based-locomotion",
+        "heel-toe-foot-mechanics",
+        "planted-contact-constraints",
+        "whole-body-counter-motion",
+        "proportion-aware-retargeting"
+      ],
+      "metadataPath": "motions/walk-natural-cautious/1.0.0/asset.yaml"
+    },
+    {
+      "id": "motion.walk-natural-cautious",
+      "version": "1.1.0",
+      "type": "motion",
+      "title": "Natural cautious walk",
+      "status": "verified",
+      "tags": [
+        "humanoid",
+        "walk",
+        "locomotion",
+        "naturalistic",
+        "cautious",
+        "procedural",
+        "project-owned"
+      ],
+      "capabilities": [
+        "canonical-humanoid-motion",
+        "phase-based-locomotion",
+        "heel-toe-foot-mechanics",
+        "planted-contact-constraints",
+        "whole-body-counter-motion",
+        "proportion-aware-retargeting"
+      ],
+      "metadataPath": "motions/walk-natural-cautious/1.1.0/asset.yaml"
+    },
+    {
+      "id": "motion.walk-natural-cautious",
+      "version": "1.1.1",
+      "type": "motion",
+      "title": "Natural cautious walk",
+      "status": "verified",
+      "tags": [
+        "humanoid",
+        "walk",
+        "locomotion",
+        "naturalistic",
+        "cautious",
+        "procedural",
+        "project-owned"
+      ],
+      "capabilities": [
+        "canonical-humanoid",
+        "root-motion",
+        "foot-contact",
+        "canonical-humanoid-motion",
+        "phase-based-locomotion",
+        "heel-toe-foot-mechanics",
+        "planted-contact-constraints",
+        "whole-body-counter-motion",
+        "proportion-aware-retargeting"
+      ],
+      "metadataPath": "motions/walk-natural-cautious/1.1.1/asset.yaml"
+    },
+    {
+      "id": "motion.walk-natural-confident",
+      "version": "1.0.0",
+      "type": "motion",
+      "title": "Natural confident walk",
+      "status": "verified",
+      "tags": [
+        "humanoid",
+        "walk",
+        "locomotion",
+        "naturalistic",
+        "confident",
+        "procedural",
+        "project-owned"
+      ],
+      "capabilities": [
+        "canonical-humanoid-motion",
+        "phase-based-locomotion",
+        "heel-toe-foot-mechanics",
+        "planted-contact-constraints",
+        "whole-body-counter-motion",
+        "proportion-aware-retargeting"
+      ],
+      "metadataPath": "motions/walk-natural-confident/1.0.0/asset.yaml"
+    },
+    {
+      "id": "motion.walk-natural-confident",
+      "version": "1.1.0",
+      "type": "motion",
+      "title": "Natural confident walk",
+      "status": "verified",
+      "tags": [
+        "humanoid",
+        "walk",
+        "locomotion",
+        "naturalistic",
+        "confident",
+        "procedural",
+        "project-owned"
+      ],
+      "capabilities": [
+        "canonical-humanoid-motion",
+        "phase-based-locomotion",
+        "heel-toe-foot-mechanics",
+        "planted-contact-constraints",
+        "whole-body-counter-motion",
+        "proportion-aware-retargeting"
+      ],
+      "metadataPath": "motions/walk-natural-confident/1.1.0/asset.yaml"
+    },
+    {
+      "id": "motion.walk-natural-confident",
+      "version": "1.1.1",
+      "type": "motion",
+      "title": "Natural confident walk",
+      "status": "verified",
+      "tags": [
+        "humanoid",
+        "walk",
+        "locomotion",
+        "naturalistic",
+        "confident",
+        "procedural",
+        "project-owned"
+      ],
+      "capabilities": [
+        "canonical-humanoid",
+        "root-motion",
+        "foot-contact",
+        "canonical-humanoid-motion",
+        "phase-based-locomotion",
+        "heel-toe-foot-mechanics",
+        "planted-contact-constraints",
+        "whole-body-counter-motion",
+        "proportion-aware-retargeting"
+      ],
+      "metadataPath": "motions/walk-natural-confident/1.1.1/asset.yaml"
+    },
+    {
+      "id": "motion.walk-natural-neutral",
+      "version": "1.0.0",
+      "type": "motion",
+      "title": "Natural neutral walk",
+      "status": "verified",
+      "tags": [
+        "humanoid",
+        "walk",
+        "locomotion",
+        "naturalistic",
+        "neutral",
+        "procedural",
+        "project-owned"
+      ],
+      "capabilities": [
+        "canonical-humanoid-motion",
+        "phase-based-locomotion",
+        "heel-toe-foot-mechanics",
+        "planted-contact-constraints",
+        "whole-body-counter-motion",
+        "proportion-aware-retargeting"
+      ],
+      "metadataPath": "motions/walk-natural-neutral/1.0.0/asset.yaml"
+    },
+    {
+      "id": "motion.walk-natural-neutral",
+      "version": "1.1.0",
+      "type": "motion",
+      "title": "Natural neutral walk",
+      "status": "verified",
+      "tags": [
+        "humanoid",
+        "walk",
+        "locomotion",
+        "naturalistic",
+        "neutral",
+        "procedural",
+        "project-owned"
+      ],
+      "capabilities": [
+        "canonical-humanoid-motion",
+        "phase-based-locomotion",
+        "heel-toe-foot-mechanics",
+        "planted-contact-constraints",
+        "whole-body-counter-motion",
+        "proportion-aware-retargeting"
+      ],
+      "metadataPath": "motions/walk-natural-neutral/1.1.0/asset.yaml"
+    },
+    {
+      "id": "motion.walk-natural-neutral",
+      "version": "1.1.1",
+      "type": "motion",
+      "title": "Natural neutral walk",
+      "status": "verified",
+      "tags": [
+        "humanoid",
+        "walk",
+        "locomotion",
+        "naturalistic",
+        "neutral",
+        "procedural",
+        "project-owned"
+      ],
+      "capabilities": [
+        "canonical-humanoid",
+        "root-motion",
+        "foot-contact",
+        "canonical-humanoid-motion",
+        "phase-based-locomotion",
+        "heel-toe-foot-mechanics",
+        "planted-contact-constraints",
+        "whole-body-counter-motion",
+        "proportion-aware-retargeting"
+      ],
+      "metadataPath": "motions/walk-natural-neutral/1.1.1/asset.yaml"
+    },
+    {
+      "id": "prop.architectural-rainwater-system",
+      "version": "0.1.0",
+      "type": "prop",
+      "title": "Architectural half-round rainwater system",
+      "status": "verified",
+      "tags": [
+        "architecture",
+        "gutter",
+        "downpipe",
+        "rainwater",
+        "facade",
+        "portable-set-dressing"
+      ],
+      "capabilities": [
+        "portable-geometry",
+        "physically-open-gutter-trough",
+        "configurable-left-right-outlet",
+        "facade-eave-host-contract",
+        "visible-eave-and-wall-mounts",
+        "named-water-discharge-attachment",
+        "metre-scaled-patinated-metal",
+        "cross-environment-transfer",
+        "medium-background-quality-tier"
+      ],
+      "metadataPath": "props/architectural-rainwater-system/0.1.0/asset.yaml"
+    },
+    {
+      "id": "prop.bookshop-door",
+      "version": "0.1.0",
+      "type": "prop",
+      "title": "Articulated glazed bookshop door",
+      "status": "verified",
+      "tags": [
+        "wooden",
+        "glazed",
+        "bookshop",
+        "door"
+      ],
+      "capabilities": [
+        "hinge",
+        "handle-interaction-point",
+        "collision-volume",
+        "named-interaction-points"
+      ],
+      "metadataPath": "props/bookshop-door/0.1.0/asset.yaml"
+    },
+    {
+      "id": "prop.decorative-vessel-set",
+      "version": "0.1.0",
+      "type": "prop",
+      "title": "Decorative vessel and tray set",
+      "status": "verified",
+      "tags": [
+        "vessels",
+        "ceramic",
+        "tabletop",
+        "interior-furnishing",
+        "portable",
+        "inhabited-environment"
+      ],
+      "capabilities": [
+        "tabletop-inventory",
+        "physical-vessels",
+        "tabletop-support-anchor"
+      ],
+      "metadataPath": "props/decorative-vessel-set/0.1.0/asset.yaml"
+    },
+    {
+      "id": "prop.freestanding-tool-board",
+      "version": "0.1.0",
+      "type": "prop",
+      "title": "Freestanding populated tool board",
+      "status": "verified",
+      "tags": [
+        "tool-board",
+        "tools",
+        "storage",
+        "workshop",
+        "portable",
+        "inhabited-environment"
+      ],
+      "capabilities": [
+        "portable-geometry",
+        "ground-placement",
+        "named-workstation-attachments",
+        "medium-background-quality-tier"
+      ],
+      "metadataPath": "props/freestanding-tool-board/0.1.0/asset.yaml"
+    },
+    {
+      "id": "prop.inset-architectural-window",
+      "version": "0.1.0",
+      "type": "prop",
+      "title": "Inset architectural cross window",
+      "status": "verified",
+      "tags": [
+        "window",
+        "architecture",
+        "wall-opening",
+        "glazing",
+        "portable-set-dressing"
+      ],
+      "capabilities": [
+        "portable-geometry",
+        "rectangular-host-cutout-contract",
+        "physical-eight-millimetre-glazing",
+        "deep-wall-reveal",
+        "named-wall-mount-and-focus-points",
+        "cross-environment-transfer",
+        "medium-background-quality-tier"
+      ],
+      "metadataPath": "props/inset-architectural-window/0.1.0/asset.yaml"
+    },
+    {
+      "id": "prop.joiners-workbench",
+      "version": "0.1.0",
+      "type": "prop",
+      "title": "Joiner's workbench with physical vise",
+      "status": "verified",
+      "tags": [
+        "workbench",
+        "vise",
+        "craft",
+        "workshop",
+        "portable",
+        "inhabited-environment"
+      ],
+      "capabilities": [
+        "portable-geometry",
+        "ground-placement",
+        "named-workstation-attachments",
+        "medium-background-quality-tier"
+      ],
+      "metadataPath": "props/joiners-workbench/0.1.0/asset.yaml"
+    },
+    {
+      "id": "prop.modular-market-stall",
+      "version": "0.1.0",
+      "type": "prop",
+      "title": "Modular striped-canopy market stall",
+      "status": "verified",
+      "tags": [
+        "stall",
+        "structure",
+        "canopy",
+        "market",
+        "portable",
+        "inhabited-environment"
+      ],
+      "capabilities": [
+        "portable-geometry",
+        "ground-placement",
+        "named-merchandising-attachments",
+        "medium-background-quality-tier"
+      ],
+      "metadataPath": "props/modular-market-stall/0.1.0/asset.yaml"
+    },
+    {
+      "id": "prop.old-city-wall-lantern",
+      "version": "0.4.0",
+      "type": "prop",
+      "title": "Portable old-city wall lantern practical",
+      "status": "deprecated",
+      "tags": [
+        "lantern",
+        "wall-light",
+        "practical",
+        "old-city",
+        "portable-set-dressing"
+      ],
+      "capabilities": [
+        "portable-geometry",
+        "named-wall-mount",
+        "physical-glazing",
+        "local-practical-emitter",
+        "inverse-square-falloff",
+        "cross-environment-transfer",
+        "medium-background-quality-tier"
+      ],
+      "metadataPath": "props/old-city-wall-lantern/0.4.0/asset.yaml"
+    },
+    {
+      "id": "prop.old-city-wall-lantern",
+      "version": "0.5.0",
+      "type": "prop",
+      "title": "Portable old-city wall lantern practical",
+      "status": "verified",
+      "tags": [
+        "lantern",
+        "wall-light",
+        "practical",
+        "old-city",
+        "portable-set-dressing"
+      ],
+      "capabilities": [
+        "portable-geometry",
+        "named-wall-mount",
+        "physical-glazing",
+        "local-practical-emitter",
+        "inverse-square-falloff",
+        "cross-environment-transfer",
+        "seeded-temporal-flicker",
+        "visible-source-emission-binding",
+        "medium-background-quality-tier"
+      ],
+      "metadataPath": "props/old-city-wall-lantern/0.5.0/asset.yaml"
+    },
+    {
+      "id": "prop.pedestal-side-table",
+      "version": "0.1.0",
+      "type": "prop",
+      "title": "Pedestal side table",
+      "status": "verified",
+      "tags": [
+        "table",
+        "pedestal",
+        "interaction-surface",
+        "interior-furnishing",
+        "portable",
+        "inhabited-environment"
+      ],
+      "capabilities": [
+        "physical-tabletop",
+        "tabletop-anchors",
+        "cross-era-furnishing"
+      ],
+      "metadataPath": "props/pedestal-side-table/0.1.0/asset.yaml"
+    },
+    {
+      "id": "prop.potted-fern",
+      "version": "0.1.0",
+      "type": "prop",
+      "title": "Weathered terracotta potted fern",
+      "status": "verified",
+      "tags": [
+        "vegetation",
+        "planter",
+        "set-dressing",
+        "portable",
+        "inhabited-environment"
+      ],
+      "capabilities": [
+        "portable-geometry",
+        "ground-placement",
+        "surface-normal-alignment",
+        "named-foliage-anchor",
+        "medium-background-quality-tier"
+      ],
+      "metadataPath": "props/potted-fern/0.1.0/asset.yaml"
+    },
+    {
+      "id": "prop.potted-shrub",
+      "version": "0.1.0",
+      "type": "prop",
+      "title": "Galvanized potted branching shrub",
+      "status": "verified",
+      "tags": [
+        "vegetation",
+        "planter",
+        "set-dressing",
+        "portable",
+        "inhabited-environment"
+      ],
+      "capabilities": [
+        "portable-geometry",
+        "ground-placement",
+        "surface-normal-alignment",
+        "named-foliage-anchor",
+        "medium-background-quality-tier"
+      ],
+      "metadataPath": "props/potted-shrub/0.1.0/asset.yaml"
+    },
+    {
+      "id": "prop.produce-basket",
+      "version": "0.1.0",
+      "type": "prop",
+      "title": "Handled produce display basket",
+      "status": "verified",
+      "tags": [
+        "basket",
+        "produce",
+        "merchandise",
+        "market",
+        "portable",
+        "inhabited-environment"
+      ],
+      "capabilities": [
+        "portable-geometry",
+        "ground-placement",
+        "named-merchandising-attachments",
+        "medium-background-quality-tier"
+      ],
+      "metadataPath": "props/produce-basket/0.1.0/asset.yaml"
+    },
+    {
+      "id": "prop.projecting-hanging-sign",
+      "version": "0.1.0",
+      "type": "prop",
+      "title": "Projecting two-sided hanging sign",
+      "status": "verified",
+      "tags": [
+        "signage",
+        "shop-sign",
+        "facade",
+        "wayfinding",
+        "portable-set-dressing"
+      ],
+      "capabilities": [
+        "portable-geometry",
+        "vertical-facade-host-contract",
+        "two-sided-sign-face",
+        "replaceable-campaign-content-slot",
+        "smooth-swept-bracket-hardware",
+        "explicit-chain-link-geometry",
+        "named-mount-pivot-and-face-attachments",
+        "cross-environment-transfer",
+        "medium-background-quality-tier"
+      ],
+      "metadataPath": "props/projecting-hanging-sign/0.1.0/asset.yaml"
+    },
+    {
+      "id": "prop.projecting-neon-blade-sign",
+      "version": "0.1.0",
+      "type": "prop",
+      "title": "Portable projecting neon blade sign practical",
+      "status": "verified",
+      "tags": [
+        "neon",
+        "blade-sign",
+        "practical",
+        "wayfinding",
+        "portable-set-dressing"
+      ],
+      "capabilities": [
+        "portable-geometry",
+        "named-wall-mount",
+        "replaceable-two-sided-face-treatment",
+        "declared-wall-clearance-contract",
+        "local-practical-emitter",
+        "inverse-square-falloff",
+        "cross-environment-transfer",
+        "seeded-electrical-instability",
+        "authored-colour-preservation",
+        "visible-source-emission-binding",
+        "medium-background-quality-tier"
+      ],
+      "metadataPath": "props/projecting-neon-blade-sign/0.1.0/asset.yaml"
+    },
+    {
+      "id": "prop.projecting-supported-canopy",
+      "version": "0.1.0",
+      "type": "prop",
+      "title": "Layered projecting supported canopy",
+      "status": "verified",
+      "tags": [
+        "architecture",
+        "canopy",
+        "eave",
+        "shopfront",
+        "facade",
+        "portable-set-dressing"
+      ],
+      "capabilities": [
+        "portable-geometry",
+        "vertical-facade-canopy-host-contract",
+        "physical-single-fall-roof",
+        "layered-slate-timber-flashing-construction",
+        "visible-three-bracket-load-path",
+        "named-rainwater-mounts",
+        "named-underside-practical-anchors",
+        "cross-environment-transfer",
+        "medium-background-quality-tier"
+      ],
+      "metadataPath": "props/projecting-supported-canopy/0.1.0/asset.yaml"
+    },
+    {
+      "id": "prop.rise-of-demons-cover",
+      "version": "0.1.0",
+      "type": "prop",
+      "title": "The Rise of Demons campaign cover",
+      "status": "verified",
+      "tags": [
+        "cover",
+        "campaign-supplied"
+      ],
+      "capabilities": [
+        "front-texture",
+        "dimensional-reveal"
+      ],
+      "metadataPath": "props/rise-of-demons-cover/0.1.0/asset.yaml"
+    },
+    {
+      "id": "prop.rolling-parts-cabinet",
+      "version": "0.1.0",
+      "type": "prop",
+      "title": "Rolling workshop parts cabinet",
+      "status": "verified",
+      "tags": [
+        "cabinet",
+        "drawers",
+        "rolling-storage",
+        "workshop",
+        "portable",
+        "inhabited-environment"
+      ],
+      "capabilities": [
+        "portable-geometry",
+        "ground-placement",
+        "named-workstation-attachments",
+        "medium-background-quality-tier"
+      ],
+      "metadataPath": "props/rolling-parts-cabinet/0.1.0/asset.yaml"
+    },
+    {
+      "id": "prop.significant-book",
+      "version": "0.1.0",
+      "type": "prop",
+      "title": "Significant hardback book",
+      "status": "verified",
+      "tags": [
+        "book",
+        "hardback",
+        "significant"
+      ],
+      "capabilities": [
+        "openable-cover",
+        "left-hand-grip",
+        "right-hand-grip",
+        "gaze-target",
+        "named-interaction-points"
+      ],
+      "metadataPath": "props/significant-book/0.1.0/asset.yaml"
+    },
+    {
+      "id": "prop.slatted-storage-crate",
+      "version": "0.1.0",
+      "type": "prop",
+      "title": "Slatted storage crate",
+      "status": "verified",
+      "tags": [
+        "set-dressing",
+        "storage",
+        "portable",
+        "inhabited-environment"
+      ],
+      "capabilities": [
+        "portable-geometry",
+        "ground-placement",
+        "named-stack-attachment",
+        "medium-background-quality-tier"
+      ],
+      "metadataPath": "props/slatted-storage-crate/0.1.0/asset.yaml"
+    },
+    {
+      "id": "prop.storage-barrel",
+      "version": "0.1.0",
+      "type": "prop",
+      "title": "Weathered storage barrel",
+      "status": "verified",
+      "tags": [
+        "set-dressing",
+        "storage",
+        "portable",
+        "inhabited-environment"
+      ],
+      "capabilities": [
+        "portable-geometry",
+        "ground-placement",
+        "named-stack-attachment",
+        "medium-background-quality-tier"
+      ],
+      "metadataPath": "props/storage-barrel/0.1.0/asset.yaml"
+    },
+    {
+      "id": "prop.tied-provision-sack",
+      "version": "0.1.0",
+      "type": "prop",
+      "title": "Tied provision sack",
+      "status": "verified",
+      "tags": [
+        "sack",
+        "provisions",
+        "merchandise",
+        "market",
+        "portable",
+        "inhabited-environment"
+      ],
+      "capabilities": [
+        "portable-geometry",
+        "ground-placement",
+        "named-merchandising-attachments",
+        "medium-background-quality-tier"
+      ],
+      "metadataPath": "props/tied-provision-sack/0.1.0/asset.yaml"
+    },
+    {
+      "id": "prop.upholstered-reading-chair",
+      "version": "0.1.0",
+      "type": "prop",
+      "title": "Upholstered reading chair",
+      "status": "verified",
+      "tags": [
+        "chair",
+        "seating",
+        "upholstery",
+        "interior-furnishing",
+        "portable",
+        "inhabited-environment"
+      ],
+      "capabilities": [
+        "physical-seating-silhouette",
+        "occupant-anchor",
+        "side-table-anchors"
+      ],
+      "metadataPath": "props/upholstered-reading-chair/0.1.0/asset.yaml"
+    },
+    {
+      "id": "vfx.rainwalk-restrained-blue-rain",
+      "version": "1.0.0",
+      "type": "vfx",
+      "title": "Rainwalk restrained blue rain",
+      "status": "verified",
+      "tags": [
+        "rain",
+        "fog",
+        "restrained",
+        "cold-blue"
+      ],
+      "capabilities": [
+        "camera-depth",
+        "deterministic-seed",
+        "foreground-background",
+        "restrained-rain"
+      ],
+      "metadataPath": "vfx/rainwalk-restrained-blue-rain/1.0.0/asset.yaml"
+    },
+    {
+      "id": "vfx.rainy-dusk-depth",
+      "version": "0.1.0",
+      "type": "vfx",
+      "title": "Camera-depth rainy dusk atmosphere",
+      "status": "verified",
+      "tags": [
+        "rain",
+        "fog",
+        "dusk"
+      ],
+      "capabilities": [
+        "camera-depth",
+        "deterministic-seed",
+        "foreground-background"
+      ],
+      "metadataPath": "vfx/rainy-dusk-depth/0.1.0/asset.yaml"
+    },
+    {
+      "id": "vfx.rainy-dusk-depth",
+      "version": "0.2.0",
+      "type": "vfx",
+      "title": "Camera-depth rainy dusk atmosphere",
+      "status": "verified",
+      "tags": [
+        "rain",
+        "fog",
+        "dusk",
+        "wind",
+        "ground-splashes"
+      ],
+      "capabilities": [
+        "camera-depth",
+        "deterministic-seed",
+        "foreground-background",
+        "wind-driven-streaks",
+        "world-space-surface-response"
+      ],
+      "metadataPath": "vfx/rainy-dusk-depth/0.2.0/asset.yaml"
+    },
+    {
+      "id": "vfx.soft-atmospheric-finish",
+      "version": "0.1.0",
+      "type": "vfx",
+      "title": "Restrained soft-atmospheric cinematic finish",
+      "status": "verified",
+      "tags": [
+        "cinematic-finish",
+        "grading",
+        "bloom",
+        "vignette",
+        "grain"
+      ],
+      "capabilities": [
+        "renderer-independent-finish-profile",
+        "deterministic-ffmpeg-reconstruction",
+        "post-editorial-compositing",
+        "warm-cool-source-transfer"
+      ],
+      "metadataPath": "vfx/soft-atmospheric-finish/0.1.0/asset.yaml"
+    },
+    {
+      "id": "vfx.source-bound-smoke-embers",
+      "version": "0.1.0",
+      "type": "vfx",
+      "title": "Source-bound volumetric smoke and rising embers",
+      "status": "verified",
+      "tags": [
+        "smoke",
+        "embers",
+        "aerosol",
+        "volumetric",
+        "source-bound",
+        "world-space"
+      ],
+      "capabilities": [
+        "source-relative-placement",
+        "true-world-space-volume",
+        "geometry-depth-occlusion",
+        "deterministic-particles",
+        "temporal-rise-and-turbulence",
+        "cross-environment-transfer"
+      ],
+      "metadataPath": "vfx/source-bound-smoke-embers/0.1.0/asset.yaml"
+    }
+  ]
+}

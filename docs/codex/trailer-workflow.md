@@ -23,3 +23,14 @@ npm run video -- render campaigns/my-trailer/campaign.yaml --final --change acce
 ```
 
 Rerendering is deterministic and never generates assets. Provider actions are explicit, persisted, revisioned, and separately reproducible.
+
+For declarative 3D campaigns, prefer the complete resumable loop:
+
+```bash
+npm run video -- cinematic-campaign produce campaigns/my-trailer/cinematic-campaign.yaml
+npm run video -- cinematic-campaign production-status campaigns/my-trailer/cinematic-campaign.yaml
+npm run video -- cinematic-campaign produce campaigns/my-trailer/cinematic-campaign.yaml --repair-shots weak-shot
+npm run video -- cinematic-campaign review campaigns/my-trailer/cinematic-campaign.yaml campaigns/my-trailer/work/production/review.yaml
+```
+
+Do not mark objective success as creative acceptance. Inspect every shot contact sheet and the complete delivery, record all review dimensions, and bind the review to the current hashes. Authoritative evidence uses the default fixed-seed Cycles CPU profile; use Eevee Next only for an explicitly declared preview.

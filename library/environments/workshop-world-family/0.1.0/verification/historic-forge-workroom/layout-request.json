@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "id": "layout.historic-forge-workroom-workshop-world",
+  "familyId": "environment.workshop-world-family",
+  "seed": 8819,
+  "clusterCount": 1,
+  "requiredVariantIds": [
+    "joiners-workbench",
+    "freestanding-tool-board",
+    "rolling-parts-cabinet"
+  ],
+  "requiredRecipeIds": [
+    "complete-craft-workstation"
+  ],
+  "zone": {
+    "minimum": [
+      -5.75,
+      -3.6
+    ],
+    "maximum": [
+      5.75,
+      3.6
+    ],
+    "groundY": 0
+  },
+  "exclusions": [
+    {
+      "id": "operator-and-camera-circulation",
+      "kind": "corridor",
+      "start": [
+        -5.5,
+        -2.2
+      ],
+      "end": [
+        5.5,
+        -2.2
+      ],
+      "halfWidthMeters": 0.55,
+      "clearanceMeters": 0.14
+    }
+  ],
+  "maximumAttemptsPerInstance": 1400
+}

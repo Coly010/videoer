@@ -1,0 +1,248 @@
+schemaVersion: 1
+id: campaign.after-hours-character
+fps: 24
+resolution: {width: 640, height: 360, percentage: 100}
+assetLibrary: ../../library
+
+geometry:
+  - id: platform
+    path: work/environment/night-platform.json
+    recipe:
+      assetId: environment.night-transit-platform
+      metadata:
+        generator: videoer.declarative-geometry.v1
+        environmentClass: abstract-night-transit-platform
+        projectOwned: true
+      publication:
+        assetId: environment.night-transit-platform
+        version: 1.0.1
+        type: environment
+        title: Abstract night transit platform
+        description: Project-owned procedural enclosed platform with cyan and amber light rhythm, semantic camera anchors, runway focus points, and a signal-attention target.
+        tags: [transit, platform, night, abstract, fashion, cyan-amber]
+        capabilities: [deterministic-geometry, enclosed-platform, semantic-camera-anchors, runway-blocking, signal-attention-target, cinematic-light-rhythm]
+        generator: videoer.declarative-geometry.v1
+        renderers: [three-3d, blender-headless]
+        verification:
+          checks: [geometry.schema, attachments.semantic-camera-anchors, environment.camera-interior-clearance, visual.multi-shot-continuity, visual.highlight-detail, visual.subject-framing]
+          shots: [platform-establish, intentional-walk, signal-attention, after-hours-resolve]
+      primitives:
+        - {kind: box, minimum: [-4, -0.18, -9], maximum: [4, 0, 9], materialId: platform-floor}
+        - {kind: box, minimum: [-4.2, 0, -9], maximum: [-3.85, 4.2, 9], materialId: tunnel-wall}
+        - {kind: box, minimum: [3.85, 0, -9], maximum: [4.2, 4.2, 9], materialId: tunnel-wall}
+        - {kind: box, minimum: [-4, 3.9, -9], maximum: [4, 4.2, 9], materialId: tunnel-ceiling}
+        - {kind: box, minimum: [-3.82, 0.05, -8.7], maximum: [-3.7, 0.12, 8.7], materialId: amber-strip}
+        - {kind: box, minimum: [3.7, 0.05, -8.7], maximum: [3.82, 0.12, 8.7], materialId: cyan-strip}
+        - {kind: box, minimum: [-3.6, 3.68, -8.5], maximum: [3.6, 3.8, -8.25], materialId: ceiling-light}
+        - {kind: box, minimum: [-3.6, 3.68, -5.6], maximum: [3.6, 3.8, -5.35], materialId: ceiling-light}
+        - {kind: box, minimum: [-3.6, 3.68, -2.7], maximum: [3.6, 3.8, -2.45], materialId: ceiling-light}
+        - {kind: box, minimum: [-3.6, 3.68, 0.2], maximum: [3.6, 3.8, 0.45], materialId: ceiling-light}
+        - {kind: box, minimum: [-3.6, 3.68, 3.1], maximum: [3.6, 3.8, 3.35], materialId: ceiling-light}
+        - {kind: box, minimum: [-3.6, 3.68, 6.0], maximum: [3.6, 3.8, 6.25], materialId: ceiling-light}
+        - {kind: box, minimum: [2.75, 0.35, -1.8], maximum: [3.68, 2.75, -1.55], materialId: signal-frame}
+        - {kind: box, minimum: [2.86, 0.48, -1.56], maximum: [3.57, 2.62, -1.5], materialId: signal-panel}
+        - {kind: box, minimum: [-3.65, 0.15, 7.4], maximum: [3.65, 3.6, 7.75], materialId: tunnel-end}
+      materials:
+        - {id: platform-floor, baseColor: [0.055, 0.06, 0.075, 1], roughness: 0.32, metallic: 0.2, emission: [0, 0, 0], emissionStrength: 0}
+        - {id: tunnel-wall, baseColor: [0.025, 0.032, 0.045, 1], roughness: 0.68, metallic: 0.12, emission: [0, 0, 0], emissionStrength: 0}
+        - {id: tunnel-ceiling, baseColor: [0.018, 0.022, 0.03, 1], roughness: 0.78, metallic: 0.08, emission: [0, 0, 0], emissionStrength: 0}
+        - {id: amber-strip, baseColor: [0.72, 0.18, 0.025, 1], roughness: 0.2, metallic: 0, emission: [1, 0.12, 0.015], emissionStrength: 4}
+        - {id: cyan-strip, baseColor: [0.02, 0.45, 0.62, 1], roughness: 0.2, metallic: 0, emission: [0.02, 0.65, 1], emissionStrength: 3.5}
+        - {id: ceiling-light, baseColor: [0.62, 0.72, 0.78, 1], roughness: 0.18, metallic: 0, emission: [0.5, 0.7, 0.9], emissionStrength: 2.2}
+        - {id: signal-frame, baseColor: [0.05, 0.055, 0.065, 1], roughness: 0.4, metallic: 0.35, emission: [0, 0, 0], emissionStrength: 0}
+        - {id: signal-panel, baseColor: [0.3, 0.045, 0.02, 1], roughness: 0.18, metallic: 0, emission: [1, 0.04, 0.01], emissionStrength: 2.8}
+        - {id: tunnel-end, baseColor: [0.035, 0.042, 0.055, 1], roughness: 0.72, metallic: 0.08, emission: [0, 0, 0], emissionStrength: 0}
+      attachments:
+        establish-camera: {position: [3.25, 2.7, -7.4]}
+        establish-focus: {position: [0, 1.4, 0.8]}
+        runway-camera: {position: [3.3, 1.45, 1.9]}
+        runway-focus: {position: [0, 1.0, 0.6]}
+        portrait-camera: {position: [-2.8, 1.55, -3.6]}
+        portrait-focus: {position: [0, 1.25, -0.9]}
+        signal-target: {position: [3.15, 1.7, -1.48]}
+        resolve-camera: {position: [3.3, 1.75, -4.8]}
+        resolve-focus: {position: [0, 1.15, -1.0]}
+
+  - id: courier
+    library:
+      type: character
+      query: Elara Vale recurring heroine
+      tags: [humanoid, woman, recurring]
+      capabilities: [canonical-humanoid-rig, motion-retargeting, walk-deformation, gaze-target]
+      preferredAsset: {id: character.elara-vale, version: 0.1.2}
+      artifactRole: geometry
+
+motions:
+  - id: cautious-walk
+    library:
+      type: motion
+      query: natural cautious walk
+      tags: [humanoid, walk, cautious, naturalistic]
+      capabilities: [canonical-humanoid, root-motion, foot-contact, planted-contact-constraints]
+      preferredAsset: {id: motion.walk-natural-cautious, version: 1.1.1}
+      artifactRole: motion
+  - id: signal-turn
+    path: work/motions/signal-turn.json
+    recipe:
+      kind: targeted-turn
+      actorTransform: {position: [0, 0, -0.9], rotation: [0, 0, 0], scale: [1, 1, 1]}
+      target:
+        geometry: platform
+        attachmentId: signal-target
+      scope: head-and-body
+      durationSeconds: 2
+      maximumYawRadians: 1.3
+
+motionTimelines:
+  - id: platform-walk
+    clipId: motion.after-hours.platform-walk
+    path: work/motions/platform-walk.json
+    frames: 72
+    layers:
+      - {id: cautious-base, motion: cautious-walk, mode: base, startFrame: 0, endFrame: 72, playback: loop}
+    metadata: {purpose: verified forward platform travel}
+  - id: attention-pause
+    clipId: motion.after-hours.attention-pause
+    path: work/motions/attention-pause.json
+    frames: 48
+    layers:
+      - {id: grounded-hold, motion: cautious-walk, mode: base, startFrame: 0, endFrame: 48, playback: hold, sourceStartSeconds: 0}
+      - {id: target-turn, motion: signal-turn, mode: additive, startFrame: 0, endFrame: 48, playback: once, fadeInFrames: 6}
+    metadata: {purpose: target-derived signal attention while grounded}
+
+overlays:
+  - id: after-hours-copy
+    path: work/editorial/after-hours-copy.png
+    width: 640
+    height: 360
+    font: {family: Cormorant Garamond, licence: OFL-1.1}
+    lines:
+      - {text: AFTER HOURS, y: 44, fontSize: 50, color: '0xf0eee6', borderWidth: 2, borderColor: '0x02050a@0.95'}
+      - {text: MOVE WITH INTENT, y: 296, fontSize: 24, color: '0x67ddf2', borderWidth: 2, borderColor: '0x02050a@0.95'}
+
+soundtrackPath: work/audio/soundtrack.wav
+soundtrack:
+  schemaVersion: 1
+  id: audio.after-hours-character
+  durationSeconds: 10
+  sampleRate: 48000
+  channels: 2
+  cues:
+    - {id: tunnel-air, kind: noise-bed, startSeconds: 0, endSeconds: 10, gain: 0.04, seed: 4404, purpose: Continuous transit atmosphere}
+    - {id: low-pulse, kind: tone-bed, startSeconds: 0, endSeconds: 10, gain: 0.04, frequencyHz: 55, purpose: Controlled fashion pulse}
+    - {id: foot-rhythm, kind: tonal-accent, startSeconds: 2, endSeconds: 5, gain: 0.055, frequencyHz: 110, purpose: Walking beat support}
+    - {id: signal-cue, kind: tonal-accent, startSeconds: 5, endSeconds: 7, gain: 0.065, frequencyHz: 329.63, purpose: Attention-turn cue}
+    - {id: resolve, kind: tonal-accent, startSeconds: 7, endSeconds: 10, gain: 0.06, frequencyHz: 164.81, purpose: Campaign end-frame resolution}
+  metadata: {providerFree: true, campaignClass: character-fashion}
+
+shots:
+  - id: platform-establish
+    frames: 48
+    entities:
+      - {id: platform, geometry: platform, role: environment}
+    camera:
+      keyframes:
+        - {time: 0, position: {entityId: platform, attachmentId: establish-camera}, target: {entityId: platform, attachmentId: establish-focus}, lensMillimeters: 48}
+        - {time: 2, position: {entityId: platform, attachmentId: establish-camera, offset: [-0.7, -0.15, 0.8]}, target: {entityId: platform, attachmentId: establish-focus}, lensMillimeters: 54}
+    lights: &platform-lights
+      - {id: cyan-key, type: area, position: [2.8, 3.2, -2], target: [0, 1, 0], color: [0.16, 0.72, 1], energy: 650, sizeMeters: 2.5}
+      - {id: amber-rim, type: area, position: [-3, 2.5, 1.8], target: [0, 1, 0], color: [1, 0.28, 0.05], energy: 470, sizeMeters: 2}
+    atmosphere: &platform-air
+      worldColor: [0.003, 0.007, 0.015]
+      fogColor: [0.035, 0.08, 0.12]
+      fogDensity: 0.006
+      rain: {enabled: false}
+    renderGates: [{id: platform-visible, type: frame-visibility, maximumBlackPercentage: 78}]
+    landmarks:
+      - {id: tunnel-arrival, progress: 0, description: Empty night platform establishes}
+      - {id: light-rhythm, progress: 0.5, description: Cyan and amber spatial rhythm becomes clear}
+      - {id: runway-ready, progress: 1, description: Platform becomes a character runway}
+    metadata: {campaignClass: character-fashion, grammar: environmental-establish}
+
+  - id: intentional-walk
+    frames: 72
+    entities:
+      - {id: platform, geometry: platform, role: environment}
+      - id: courier
+        geometry: courier
+        role: character
+        transform: {position: [0, 0, 2.3], rotation: [0, 0, 0], scale: [1, 1, 1]}
+        motion: {source: platform-walk, startFrame: 0, endFrame: 72}
+    camera:
+      keyframes:
+        - {time: 0, position: {entityId: platform, attachmentId: runway-camera}, target: {entityId: platform, attachmentId: runway-focus, offset: [0, 0, 1.1]}, lensMillimeters: 28}
+        - {time: 3, position: {entityId: platform, attachmentId: runway-camera, offset: [-0.35, 0, -1.6]}, target: {entityId: platform, attachmentId: runway-focus, offset: [0, 0, -0.8]}, lensMillimeters: 24}
+    lights: *platform-lights
+    atmosphere: *platform-air
+    qualityGates:
+      - {id: body-faces-travel, type: directional-motion, entityId: courier, minimumDistanceMeters: 1.2, minimumForwardDot: 0.9}
+    renderGates:
+      - {id: walk-visible, type: frame-visibility, maximumBlackPercentage: 75}
+      - {id: walk-highlight-detail, type: frame-overexposure, maximumWhitePercentage: 16}
+      - {id: walk-full-body, type: subject-framing, entityId: courier, minimumScreenHeightPercentage: 35, maximumScreenHeightPercentage: 92, marginPercentage: 2}
+    landmarks:
+      - {id: first-contact, progress: 0, description: Grounded cautious gait begins}
+      - {id: passing-light, progress: 0.45, description: Recurring identity crosses the light rhythm}
+      - {id: next-contact, progress: 1, description: Root travel remains aligned with body forward}
+    metadata: {campaignClass: character-fashion, grammar: verified-profile-walk}
+
+  - id: signal-attention
+    frames: 48
+    entities:
+      - {id: platform, geometry: platform, role: environment}
+      - id: courier
+        geometry: courier
+        role: character
+        transform: {position: [0, 0, -0.9], rotation: [0, 0, 0], scale: [1, 1, 1]}
+        motion: {source: attention-pause, startFrame: 0, endFrame: 48}
+    camera:
+      keyframes:
+        - {time: 0, position: {entityId: platform, attachmentId: portrait-camera}, target: {entityId: platform, attachmentId: portrait-focus}, lensMillimeters: 72}
+        - {time: 2, position: {entityId: platform, attachmentId: portrait-camera, offset: [0.3, 0.02, 0.35]}, target: {entityId: platform, attachmentId: portrait-focus, offset: [0.1, 0.06, 0]}, lensMillimeters: 78}
+    lights: *platform-lights
+    atmosphere: *platform-air
+    renderGates:
+      - {id: attention-visible, type: frame-visibility, maximumBlackPercentage: 72}
+      - {id: attention-highlight-detail, type: frame-overexposure, maximumWhitePercentage: 16}
+    landmarks:
+      - {id: grounded, progress: 0, description: Character settles without foot sliding}
+      - {id: orient, progress: 0.55, description: Head and torso turn toward the semantic signal target}
+      - {id: attention, progress: 1, description: Target-derived attention holds}
+    metadata: {campaignClass: character-fashion, grammar: targeted-attention}
+
+  - id: after-hours-resolve
+    frames: 72
+    entities:
+      - {id: platform, geometry: platform, role: environment}
+      - id: courier
+        geometry: courier
+        role: character
+        transform: {position: [0, 0, -1], rotation: [0, 0, 0], scale: [1, 1, 1]}
+        motion: {source: attention-pause, startFrame: 0, endFrame: 72, sourceStartSeconds: 0.8, sourceEndSeconds: 2}
+    camera:
+      keyframes:
+        - {time: 0, position: {entityId: platform, attachmentId: resolve-camera}, target: {entityId: platform, attachmentId: resolve-focus}, lensMillimeters: 62}
+        - {time: 3, position: {entityId: platform, attachmentId: resolve-camera, offset: [-0.4, 0.05, 0.5]}, target: {entityId: platform, attachmentId: resolve-focus, offset: [0, 0.08, 0]}, lensMillimeters: 68}
+    lights: *platform-lights
+    atmosphere: *platform-air
+    overlays: [{overlay: after-hours-copy, startSeconds: 0, endSeconds: 3, fadeInSeconds: 0.4, fadeOutSeconds: 0}]
+    renderGates:
+      - {id: resolve-visible, type: frame-visibility, maximumBlackPercentage: 72}
+      - {id: resolve-highlight-detail, type: frame-overexposure, maximumWhitePercentage: 16}
+    landmarks:
+      - {id: identity-hold, progress: 0, description: Character identity anchors the end frame}
+      - {id: campaign-promise, progress: 0.5, description: Original campaign promise becomes primary}
+      - {id: final-hold, progress: 1, description: Editorial and character resolve together}
+    metadata: {campaignClass: character-fashion, grammar: identity-resolution}
+
+delivery:
+  id: edit.after-hours-character
+  directory: delivery
+  codec: h264
+  pixelFormat: yuv420p
+  fastStart: true
+
+metadata:
+  conformancePurpose: fourth-campaign-declarative-character-motion
+  campaignClass: character-fashion
+  bespokeOrchestrationSourceFiles: 0

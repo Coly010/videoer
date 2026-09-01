@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "id": "layout.historic-market-square-market-world",
+  "familyId": "environment.market-world-family",
+  "seed": 7719,
+  "clusterCount": 3,
+  "requiredVariantIds": [
+    "market-stall",
+    "produce-basket",
+    "provision-sack"
+  ],
+  "zone": {
+    "minimum": [
+      -6.4,
+      -4.1
+    ],
+    "maximum": [
+      6.4,
+      3.7
+    ],
+    "groundY": 0
+  },
+  "exclusions": [
+    {
+      "id": "customer-and-camera-circulation",
+      "kind": "corridor",
+      "start": [
+        -6,
+        -1.25
+      ],
+      "end": [
+        6,
+        -1.25
+      ],
+      "halfWidthMeters": 0.74,
+      "clearanceMeters": 0.15
+    },
+    {
+      "id": "primary-entrance-clearance",
+      "kind": "rectangle",
+      "minimum": [
+        -1.75,
+        2.45
+      ],
+      "maximum": [
+        1.75,
+        4.1
+      ],
+      "clearanceMeters": 0.2
+    }
+  ],
+  "maximumAttemptsPerInstance": 1200
+}

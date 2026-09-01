@@ -1,0 +1,272 @@
+{
+  "schemaVersion": 1,
+  "source": "/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/environments/projecting-supported-canopy-v2/verification/old-city-shopfront/scene.json",
+  "manifest": "/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/environments/projecting-supported-canopy-v2/verification/old-city-shopfront/resolved-scene.json",
+  "video": "/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/environments/projecting-supported-canopy-v2/verification/old-city-shopfront/projecting-canopy-old-city-shopfront-transfer.mp4",
+  "blend": "/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/environments/projecting-supported-canopy-v2/verification/old-city-shopfront/projecting-canopy-old-city-shopfront-transfer.blend",
+  "frames": [
+    {
+      "id": "elevated-roof",
+      "progress": 0,
+      "description": "Layered sloped covering, flashing and front drainage edge",
+      "path": "/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/environments/projecting-supported-canopy-v2/verification/old-city-shopfront/000-elevated-roof.png"
+    },
+    {
+      "id": "underside-support",
+      "progress": 0.5,
+      "description": "Seven soffit boards and complete three-bracket load paths",
+      "path": "/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/environments/projecting-supported-canopy-v2/verification/old-city-shopfront/050-underside-support.png"
+    },
+    {
+      "id": "left-context",
+      "progress": 1,
+      "description": "Opposite facade integration, fascia and material separation",
+      "path": "/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/environments/projecting-supported-canopy-v2/verification/old-city-shopfront/100-left-context.png"
+    }
+  ],
+  "contactSheet": "/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/environments/projecting-supported-canopy-v2/verification/old-city-shopfront/contact-sheet.png",
+  "media": {
+    "streams": [
+      {
+        "index": 0,
+        "codec_name": "h264",
+        "codec_long_name": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+        "profile": "High",
+        "codec_type": "video",
+        "codec_tag_string": "avc1",
+        "codec_tag": "0x31637661",
+        "mime_codec_string": "avc1.64001e",
+        "width": 720,
+        "height": 480,
+        "coded_width": 720,
+        "coded_height": 480,
+        "has_b_frames": 2,
+        "sample_aspect_ratio": "1:1",
+        "display_aspect_ratio": "3:2",
+        "pix_fmt": "yuv420p",
+        "level": 30,
+        "chroma_location": "left",
+        "field_order": "progressive",
+        "is_avc": "true",
+        "nal_length_size": "4",
+        "id": "0x1",
+        "r_frame_rate": "24/1",
+        "avg_frame_rate": "24/1",
+        "time_base": "1/12288",
+        "start_pts": 0,
+        "start_time": "0.000000",
+        "duration_ts": 1536,
+        "duration": "0.125000",
+        "bit_rate": "1030464",
+        "bits_per_raw_sample": "8",
+        "nb_frames": "3",
+        "extradata_size": 46,
+        "disposition": {
+          "default": 1,
+          "dub": 0,
+          "original": 0,
+          "comment": 0,
+          "lyrics": 0,
+          "karaoke": 0,
+          "forced": 0,
+          "hearing_impaired": 0,
+          "visual_impaired": 0,
+          "clean_effects": 0,
+          "attached_pic": 0,
+          "timed_thumbnails": 0,
+          "non_diegetic": 0,
+          "captions": 0,
+          "descriptions": 0,
+          "metadata": 0,
+          "dependent": 0,
+          "still_image": 0,
+          "multilayer": 0
+        },
+        "tags": {
+          "language": "und",
+          "handler_name": "VideoHandler",
+          "encoder": "Lavc libx264"
+        }
+      }
+    ],
+    "format": {
+      "filename": "/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/environments/projecting-supported-canopy-v2/verification/old-city-shopfront/projecting-canopy-old-city-shopfront-transfer.mp4",
+      "nb_streams": 1,
+      "nb_programs": 0,
+      "nb_stream_groups": 0,
+      "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+      "format_long_name": "QuickTime / MOV",
+      "start_time": "0.000000",
+      "duration": "0.125000",
+      "size": "16995",
+      "bit_rate": "1087680",
+      "probe_score": 100,
+      "tags": {
+        "major_brand": "isom",
+        "minor_version": "512",
+        "compatible_brands": "isomiso2avc1mp41",
+        "encoder": "Lavf63.1.101"
+      }
+    }
+  },
+  "verification": {
+    "schemaVersion": 1,
+    "status": "pass",
+    "checks": []
+  },
+  "evidenceRefresh": "new-pixel-render",
+  "renderProfile": {
+    "engine": "cycles-cpu",
+    "samples": 128,
+    "seed": 1729,
+    "denoise": true,
+    "intent": "deterministic-final"
+  },
+  "deterministicEvidence": {
+    "boundary": "cycles-cpu-fixed-seed-to-lossless-png-to-single-thread-x264",
+    "expected": "byte-identical-on-matching-runtime-and-input-fingerprint"
+  },
+  "renderChecks": [
+    {
+      "id": "renderer-camera-contract",
+      "status": "pass",
+      "message": "Renderer camera position, semantic target, lens, and tracking contract match the declarative path",
+      "measurements": {
+        "valid": true,
+        "trackingConstraint": "TRACK_TO",
+        "trackAxis": "TRACK_NEGATIVE_Z",
+        "upAxis": "UP_Y",
+        "interpolationImplementation": "frame-baked-declarative-v1",
+        "maximumPositionErrorMeters": 0,
+        "maximumTargetErrorMeters": 0,
+        "maximumLensErrorMillimeters": 0,
+        "positionToleranceMeters": 0.00001,
+        "targetToleranceMeters": 0.00001,
+        "lensToleranceMillimeters": 0.005,
+        "samples": [
+          {
+            "landmarkId": "elevated-roof",
+            "frame": 1,
+            "positionErrorMeters": 0,
+            "targetErrorMeters": 0,
+            "lensErrorMillimeters": 0,
+            "actualLensMillimeters": 54,
+            "expectedLensMillimeters": 54
+          },
+          {
+            "landmarkId": "underside-support",
+            "frame": 2,
+            "positionErrorMeters": 0,
+            "targetErrorMeters": 0,
+            "lensErrorMillimeters": 0,
+            "actualLensMillimeters": 48,
+            "expectedLensMillimeters": 48
+          },
+          {
+            "landmarkId": "left-context",
+            "frame": 3,
+            "positionErrorMeters": 0,
+            "targetErrorMeters": 0,
+            "lensErrorMillimeters": 0,
+            "actualLensMillimeters": 54,
+            "expectedLensMillimeters": 54
+          }
+        ]
+      }
+    },
+    {
+      "id": "canopy-scene-visible",
+      "status": "pass",
+      "message": "Semantic frames retain the required visible image coverage",
+      "measurements": {
+        "maximumBlackPercentage": 35,
+        "allowedBlackPercentage": 62,
+        "perFrameBlackPercentage": [
+          34,
+          24,
+          35
+        ]
+      }
+    },
+    {
+      "id": "canopy-highlight-detail",
+      "status": "pass",
+      "message": "Semantic frames retain highlight detail within the declared limit",
+      "measurements": {
+        "maximumWhitePercentage": 0,
+        "allowedWhitePercentage": 4,
+        "perFrameWhitePercentage": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "canopy-framing",
+      "status": "pass",
+      "message": "Entity 'projecting-canopy' remains fully framed at semantic landmarks",
+      "measurements": {
+        "entityId": "projecting-canopy",
+        "minimumScreenHeightPercentage": 12,
+        "maximumScreenHeightPercentage": 46,
+        "marginPercentage": 3,
+        "samples": [
+          {
+            "landmarkId": "elevated-roof",
+            "bounds": {
+              "minimumX": 0.07848474383354187,
+              "maximumX": 0.8345174193382263,
+              "minimumY": 0.27446380257606506,
+              "maximumY": 0.6071804165840149,
+              "widthPercentage": 75.60326755046844,
+              "heightPercentage": 33.27166140079498
+            }
+          },
+          {
+            "landmarkId": "underside-support",
+            "bounds": {
+              "minimumX": 0.08361554890871048,
+              "maximumX": 0.9163844585418701,
+              "minimumY": 0.3649478852748871,
+              "maximumY": 0.5677540898323059,
+              "widthPercentage": 83.27689096331596,
+              "heightPercentage": 20.280620455741882
+            }
+          },
+          {
+            "landmarkId": "left-context",
+            "bounds": {
+              "minimumX": 0.16178475320339203,
+              "maximumX": 0.9272898435592651,
+              "minimumY": 0.31052595376968384,
+              "maximumY": 0.5644770860671997,
+              "widthPercentage": 76.55050903558731,
+              "heightPercentage": 25.395113229751587
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "canopy-local-highlight-detail",
+      "status": "pass",
+      "message": "Entity 'projecting-canopy' retains subject-local highlight detail",
+      "measurements": {
+        "entityId": "projecting-canopy",
+        "maximumWhitePercentage": 0,
+        "allowedWhitePercentage": 4,
+        "perFrameWhitePercentage": [
+          0,
+          0,
+          0
+        ]
+      }
+    }
+  ],
+  "blender": {
+    "mode": "render",
+    "stdout": "Blender 4.5.13 LTS (hash daeeeca98fb0 built 2026-08-25 01:30:50)\nFra:1 Mem:13.00M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | host-mesh\nFra:1 Mem:13.00M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | projecting-canopy-mesh\nFra:1 Mem:13.01M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | warm-soffit-edge\nFra:1 Mem:13.21M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing\nFra:1 Mem:11.50M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Waiting for render to start\nFra:1 Mem:11.50M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene\nFra:1 Mem:11.50M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Shaders\nFra:1 Mem:11.50M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)\nFra:1 Mem:11.67M (Peak 22.20M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Procedurals\nFra:1 Mem:11.67M (Peak 22.20M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Background\nFra:1 Mem:11.67M (Peak 22.20M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Camera\nFra:1 Mem:11.67M (Peak 22.20M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Meshes Flags\nFra:1 Mem:11.67M (Peak 22.20M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Objects\nFra:1 Mem:11.67M (Peak 22.20M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Objects | Copying Transformations to device\nFra:1 Mem:11.67M (Peak 22.20M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Particle Systems\nFra:1 Mem:11.67M (Peak 22.20M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device\nFra:1 Mem:11.67M (Peak 22.20M) | Time:00:00.00 | Mem:0.09M, Peak:0.09M | Scene, ViewLayer | Updating Meshes\nFra:1 Mem:11.67M (Peak 22.20M) | Time:00:00.00 | Mem:0.09M, Peak:0.09M | Scene, ViewLayer | Updating Objects | Applying Static Transformations\nFra:1 Mem:11.67M (Peak 22.20M) | Time:00:00.00 | Mem:0.09M, Peak:0.09M | Scene, ViewLayer | Updating Mesh | Computing attributes\nFra:1 Mem:11.69M (Peak 22.20M) | Time:00:00.00 | Mem:0.09M, Peak:0.09M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device\nFra:1 Mem:11.69M (Peak 22.20M) | Time:00:00.00 | Mem:0.11M, Peak:0.11M | Scene, ViewLayer | Updating Scene BVH | Building\nFra:1 Mem:11.69M (Peak 22.20M) | Time:00:00.00 | Mem:0.11M, Peak:0.11M | Scene, ViewLayer | Updating Scene BVH | Building BVH\nFra:1 Mem:11.69M (Peak 22.20M) | Time:00:00.00 | Mem:0.15M, Peak:0.15M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%\nFra:1 Mem:11.69M (Peak 22.20M) | Time:00:00.00 | Mem:0.21M, Peak:0.25M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device\nFra:1 Mem:11.69M (Peak 22.20M) | Time:00:00.00 | Mem:0.21M, Peak:0.25M | Scene, ViewLayer | Updating Mesh | Computing normals\nFra:1 Mem:11.76M (Peak 22.20M) | Time:00:00.00 | Mem:0.21M, Peak:0.25M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device\nFra:1 Mem:11.76M (Peak 22.20M) | Time:00:00.00 | Mem:0.28M, Peak:0.28M | Scene, ViewLayer | Updating Objects Flags\nFra:1 Mem:11.76M (Peak 22.20M) | Time:00:00.00 | Mem:0.28M, Peak:0.28M | Scene, ViewLayer | Updating Primitive Offsets\nFra:1 Mem:11.76M (Peak 22.20M) | Time:00:00.00 | Mem:0.28M, Peak:0.28M | Scene, ViewLayer | Updating Images\nFra:1 Mem:11.76M (Peak 22.20M) | Time:00:00.00 | Mem:0.28M, Peak:0.28M | Scene, ViewLayer | Updating Camera Volume\nFra:1 Mem:11.76M (Peak 22.20M) | Time:00:00.00 | Mem:0.28M, Peak:0.28M | Scene, ViewLayer | Updating Lookup Tables\nFra:1 Mem:11.76M (Peak 22.20M) | Time:00:00.00 | Mem:0.36M, Peak:0.36M | Scene, ViewLayer | Updating Lights\nFra:1 Mem:11.76M (Peak 22.20M) | Time:00:00.00 | Mem:0.36M, Peak:0.36M | Scene, ViewLayer | Updating Lights | Computing tree\nFra:1 Mem:11.76M (Peak 22.20M) | Time:00:00.00 | Mem:0.36M, Peak:0.36M | Scene, ViewLayer | Updating Integrator\nFra:1 Mem:11.76M (Peak 22.20M) | Time:00:00.00 | Mem:0.36M, Peak:0.36M | Scene, ViewLayer | Updating Film\nFra:1 Mem:11.77M (Peak 22.20M) | Time:00:00.00 | Mem:0.28M, Peak:0.36M | Scene, ViewLayer | Updating Lookup Tables\nFra:1 Mem:11.77M (Peak 22.20M) | Time:00:00.00 | Mem:0.36M, Peak:0.36M | Scene, ViewLayer | Updating Baking\nFra:1 Mem:11.77M (Peak 22.20M) | Time:00:00.00 | Mem:0.36M, Peak:0.36M | Scene, ViewLayer | Updating Device | Writing constant memory\nFra:1 Mem:11.77M (Peak 22.20M) | Time:00:00.00 | Mem:0.36M, Peak:0.36M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)\nFra:1 Mem:11.77M (Peak 22.20M) | Time:00:00.00 | Mem:0.36M, Peak:0.36M | Scene, ViewLayer | Sample 0/128\nFra:1 Mem:30.38M (Peak 30.38M) | Time:00:00.16 | Remaining:00:20.01 | Mem:18.82M, Peak:18.82M | Scene, ViewLayer | Sample 1/128\nFra:1 Mem:40.93M (Peak 56.76M) | Time:00:17.81 | Mem:18.82M, Peak:18.82M | Scene, ViewLayer | Sample 128/128\nFra:1 Mem:40.93M (Peak 56.76M) | Time:00:17.81 | Mem:18.82M, Peak:18.82M | Scene, ViewLayer | Finished\nSaved: '/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/environments/projecting-supported-canopy-v2/verification/old-city-shopfront/lossless-frames/projecting-canopy-old-city-shopfront-transfer-0001.png'\nTime: 00:17.86 (Saving: 00:00.04)\n\nFra:2 Mem:13.03M (Peak 56.76M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | host-mesh\nFra:2 Mem:13.03M (Peak 56.76M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | projecting-canopy-mesh\nFra:2 Mem:13.04M (Peak 56.76M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | cool-roof-key\nFra:2 Mem:13.21M (Peak 56.76M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing\nFra:2 Mem:11.50M (Peak 56.76M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Waiting for render to start\nFra:2 Mem:11.50M (Peak 56.76M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene\nFra:2 Mem:11.50M (Peak 56.76M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Shaders\nFra:2 Mem:11.50M (Peak 56.76M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)\nFra:2 Mem:11.67M (Peak 56.76M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Procedurals\nFra:2 Mem:11.67M (Peak 56.76M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Background\nFra:2 Mem:11.67M (Peak 56.76M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Camera\nFra:2 Mem:11.67M (Peak 56.76M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Meshes Flags\nFra:2 Mem:11.67M (Peak 56.76M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Objects\nFra:2 Mem:11.67M (Peak 56.76M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Objects | Copying Transformations to device\nFra:2 Mem:11.67M (Peak 56.76M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Particle Systems\nFra:2 Mem:11.67M (Peak 56.76M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device\nFra:2 Mem:11.67M (Peak 56.76M) | Time:00:00.00 | Mem:0.09M, Peak:0.09M | Scene, ViewLayer | Updating Meshes\nFra:2 Mem:11.67M (Peak 56.76M) | Time:00:00.00 | Mem:0.09M, Peak:0.09M | Scene, ViewLayer | Updating Objects | Applying Static Transformations\nFra:2 Mem:11.67M (Peak 56.76M) | Time:00:00.00 | Mem:0.09M, Peak:0.09M | Scene, ViewLayer | Updating Mesh | Computing attributes\nFra:2 Mem:11.69M (Peak 56.76M) | Time:00:00.00 | Mem:0.09M, Peak:0.09M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device\nFra:2 Mem:11.69M (Peak 56.76M) | Time:00:00.00 | Mem:0.11M, Peak:0.11M | Scene, ViewLayer | Updating Scene BVH | Building\nFra:2 Mem:11.69M (Peak 56.76M) | Time:00:00.00 | Mem:0.11M, Peak:0.11M | Scene, ViewLayer | Updating Scene BVH | Building BVH\nFra:2 Mem:11.69M (Peak 56.76M) | Time:00:00.00 | Mem:0.15M, Peak:0.15M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%\nFra:2 Mem:11.69M (Peak 56.76M) | Time:00:00.00 | Mem:0.21M, Peak:0.25M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device\nFra:2 Mem:11.69M (Peak 56.76M) | Time:00:00.00 | Mem:0.21M, Peak:0.25M | Scene, ViewLayer | Updating Mesh | Computing normals\nFra:2 Mem:11.76M (Peak 56.76M) | Time:00:00.00 | Mem:0.21M, Peak:0.25M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device\nFra:2 Mem:11.76M (Peak 56.76M) | Time:00:00.00 | Mem:0.28M, Peak:0.28M | Scene, ViewLayer | Updating Objects Flags\nFra:2 Mem:11.76M (Peak 56.76M) | Time:00:00.00 | Mem:0.28M, Peak:0.28M | Scene, ViewLayer | Updating Primitive Offsets\nFra:2 Mem:11.76M (Peak 56.76M) | Time:00:00.00 | Mem:0.28M, Peak:0.28M | Scene, ViewLayer | Updating Images\nFra:2 Mem:11.76M (Peak 56.76M) | Time:00:00.00 | Mem:0.28M, Peak:0.28M | Scene, ViewLayer | Updating Camera Volume\nFra:2 Mem:11.76M (Peak 56.76M) | Time:00:00.00 | Mem:0.28M, Peak:0.28M | Scene, ViewLayer | Updating Lookup Tables\nFra:2 Mem:11.76M (Peak 56.76M) | Time:00:00.00 | Mem:0.36M, Peak:0.36M | Scene, ViewLayer | Updating Lights\nFra:2 Mem:11.76M (Peak 56.76M) | Time:00:00.00 | Mem:0.36M, Peak:0.36M | Scene, ViewLayer | Updating Lights | Computing tree\nFra:2 Mem:11.76M (Peak 56.76M) | Time:00:00.00 | Mem:0.36M, Peak:0.36M | Scene, ViewLayer | Updating Integrator\nFra:2 Mem:11.76M (Peak 56.76M) | Time:00:00.00 | Mem:0.36M, Peak:0.36M | Scene, ViewLayer | Updating Film\nFra:2 Mem:11.77M (Peak 56.76M) | Time:00:00.00 | Mem:0.28M, Peak:0.36M | Scene, ViewLayer | Updating Lookup Tables\nFra:2 Mem:11.77M (Peak 56.76M) | Time:00:00.00 | Mem:0.36M, Peak:0.36M | Scene, ViewLayer | Updating Baking\nFra:2 Mem:11.77M (Peak 56.76M) | Time:00:00.00 | Mem:0.36M, Peak:0.36M | Scene, ViewLayer | Updating Device | Writing constant memory\nFra:2 Mem:11.77M (Peak 56.76M) | Time:00:00.00 | Mem:0.36M, Peak:0.36M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)\nFra:2 Mem:11.77M (Peak 56.76M) | Time:00:00.00 | Mem:0.36M, Peak:0.36M | Scene, ViewLayer | Sample 0/128\nFra:2 Mem:30.38M (Peak 56.76M) | Time:00:00.14 | Remaining:00:18.23 | Mem:18.82M, Peak:18.82M | Scene, ViewLayer | Sample 1/128\nFra:2 Mem:40.93M (Peak 56.76M) | Time:00:19.56 | Mem:18.82M, Peak:18.82M | Scene, ViewLayer | Sample 128/128\nFra:2 Mem:40.93M (Peak 56.76M) | Time:00:19.56 | Mem:18.82M, Peak:18.82M | Scene, ViewLayer | Finished\nSaved: '/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/environments/projecting-supported-canopy-v2/verification/old-city-shopfront/lossless-frames/projecting-canopy-old-city-shopfront-transfer-0002.png'\nTime: 00:19.57 (Saving: 00:00.01)\n\nFra:3 Mem:13.03M (Peak 56.76M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | host-mesh\nFra:3 Mem:13.03M (Peak 56.76M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | warm-soffit-edge\nFra:3 Mem:13.21M (Peak 56.76M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing\nFra:3 Mem:11.50M (Peak 56.76M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Waiting for render to start\nFra:3 Mem:11.50M (Peak 56.76M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene\nFra:3 Mem:11.50M (Peak 56.76M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Shaders\nFra:3 Mem:11.50M (Peak 56.76M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)\nFra:3 Mem:11.67M (Peak 56.76M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Procedurals\nFra:3 Mem:11.67M (Peak 56.76M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Background\nFra:3 Mem:11.67M (Peak 56.76M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Camera\nFra:3 Mem:11.67M (Peak 56.76M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Meshes Flags\nFra:3 Mem:11.67M (Peak 56.76M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Objects\nFra:3 Mem:11.67M (Peak 56.76M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Objects | Copying Transformations to device\nFra:3 Mem:11.67M (Peak 56.76M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Particle Systems\nFra:3 Mem:11.67M (Peak 56.76M) | Time:00:00.00 | Mem:0.08M, Peak:0.08M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device\nFra:3 Mem:11.67M (Peak 56.76M) | Time:00:00.00 | Mem:0.09M, Peak:0.09M | Scene, ViewLayer | Updating Meshes\nFra:3 Mem:11.67M (Peak 56.76M) | Time:00:00.00 | Mem:0.09M, Peak:0.09M | Scene, ViewLayer | Updating Objects | Applying Static Transformations\nFra:3 Mem:11.67M (Peak 56.76M) | Time:00:00.00 | Mem:0.09M, Peak:0.09M | Scene, ViewLayer | Updating Mesh | Computing attributes\nFra:3 Mem:11.69M (Peak 56.76M) | Time:00:00.00 | Mem:0.09M, Peak:0.09M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device\nFra:3 Mem:11.69M (Peak 56.76M) | Time:00:00.00 | Mem:0.11M, Peak:0.11M | Scene, ViewLayer | Updating Scene BVH | Building\nFra:3 Mem:11.69M (Peak 56.76M) | Time:00:00.00 | Mem:0.11M, Peak:0.11M | Scene, ViewLayer | Updating Scene BVH | Building BVH\nFra:3 Mem:11.69M (Peak 56.76M) | Time:00:00.00 | Mem:0.15M, Peak:0.15M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%\nFra:3 Mem:11.69M (Peak 56.76M) | Time:00:00.00 | Mem:0.21M, Peak:0.25M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device\nFra:3 Mem:11.69M (Peak 56.76M) | Time:00:00.00 | Mem:0.21M, Peak:0.25M | Scene, ViewLayer | Updating Mesh | Computing normals\nFra:3 Mem:11.76M (Peak 56.76M) | Time:00:00.00 | Mem:0.21M, Peak:0.25M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device\nFra:3 Mem:11.76M (Peak 56.76M) | Time:00:00.00 | Mem:0.28M, Peak:0.28M | Scene, ViewLayer | Updating Objects Flags\nFra:3 Mem:11.76M (Peak 56.76M) | Time:00:00.00 | Mem:0.28M, Peak:0.28M | Scene, ViewLayer | Updating Primitive Offsets\nFra:3 Mem:11.76M (Peak 56.76M) | Time:00:00.00 | Mem:0.28M, Peak:0.28M | Scene, ViewLayer | Updating Images\nFra:3 Mem:11.76M (Peak 56.76M) | Time:00:00.00 | Mem:0.28M, Peak:0.28M | Scene, ViewLayer | Updating Camera Volume\nFra:3 Mem:11.76M (Peak 56.76M) | Time:00:00.00 | Mem:0.28M, Peak:0.28M | Scene, ViewLayer | Updating Lookup Tables\nFra:3 Mem:11.76M (Peak 56.76M) | Time:00:00.00 | Mem:0.36M, Peak:0.36M | Scene, ViewLayer | Updating Lights\nFra:3 Mem:11.76M (Peak 56.76M) | Time:00:00.00 | Mem:0.36M, Peak:0.36M | Scene, ViewLayer | Updating Lights | Computing tree\nFra:3 Mem:11.76M (Peak 56.76M) | Time:00:00.00 | Mem:0.36M, Peak:0.36M | Scene, ViewLayer | Updating Integrator\nFra:3 Mem:11.76M (Peak 56.76M) | Time:00:00.00 | Mem:0.36M, Peak:0.36M | Scene, ViewLayer | Updating Film\nFra:3 Mem:11.77M (Peak 56.76M) | Time:00:00.00 | Mem:0.28M, Peak:0.36M | Scene, ViewLayer | Updating Lookup Tables\nFra:3 Mem:11.77M (Peak 56.76M) | Time:00:00.00 | Mem:0.36M, Peak:0.36M | Scene, ViewLayer | Updating Baking\nFra:3 Mem:11.77M (Peak 56.76M) | Time:00:00.00 | Mem:0.36M, Peak:0.36M | Scene, ViewLayer | Updating Device | Writing constant memory\nFra:3 Mem:11.77M (Peak 56.76M) | Time:00:00.00 | Mem:0.36M, Peak:0.36M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)\nFra:3 Mem:11.77M (Peak 56.76M) | Time:00:00.00 | Mem:0.36M, Peak:0.36M | Scene, ViewLayer | Sample 0/128\nFra:3 Mem:30.38M (Peak 56.76M) | Time:00:00.13 | Remaining:00:17.33 | Mem:18.82M, Peak:18.82M | Scene, ViewLayer | Sample 1/128\nFra:3 Mem:40.93M (Peak 56.76M) | Time:00:18.10 | Mem:18.82M, Peak:18.82M | Scene, ViewLayer | Sample 128/128\nFra:3 Mem:40.93M (Peak 56.76M) | Time:00:18.10 | Mem:18.82M, Peak:18.82M | Scene, ViewLayer | Finished\nSaved: '/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/environments/projecting-supported-canopy-v2/verification/old-city-shopfront/lossless-frames/projecting-canopy-old-city-shopfront-transfer-0003.png'\nTime: 00:18.11 (Saving: 00:00.01)\n\nInfo: Saved as \"projecting-canopy-old-city-shopfront-transfer.blend\"\n\nBlender quit\n",
+    "stderr": ""
+  }
+}

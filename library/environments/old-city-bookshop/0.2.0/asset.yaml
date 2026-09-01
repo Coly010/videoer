@@ -1,0 +1,109 @@
+schemaVersion: 1
+id: environment.old-city-bookshop
+version: 0.2.0
+type: environment
+title: Continuous old-city bookshop
+description: Deterministic narrow wet-cobble street with opposing facades and
+  tower skyline, plus an aligned bookshop facade and spatially continuous warm
+  interior.
+status: verified
+tags:
+  - old-city
+  - narrow-street
+  - bookshop
+  - warm-interior
+capabilities:
+  - deterministic-seed
+  - named-paths
+  - promotable-asset
+  - exterior-continuity
+  - named-interaction-points
+  - procedural-wet-cobble
+  - opposing-street-depth
+  - tower-silhouette
+source:
+  kind: procedural
+  generator: videoer.old-city-bookshop.v2
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: geometry
+    path: geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: a56ed7058c02f96d91d29ff561c28581ed94e1da23ce93ac670cef60d6701d06
+  - role: validation
+    path: validation.json
+    mediaType: application/json
+    sha256: a36e363905e0381bf164343053343b576a42e2d58e91f3ee671c5f39c4fb2969
+  - role: turntable
+    path: verification/turntable.mp4
+    mediaType: video/mp4
+    sha256: fdfde0ad99fb6d923c7949676b33294a7264c35ab356038dfdeb603847cd4793
+  - role: blender-source
+    path: verification/mannequin.blend
+    mediaType: application/x-blender
+    sha256: 1871dc98c2ec58d4b044de286cea7509a650e2772b1ebed757a70697c4804e73
+  - role: verification-verification-street-front
+    path: verification/street-front.png
+    mediaType: image/png
+    sha256: 3e99cd6af2620b8fd0d370e58301ed3c806b77ddafd4ed633151bfabc1a95baf
+  - role: verification-verification-street-three-quarter
+    path: verification/street-three-quarter.png
+    mediaType: image/png
+    sha256: 396161d8a458fa68a0f7900c494f8c4b18a97401846304081d5824251453e564
+  - role: verification-verification-threshold
+    path: verification/threshold.png
+    mediaType: image/png
+    sha256: ff6b83befcb71e938a82b0aa70329c06f75ce04b1de7cfe518c89e735a027183
+  - role: verification-verification-interior-shelves
+    path: verification/interior-shelves.png
+    mediaType: image/png
+    sha256: 5049b558f1af7c49efd83a21bd8b9785e32f02e0bd016919fc138c1bee7a06f4
+  - role: verification-verification-interior-facade
+    path: verification/interior-facade.png
+    mediaType: image/png
+    sha256: 3f81ab53d4adb707d28e557780185f1f102213d3b04583b04cba8070ee9933b8
+  - role: verification-verification-continuity-overhead
+    path: verification/continuity-overhead.png
+    mediaType: image/png
+    sha256: 5382da416026718b770ad71aef96dfe8319597536b7c3b6c57532fe1a32a7975
+  - role: verification-verification-contact-sheet
+    path: verification/contact-sheet.png
+    mediaType: image/png
+    sha256: c7bb6b144dad2ecef617f36adb7ec3d19d79eb22f34004a71ea4c6b30b4c7243
+  - role: verification-verification-probe
+    path: verification/probe.json
+    mediaType: application/json
+    sha256: 748b84347c41efea99d10fd90cf464296368013c124886e77b8c17938d490324
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - three-3d
+    - blender-headless
+  requires: []
+verification:
+  checks:
+    - geometry.topology
+    - geometry.material-groups
+    - material.wet-cobble-relief
+    - environment.opposing-facade-depth
+    - environment.tower-silhouette
+    - attachments.named-paths
+    - continuity.exterior-interior
+    - visual.canonical-views
+    - visual.turntable
+  artifacts:
+    - verification/street-front.png
+    - verification/street-three-quarter.png
+    - verification/threshold.png
+    - verification/interior-shelves.png
+    - verification/interior-facade.png
+    - verification/continuity-overhead.png
+    - verification/contact-sheet.png
+    - verification/probe.json
+  verifiedAt: 2026-08-30T22:03:59.736Z

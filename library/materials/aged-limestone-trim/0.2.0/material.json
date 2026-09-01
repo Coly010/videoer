@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "id": "material.aged-limestone-trim",
+  "shadingModel": "metallic-roughness",
+  "baseColor": {
+    "kind": "procedural-palette",
+    "colors": [
+      [
+        0.23,
+        0.22,
+        0.2,
+        1
+      ],
+      [
+        0.34,
+        0.31,
+        0.26,
+        1
+      ],
+      [
+        0.17,
+        0.18,
+        0.18,
+        1
+      ]
+    ],
+    "scaleMeters": 0.38,
+    "seed": 2314
+  },
+  "normal": {
+    "kind": "procedural-noise",
+    "strength": 0.3,
+    "scaleMeters": 0.032
+  },
+  "roughness": {
+    "minimum": 0.42,
+    "maximum": 0.7,
+    "variationScaleMeters": 0.3,
+    "wetness": 0.18
+  },
+  "pattern": {
+    "kind": "cut-stone",
+    "beddingAxis": "x",
+    "beddingScaleMeters": 0.21,
+    "grainScaleMeters": 0.024,
+    "veinContrast": 0.28,
+    "poreAmount": 0.42
+  },
+  "weathering": {
+    "verticalStreaks": {
+      "amount": 0.2,
+      "widthMeters": 0.1,
+      "lengthMeters": 0.95
+    },
+    "lowerDamp": {
+      "amount": 0.3,
+      "heightMeters": 0.5
+    },
+    "surfaceDirt": {
+      "amount": 0.14,
+      "scaleMeters": 0.42
+    }
+  },
+  "metallic": 0,
+  "metadata": {
+    "generator": "videoer.old-city-surface-library.v3",
+    "coordinateScale": "object-space-metres",
+    "layeredResponse": [
+      "surface-specific-pattern",
+      "palette",
+      "micro-normal",
+      "roughness-variation",
+      "wet-coat"
+    ]
+  }
+}

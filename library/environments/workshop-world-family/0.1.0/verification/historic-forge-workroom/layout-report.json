@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "requestId": "layout.historic-forge-workroom-workshop-world",
+  "familyId": "environment.workshop-world-family",
+  "seed": 8819,
+  "attempts": 2,
+  "instances": [
+    {
+      "id": "layout.historic-forge-workroom-workshop-world.cluster-001.member-01",
+      "clusterId": "layout.historic-forge-workroom-workshop-world.cluster-001",
+      "recipeId": "complete-craft-workstation",
+      "variantId": "joiners-workbench",
+      "geometryAssetId": "prop.joiners-workbench",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          0.6872294639335443,
+          0,
+          1.1282524199248853
+        ],
+        "rotation": [
+          0,
+          -0.09618431595870748,
+          0
+        ],
+        "scale": [
+          0.9848045333358459,
+          0.9848045333358459,
+          0.9848045333358459
+        ]
+      },
+      "footprintRadiusMeters": 1.2310056666698075,
+      "heightMeters": 1.0241967146692799
+    },
+    {
+      "id": "layout.historic-forge-workroom-workshop-world.cluster-001.member-02",
+      "clusterId": "layout.historic-forge-workroom-workshop-world.cluster-001",
+      "recipeId": "complete-craft-workstation",
+      "variantId": "freestanding-tool-board",
+      "geometryAssetId": "prop.freestanding-tool-board",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          0.7740948466186921,
+          0,
+          1.963748922186243
+        ],
+        "rotation": [
+          0,
+          -0.0826986346729358,
+          0
+        ],
+        "scale": [
+          1.0375311075872742,
+          1.0375311075872742,
+          1.0375311075872742
+        ]
+      },
+      "footprintRadiusMeters": 0.9960298632837832,
+      "heightMeters": 2.1995659480850214
+    },
+    {
+      "id": "layout.historic-forge-workroom-workshop-world.cluster-001.member-03",
+      "clusterId": "layout.historic-forge-workroom-workshop-world.cluster-001",
+      "recipeId": "complete-craft-workstation",
+      "variantId": "rolling-parts-cabinet",
+      "geometryAssetId": "prop.rolling-parts-cabinet",
+      "geometryVersion": "0.1.0",
+      "transform": {
+        "position": [
+          2.3710265388944967,
+          0,
+          1.1743762787502448
+        ],
+        "rotation": [
+          0,
+          -0.2433353896902456,
+          0
+        ],
+        "scale": [
+          0.8845625730110331,
+          0.8845625730110331,
+          0.8845625730110331
+        ]
+      },
+      "footprintRadiusMeters": 0.5661200467270612,
+      "heightMeters": 0.9022538244712538
+    }
+  ],
+  "verification": {
+    "requestedClusterCount": 1,
+    "placedClusterCount": 1,
+    "placedCount": 3,
+    "requiredVariantIds": [
+      "joiners-workbench",
+      "freestanding-tool-board",
+      "rolling-parts-cabinet"
+    ],
+    "requiredRecipeIds": [
+      "complete-craft-workstation"
+    ],
+    "allRequiredVariantsPresent": true,
+    "exclusionCount": 1,
+    "deterministic": true,
+    "overlapFree": true,
+    "navigationClearancePreserved": true
+  }
+}

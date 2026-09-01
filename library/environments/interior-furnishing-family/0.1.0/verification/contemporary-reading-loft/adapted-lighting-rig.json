@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "id": "lighting.contemporary-reading-loft-reading-corner",
+  "exposure": {
+    "look": "AgX - Medium High Contrast",
+    "coherentAcrossShots": true
+  },
+  "worldColor": [
+    0.025,
+    0.04,
+    0.055
+  ],
+  "lights": [
+    {
+      "id": "warm-reading-key",
+      "type": "area",
+      "position": [
+        -4.712544164642996,
+        3.4800000000000004,
+        2.4576883569410035
+      ],
+      "target": [
+        -2.526087684257689,
+        1.764,
+        0.5636756697128793
+      ],
+      "color": [
+        0.92,
+        0.6859999999999999,
+        0.48300000000000004
+      ],
+      "energy": 791.1999999999999,
+      "sizeMeters": 1.6500000000000001,
+      "angleDegrees": 45,
+      "purpose": "key"
+    },
+    {
+      "id": "cool-window-fill",
+      "type": "area",
+      "position": [
+        -0.14245641521525343,
+        2.886,
+        0.8636789584334301
+      ],
+      "target": [
+        -2.526087684257689,
+        1.764,
+        0.5636756697128793
+      ],
+      "color": [
+        0.3128,
+        0.5586,
+        1
+      ],
+      "energy": 744,
+      "sizeMeters": 3.828,
+      "angleDegrees": 45,
+      "purpose": "fill"
+    },
+    {
+      "id": "shelf-rim",
+      "type": "spot",
+      "position": [
+        -2.7900804051819934,
+        3.8100000000000005,
+        -1.0704087354813516
+      ],
+      "target": [
+        -2.4947109375693075,
+        1.83,
+        0.6918922823933471
+      ],
+      "color": [
+        0.92,
+        0.6076,
+        0.35700000000000004
+      ],
+      "energy": 460,
+      "sizeMeters": 1.32,
+      "angleDegrees": 42,
+      "purpose": "rim"
+    }
+  ],
+  "metadata": {
+    "context": "contemporary-reading-loft",
+    "faceKey": "warm-reading-key",
+    "windowFill": "cool-window-fill",
+    "balanceStrategy": "off-axis-warm-key-plus-camera-side-cool-fill-and-rear-shelf-rim",
+    "purpose": "portable-furnishing-silhouette-and-surface-separation",
+    "layoutFocus": [
+      -2.5260876842576896,
+      0.5636756697128793
+    ],
+    "derivedFrom": "lighting.bookshop-warm-interior",
+    "lightingAdaptation": "lighting-rig-transform-v1"
+  }
+}

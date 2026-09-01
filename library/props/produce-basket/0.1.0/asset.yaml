@@ -1,0 +1,71 @@
+schemaVersion: 1
+id: prop.produce-basket
+version: 0.1.0
+type: prop
+title: Handled produce display basket
+description: Project-owned willow basket with physical rim, handle and
+  individually modelled mixed produce inventory.
+status: verified
+tags:
+  - basket
+  - produce
+  - merchandise
+  - market
+  - portable
+  - inhabited-environment
+capabilities:
+  - portable-geometry
+  - ground-placement
+  - named-merchandising-attachments
+  - medium-background-quality-tier
+source:
+  kind: procedural
+  generator: videoer.market-world-assets.v1
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: geometry
+    path: geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: 181a1b55ff7fd936d71310e1cbaa73cdf615dab2b597538240041abc76deef31
+  - role: validation
+    path: validation.json
+    mediaType: application/json
+    sha256: 8b2c49ff0b585a1b3592a3a7e59002a1bd3d2959d4b4ffc965fea222b2bbdc2a
+  - role: historic-market-square-family-contact-sheet
+    path: verification/historic-market-square-family-contact-sheet.png
+    mediaType: image/png
+    sha256: af3528239bbbbb9540f749569281c833522776a7f2c1f8d74ef37152b269edb8
+  - role: contemporary-pop-up-family-contact-sheet
+    path: verification/contemporary-pop-up-family-contact-sheet.png
+    mediaType: image/png
+    sha256: 7458a9a915e891778b9b0ee765b0c8d5aa8ec9405ac3a89adb294acb38a6a899
+  - role: family-transfer-summary
+    path: verification/family-transfer-summary.json
+    mediaType: application/json
+    sha256: 252a6812893d7dbf8564efcd69ed259ea1ec633e0bcda7ece25c75b083edc2bf
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - three-3d
+    - blender-headless
+  requires: []
+verification:
+  checks:
+    - geometry.topology
+    - geometry.material-groups
+    - attachments.market-semantic
+    - visual.historic-market-square-family-transfer-accepted
+    - visual.contemporary-pop-up-family-transfer-accepted
+    - prop.physical-merchandising-semantics-accepted
+    - prop.medium-background-shot-distance-accepted
+  artifacts:
+    - verification/historic-market-square-family-contact-sheet.png
+    - verification/contemporary-pop-up-family-contact-sheet.png
+    - verification/family-transfer-summary.json
+  verifiedAt: 2026-09-01T10:03:00.000Z

@@ -2,6 +2,14 @@
 
 Videoer is a composable, local-first marketing-video toolkit designed to be operated interactively by Codex or directly by a human. Codex is the conversational orchestrator outside this repository; Videoer provides inspectable TypeScript operations and a stable CLI for campaign loading, validation, inspection, verification, generation boundaries, and deterministic rendering.
 
+The cinematic production layer adds renderer-independent production plans and a shared, versioned asset library. A plan names shots, continuity, actions, camera/lighting direction, and required characters, environments, props, clothing, materials, motion, VFX, and audio. Resolution searches only commercially cleared inventory and persists an explicit reuse/adapt/create manifest before factories or renderers run.
+
+Atmospheric VFX, surface materials, and canonical clothing are reusable derivation domains rather than campaign-local styling shortcuts. Declarative campaigns can adapt verified parents through bounded, hash-linked contracts, publish the reviewed outputs, and resolve them unchanged in a different trailer or format. The Rainwalk Square campaign creates this three-domain chain; Rainwalk Banner proves direct reuse of all three releases at a different aspect ratio and duration with no campaign-specific orchestration source.
+
+Non-speech score treatment follows the same rule. Declarative audio derivations select an exact interval from a verified parent, apply bounded filter/dynamics/stereo/mastering parameters, add optional exact-sample deterministic accents, and publish only after temporal-envelope, contribution, format, peak, parent-hash, output-hash, and byte-identical approval-time re-render gates pass. Beacon One creates the first release; Last Platform reuses it with zero audio adaptation. See [ADR 031](docs/adr/031-deterministic-audio-treatment-derivation.md).
+
+Reusable lighting rigs and editorial identities also resolve through the same library manifest. Editorial derivations preserve the parent font and motif while bounding copy, palette, safe area, contrast, and responsive typography; approval independently rerenders and measures the result before publication. The Nocturne event lockup is consumed pixel-identically by a separate programme-announcement campaign. The original eight-shot reference benchmark now runs entirely through `cinematic-campaign build`; its former named scene, soundtrack, and edit factories have been removed. Character and standalone clothing generation share renderer-independent temporal collision, silhouette, and pose-space-correction contracts, so a defect discovered in one campaign becomes a reusable verification or derivation capability rather than a shot-specific repair. Production-human v2 extends the stable retargeting core with audited articulated finger chains and mandatory bilateral hand evidence; see [character creation and acceptance](docs/characters.md) and the [retopology research record](docs/research/character-retopology.md).
+
 The repository includes validated campaign/storyboard contracts, two style templates, a deterministic Remotion renderer, reusable application operations, provider boundaries, filesystem state and provenance, sampled-frame/contact-sheet inspection, objective campaign/image/video verification, selective shot revision and scene-keyframe regeneration, examples, and a thin CLI.
 
 Rich `scene` shots compose independently timed image, video, text, shape, sprite, particle, and effect layers with depth-aware 2.5D cameras, masks, filters, and blend modes. PixiJS provides a GPU-backed 2D adapter for dense particles and procedural VFX while Remotion remains the timeline and final-rendering layer. See [Scene composition and VFX](docs/scene-vfx.md), [Particle system](docs/particle-system.md), and the [Codex extension guide](docs/codex/scene-vfx.md).
@@ -12,8 +20,16 @@ Rich `scene` shots compose independently timed image, video, text, shape, sprite
 
 - Node.js 22+
 - npm 11
+- Three.js 0.185.1 (installed by npm; MIT)
+- Blender 4.5 LTS or newer with working background Python, bundled OpenVDB and NumPy modules, fixed-seed Cycles CPU final rendering, and Eevee preview rendering (GPL tooling)
+- MPFB 2.0.17 commit `437dd513888a92399d1d3200d2e80859fae55abc` plus Blender's bundled Rigify addon for the production-character rig backend (GPL tooling with CC0 rig/weight/mesh assets; installed by the repository script)
+- eSpeak NG 1.52+ with development headers for deterministic speech audio and native phoneme timing (GPL-3.0-or-later)
+- A C compiler for the small eSpeak NG event bridge (Apple Clang/Xcode Command Line Tools on macOS, build-essential on Debian/Ubuntu)
+- Cormorant Garamond installed as a system font for the benchmark editorial treatment (OFL-1.1)
 - FFmpeg 9+ and ffprobe with the capabilities used by the renderer and inspection pipeline:
-  - `drawtext`, `xfade`, `zoompan`, `xstack`, and `subtitles` filters
+  - visual composition filters: `drawtext`, `xfade`, `zoompan`, `xstack`, and `subtitles`
+  - deterministic audio-treatment filters: `highpass`, `lowpass`, `acompressor`, `extrastereo`, `loudnorm`, `afade`, `adelay`, `amix`, `apad`, `atrim`, `aresample`, and `aformat`
+  - deterministic cinematic-finishing filters: `eq`, `colorchannelmixer`, `lutrgb`, `gblur`, `blend`, `vignette`, and `noise`
   - H.264 (`libx264`) and AAC encoders
   - PNG and JPEG decoding
 
@@ -23,6 +39,9 @@ The small/default FFmpeg package supplied by some package managers omits require
 
 ```bash
 brew install ffmpeg-full
+brew install espeak-ng
+brew install --cask blender font-cormorant-garamond
+scripts/install-mpfb-extension.sh
 brew unlink ffmpeg            # only when the minimal formula is currently linked
 brew link --overwrite ffmpeg-full
 ```
@@ -40,15 +59,38 @@ Distribution FFmpeg builds commonly include these capabilities:
 ```bash
 sudo apt-get update
 sudo apt-get install ffmpeg fontconfig fonts-dejavu-core
+sudo apt-get install espeak-ng libespeak-ng-dev build-essential
 ```
 
 Run the capability check after installation. A binary merely existing on `PATH` is not sufficient.
+
+### Blender and production typography
+
+Blender is required production infrastructure for headless geometry, rigging, animation, conversion, simulation, and visual probes. On macOS, install the official application or Homebrew cask:
+
+```bash
+brew install --cask blender
+brew install --cask font-cormorant-garamond
+```
+
+Videoer prefers `/Applications/Blender.app/Contents/MacOS/Blender` on macOS and otherwise resolves `blender` from `PATH`. Set `VIDEOER_BLENDER` only when the installation lives elsewhere.
+
+The npm dependency `@fontsource/cormorant-garamond` pins the web-rendering copy, while Blender/FFmpeg require the matching system font. Both are open source under OFL-1.1. Do not substitute a metrically different font silently because it changes title and cover layout.
+
+The doctor check imports `bpy` in background mode and verifies Blender's bundled `openvdb` and `numpy` modules; `blender --version` alone is not sufficient. Those OSS modules power project-owned deterministic sparse-volume simulation and must be available on every production machine. In a restricted Codex run, Blender may exit with signal 11/139 in `supports_barycentric_whitelist` because the sandbox hides `MTLCreateSystemDefaultDevice()`. Approve host/GPU execution and rerun the same command. The official `bpy` wheel reaches the same native Metal detector and does not avoid this failure. Do not respond by downgrading output, skipping probes, reinstalling `bpy`, switching architectures, or carrying an unnecessary private Blender fork. See [Blender installation and Metal diagnostics](docs/install-blender.md).
+
+### Deterministic speech and lip synchronization
+
+Videoer uses eSpeak NG as an open-source, provider-free speech runtime. It renders persisted WAV audio and exposes the engine's native phoneme timestamps through a project-owned C bridge; those timestamps drive renderer-independent viseme tracks on the exact campaign frame grid. This keeps speech rendering deterministic and makes audiovisual synchronization objectively verifiable. It does not call a generative provider during rendering.
+
+On macOS, `brew install espeak-ng` installs both the runtime and development headers. Install Apple's Command Line Tools with `xcode-select --install` if `cc --version` fails. On Debian/Ubuntu, install `espeak-ng libespeak-ng-dev build-essential`. `npm run video -- doctor` checks both capabilities. See [Speech runtime installation and diagnostics](docs/install-speech.md).
 
 ## Setup
 
 ```bash
 npm install
 npx remotion browser ensure
+scripts/install-mpfb-extension.sh
 npm run video -- doctor
 npm run check
 npm run video -- --help
@@ -86,6 +128,52 @@ npm run video -- vfx list
 npm run video -- particles list
 npm run video -- shot render campaigns/fixtures/scene-vfx-product/campaign.yaml dashboard --preview
 npm run video -- shot inspect campaigns/fixtures/scene-vfx-product/inspection/shots/dashboard-preview.mp4
+npm run video -- production validate campaigns/reference-cinematic-benchmark/production-plan.yaml
+npm run video -- production resolve campaigns/reference-cinematic-benchmark/production-plan.yaml --library library
+npm run video -- asset search "wet medieval door" --type prop
+npm run video -- asset validate work/candidate-door
+npm run video -- asset publish work/candidate-door --library library
+npm run video -- asset index --library library
+npm run video -- asset audit-library --library library
+npm run video -- asset repair-library --library library --source work campaigns
+npm run video -- geometry mannequin work/mannequin
+npm run video -- geometry production-human work/production-human --id character.example --asset-version 0.1.0
+npm run video -- geometry validate work/mannequin/geometry.json
+npm run video -- geometry probe work/mannequin/geometry.json --output work/mannequin/verification
+npm run video -- character inspect-anatomy work/production-human/geometry.json --output work/production-human/anatomy-report.json
+npm run video -- motion create-walk work/walk-neutral.json --style neutral
+npm run video -- motion create-walk work/walk-cautious.json --style cautious
+npm run video -- motion create-walk work/walk-confident.json --style confident
+npm run video -- motion probe work/mannequin/geometry.json work/walk-neutral.json --output work/walk-neutral-verification
+npm run video -- character create campaigns/reference-cinematic-benchmark/heroine.yaml work/elara-vale
+npm run video -- interaction create open-door work/elara-vale/geometry.json work/open-door
+npm run video -- interaction create read-book work/elara-vale/geometry.json work/read-book
+npm run video -- interaction create-turn work/elara-vale/geometry.json work/turn-orientation
+npm run video -- environment create-bookshop work/old-city-bookshop
+npm run video -- clothing extract-dark-dress work/elara-vale/geometry.json work/elara-midnight-dress
+# Legacy geometry without embedded assetVersion additionally needs: --character-version <version>
+npm run video -- material create-wet-cobble work/wet-cobble
+npm run video -- vfx create-rainy-dusk work/old-city-bookshop/geometry.json work/rainy-dusk
+npm run video -- lighting create-bookshop-rigs work/old-city-bookshop/geometry.json work/elara-vale/geometry.json work/lighting
+npm run video -- editorial create-assets campaigns/reference-cinematic-benchmark/references/cover.png work/editorial
+npm run video -- cinematic-campaign validate campaigns/reference-cinematic-benchmark/cinematic-campaign.yaml
+npm run video -- cinematic-campaign build campaigns/reference-cinematic-benchmark/cinematic-campaign.yaml
+npm run video -- cinematic-campaign produce campaigns/reference-cinematic-benchmark/cinematic-campaign.yaml
+npm run video -- cinematic-campaign production-status campaigns/reference-cinematic-benchmark/cinematic-campaign.yaml
+npm run video -- cinematic-campaign review campaigns/reference-cinematic-benchmark/cinematic-campaign.yaml path/to/review.yaml
+npm run video -- cinematic verify campaigns/reference-cinematic-benchmark/work/scenes/enter-bookshop/scene.json
+npm run video -- cinematic render path/to/scene.json --output work/scene/verification
+npm run video -- edit assemble campaigns/reference-cinematic-benchmark/work/edit/edit-plan.json campaigns/reference-cinematic-benchmark/delivery-declarative
+npm run video -- cinematic-campaign validate campaigns/beacon-one-product-conformance/cinematic-campaign.yaml
+npm run video -- cinematic-campaign build campaigns/beacon-one-product-conformance/cinematic-campaign.yaml
+npm run video -- cinematic-campaign build campaigns/breathe-again-awareness-conformance/cinematic-campaign.yaml
+npm run video -- cinematic-campaign build campaigns/after-hours-character-conformance/cinematic-campaign.yaml
+npm run video -- cinematic-campaign build campaigns/night-signal-library-reuse-conformance/cinematic-campaign.yaml
+npm run video -- cinematic-campaign build campaigns/last-platform-multicharacter-conformance/cinematic-campaign.yaml
+npm run video -- cinematic-campaign build campaigns/last-call-dialogue-conformance/cinematic-campaign.yaml
+npm run video -- cinematic-campaign build campaigns/voices-of-midnight-documentary-conformance/cinematic-campaign.yaml
+npm run video -- cinematic-campaign build campaigns/rainwalk-square-crossdomain-conformance/cinematic-campaign.yaml
+npm run video -- cinematic-campaign build campaigns/rainwalk-banner-library-reuse/cinematic-campaign.yaml
 npm run video -- render campaigns/examples/saas-promo/campaign.yaml --final --change revised-hook
 npm run video -- doctor
 ```
@@ -112,7 +200,23 @@ Directories are created as operations need them. Existing examples retain their 
 
 ## Codex usage example
 
-Open Codex, attach or identify reference material, and ask for a trailer. Codex can create/update campaign files, choose scene-based or still-based shot strategies, generate an anchor and dependent scene keyframes through the provider boundary, produce a versioned draft, inspect its sampled frames and contact sheet, run objective verification, regenerate one weak keyframe, and render a versioned final. Rendering and verification never invoke providers. See [the cinematic trailer workflow](docs/codex/trailer-workflow.md). Full automatic creative storyboard authoring, audio authoring/mixing, and production provider adapters beyond the experimental boundary remain future capabilities.
+Open Codex, attach or identify reference material, and ask for a trailer. Codex can create/update campaign files, choose scene-based or still-based shot strategies, compose verified 3D assets and interactions, generate deterministic atmosphere, lighting, editorial, and audio, produce a frame-exact edit, inspect semantic frames and contact sheets, run objective verification, and selectively rebuild weak shots. Rendering and verification never invoke providers. See [the cinematic trailer workflow](docs/codex/trailer-workflow.md). The reference cinematic benchmark is a conformance suite, not the product API; general acceptance additionally requires a materially different campaign through the same reusable operations. See [ADR 028](docs/adr/028-benchmark-as-conformance-suite.md).
+
+Reusable cross-domain derivation is governed by [ADR 029](docs/adr/029-cross-domain-derived-asset-contracts.md). Verified library packages are content-addressed in full, and VFX, material, and clothing approval independently revalidates protected semantics from live artifacts rather than trusting candidate reports.
+
+First-class lighting derivation is governed by [ADR 032](docs/adr/032-first-class-lighting-derivation.md). Bounded whole-rig spatial, energy, and colour transforms preserve light topology, semantic roles, and coherent exposure; approval recomputes the expected artifact from its immutable parent. The 20-second Nocturne exhibition campaign publishes the first rig and an unrelated square product campaign resolves it unchanged.
+
+Semantic camera execution is governed by [ADR 033](docs/adr/033-semantic-camera-path-fidelity-and-clearance.md). Blender follows an animated declared target with deterministic per-segment easing and emits exact-frame contract-error evidence. Optional pre-render clearance gates evaluate transformed or animated/skinned obstacle triangles instead of waiting for an occluded render.
+
+First-class editorial derivation is governed by [ADR 034](docs/adr/034-first-class-editorial-derivation-and-transfer.md). A typed treatment preserves font and motif identity while independently verifying deterministic pixels, line-by-line safe-area bounds, contrast, and live parent provenance. Nocturne publishes the first editorial release and a separate programme-announcement campaign resolves it unchanged.
+
+Autonomous campaign production is governed by [ADR 035](docs/adr/035-autonomous-campaign-production-loop.md): pre-build planning, dependency-aware selective rendering, fail-closed objective inspection, resumable ledgers, and hash-bound qualitative review are reusable campaign mechanics. Deterministic Blender render tiers are governed by [ADR 036](docs/adr/036-deterministic-blender-render-profiles.md): fixed-seed Cycles CPU is the authoritative final path and Eevee Next is preview-only where its Metal shadow path is not bit-repeatable.
+
+Project-owned isolated foley and ambience are governed by [ADR 037](docs/adr/037-renderer-independent-procedural-sound-effects.md). Layered noise, resonance, and seeded impulses render to deterministic 24-bit PCM with exact sample timing, byte-identical verification, waveform and spectrogram evidence, and explicit auditory acceptance before publication. See [Procedural sound effects](docs/sound-effects.md).
+
+Animated fitted clothing is governed by [ADR 030](docs/adr/030-renderer-independent-temporal-clothing.md). CPU skinning, body-derived collision proxies, temporal silhouette and local-strain gates, deterministic pose-space correction, and content-addressed deformation reuse remain independent of Blender, a particular character, and the reference benchmark.
+
+Project-owned human generation and its fail-closed acceptance workflow are documented in [Character creation and acceptance](docs/characters.md). The continuous body and preserve-volume deformation foundation pass structural gates but remain visually rejected; canonical renders, face evidence, and dual-angle gait probes never imply production acceptance by themselves.
 
 ## Source boundaries
 
@@ -123,6 +227,16 @@ Open Codex, attach or identify reference material, and ask for a trailer. Codex 
 - `src/verification`: checks, evaluator composition, result aggregation
 - `src/media`: dependency diagnostics and reusable inspection utilities
 - `src/assets`: workspace paths, cache keys, revisioned filenames
+- `src/production`: renderer-independent production plans, typed asset requirements, and resolution manifests
+- `src/production/cinematic-campaign.ts`: validated data-driven geometry, shot, editorial, audio, and delivery contract
+- `src/interactions`: phased actor/prop contracts, analytic IK synthesis, scene transforms, and multi-object Blender probes
+- `src/cinematic`: executable 3D scene contracts, semantic quality gates, portable persistence, and Blender rendering
+- `src/cinematic/assembly.ts`: semantic attachment resolution and reusable shot templates
+- `src/editing`: generic frame-exact edit plans and deterministic FFmpeg assembly
+- `src/audio`, `src/lighting`, `src/vfx`, `src/titles`: reusable provider-free production subsystems
+- `library`: immutable, licence-aware reusable production inventory
 - `src/cli.ts`: argument parsing, presentation, JSON envelopes, exit codes
 
 Remotion downloads a pinned Chrome Headless Shell into `node_modules/.remotion`; run `npx remotion browser ensure` during setup or whenever the Remotion version changes. Rendering may bind a temporary loopback port for the local browser bundle. All Remotion packages and Zod are exact-version pinned because Remotion treats version alignment as a runtime requirement.
+
+The Beacon One conformance campaign is intentionally unlike the narrative benchmark: it is a three-shot non-narrative product launch with no character, gait, bookshop, door, or story interaction. Its complete product geometry, materials, attachments, shots, lighting, atmosphere, typography, soundtrack, gates, and edit are declared in one validated YAML file. The generic builder produces the verified campaign with zero campaign-specific orchestration source files. This is a transfer test, not a second style variant of the benchmark.

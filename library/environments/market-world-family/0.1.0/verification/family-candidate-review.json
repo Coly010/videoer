@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "familyAssetId": "environment.market-world-family",
+  "memberAssetIds": [
+    "prop.modular-market-stall",
+    "prop.produce-basket",
+    "prop.tied-provision-sack"
+  ],
+  "decision": "accepted",
+  "reviewer": "codex-visual-review",
+  "reviewedAt": "2026-09-01T10:03:00.000Z",
+  "intendedShotDistance": "medium",
+  "evidence": [
+    "verification/historic-market-square/contact-sheet.png",
+    "verification/historic-market-square/scene-render.json",
+    "verification/contemporary-pop-up/contact-sheet.png",
+    "verification/contemporary-pop-up/scene-render.json"
+  ],
+  "strengths": [
+    "The structural stall reads clearly through its striped physical canopy, timber frame, counter, lower stock shelf and hanging price board.",
+    "Produce baskets contain individually modelled mixed inventory and retain a distinct silhouette from the tied provision sacks.",
+    "Authored metre-space cluster offsets now place physical baskets on the 1.09 metre counter and sacks on the lower shelf in both unrelated hosts.",
+    "All ten entities per transfer remain fully inspectable across three distinct landmarks while customer and entrance circulation remain clear."
+  ],
+  "limitations": [
+    "Accepted for background and medium shots only; basket weave and burlap fibres are procedural surface responses rather than close-up textile construction.",
+    "The provision sack uses deterministic gathered seams and a cinched profile rather than dynamic cloth simulation.",
+    "The host scenes prove transfer and circulation semantics but are verification fixtures, not publishable finished market environments."
+  ],
+  "notes": "V1 was rejected because the sacks read as smooth ceramic jars and the stall lacked a merchandising focal cue. V2 added coarse burlap response, raised gathered seams, and a physical price board, but fail-closed acceptance exposed inconsistent vertical cluster-offset scaling that embedded the baskets below their authored counter anchors. V3 fixes that solver defect and is accepted only at its declared medium/background tier."
+}

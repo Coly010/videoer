@@ -1,0 +1,136 @@
+schemaVersion: 1
+id: vfx.source-bound-smoke-embers
+version: 0.1.0
+type: vfx
+title: Source-bound volumetric smoke and rising embers
+description: Renderer-independent source-relative aerosol system with true
+  world-space noisy smoke volumes, emissive rising embers, deterministic
+  turbulence and attachment-bound transfer.
+status: verified
+tags:
+  - smoke
+  - embers
+  - aerosol
+  - volumetric
+  - source-bound
+  - world-space
+capabilities:
+  - source-relative-placement
+  - true-world-space-volume
+  - geometry-depth-occlusion
+  - deterministic-particles
+  - temporal-rise-and-turbulence
+  - cross-environment-transfer
+source:
+  kind: procedural
+  generator: videoer.source-bound-aerosol.v1
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: vfx
+    path: vfx.json
+    mediaType: application/vnd.videoer.vfx+json
+    sha256: e2a905bfc9890ecc5dae0fe5e36fbbf1c5c08946008274bee86a8e270686d09c
+  - role: historic-forge-source
+    path: verification/historic-forge/source-geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: 1f06776d9e476eadcfce0dfa3ccfc1c08732318714a9ed2293b1c626c8e6dfc9
+  - role: historic-forge-scene
+    path: verification/historic-forge/scene.json
+    mediaType: application/vnd.videoer.cinematic-scene+json
+    sha256: 204e1d5f1af9db068eafbbc8c9af4e58d43333a45a81a4f6addd0015f9574110
+  - role: historic-forge-contact-sheet
+    path: verification/historic-forge/contact-sheet.png
+    mediaType: image/png
+    sha256: 566c2b3e93adb276e0e4b90d661683df0ab4f72b3c981060f601e7e1de6037c7
+  - role: historic-forge-full-report
+    path: verification/historic-forge/scene-render.json
+    mediaType: application/json
+    sha256: 13383e185cf5b5ddb87b0c4433bb13d88934258554de8087c4ca2ff0654c03cd
+  - role: historic-forge-aerosol-report
+    path: verification/historic-forge/aerosol-report.json
+    mediaType: application/json
+    sha256: 9867991f980bbbea2279568a90b24569cd252c291deebb9e0a53702b85bc984d
+  - role: contemporary-metal-shop-source
+    path: verification/contemporary-metal-shop/source-geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: 47214358f2865762faf356401943365fe2732136538637c63bd4b0c1a1628df4
+  - role: contemporary-metal-shop-scene
+    path: verification/contemporary-metal-shop/scene.json
+    mediaType: application/vnd.videoer.cinematic-scene+json
+    sha256: 2a4923deeb8c1143a0d019a7c14c496459ce543de78d855069362149e250daf6
+  - role: contemporary-metal-shop-contact-sheet
+    path: verification/contemporary-metal-shop/contact-sheet.png
+    mediaType: image/png
+    sha256: 6a28e5de5b96491b95aa020d08dc247f094049cdc7785a42fc0af3d34dc36200
+  - role: contemporary-metal-shop-full-report
+    path: verification/contemporary-metal-shop/scene-render.json
+    mediaType: application/json
+    sha256: bca06e24c70e38e190765bd1013ef65e01afb8bcf9a7c9bcf007f73f1e6e3a2d
+  - role: contemporary-metal-shop-aerosol-report
+    path: verification/contemporary-metal-shop/aerosol-report.json
+    mediaType: application/json
+    sha256: 8ac3f102ecb616e34ae3ec4b9fe3fc5491656cbf98698df2cf34a34ff6397bd3
+  - role: historic-forge-accepted-contact-sheet
+    path: verification/historic-forge/contact-sheet.png
+    mediaType: image/png
+    sha256: 566c2b3e93adb276e0e4b90d661683df0ab4f72b3c981060f601e7e1de6037c7
+  - role: historic-forge-accepted-render-report
+    path: verification/historic-forge/scene-render.json
+    mediaType: application/json
+    sha256: 13383e185cf5b5ddb87b0c4433bb13d88934258554de8087c4ca2ff0654c03cd
+  - role: historic-forge-accepted-aerosol-report
+    path: verification/historic-forge/aerosol-report.json
+    mediaType: application/json
+    sha256: 9867991f980bbbea2279568a90b24569cd252c291deebb9e0a53702b85bc984d
+  - role: contemporary-metal-shop-accepted-contact-sheet
+    path: verification/contemporary-metal-shop/contact-sheet.png
+    mediaType: image/png
+    sha256: 6a28e5de5b96491b95aa020d08dc247f094049cdc7785a42fc0af3d34dc36200
+  - role: contemporary-metal-shop-accepted-render-report
+    path: verification/contemporary-metal-shop/scene-render.json
+    mediaType: application/json
+    sha256: bca06e24c70e38e190765bd1013ef65e01afb8bcf9a7c9bcf007f73f1e6e3a2d
+  - role: contemporary-metal-shop-accepted-aerosol-report
+    path: verification/contemporary-metal-shop/aerosol-report.json
+    mediaType: application/json
+    sha256: 8ac3f102ecb616e34ae3ec4b9fe3fc5491656cbf98698df2cf34a34ff6397bd3
+  - role: qualitative-review
+    path: verification/vfx-candidate-review.json
+    mediaType: application/json
+    sha256: 5a9a92285c5548c77302a8f548afababb250d31a3ace2a3b4dc320d6e23a6831
+compatibility:
+  coordinateSystem: source-relative-right-handed-y-up-metres
+  renderers:
+    - blender-headless
+  requires: []
+verification:
+  checks:
+    - vfx.unique-layer-ids-and-seeds
+    - vfx.source-attachment-resolution
+    - vfx.declared-generated-count-equality
+    - vfx.world-space-volume-and-particles
+    - vfx.temporal-rise-and-turbulence
+    - vfx.live-source-attachment-regeneration-accepted
+    - vfx.backend-layer-count-and-seed-accepted
+    - vfx.sparse-openvdb-buoyant-incompressible-sequence-accepted
+    - vfx.openvdb-live-frame-hashes-and-temporal-variation-accepted
+    - vfx.openvdb-cross-host-sequence-identity-accepted
+    - vfx.openvdb-live-canonical-field-inspection-accepted
+    - visual.historic-forge-world-space-volume-accepted
+    - visual.contemporary-metal-shop-world-space-volume-accepted
+    - visual.medium-shot-aerosol-quality-tier-accepted
+  artifacts:
+    - verification/historic-forge/contact-sheet.png
+    - verification/historic-forge/scene-render.json
+    - verification/historic-forge/aerosol-report.json
+    - verification/contemporary-metal-shop/contact-sheet.png
+    - verification/contemporary-metal-shop/scene-render.json
+    - verification/contemporary-metal-shop/aerosol-report.json
+    - verification/vfx-candidate-review.json
+  verifiedAt: 2026-09-01T12:43:04.000Z

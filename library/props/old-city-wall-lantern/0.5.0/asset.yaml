@@ -1,0 +1,136 @@
+schemaVersion: 1
+id: prop.old-city-wall-lantern
+version: 0.5.0
+type: prop
+title: Portable old-city wall lantern practical
+description: Project-owned wall-mounted lantern with separate 8 mm glazing,
+  metal frame and bracket, candle/flame source, named mount, and
+  renderer-independent local practical emitter.
+status: verified
+tags:
+  - lantern
+  - wall-light
+  - practical
+  - old-city
+  - portable-set-dressing
+capabilities:
+  - portable-geometry
+  - named-wall-mount
+  - physical-glazing
+  - local-practical-emitter
+  - inverse-square-falloff
+  - cross-environment-transfer
+  - seeded-temporal-flicker
+  - visible-source-emission-binding
+  - medium-background-quality-tier
+source:
+  kind: procedural
+  generator: videoer.portable-wall-lantern.v5
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: geometry
+    path: geometry.json
+    mediaType: application/vnd.videoer.geometry+json
+    sha256: 710898c0f920016e0ff14eb640df6c9b1c1d7382be7fac26bf3dd6d9d5e92958
+  - role: practical-fixture
+    path: fixture.json
+    mediaType: application/vnd.videoer.practical-fixture+json
+    sha256: 582fb4ae7b8f6e63649d8bd4e9e054f01c5bd86505d1be5286de9089c1eed7dc
+  - role: validation
+    path: validation.json
+    mediaType: application/json
+    sha256: 1b8d272a6216f0a17acba8541ec4a79f74c545002dfce360e53880b077595ae4
+  - role: blender-source
+    path: verification/facade/wall-lantern-facade-probe.blend
+    mediaType: application/x-blender
+    sha256: bc61bd23e562eed5d4577ee8ee53b369fb28234c9cbb1197109fea15077db6ca
+  - role: temporal-preview
+    path: verification/facade/wall-lantern-facade-probe.mp4
+    mediaType: video/mp4
+    sha256: a11677d7c7ac858556587ff28dcb97fd9fe6d7f899c7d652abdc0c5b1ae66a4d
+  - role: temporal-render-report
+    path: verification/facade/scene-render.json
+    mediaType: application/json
+    sha256: 951e4e63e5ffc8ff4b8f19006701d7d4f61b678f912173034c095a7a732a2601
+  - role: fixture-modulation-report
+    path: verification/facade/fixture-modulation-report.json
+    mediaType: application/json
+    sha256: f897b2c001efb17d8478af844dd5aed2a71ca6552fec168de4f3388fa28300a5
+  - role: transfer-blender-source
+    path: verification/warehouse/wall-lantern-warehouse-probe.blend
+    mediaType: application/x-blender
+    sha256: 6ce57c2181a71b9098c25a434d0e6bbb2f4621f6da7eea6cefc11c932fe46f57
+  - role: verification-verification-facade-contact-sheet
+    path: verification/facade/contact-sheet.png
+    mediaType: image/png
+    sha256: ceeeab8f8f630ca4e01f48896a1b15cfe804e117e7add8c1fdd668737346cf15
+  - role: verification-verification-warehouse-contact-sheet
+    path: verification/warehouse/contact-sheet.png
+    mediaType: image/png
+    sha256: f8d51f466fefaf514e16f3d1fc8134f187c8ddb87aa7077ceaa155f4f8e0d6fe
+  - role: verification-verification-warehouse-scene-probe
+    path: verification/warehouse/scene-probe.json
+    mediaType: application/json
+    sha256: c623014f4a0962141a7df368dc779a2dfb9a20681b473685f0d420cb3b42ec67
+  - role: facade-contact-sheet
+    path: verification/facade/contact-sheet.png
+    mediaType: image/png
+    sha256: ceeeab8f8f630ca4e01f48896a1b15cfe804e117e7add8c1fdd668737346cf15
+  - role: facade-temporal-render-report
+    path: verification/facade/scene-render.json
+    mediaType: application/json
+    sha256: 951e4e63e5ffc8ff4b8f19006701d7d4f61b678f912173034c095a7a732a2601
+  - role: facade-temporal-preview
+    path: verification/facade/wall-lantern-facade-probe.mp4
+    mediaType: video/mp4
+    sha256: a11677d7c7ac858556587ff28dcb97fd9fe6d7f899c7d652abdc0c5b1ae66a4d
+  - role: fixture-modulation-report
+    path: verification/facade/fixture-modulation-report.json
+    mediaType: application/json
+    sha256: f897b2c001efb17d8478af844dd5aed2a71ca6552fec168de4f3388fa28300a5
+  - role: warehouse-transfer-contact-sheet
+    path: verification/warehouse/contact-sheet.png
+    mediaType: image/png
+    sha256: f8d51f466fefaf514e16f3d1fc8134f187c8ddb87aa7077ceaa155f4f8e0d6fe
+  - role: warehouse-transfer-probe-report
+    path: verification/warehouse/scene-probe.json
+    mediaType: application/json
+    sha256: c623014f4a0962141a7df368dc779a2dfb9a20681b473685f0d420cb3b42ec67
+  - role: qualitative-review
+    path: verification/fixture-candidate-review.json
+    mediaType: application/json
+    sha256: cfc41e12ac331fd2ac3bdd97dcf1de542c07cad77a2b1538d74eb8ac530d52db
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - blender-headless
+  requires: []
+verification:
+  checks:
+    - geometry.topology
+    - fixture.geometry-binding
+    - fixture.mount-attachment
+    - fixture.local-emitter-schema
+    - fixture.inverse-square-falloff
+    - fixture.seeded-temporal-modulation
+    - fixture.visible-source-and-useful-light-shared-signal
+    - visual.facade-geometry-light-pool-accepted
+    - visual.unrelated-warehouse-transfer-accepted
+    - fixture.medium-background-shot-distance-accepted
+    - fixture.seeded-temporal-modulation-accepted
+    - fixture.visible-source-and-useful-light-shared-signal-accepted
+  artifacts:
+    - verification/facade/contact-sheet.png
+    - verification/facade/scene-render.json
+    - verification/facade/wall-lantern-facade-probe.mp4
+    - verification/facade/fixture-modulation-report.json
+    - verification/warehouse/contact-sheet.png
+    - verification/warehouse/scene-probe.json
+    - verification/fixture-candidate-review.json
+  verifiedAt: 2026-09-01T05:13:36.000Z

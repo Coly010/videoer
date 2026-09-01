@@ -1,0 +1,105 @@
+{
+  "valid": true,
+  "issues": [],
+  "stats": {
+    "vertices": 4247,
+    "triangles": 7840,
+    "joints": 22,
+    "skinned": true,
+    "morphTargets": 0
+  },
+  "dressDrape": {
+    "valid": true,
+    "issues": [],
+    "hemVertexCount": 99,
+    "maximumHemNonPelvisWeight": 0.1004826420370877
+  },
+  "temporalClothing": {
+    "neutral": {
+      "valid": true,
+      "issues": [],
+      "sampleCount": 49,
+      "garmentVertexCount": 231,
+      "bodyCapsuleCount": 8,
+      "collision": {
+        "collidingVertexSamples": 0,
+        "sampledVertexCount": 11319,
+        "collidingSampleFraction": 0,
+        "maximumDepthMeters": 0
+      },
+      "silhouette": {
+        "restWidthMeters": 0.8636,
+        "restDepthMeters": 0.945,
+        "maximumLateralExpansionRatio": 1.0008596285593563,
+        "maximumDepthExpansionRatio": 1.0819911326930634,
+        "maximumAreaExpansionRatio": 1.0499021715515306,
+        "maximumAdjacentAreaDeltaRatio": 0.03383547452680402,
+        "maximumEdgeStretchRatio": 1.1921267947914505,
+        "maximumEdgeCompressionRatio": 0.15621307018114894,
+        "worstEdgeStretch": {
+          "sample": 42,
+          "vertices": [
+            4123,
+            4124
+          ],
+          "restMeters": 0.07021670770245103,
+          "posedMeters": 0.0837072186941311
+        }
+      }
+    },
+    "cautious": {
+      "valid": true,
+      "issues": [],
+      "sampleCount": 49,
+      "garmentVertexCount": 231,
+      "bodyCapsuleCount": 8,
+      "collision": {
+        "collidingVertexSamples": 0,
+        "sampledVertexCount": 11319,
+        "collidingSampleFraction": 0,
+        "maximumDepthMeters": 0
+      },
+      "silhouette": {
+        "restWidthMeters": 0.8636,
+        "restDepthMeters": 0.945,
+        "maximumLateralExpansionRatio": 1.0004224298643956,
+        "maximumDepthExpansionRatio": 1.0439951604343098,
+        "maximumAreaExpansionRatio": 1.0300778591152282,
+        "maximumAdjacentAreaDeltaRatio": 0.017873365812757225,
+        "maximumEdgeStretchRatio": 1.1504387245888505,
+        "maximumEdgeCompressionRatio": 0.11691518636205067,
+        "worstEdgeStretch": {
+          "sample": 18,
+          "vertices": [
+            4206,
+            4238
+          ],
+          "restMeters": 0.14882001437011086,
+          "posedMeters": 0.17120830752524474
+        }
+      }
+    }
+  },
+  "poseSpaceClothCorrectives": {
+    "neutral": {
+      "generator": "videoer.pose-space-cloth-corrective.v1",
+      "materialId": "dress",
+      "sampleCount": 49,
+      "clearanceMeters": 0.003,
+      "correctedPoseCount": 20,
+      "correctedVertexCount": 3960,
+      "maximumRawDepthMeters": 0.06397165390369464,
+      "addedMorphTargetCount": 20
+    },
+    "cautious": {
+      "generator": "videoer.pose-space-cloth-corrective.v1",
+      "materialId": "dress",
+      "sampleCount": 49,
+      "clearanceMeters": 0.003,
+      "correctedPoseCount": 16,
+      "correctedVertexCount": 3168,
+      "maximumRawDepthMeters": 0.03888564491822555,
+      "addedMorphTargetCount": 16
+    }
+  }
+}

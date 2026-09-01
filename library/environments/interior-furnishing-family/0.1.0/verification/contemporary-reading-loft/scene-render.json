@@ -1,0 +1,324 @@
+{
+  "schemaVersion": 1,
+  "source": "/Users/colum/dev/personal/videoer/work/environments/interior-furnishing-family-v7/family/verification/contemporary-reading-loft/scene.json",
+  "manifest": "/Users/colum/dev/personal/videoer/work/environments/interior-furnishing-family-v7/family/verification/contemporary-reading-loft/resolved-scene.json",
+  "video": "/Users/colum/dev/personal/videoer/work/environments/interior-furnishing-family-v7/family/verification/contemporary-reading-loft/interior-furnishing-contemporary-reading-loft-transfer.mp4",
+  "blend": "/Users/colum/dev/personal/videoer/work/environments/interior-furnishing-family-v7/family/verification/contemporary-reading-loft/interior-furnishing-contemporary-reading-loft-transfer.blend",
+  "frames": [
+    {
+      "id": "right-context",
+      "progress": 0,
+      "description": "Right host and furniture silhouette",
+      "path": "/Users/colum/dev/personal/videoer/work/environments/interior-furnishing-family-v7/family/verification/contemporary-reading-loft/000-right-context.png"
+    },
+    {
+      "id": "frontal-reading-corner",
+      "progress": 0.5,
+      "description": "Table support, vessels, seating and circulation",
+      "path": "/Users/colum/dev/personal/videoer/work/environments/interior-furnishing-family-v7/family/verification/contemporary-reading-loft/050-frontal-reading-corner.png"
+    },
+    {
+      "id": "left-context",
+      "progress": 1,
+      "description": "Left host and material separation",
+      "path": "/Users/colum/dev/personal/videoer/work/environments/interior-furnishing-family-v7/family/verification/contemporary-reading-loft/100-left-context.png"
+    }
+  ],
+  "contactSheet": "/Users/colum/dev/personal/videoer/work/environments/interior-furnishing-family-v7/family/verification/contemporary-reading-loft/contact-sheet.png",
+  "media": {
+    "streams": [
+      {
+        "index": 0,
+        "codec_name": "h264",
+        "codec_long_name": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+        "profile": "High",
+        "codec_type": "video",
+        "codec_tag_string": "avc1",
+        "codec_tag": "0x31637661",
+        "mime_codec_string": "avc1.64001e",
+        "width": 720,
+        "height": 406,
+        "coded_width": 720,
+        "coded_height": 406,
+        "has_b_frames": 2,
+        "sample_aspect_ratio": "1:1",
+        "display_aspect_ratio": "360:203",
+        "pix_fmt": "yuv420p",
+        "level": 30,
+        "chroma_location": "left",
+        "field_order": "progressive",
+        "is_avc": "true",
+        "nal_length_size": "4",
+        "id": "0x1",
+        "r_frame_rate": "24/1",
+        "avg_frame_rate": "24/1",
+        "time_base": "1/12288",
+        "start_pts": 0,
+        "start_time": "0.000000",
+        "duration_ts": 1536,
+        "duration": "0.125000",
+        "bit_rate": "1379776",
+        "bits_per_raw_sample": "8",
+        "nb_frames": "3",
+        "extradata_size": 47,
+        "disposition": {
+          "default": 1,
+          "dub": 0,
+          "original": 0,
+          "comment": 0,
+          "lyrics": 0,
+          "karaoke": 0,
+          "forced": 0,
+          "hearing_impaired": 0,
+          "visual_impaired": 0,
+          "clean_effects": 0,
+          "attached_pic": 0,
+          "timed_thumbnails": 0,
+          "non_diegetic": 0,
+          "captions": 0,
+          "descriptions": 0,
+          "metadata": 0,
+          "dependent": 0,
+          "still_image": 0,
+          "multilayer": 0
+        },
+        "tags": {
+          "language": "und",
+          "handler_name": "VideoHandler",
+          "encoder": "Lavc libx264"
+        }
+      }
+    ],
+    "format": {
+      "filename": "/Users/colum/dev/personal/videoer/work/environments/interior-furnishing-family-v7/family/verification/contemporary-reading-loft/interior-furnishing-contemporary-reading-loft-transfer.mp4",
+      "nb_streams": 1,
+      "nb_programs": 0,
+      "nb_stream_groups": 0,
+      "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+      "format_long_name": "QuickTime / MOV",
+      "start_time": "0.000000",
+      "duration": "0.125000",
+      "size": "22454",
+      "bit_rate": "1437056",
+      "probe_score": 100,
+      "tags": {
+        "major_brand": "isom",
+        "minor_version": "512",
+        "compatible_brands": "isomiso2avc1mp41",
+        "encoder": "Lavf63.1.101"
+      }
+    }
+  },
+  "verification": {
+    "schemaVersion": 1,
+    "status": "pass",
+    "checks": [
+      {
+        "id": "camera-remains-inside-host-shell",
+        "status": "pass",
+        "message": "Camera body path and semantic target sightline remain clear of declared obstacles",
+        "measurements": {
+          "sampleCount": 25,
+          "triangleCount": 192,
+          "minimumCameraClearanceMeters": 1.183638690890832,
+          "requiredCameraClearanceMeters": 0.12,
+          "maximumOcclusionBeforeTargetMeters": 0,
+          "targetOcclusionToleranceMeters": 0.18,
+          "blockedSightlineSamples": 0,
+          "closestObstacleEntityId": "interior-host",
+          "closestSampleTimeSeconds": 0.125,
+          "blockedObstacleEntityId": ""
+        }
+      }
+    ]
+  },
+  "evidenceRefresh": "new-pixel-render",
+  "renderProfile": {
+    "engine": "cycles-cpu",
+    "samples": 128,
+    "seed": 9431,
+    "denoise": true,
+    "intent": "deterministic-final"
+  },
+  "deterministicEvidence": {
+    "boundary": "cycles-cpu-fixed-seed-to-lossless-png-to-single-thread-x264",
+    "expected": "byte-identical-on-matching-runtime-and-input-fingerprint"
+  },
+  "renderChecks": [
+    {
+      "id": "renderer-camera-contract",
+      "status": "pass",
+      "message": "Renderer camera position, semantic target, lens, and tracking contract match the declarative path",
+      "measurements": {
+        "valid": true,
+        "trackingConstraint": "TRACK_TO",
+        "trackAxis": "TRACK_NEGATIVE_Z",
+        "upAxis": "UP_Y",
+        "interpolationImplementation": "frame-baked-declarative-v1",
+        "maximumPositionErrorMeters": 0,
+        "maximumTargetErrorMeters": 0,
+        "maximumLensErrorMillimeters": 0,
+        "positionToleranceMeters": 0.00001,
+        "targetToleranceMeters": 0.00001,
+        "lensToleranceMillimeters": 0.005,
+        "samples": [
+          {
+            "landmarkId": "right-context",
+            "frame": 1,
+            "positionErrorMeters": 0,
+            "targetErrorMeters": 0,
+            "lensErrorMillimeters": 0,
+            "actualLensMillimeters": 47,
+            "expectedLensMillimeters": 47
+          },
+          {
+            "landmarkId": "frontal-reading-corner",
+            "frame": 2,
+            "positionErrorMeters": 0,
+            "targetErrorMeters": 0,
+            "lensErrorMillimeters": 0,
+            "actualLensMillimeters": 52,
+            "expectedLensMillimeters": 52
+          },
+          {
+            "landmarkId": "left-context",
+            "frame": 3,
+            "positionErrorMeters": 0,
+            "targetErrorMeters": 0,
+            "lensErrorMillimeters": 0,
+            "actualLensMillimeters": 47,
+            "expectedLensMillimeters": 47
+          }
+        ]
+      }
+    },
+    {
+      "id": "interior-visible",
+      "status": "pass",
+      "message": "Semantic frames retain the required visible image coverage",
+      "measurements": {
+        "maximumBlackPercentage": 7,
+        "allowedBlackPercentage": 55,
+        "perFrameBlackPercentage": [
+          1,
+          1,
+          7
+        ]
+      }
+    },
+    {
+      "id": "interior-highlight-detail",
+      "status": "pass",
+      "message": "Semantic frames retain highlight detail within the declared limit",
+      "measurements": {
+        "maximumWhitePercentage": 0,
+        "allowedWhitePercentage": 4,
+        "perFrameWhitePercentage": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "interior-furnishing-inspection-coverage",
+      "status": "pass",
+      "message": "Every declared entity is inspectable in at least one semantic landmark",
+      "measurements": {
+        "minimumVisibleAreaPercentage": 94,
+        "minimumScreenHeightPercentage": 7,
+        "maximumScreenHeightPercentage": 68,
+        "marginPercentage": 1,
+        "uncoveredEntityIds": [],
+        "entities": [
+          {
+            "entityId": "layout.contemporary-reading-loft-interior-furnishing.cluster-001.member-01",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 48.55347275733948,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-reading-corner",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 62.38207519054413,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 59.687359631061554,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "entityId": "layout.contemporary-reading-loft-interior-furnishing.cluster-001.member-02",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 29.27781194448471,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-reading-corner",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 36.27190738916397,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 29.80383187532425,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          },
+          {
+            "entityId": "layout.contemporary-reading-loft-interior-furnishing.cluster-001.member-03",
+            "covered": true,
+            "samples": [
+              {
+                "landmarkId": "right-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 17.176085710525513,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "frontal-reading-corner",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 20.948264002799988,
+                "withinMargin": true,
+                "accepted": true
+              },
+              {
+                "landmarkId": "left-context",
+                "visibleAreaPercentage": 100,
+                "screenHeightPercentage": 16.98705554008484,
+                "withinMargin": true,
+                "accepted": true
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "blender": {
+    "mode": "render",
+    "stdout": "Blender 4.5.13 LTS (hash daeeeca98fb0 built 2026-08-25 01:30:50)\nFra:1 Mem:16.52M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | interior-host-mesh\nFra:1 Mem:16.53M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.contemporary-reading-loft-interior-furnishing.cluster\nFra:1 Mem:16.57M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | warm-reading-key\nFra:1 Mem:16.65M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | cool-window-fill\nFra:1 Mem:17.13M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing\nFra:1 Mem:14.20M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Waiting for render to start\nFra:1 Mem:14.20M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene\nFra:1 Mem:14.20M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Shaders\nFra:1 Mem:14.20M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)\nFra:1 Mem:14.42M (Peak 22.20M) | Time:00:00.00 | Mem:0.13M, Peak:0.13M | Scene, ViewLayer | Updating Procedurals\nFra:1 Mem:14.42M (Peak 22.20M) | Time:00:00.00 | Mem:0.13M, Peak:0.13M | Scene, ViewLayer | Updating Background\nFra:1 Mem:14.42M (Peak 22.20M) | Time:00:00.00 | Mem:0.13M, Peak:0.13M | Scene, ViewLayer | Updating Camera\nFra:1 Mem:14.42M (Peak 22.20M) | Time:00:00.00 | Mem:0.13M, Peak:0.13M | Scene, ViewLayer | Updating Meshes Flags\nFra:1 Mem:14.42M (Peak 22.20M) | Time:00:00.00 | Mem:0.13M, Peak:0.13M | Scene, ViewLayer | Updating Objects\nFra:1 Mem:14.42M (Peak 22.20M) | Time:00:00.00 | Mem:0.13M, Peak:0.13M | Scene, ViewLayer | Updating Objects | Copying Transformations to device\nFra:1 Mem:14.42M (Peak 22.20M) | Time:00:00.00 | Mem:0.13M, Peak:0.13M | Scene, ViewLayer | Updating Particle Systems\nFra:1 Mem:14.42M (Peak 22.20M) | Time:00:00.00 | Mem:0.13M, Peak:0.13M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device\nFra:1 Mem:14.42M (Peak 22.20M) | Time:00:00.00 | Mem:0.13M, Peak:0.13M | Scene, ViewLayer | Updating Meshes\nFra:1 Mem:14.42M (Peak 22.20M) | Time:00:00.00 | Mem:0.13M, Peak:0.13M | Scene, ViewLayer | Updating Objects | Applying Static Transformations\nFra:1 Mem:14.42M (Peak 22.20M) | Time:00:00.00 | Mem:0.13M, Peak:0.13M | Scene, ViewLayer | Updating Mesh | Computing attributes\nFra:1 Mem:14.47M (Peak 22.20M) | Time:00:00.00 | Mem:0.14M, Peak:0.14M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device\nFra:1 Mem:14.47M (Peak 22.20M) | Time:00:00.00 | Mem:0.18M, Peak:0.18M | Scene, ViewLayer | Updating Scene BVH | Building\nFra:1 Mem:14.47M (Peak 22.20M) | Time:00:00.00 | Mem:0.18M, Peak:0.18M | Scene, ViewLayer | Updating Scene BVH | Building BVH\nFra:1 Mem:14.47M (Peak 22.20M) | Time:00:00.00 | Mem:0.38M, Peak:0.38M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%\nFra:1 Mem:14.47M (Peak 22.20M) | Time:00:00.00 | Mem:0.60M, Peak:0.80M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device\nFra:1 Mem:14.47M (Peak 22.20M) | Time:00:00.00 | Mem:0.60M, Peak:0.80M | Scene, ViewLayer | Updating Mesh | Computing normals\nFra:1 Mem:14.66M (Peak 22.20M) | Time:00:00.00 | Mem:0.60M, Peak:0.80M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device\nFra:1 Mem:14.66M (Peak 22.20M) | Time:00:00.00 | Mem:0.79M, Peak:0.80M | Scene, ViewLayer | Updating Objects Flags\nFra:1 Mem:14.66M (Peak 22.20M) | Time:00:00.00 | Mem:0.79M, Peak:0.80M | Scene, ViewLayer | Updating Primitive Offsets\nFra:1 Mem:14.66M (Peak 22.20M) | Time:00:00.00 | Mem:0.79M, Peak:0.80M | Scene, ViewLayer | Updating Images\nFra:1 Mem:14.66M (Peak 22.20M) | Time:00:00.00 | Mem:0.79M, Peak:0.80M | Scene, ViewLayer | Updating Camera Volume\nFra:1 Mem:14.66M (Peak 22.20M) | Time:00:00.00 | Mem:0.79M, Peak:0.80M | Scene, ViewLayer | Updating Lookup Tables\nFra:1 Mem:14.66M (Peak 22.20M) | Time:00:00.00 | Mem:0.87M, Peak:0.87M | Scene, ViewLayer | Updating Lights\nFra:1 Mem:14.66M (Peak 22.20M) | Time:00:00.00 | Mem:0.88M, Peak:0.88M | Scene, ViewLayer | Updating Lights | Computing tree\nFra:1 Mem:14.67M (Peak 22.20M) | Time:00:00.00 | Mem:0.88M, Peak:0.88M | Scene, ViewLayer | Updating Integrator\nFra:1 Mem:14.67M (Peak 22.20M) | Time:00:00.00 | Mem:0.88M, Peak:0.88M | Scene, ViewLayer | Updating Film\nFra:1 Mem:14.67M (Peak 22.20M) | Time:00:00.00 | Mem:0.79M, Peak:0.88M | Scene, ViewLayer | Updating Lookup Tables\nFra:1 Mem:14.67M (Peak 22.20M) | Time:00:00.00 | Mem:0.88M, Peak:0.88M | Scene, ViewLayer | Updating Baking\nFra:1 Mem:14.67M (Peak 22.20M) | Time:00:00.00 | Mem:0.88M, Peak:0.88M | Scene, ViewLayer | Updating Device | Writing constant memory\nFra:1 Mem:14.67M (Peak 22.20M) | Time:00:00.00 | Mem:0.88M, Peak:0.88M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)\nFra:1 Mem:14.67M (Peak 22.20M) | Time:00:00.00 | Mem:0.88M, Peak:0.88M | Scene, ViewLayer | Sample 0/128\nFra:1 Mem:30.44M (Peak 30.44M) | Time:00:00.13 | Remaining:00:16.25 | Mem:16.49M, Peak:16.49M | Scene, ViewLayer | Sample 1/128\nFra:1 Mem:39.37M (Peak 52.75M) | Time:00:16.00 | Mem:16.49M, Peak:16.49M | Scene, ViewLayer | Sample 128/128\nFra:1 Mem:39.37M (Peak 52.75M) | Time:00:16.00 | Mem:16.49M, Peak:16.49M | Scene, ViewLayer | Finished\nSaved: '/Users/colum/dev/personal/videoer/work/environments/interior-furnishing-family-v7/family/verification/contemporary-reading-loft/lossless-frames/interior-furnishing-contemporary-reading-loft-transfer-0001.png'\nTime: 00:16.04 (Saving: 00:00.04)\n\nFra:2 Mem:16.64M (Peak 52.75M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | interior-host-mesh\nFra:2 Mem:16.64M (Peak 52.75M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.contemporary-reading-loft-interior-furnishing.cluster-0\nFra:2 Mem:16.71M (Peak 52.75M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.contemporary-reading-loft-interior-furnishing.cluster\nFra:2 Mem:16.92M (Peak 52.75M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | shelf-rim\nFra:2 Mem:17.13M (Peak 52.75M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing\nFra:2 Mem:14.20M (Peak 52.75M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Waiting for render to start\nFra:2 Mem:14.20M (Peak 52.75M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene\nFra:2 Mem:14.20M (Peak 52.75M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Shaders\nFra:2 Mem:14.20M (Peak 52.75M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)\nFra:2 Mem:14.42M (Peak 52.75M) | Time:00:00.00 | Mem:0.13M, Peak:0.13M | Scene, ViewLayer | Updating Procedurals\nFra:2 Mem:14.42M (Peak 52.75M) | Time:00:00.00 | Mem:0.13M, Peak:0.13M | Scene, ViewLayer | Updating Background\nFra:2 Mem:14.42M (Peak 52.75M) | Time:00:00.00 | Mem:0.13M, Peak:0.13M | Scene, ViewLayer | Updating Camera\nFra:2 Mem:14.42M (Peak 52.75M) | Time:00:00.00 | Mem:0.13M, Peak:0.13M | Scene, ViewLayer | Updating Meshes Flags\nFra:2 Mem:14.42M (Peak 52.75M) | Time:00:00.00 | Mem:0.13M, Peak:0.13M | Scene, ViewLayer | Updating Objects\nFra:2 Mem:14.42M (Peak 52.75M) | Time:00:00.00 | Mem:0.13M, Peak:0.13M | Scene, ViewLayer | Updating Objects | Copying Transformations to device\nFra:2 Mem:14.42M (Peak 52.75M) | Time:00:00.00 | Mem:0.13M, Peak:0.13M | Scene, ViewLayer | Updating Particle Systems\nFra:2 Mem:14.42M (Peak 52.75M) | Time:00:00.00 | Mem:0.13M, Peak:0.13M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device\nFra:2 Mem:14.42M (Peak 52.75M) | Time:00:00.00 | Mem:0.13M, Peak:0.13M | Scene, ViewLayer | Updating Meshes\nFra:2 Mem:14.42M (Peak 52.75M) | Time:00:00.00 | Mem:0.13M, Peak:0.13M | Scene, ViewLayer | Updating Objects | Applying Static Transformations\nFra:2 Mem:14.42M (Peak 52.75M) | Time:00:00.00 | Mem:0.13M, Peak:0.13M | Scene, ViewLayer | Updating Mesh | Computing attributes\nFra:2 Mem:14.47M (Peak 52.75M) | Time:00:00.00 | Mem:0.14M, Peak:0.14M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device\nFra:2 Mem:14.47M (Peak 52.75M) | Time:00:00.00 | Mem:0.18M, Peak:0.18M | Scene, ViewLayer | Updating Scene BVH | Building\nFra:2 Mem:14.47M (Peak 52.75M) | Time:00:00.00 | Mem:0.18M, Peak:0.18M | Scene, ViewLayer | Updating Scene BVH | Building BVH\nFra:2 Mem:14.47M (Peak 52.75M) | Time:00:00.00 | Mem:0.38M, Peak:0.38M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%\nFra:2 Mem:14.47M (Peak 52.75M) | Time:00:00.00 | Mem:0.60M, Peak:0.80M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device\nFra:2 Mem:14.47M (Peak 52.75M) | Time:00:00.00 | Mem:0.60M, Peak:0.80M | Scene, ViewLayer | Updating Mesh | Computing normals\nFra:2 Mem:14.66M (Peak 52.75M) | Time:00:00.00 | Mem:0.60M, Peak:0.80M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device\nFra:2 Mem:14.66M (Peak 52.75M) | Time:00:00.00 | Mem:0.79M, Peak:0.80M | Scene, ViewLayer | Updating Objects Flags\nFra:2 Mem:14.66M (Peak 52.75M) | Time:00:00.00 | Mem:0.79M, Peak:0.80M | Scene, ViewLayer | Updating Primitive Offsets\nFra:2 Mem:14.66M (Peak 52.75M) | Time:00:00.00 | Mem:0.79M, Peak:0.80M | Scene, ViewLayer | Updating Images\nFra:2 Mem:14.66M (Peak 52.75M) | Time:00:00.00 | Mem:0.79M, Peak:0.80M | Scene, ViewLayer | Updating Camera Volume\nFra:2 Mem:14.66M (Peak 52.75M) | Time:00:00.00 | Mem:0.79M, Peak:0.80M | Scene, ViewLayer | Updating Lookup Tables\nFra:2 Mem:14.66M (Peak 52.75M) | Time:00:00.00 | Mem:0.87M, Peak:0.87M | Scene, ViewLayer | Updating Lights\nFra:2 Mem:14.66M (Peak 52.75M) | Time:00:00.00 | Mem:0.88M, Peak:0.88M | Scene, ViewLayer | Updating Lights | Computing tree\nFra:2 Mem:14.67M (Peak 52.75M) | Time:00:00.00 | Mem:0.88M, Peak:0.88M | Scene, ViewLayer | Updating Integrator\nFra:2 Mem:14.67M (Peak 52.75M) | Time:00:00.00 | Mem:0.88M, Peak:0.88M | Scene, ViewLayer | Updating Film\nFra:2 Mem:14.67M (Peak 52.75M) | Time:00:00.00 | Mem:0.79M, Peak:0.88M | Scene, ViewLayer | Updating Lookup Tables\nFra:2 Mem:14.67M (Peak 52.75M) | Time:00:00.00 | Mem:0.88M, Peak:0.88M | Scene, ViewLayer | Updating Baking\nFra:2 Mem:14.67M (Peak 52.75M) | Time:00:00.00 | Mem:0.88M, Peak:0.88M | Scene, ViewLayer | Updating Device | Writing constant memory\nFra:2 Mem:14.67M (Peak 52.75M) | Time:00:00.00 | Mem:0.88M, Peak:0.88M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)\nFra:2 Mem:14.67M (Peak 52.75M) | Time:00:00.00 | Mem:0.88M, Peak:0.88M | Scene, ViewLayer | Sample 0/128\nFra:2 Mem:30.44M (Peak 52.75M) | Time:00:00.12 | Remaining:00:15.58 | Mem:16.49M, Peak:16.49M | Scene, ViewLayer | Sample 1/128\nFra:2 Mem:39.37M (Peak 52.75M) | Time:00:16.48 | Mem:16.49M, Peak:16.49M | Scene, ViewLayer | Sample 128/128\nFra:2 Mem:39.37M (Peak 52.75M) | Time:00:16.48 | Mem:16.49M, Peak:16.49M | Scene, ViewLayer | Finished\nSaved: '/Users/colum/dev/personal/videoer/work/environments/interior-furnishing-family-v7/family/verification/contemporary-reading-loft/lossless-frames/interior-furnishing-contemporary-reading-loft-transfer-0002.png'\nTime: 00:16.49 (Saving: 00:00.01)\n\nFra:3 Mem:16.64M (Peak 52.75M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | interior-host-mesh\nFra:3 Mem:16.64M (Peak 52.75M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.contemporary-reading-loft-interior-furnishing.cluster-0\nFra:3 Mem:16.71M (Peak 52.75M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | layout.contemporary-reading-loft-interior-furnishing.cluster\nFra:3 Mem:16.92M (Peak 52.75M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | cool-window-fill\nFra:3 Mem:17.13M (Peak 52.75M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing\nFra:3 Mem:14.20M (Peak 52.75M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Waiting for render to start\nFra:3 Mem:14.20M (Peak 52.75M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene\nFra:3 Mem:14.20M (Peak 52.75M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Shaders\nFra:3 Mem:14.20M (Peak 52.75M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)\nFra:3 Mem:14.42M (Peak 52.75M) | Time:00:00.00 | Mem:0.13M, Peak:0.13M | Scene, ViewLayer | Updating Procedurals\nFra:3 Mem:14.42M (Peak 52.75M) | Time:00:00.00 | Mem:0.13M, Peak:0.13M | Scene, ViewLayer | Updating Background\nFra:3 Mem:14.42M (Peak 52.75M) | Time:00:00.00 | Mem:0.13M, Peak:0.13M | Scene, ViewLayer | Updating Camera\nFra:3 Mem:14.42M (Peak 52.75M) | Time:00:00.00 | Mem:0.13M, Peak:0.13M | Scene, ViewLayer | Updating Meshes Flags\nFra:3 Mem:14.42M (Peak 52.75M) | Time:00:00.00 | Mem:0.13M, Peak:0.13M | Scene, ViewLayer | Updating Objects\nFra:3 Mem:14.42M (Peak 52.75M) | Time:00:00.00 | Mem:0.13M, Peak:0.13M | Scene, ViewLayer | Updating Objects | Copying Transformations to device\nFra:3 Mem:14.42M (Peak 52.75M) | Time:00:00.00 | Mem:0.13M, Peak:0.13M | Scene, ViewLayer | Updating Particle Systems\nFra:3 Mem:14.42M (Peak 52.75M) | Time:00:00.00 | Mem:0.13M, Peak:0.13M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device\nFra:3 Mem:14.42M (Peak 52.75M) | Time:00:00.00 | Mem:0.13M, Peak:0.13M | Scene, ViewLayer | Updating Meshes\nFra:3 Mem:14.42M (Peak 52.75M) | Time:00:00.00 | Mem:0.13M, Peak:0.13M | Scene, ViewLayer | Updating Objects | Applying Static Transformations\nFra:3 Mem:14.42M (Peak 52.75M) | Time:00:00.00 | Mem:0.13M, Peak:0.13M | Scene, ViewLayer | Updating Mesh | Computing attributes\nFra:3 Mem:14.47M (Peak 52.75M) | Time:00:00.00 | Mem:0.14M, Peak:0.14M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device\nFra:3 Mem:14.47M (Peak 52.75M) | Time:00:00.00 | Mem:0.18M, Peak:0.18M | Scene, ViewLayer | Updating Scene BVH | Building\nFra:3 Mem:14.47M (Peak 52.75M) | Time:00:00.00 | Mem:0.18M, Peak:0.18M | Scene, ViewLayer | Updating Scene BVH | Building BVH\nFra:3 Mem:14.47M (Peak 52.75M) | Time:00:00.00 | Mem:0.38M, Peak:0.38M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%\nFra:3 Mem:14.47M (Peak 52.75M) | Time:00:00.00 | Mem:0.60M, Peak:0.80M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device\nFra:3 Mem:14.47M (Peak 52.75M) | Time:00:00.00 | Mem:0.60M, Peak:0.80M | Scene, ViewLayer | Updating Mesh | Computing normals\nFra:3 Mem:14.66M (Peak 52.75M) | Time:00:00.00 | Mem:0.60M, Peak:0.80M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device\nFra:3 Mem:14.66M (Peak 52.75M) | Time:00:00.00 | Mem:0.79M, Peak:0.80M | Scene, ViewLayer | Updating Objects Flags\nFra:3 Mem:14.66M (Peak 52.75M) | Time:00:00.00 | Mem:0.79M, Peak:0.80M | Scene, ViewLayer | Updating Primitive Offsets\nFra:3 Mem:14.66M (Peak 52.75M) | Time:00:00.00 | Mem:0.79M, Peak:0.80M | Scene, ViewLayer | Updating Images\nFra:3 Mem:14.66M (Peak 52.75M) | Time:00:00.00 | Mem:0.79M, Peak:0.80M | Scene, ViewLayer | Updating Camera Volume\nFra:3 Mem:14.66M (Peak 52.75M) | Time:00:00.00 | Mem:0.79M, Peak:0.80M | Scene, ViewLayer | Updating Lookup Tables\nFra:3 Mem:14.66M (Peak 52.75M) | Time:00:00.00 | Mem:0.87M, Peak:0.87M | Scene, ViewLayer | Updating Lights\nFra:3 Mem:14.66M (Peak 52.75M) | Time:00:00.00 | Mem:0.88M, Peak:0.88M | Scene, ViewLayer | Updating Lights | Computing tree\nFra:3 Mem:14.67M (Peak 52.75M) | Time:00:00.00 | Mem:0.88M, Peak:0.88M | Scene, ViewLayer | Updating Integrator\nFra:3 Mem:14.67M (Peak 52.75M) | Time:00:00.00 | Mem:0.88M, Peak:0.88M | Scene, ViewLayer | Updating Film\nFra:3 Mem:14.67M (Peak 52.75M) | Time:00:00.00 | Mem:0.79M, Peak:0.88M | Scene, ViewLayer | Updating Lookup Tables\nFra:3 Mem:14.67M (Peak 52.75M) | Time:00:00.00 | Mem:0.88M, Peak:0.88M | Scene, ViewLayer | Updating Baking\nFra:3 Mem:14.67M (Peak 52.75M) | Time:00:00.00 | Mem:0.88M, Peak:0.88M | Scene, ViewLayer | Updating Device | Writing constant memory\nFra:3 Mem:14.67M (Peak 52.75M) | Time:00:00.00 | Mem:0.88M, Peak:0.88M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)\nFra:3 Mem:14.67M (Peak 52.75M) | Time:00:00.00 | Mem:0.88M, Peak:0.88M | Scene, ViewLayer | Sample 0/128\nFra:3 Mem:30.44M (Peak 52.75M) | Time:00:00.13 | Remaining:00:16.39 | Mem:16.49M, Peak:16.49M | Scene, ViewLayer | Sample 1/128\nFra:3 Mem:39.37M (Peak 52.75M) | Time:00:15.81 | Mem:16.49M, Peak:16.49M | Scene, ViewLayer | Sample 128/128\nFra:3 Mem:39.37M (Peak 52.75M) | Time:00:15.81 | Mem:16.49M, Peak:16.49M | Scene, ViewLayer | Finished\nSaved: '/Users/colum/dev/personal/videoer/work/environments/interior-furnishing-family-v7/family/verification/contemporary-reading-loft/lossless-frames/interior-furnishing-contemporary-reading-loft-transfer-0003.png'\nTime: 00:15.83 (Saving: 00:00.01)\n\nInfo: Saved as \"interior-furnishing-contemporary-reading-loft-transfer.blend\"\n\nBlender quit\n",
+    "stderr": ""
+  }
+}

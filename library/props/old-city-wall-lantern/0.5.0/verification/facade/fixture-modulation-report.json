@@ -1,0 +1,183 @@
+{
+  "schemaVersion": 1,
+  "sceneId": "scene.wall-lantern-facade-probe",
+  "fps": 24,
+  "frameCount": 12,
+  "emitters": [
+    {
+      "entityId": "portable-lantern",
+      "fixtureId": "fixture.old-city-wall-lantern",
+      "emitterId": "warm-lantern-source",
+      "kind": "seeded-flicker",
+      "seed": 2417,
+      "frequencyHz": 7.2,
+      "declaredIntensityRange": [
+        0.78,
+        1.12
+      ],
+      "declaredColorTemperatureRangeKelvin": [
+        1780,
+        2050
+      ],
+      "visibleSourceMaterialId": "warm-flame",
+      "samples": [
+        {
+          "frame": 1,
+          "timeSeconds": 0.0,
+          "intensityMultiplier": 0.9507424979559143,
+          "powerWatts": 49.4386100769043,
+          "colorTemperatureKelvin": 1915.5896307296966,
+          "lightColor": [
+            1.0,
+            0.5199175486126877,
+            0.006621980032505413
+          ],
+          "sourceEmissionStrength": 0.6179826259613037
+        },
+        {
+          "frame": 2,
+          "timeSeconds": 0.041666666666666664,
+          "intensityMultiplier": 0.9796839505943785,
+          "powerWatts": 50.943565368652344,
+          "colorTemperatureKelvin": 1938.572549001418,
+          "lightColor": [
+            1.0,
+            0.524569827833548,
+            0.020089104776510856
+          ],
+          "sourceEmissionStrength": 0.6367945671081543
+        },
+        {
+          "frame": 3,
+          "timeSeconds": 0.08333333333333333,
+          "intensityMultiplier": 1.0375668558713071,
+          "powerWatts": 53.95347595214844,
+          "colorTemperatureKelvin": 1984.5383855448615,
+          "lightColor": [
+            1.0,
+            0.5337111684455916,
+            0.04606130487441256
+          ],
+          "sourceEmissionStrength": 0.6744184494018555
+        },
+        {
+          "frame": 4,
+          "timeSeconds": 0.125,
+          "intensityMultiplier": 1.0809790348290036,
+          "powerWatts": 56.21091079711914,
+          "colorTemperatureKelvin": 2019.012762952444,
+          "lightColor": [
+            1.0,
+            0.5404292801721813,
+            0.06475667417397428
+          ],
+          "sourceEmissionStrength": 0.7026363611221313
+        },
+        {
+          "frame": 5,
+          "timeSeconds": 0.16666666666666666,
+          "intensityMultiplier": 1.0688517029176396,
+          "powerWatts": 55.58028793334961,
+          "colorTemperatureKelvin": 2009.3822346698903,
+          "lightColor": [
+            1.0,
+            0.5385641707000935,
+            0.05959849969492842
+          ],
+          "sourceEmissionStrength": 0.6947535872459412
+        },
+        {
+          "frame": 6,
+          "timeSeconds": 0.20833333333333334,
+          "intensityMultiplier": 1.0083893502989731,
+          "powerWatts": 52.43624496459961,
+          "colorTemperatureKelvin": 1961.3680134727138,
+          "lightColor": [
+            1.0,
+            0.5291299958132085,
+            0.03312450759448523
+          ],
+          "sourceEmissionStrength": 0.6554530262947083
+        },
+        {
+          "frame": 7,
+          "timeSeconds": 0.25,
+          "intensityMultiplier": 0.9479269976803065,
+          "powerWatts": 49.29220199584961,
+          "colorTemperatureKelvin": 1913.3537922755374,
+          "lightColor": [
+            1.0,
+            0.5194619871708763,
+            0.005293865431047727
+          ],
+          "sourceEmissionStrength": 0.6161525249481201
+        },
+        {
+          "frame": 8,
+          "timeSeconds": 0.2916666666666667,
+          "intensityMultiplier": 0.92779093911619,
+          "powerWatts": 48.2451286315918,
+          "colorTemperatureKelvin": 1897.3633928275626,
+          "lightColor": [
+            1.0,
+            0.5161882743398656,
+            0.0
+          ],
+          "sourceEmissionStrength": 0.6030640602111816
+        },
+        {
+          "frame": 9,
+          "timeSeconds": 0.3333333333333333,
+          "intensityMultiplier": 0.8785307096634656,
+          "powerWatts": 45.683597564697266,
+          "colorTemperatureKelvin": 1858.2449753209874,
+          "lightColor": [
+            1.0,
+            0.5080618008392461,
+            0.0
+          ],
+          "sourceEmissionStrength": 0.571044921875
+        },
+        {
+          "frame": 10,
+          "timeSeconds": 0.375,
+          "intensityMultiplier": 0.8128504037264995,
+          "powerWatts": 42.26822280883789,
+          "colorTemperatureKelvin": 1806.08708531222,
+          "lightColor": [
+            1.0,
+            0.49695625365261725,
+            0.0
+          ],
+          "sourceEmissionStrength": 0.5283527374267578
+        },
+        {
+          "frame": 11,
+          "timeSeconds": 0.4166666666666667,
+          "intensityMultiplier": 0.7800102507580166,
+          "powerWatts": 40.56053161621094,
+          "colorTemperatureKelvin": 1780.0081403078366,
+          "lightColor": [
+            1.0,
+            0.49128261994310823,
+            0.0
+          ],
+          "sourceEmissionStrength": 0.5070066452026367
+        },
+        {
+          "frame": 12,
+          "timeSeconds": 0.4583333333333333,
+          "intensityMultiplier": 0.8252579473724249,
+          "powerWatts": 42.913414001464844,
+          "colorTemperatureKelvin": 1815.9401346781021,
+          "lightColor": [
+            1.0,
+            0.4990785472190006,
+            0.0
+          ],
+          "sourceEmissionStrength": 0.5364176630973816
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "id": "environment.warm-bookshop-lighting",
+  "exposure": {
+    "look": "AgX - Medium High Contrast",
+    "coherentAcrossShots": true
+  },
+  "worldColor": [
+    0.009,
+    0.006,
+    0.004
+  ],
+  "lights": [
+    {
+      "id": "warm-reading-key",
+      "type": "area",
+      "position": [
+        -0.8,
+        2.8,
+        3.5
+      ],
+      "target": [
+        0.45,
+        1.2,
+        2.4
+      ],
+      "color": [
+        1,
+        0.49,
+        0.2
+      ],
+      "energy": 680,
+      "sizeMeters": 2.2,
+      "angleDegrees": 45,
+      "purpose": "key"
+    },
+    {
+      "id": "cool-window-fill",
+      "type": "area",
+      "position": [
+        2.3,
+        2.1,
+        0.2
+      ],
+      "target": [
+        0.45,
+        1.2,
+        2.4
+      ],
+      "color": [
+        0.3,
+        0.52,
+        0.92
+      ],
+      "energy": 340,
+      "sizeMeters": 2.6,
+      "angleDegrees": 45,
+      "purpose": "fill"
+    },
+    {
+      "id": "shelf-rim",
+      "type": "spot",
+      "position": [
+        0,
+        2.7,
+        4.1
+      ],
+      "target": [
+        0.45,
+        1.25,
+        2.5
+      ],
+      "color": [
+        1,
+        0.65,
+        0.35
+      ],
+      "energy": 320,
+      "sizeMeters": 1,
+      "angleDegrees": 48,
+      "purpose": "rim"
+    }
+  ],
+  "metadata": {
+    "context": "warm-bookshop-interior",
+    "faceKey": "warm-reading-key",
+    "windowFill": "cool-window-fill"
+  }
+}

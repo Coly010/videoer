@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "assetId": "lighting.moonlit-exterior",
+  "decision": "accepted",
+  "reviewer": "codex-visual-inspection",
+  "reviewedAt": "2026-09-01T15:06:00.000Z",
+  "portableWithoutEnvironment": true,
+  "sourceEvidenceDirectory": "verification/source/courtyard",
+  "transferEvidenceDirectory": "verification/transfer/rooftop",
+  "evidence": [
+    "verification/source/courtyard/courtyard-host.json",
+    "verification/source/courtyard/lighting-witness.json",
+    "verification/source/courtyard/contact-sheet.png",
+    "verification/source/courtyard/scene-render.json",
+    "verification/transfer/rooftop/rooftop-host.json",
+    "verification/transfer/rooftop/contact-sheet.png",
+    "verification/transfer/rooftop/scene-render.json",
+    "verification/transfer/rooftop/transfer-definition.json",
+    "verification/transfer/rooftop/lighting-adaptation-report.json"
+  ],
+  "strengths": [
+    "The historic courtyard source establishes a directional cool moon key, broader blue sky fill, silver edge separation, restrained ground bounce and a visibly motivated warm aperture without exposing backend light geometry.",
+    "Wet stone, plaster, wood, glazing, matte cloth, portrait form, glossy ceramic and metal remain differentiated through an opposed camera move without clipped highlights.",
+    "The unchanged five-role topology transfers through one bounded transform into a materially different contemporary rooftop while preserving readable shadow modelling and a subtle service-aperture motivation.",
+    "Source semantic frames hold 18 to 30 percent black coverage and zero clipped whites; transfer frames hold 45 to 47 percent black and zero clipped whites while the witness region retains 55 to 62 percent midtones.",
+    "Live adaptation reconstruction proves position, target, size, energy, colour, exposure and purpose topology rather than trusting the rendered frames alone."
+  ],
+  "limitations": [
+    "Accepted for background and medium night-exterior staging; hero faces, skin close-ups and macro reflective products require dedicated shot evidence.",
+    "Visible practical fixtures and aperture geometry remain separate host assets and must be spatially synchronized with the rig's practical source.",
+    "This release is static moonlight: moving clouds, foliage shadow animation, fire flicker, lightning and time-varying exposure are separate VFX or fixture systems.",
+    "The verification hosts are lighting witnesses rather than published complete environments, and the rooftop practical is intentionally subtle at the tested camera angles."
+  ],
+  "notes": "Accepted V4 after rejecting V1 for a visible white area-emitter crescent, V2 for a flat emissive rooftop card, and V3 for an occluded rooftop aperture with unexplained warm spill. V4 uses real framed openings, glazing and physically separated warm interior surfaces in both hosts."
+}

@@ -1,0 +1,100 @@
+schemaVersion: 1
+id: lighting.bookshop-dusk-exterior
+version: 0.1.0
+type: lighting
+title: Overcast dusk exterior lighting rig
+description: Reusable overcast dusk exterior rig with cool environmental key,
+  warm bookshop practicals, threshold rim, and coherent AgX exposure.
+status: verified
+tags:
+  - lighting-rig
+  - dusk
+  - warm-practicals
+capabilities:
+  - reusable-rig
+  - coherent-exposure
+source:
+  kind: procedural
+  generator: videoer.bookshop-lighting-rig.v3
+  references: []
+  licence:
+    spdx: LicenseRef-Videoer-Project
+    name: Videoer project-owned production asset
+    commercialUse: allowed
+    attributionRequired: false
+  clearance: approved
+artifacts:
+  - role: lighting-rig
+    path: lighting-rig.json
+    mediaType: application/vnd.videoer.lighting+json
+    sha256: 5c02b3bdd905316a9ff03f41ce9c1f435ddb73f87a624f066ab56d8bee0a2d14
+  - role: preview
+    path: verification/exterior-lighting-probe.mp4
+    mediaType: video/mp4
+    sha256: 716e83b1794ad2849f0d2d8d0efc027a4ebf8555db168b07c6cb025cfcdea87e
+  - role: blender-source
+    path: verification/exterior-lighting-probe.blend
+    mediaType: application/x-blender
+    sha256: 51d14451d07b1d4416c03b169944f65b45fd949902c5c5baf21f0a540f65098c
+  - role: verification-verification-contact-sheet
+    path: verification/contact-sheet.png
+    mediaType: image/png
+    sha256: 38588bd6654e253afc77a29ce98dd738818c4335e7d39cc7afd3e16cbdca8501
+  - role: verification-verification-scene-render
+    path: verification/scene-render.json
+    mediaType: application/json
+    sha256: 86132c55424b9dc95cf0ba18a29d528056d58646ea029280318d3919b107b46e
+  - role: transfer-definition
+    path: verification/transfer/transit-platform/transfer-definition.json
+    mediaType: application/vnd.videoer.lighting-transfer-probe+json
+    sha256: 70a587c95112b855e91fc4c226b9775715958f594c3c0eda4d03d9b2fc449053
+  - role: transfer-lighting-rig
+    path: verification/transfer/transit-platform/adapted-lighting-rig.json
+    mediaType: application/vnd.videoer.lighting+json
+    sha256: 2b316ec08c9e09d6697b99d1ea60bfa5e46a59bd477b41bd15726adc15d7028d
+  - role: transfer-adaptation-report
+    path: verification/transfer/transit-platform/lighting-adaptation-report.json
+    mediaType: application/json
+    sha256: 1372bb1944d82b2be0917b87adc86c52617ef3f883af3b37ed9d82240e930af9
+  - role: transfer-contact-sheet
+    path: verification/transfer/transit-platform/contact-sheet.png
+    mediaType: image/png
+    sha256: aa2e137843d50f91c832a644fdbf708c7014e557cfacc93dd3939fb4a862c53f
+  - role: transfer-preview
+    path: verification/transfer/transit-platform/transit-dusk-exterior-v1.mp4
+    mediaType: video/mp4
+    sha256: 960cea38a680bc2430710a9a4c2f3f42af4c455e6122fb5b66251ece714af96d
+  - role: transfer-scene-render
+    path: verification/transfer/transit-platform/scene-render.json
+    mediaType: application/json
+    sha256: fffab5b620dcbeb2961d5736302a0ac83f5c41e649f1f0cad1cb68042a9e101e
+  - role: qualitative-review
+    path: verification/lighting-candidate-review.json
+    mediaType: application/json
+    sha256: 30670396b8b07590045c7802794e1bdbd18b34725597491a54bd8b58d04cf4d7
+compatibility:
+  coordinateSystem: right-handed-y-up-forward-negative-z-metres
+  renderers:
+    - blender-headless
+  requires: []
+verification:
+  checks:
+    - lighting.reusable-rig-schema
+    - lighting.agx-coherent-exposure
+    - lighting.exterior-frame-visible
+    - lighting.exterior-highlight-detail
+    - lighting.exterior-regional-tonal-balance
+    - lighting.warm-practical-cool-dusk-separation
+    - visual.camera-movement-exposure-continuity
+    - visual.source-lighting-evidence-accepted
+    - lighting.unrelated-environment-transfer-reconstructed
+    - visual.unrelated-environment-transfer-accepted
+  artifacts:
+    - verification/contact-sheet.png
+    - verification/exterior-lighting-probe.mp4
+    - verification/scene-render.json
+    - verification/transfer/transit-platform/contact-sheet.png
+    - verification/transfer/transit-platform/scene-render.json
+    - verification/transfer/transit-platform/lighting-adaptation-report.json
+    - verification/lighting-candidate-review.json
+  verifiedAt: 2026-09-01T10:50:37Z

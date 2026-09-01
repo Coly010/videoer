@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "assetId": "vfx.source-bound-smoke-embers",
+  "decision": "accepted",
+  "reviewer": "Codex visual QA",
+  "reviewedAt": "2026-09-01T12:43:04.000Z",
+  "intendedShotDistance": "medium",
+  "evidence": [
+    "verification/historic-forge/contact-sheet.png",
+    "verification/historic-forge/historic-forge-source-bound-aerosol-transfer.mp4",
+    "verification/historic-forge/aerosol-report.json",
+    "verification/contemporary-metal-shop/contact-sheet.png",
+    "verification/contemporary-metal-shop/contemporary-metal-shop-source-bound-aerosol-transfer.mp4",
+    "verification/contemporary-metal-shop/aerosol-report.json"
+  ],
+  "strengths": [
+    "Separated curling smoke lobes replace the rejected spheres, capsule and procedural ribbon silhouettes.",
+    "The same deterministic sparse-volume sequence remains spatially legible in warm historic and cool contemporary lighting without host-specific VFX adaptation.",
+    "Complete temporal renders show continuous buoyant rise, lateral drift and evolving density without obvious volume popping.",
+    "Embers remain source-bound and provide restrained warm depth separation through the plume."
+  ],
+  "limitations": [
+    "The approximately 4.6 centimetre voxel grid is accepted for medium and background framing, not close or hero-close smoke photography.",
+    "The half-second verification fixture proves local continuity but not a long-lived plume, looping behaviour or interaction with moving collision geometry.",
+    "Embers are simplified volumetric points and are not accepted as close-range spark or firework inventory.",
+    "The project-owned solver models buoyant incompressible advection and vorticity confinement but does not yet model combustion chemistry, obstacles or adaptive-resolution turbulence."
+  ],
+  "notes": "Accepted after V1-V5 analytic representations were rejected and V6 full transfer failed the unchanged contemporary framing gate. V7 preserves the gate, moves the frontal contemporary camera 0.25 metres back, passes complete two-host Cycles renders, and visibly demonstrates a reusable source-bound turbulent volume at its declared medium-shot tier."
+}

@@ -1,0 +1,63 @@
+{
+  "valid": true,
+  "issues": [],
+  "adaptation": {
+    "kind": "lighting-rig-transform-v1",
+    "assetId": "lighting.contemporary-reading-loft-reading-corner",
+    "transform": {
+      "translation": [
+        -3.8561043618409574,
+        0.18,
+        -2.372327674520633
+      ],
+      "yawRadians": 0.24,
+      "uniformScale": 1.32
+    },
+    "energyScale": 1.6,
+    "purposeEnergyScale": {
+      "key": 1.15,
+      "fill": 1.55,
+      "rim": 1.25,
+      "practical": 1,
+      "environment": 1
+    },
+    "colorMultiply": [
+      0.92,
+      0.98,
+      1.05
+    ],
+    "worldColor": [
+      0.025,
+      0.04,
+      0.055
+    ],
+    "metadata": {
+      "context": "contemporary-reading-loft",
+      "purpose": "portable-furnishing-silhouette-and-surface-separation",
+      "layoutFocus": [
+        -2.5260876842576896,
+        0.5636756697128793
+      ]
+    }
+  },
+  "topologyPreserved": true,
+  "exposurePreserved": true,
+  "spatialTransformMatched": true,
+  "energyTransformMatched": true,
+  "colorTransformMatched": true,
+  "sizeTransformMatched": true,
+  "nonBlackWorld": true,
+  "roleCoverage": {
+    "key": 1,
+    "fill": 1,
+    "rim": 1,
+    "practical": 0,
+    "environment": 0
+  },
+  "baseLightCount": 3,
+  "adaptedLightCount": 3,
+  "energyRange": {
+    "minimum": 460,
+    "maximum": 791.1999999999999
+  }
+}

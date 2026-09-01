@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "campaign": "campaign.last-call-dialogue",
+  "sourceId": "last-call-line",
+  "asset": {
+    "id": "motion.last-call-line",
+    "version": "1.0.0"
+  },
+  "reviewer": "codex-agentic-review",
+  "rationale": "Reviewed the accepted 72-frame audiovisual delivery; neutral, aa, ee, mbp, and rest semantic frames; mouth-only deformation over 138 vertices; preserved 4,247-vertex/7,840-triangle topology and 22-joint skeleton; isolated 48 kHz speech WAV; 25 monotonic native phoneme events and six word events; exact five-track frame grid; target compatibility; one-frame global AV placement; immutable audio, event-ledger, target-geometry, and motion hashes; and independent live semantic validation at approval.",
+  "approvedAt": "2026-08-31T01:57:49.104Z"
+}

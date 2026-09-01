@@ -79,11 +79,36 @@ export class ProviderRegistry {
     if (!p) throw new ProviderError(id, `Image provider '${id}' is not configured`);
     return p;
   }
-  registerVideo(provider: VideoProvider) { this.videos.set(provider.id, provider); return this; }
-  registerVoice(provider: VoiceProvider) { this.voices.set(provider.id, provider); return this; }
-  registerMusic(provider: MusicProvider) { this.music.set(provider.id, provider); return this; }
-  video(id: string) { const provider = this.videos.get(id); if (!provider) throw new ProviderError(id, `Video provider '${id}' is not configured`); return provider; }
-  voice(id: string) { const provider = this.voices.get(id); if (!provider) throw new ProviderError(id, `Voice provider '${id}' is not configured`); return provider; }
-  musicProvider(id: string) { const provider = this.music.get(id); if (!provider) throw new ProviderError(id, `Music provider '${id}' is not configured`); return provider; }
-  has(capability: Capability, id: string) { return ({ image: this.images, video: this.videos, voice: this.voices, music: this.music }[capability]).has(id); }
+  registerVideo(provider: VideoProvider) {
+    this.videos.set(provider.id, provider);
+    return this;
+  }
+  registerVoice(provider: VoiceProvider) {
+    this.voices.set(provider.id, provider);
+    return this;
+  }
+  registerMusic(provider: MusicProvider) {
+    this.music.set(provider.id, provider);
+    return this;
+  }
+  video(id: string) {
+    const provider = this.videos.get(id);
+    if (!provider) throw new ProviderError(id, `Video provider '${id}' is not configured`);
+    return provider;
+  }
+  voice(id: string) {
+    const provider = this.voices.get(id);
+    if (!provider) throw new ProviderError(id, `Voice provider '${id}' is not configured`);
+    return provider;
+  }
+  musicProvider(id: string) {
+    const provider = this.music.get(id);
+    if (!provider) throw new ProviderError(id, `Music provider '${id}' is not configured`);
+    return provider;
+  }
+  has(capability: Capability, id: string) {
+    return { image: this.images, video: this.videos, voice: this.voices, music: this.music }[
+      capability
+    ].has(id);
+  }
 }

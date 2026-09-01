@@ -1,0 +1,182 @@
+{
+  "schemaVersion": 1,
+  "id": "lighting.firelit-interior.contemporary-lounge-transfer",
+  "exposure": {
+    "look": "AgX - Medium High Contrast",
+    "coherentAcrossShots": true
+  },
+  "worldColor": [
+    0.0025,
+    0.002,
+    0.0025
+  ],
+  "lights": [
+    {
+      "id": "hearth-source-practical",
+      "type": "point",
+      "position": [
+        -1.6713941092762636,
+        0.7999999999999999,
+        3.2494371407178515
+      ],
+      "color": [
+        0.98,
+        0.1568,
+        0.025
+      ],
+      "energy": 160.73999999999998,
+      "sizeMeters": 0.22,
+      "angleDegrees": 45,
+      "purpose": "practical",
+      "temporalModulation": {
+        "kind": "seeded-flicker",
+        "seed": 8117,
+        "frequencyHz": 5.2,
+        "intensityMinimumMultiplier": 0.82,
+        "intensityMaximumMultiplier": 1.12,
+        "colorTemperatureMinimumKelvin": 1300,
+        "colorTemperatureMaximumKelvin": 1850,
+        "interpolation": "smooth"
+      },
+      "temporalSignalId": "primary-fire",
+      "visibleSourceRole": "primary-fire"
+    },
+    {
+      "id": "fire-shaped-key",
+      "type": "area",
+      "position": [
+        -0.9411889096901146,
+        1.28,
+        2.7398290888806063
+      ],
+      "target": [
+        1.8293786417137123,
+        1.4300000000000002,
+        1.9484028806285654
+      ],
+      "color": [
+        0.98,
+        0.196,
+        0.04
+      ],
+      "energy": 117,
+      "sizeMeters": 1.15,
+      "angleDegrees": 45,
+      "purpose": "key",
+      "temporalModulation": {
+        "kind": "seeded-flicker",
+        "seed": 8117,
+        "frequencyHz": 5.2,
+        "intensityMinimumMultiplier": 0.82,
+        "intensityMaximumMultiplier": 1.12,
+        "colorTemperatureMinimumKelvin": 1300,
+        "colorTemperatureMaximumKelvin": 1850,
+        "interpolation": "smooth"
+      },
+      "temporalSignalId": "primary-fire"
+    },
+    {
+      "id": "fire-ground-bounce",
+      "type": "area",
+      "position": [
+        -0.19181549209462495,
+        0.32,
+        1.4588374882050765
+      ],
+      "target": [
+        1.728658844363882,
+        1.23,
+        1.9324178119140094
+      ],
+      "color": [
+        0.98,
+        0.13720000000000002,
+        0.018
+      ],
+      "energy": 31.104000000000003,
+      "sizeMeters": 2.2,
+      "angleDegrees": 45,
+      "purpose": "fill",
+      "temporalModulation": {
+        "kind": "seeded-flicker",
+        "seed": 8117,
+        "frequencyHz": 5.2,
+        "intensityMinimumMultiplier": 0.82,
+        "intensityMaximumMultiplier": 1.12,
+        "colorTemperatureMinimumKelvin": 1300,
+        "colorTemperatureMaximumKelvin": 1850,
+        "interpolation": "smooth"
+      },
+      "temporalSignalId": "primary-fire"
+    },
+    {
+      "id": "fire-edge-rim",
+      "type": "spot",
+      "position": [
+        3.0316445788420605,
+        2.83,
+        3.231351288173037
+      ],
+      "target": [
+        1.7786188496969308,
+        1.33,
+        1.9304183452046777
+      ],
+      "color": [
+        0.98,
+        0.2352,
+        0.055
+      ],
+      "energy": 48.02400000000001,
+      "sizeMeters": 0.38,
+      "angleDegrees": 48,
+      "purpose": "rim",
+      "temporalModulation": {
+        "kind": "seeded-flicker",
+        "seed": 8117,
+        "frequencyHz": 5.2,
+        "intensityMinimumMultiplier": 0.82,
+        "intensityMaximumMultiplier": 1.12,
+        "colorTemperatureMinimumKelvin": 1300,
+        "colorTemperatureMaximumKelvin": 1850,
+        "interpolation": "smooth"
+      },
+      "temporalSignalId": "primary-fire"
+    },
+    {
+      "id": "cool-night-window-separation",
+      "type": "area",
+      "position": [
+        3.708983870101121,
+        3.58,
+        -2.3501997045633614
+      ],
+      "target": [
+        1.678698839030833,
+        1.33,
+        1.9344172786233411
+      ],
+      "color": [
+        0.1176,
+        0.2352,
+        0.72
+      ],
+      "energy": 253.575,
+      "sizeMeters": 3.4,
+      "angleDegrees": 45,
+      "purpose": "environment"
+    }
+  ],
+  "metadata": {
+    "context": "unrelated-contemporary-fire-lounge-transfer",
+    "contrastStrategy": "correlated-low-fire-key-bounce-rim-plus-static-cool-environment",
+    "intendedShotDistance": "background-to-medium",
+    "temporalSignals": [
+      "primary-fire"
+    ],
+    "motionDependency": "none",
+    "sourceCandidate": "lighting.firelit-interior@0.1.0",
+    "derivedFrom": "lighting.firelit-interior",
+    "lightingAdaptation": "lighting-rig-transform-v1"
+  }
+}

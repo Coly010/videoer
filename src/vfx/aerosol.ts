@@ -1,0 +1,95 @@
+import type { GeometryAsset, Vec3 } from '../geometry/model.js';
+import type { SceneTransform } from '../interactions/model.js';
+import { resolveAttachment, transformPoint } from '../interactions/transforms.js';
+import { aerosolVfxSchema, type AerosolVfx } from './model.js';
+
+export function createHearthSmokeAndEmbersVfx(): AerosolVfx {
+  return aerosolVfxSchema.parse({
+    schemaVersion: 1,
+    id: 'vfx.source-bound-smoke-embers',
+    placement: 'source-relative',
+    layers: [
+      {
+        id: 'smoke-body',
+        kind: 'smoke-volume',
+        seed: 8841,
+        count: 18,
+        originOffset: [0, 0.08, 0],
+        sourceRadiusMeters: 0.23,
+        verticalSpanMeters: 2.5,
+        lifetimeSeconds: 4.2,
+        riseSpeedMetersPerSecond: { minimum: 0.38, maximum: 0.72 },
+        windMetersPerSecond: [0.16, 0, 0.08],
+        turbulenceMeters: 0.2,
+        color: [0.18, 0.21, 0.24],
+        opacity: 0.25,
+        particleRadiusMeters: { minimum: 0.14, maximum: 0.34 },
+        density: 1.2,
+        anisotropy: 0.18,
+        noiseScaleMeters: 0.19,
+        noiseDetail: 5,
+      },
+      {
+        id: 'rising-embers',
+        kind: 'ember-particles',
+        seed: 8842,
+        count: 30,
+        originOffset: [0, 0.1, 0],
+        sourceRadiusMeters: 0.28,
+        verticalSpanMeters: 2.2,
+        lifetimeSeconds: 2.8,
+        riseSpeedMetersPerSecond: { minimum: 0.42, maximum: 1.12 },
+        windMetersPerSecond: [0.2, 0, 0.11],
+        turbulenceMeters: 0.16,
+        color: [1, 0.11, 0.008],
+        opacity: 0.48,
+        particleRadiusMeters: { minimum: 0.0025, maximum: 0.006 },
+        trailLengthMeters: 0.012,
+        emissionStrength: 2.4,
+      },
+    ],
+    metadata: {
+      generator: 'videoer.source-bound-aerosol.v1',
+      intendedSources: ['hearth', 'brazier', 'forge', 'exhaust', 'ritual-fire'],
+      backendSemantics: 'true-world-space-volume-and-particles',
+    },
+  });
+}
+
+export interface AerosolSourceBinding {
+  entityId: string;
+  geometry: GeometryAsset;
+  attachmentId: string;
+  transform: SceneTransform;
+}
+
+export function resolveAerosolVfx(vfxInput: AerosolVfx, source: AerosolSourceBinding) {
+  const vfx = aerosolVfxSchema.parse(vfxInput);
+  const attachment = resolveAttachment(source.geometry, source.attachmentId, source.transform);
+  return vfx.layers.map((layer) => {
+    const origin = transformPoint(layer.originOffset, {
+      position: attachment.position,
+      rotation: attachment.rotation,
+      scale: [1, 1, 1],
+    });
+    return {
+      source: {
+        vfxAssetId: vfx.id,
+        entityId: source.entityId,
+        geometryAssetId: source.geometry.id,
+        attachmentId: source.attachmentId,
+        resolvedAttachmentPosition: attachment.position,
+      },
+      origin,
+      layer,
+    };
+  });
+}
+
+export function aerosolOriginDistance(origin: Vec3, attachmentPosition: Vec3) {
+  return Math.hypot(
+    origin[0] - attachmentPosition[0],
+    origin[1] - attachmentPosition[1],
+    origin[2] - attachmentPosition[2],
+  );
+}

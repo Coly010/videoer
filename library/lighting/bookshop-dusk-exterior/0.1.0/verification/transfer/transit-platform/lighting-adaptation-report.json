@@ -1,0 +1,59 @@
+{
+  "valid": true,
+  "issues": [],
+  "adaptation": {
+    "kind": "lighting-rig-transform-v1",
+    "assetId": "lighting.transit-dusk-exterior-v1-transfer",
+    "transform": {
+      "translation": [
+        0,
+        0,
+        -0.6
+      ],
+      "yawRadians": 0,
+      "uniformScale": 1
+    },
+    "energyScale": 0.88,
+    "purposeEnergyScale": {
+      "key": 1,
+      "fill": 1.05,
+      "rim": 1,
+      "practical": 0.9,
+      "environment": 1
+    },
+    "colorMultiply": [
+      0.96,
+      0.98,
+      1
+    ],
+    "worldColor": [
+      0.004,
+      0.008,
+      0.02
+    ],
+    "metadata": {
+      "context": "unrelated-night-transit-platform-transfer",
+      "sourceCandidate": "lighting.bookshop-dusk-exterior@0.1.0"
+    }
+  },
+  "topologyPreserved": true,
+  "exposurePreserved": true,
+  "spatialTransformMatched": true,
+  "energyTransformMatched": true,
+  "colorTransformMatched": true,
+  "sizeTransformMatched": true,
+  "nonBlackWorld": true,
+  "roleCoverage": {
+    "key": 1,
+    "fill": 1,
+    "rim": 1,
+    "practical": 1,
+    "environment": 1
+  },
+  "baseLightCount": 5,
+  "adaptedLightCount": 5,
+  "energyRange": {
+    "minimum": 166.32000000000002,
+    "maximum": 570.24
+  }
+}

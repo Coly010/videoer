@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "samples": [
+    {
+      "landmarkId": "amber-line",
+      "progress": 0,
+      "frame": 1,
+      "entities": {
+        "gallery": {
+          "minimumX": -1.469769835472107,
+          "maximumX": 2.156139850616455,
+          "minimumY": -0.8722116947174072,
+          "maximumY": 1.6707175970077515,
+          "widthPercentage": 362.5909686088562,
+          "heightPercentage": 254.29292917251587
+        }
+      }
+    },
+    {
+      "landmarkId": "parallax",
+      "progress": 0.5,
+      "frame": 49,
+      "entities": {
+        "gallery": {
+          "minimumX": -2.1460366249084473,
+          "maximumX": 2.4139504432678223,
+          "minimumY": -1.3310997486114502,
+          "maximumY": 2.0465385913848877,
+          "widthPercentage": 455.99870681762695,
+          "heightPercentage": 337.7638339996338
+        }
+      }
+    },
+    {
+      "landmarkId": "blue-line",
+      "progress": 1,
+      "frame": 96,
+      "entities": {
+        "gallery": {
+          "minimumX": -3.1167211532592773,
+          "maximumX": 2.6996214389801025,
+          "minimumY": -1.960028886795044,
+          "maximumY": 2.5428626537323,
+          "widthPercentage": 581.634259223938,
+          "heightPercentage": 450.2891540527344
+        }
+      }
+    }
+  ]
+}

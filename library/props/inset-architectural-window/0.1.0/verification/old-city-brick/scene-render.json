@@ -1,0 +1,272 @@
+{
+  "schemaVersion": 1,
+  "source": "/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/environments/inset-window-module-v4/verification/old-city-brick/scene.json",
+  "manifest": "/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/environments/inset-window-module-v4/verification/old-city-brick/resolved-scene.json",
+  "video": "/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/environments/inset-window-module-v4/verification/old-city-brick/inset-window-old-city-brick-transfer.mp4",
+  "blend": "/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/environments/inset-window-module-v4/verification/old-city-brick/inset-window-old-city-brick-transfer.blend",
+  "frames": [
+    {
+      "id": "right-glancing",
+      "progress": 0,
+      "description": "Reveal, sill projection and right glancing reflection",
+      "path": "/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/environments/inset-window-module-v4/verification/old-city-brick/000-right-glancing.png"
+    },
+    {
+      "id": "frontal",
+      "progress": 0.5,
+      "description": "True aperture, cross mullions and retained interior witness",
+      "path": "/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/environments/inset-window-module-v4/verification/old-city-brick/050-frontal.png"
+    },
+    {
+      "id": "left-glancing",
+      "progress": 1,
+      "description": "Opposite reveal and angle-varying glazing response",
+      "path": "/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/environments/inset-window-module-v4/verification/old-city-brick/100-left-glancing.png"
+    }
+  ],
+  "contactSheet": "/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/environments/inset-window-module-v4/verification/old-city-brick/contact-sheet.png",
+  "media": {
+    "streams": [
+      {
+        "index": 0,
+        "codec_name": "h264",
+        "codec_long_name": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+        "profile": "High",
+        "codec_type": "video",
+        "codec_tag_string": "avc1",
+        "codec_tag": "0x31637661",
+        "mime_codec_string": "avc1.64001e",
+        "width": 720,
+        "height": 480,
+        "coded_width": 720,
+        "coded_height": 480,
+        "has_b_frames": 2,
+        "sample_aspect_ratio": "1:1",
+        "display_aspect_ratio": "3:2",
+        "pix_fmt": "yuv420p",
+        "level": 30,
+        "chroma_location": "left",
+        "field_order": "progressive",
+        "is_avc": "true",
+        "nal_length_size": "4",
+        "id": "0x1",
+        "r_frame_rate": "24/1",
+        "avg_frame_rate": "24/1",
+        "time_base": "1/12288",
+        "start_pts": 0,
+        "start_time": "0.000000",
+        "duration_ts": 1536,
+        "duration": "0.125000",
+        "bit_rate": "1287936",
+        "bits_per_raw_sample": "8",
+        "nb_frames": "3",
+        "extradata_size": 46,
+        "disposition": {
+          "default": 1,
+          "dub": 0,
+          "original": 0,
+          "comment": 0,
+          "lyrics": 0,
+          "karaoke": 0,
+          "forced": 0,
+          "hearing_impaired": 0,
+          "visual_impaired": 0,
+          "clean_effects": 0,
+          "attached_pic": 0,
+          "timed_thumbnails": 0,
+          "non_diegetic": 0,
+          "captions": 0,
+          "descriptions": 0,
+          "metadata": 0,
+          "dependent": 0,
+          "still_image": 0,
+          "multilayer": 0
+        },
+        "tags": {
+          "language": "und",
+          "handler_name": "VideoHandler",
+          "encoder": "Lavc libx264"
+        }
+      }
+    ],
+    "format": {
+      "filename": "/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/environments/inset-window-module-v4/verification/old-city-brick/inset-window-old-city-brick-transfer.mp4",
+      "nb_streams": 1,
+      "nb_programs": 0,
+      "nb_stream_groups": 0,
+      "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+      "format_long_name": "QuickTime / MOV",
+      "start_time": "0.000000",
+      "duration": "0.125000",
+      "size": "21018",
+      "bit_rate": "1345152",
+      "probe_score": 100,
+      "tags": {
+        "major_brand": "isom",
+        "minor_version": "512",
+        "compatible_brands": "isomiso2avc1mp41",
+        "encoder": "Lavf63.1.101"
+      }
+    }
+  },
+  "verification": {
+    "schemaVersion": 1,
+    "status": "pass",
+    "checks": []
+  },
+  "evidenceRefresh": "new-pixel-render",
+  "renderProfile": {
+    "engine": "cycles-cpu",
+    "samples": 128,
+    "seed": 1729,
+    "denoise": true,
+    "intent": "deterministic-final"
+  },
+  "deterministicEvidence": {
+    "boundary": "cycles-cpu-fixed-seed-to-lossless-png-to-single-thread-x264",
+    "expected": "byte-identical-on-matching-runtime-and-input-fingerprint"
+  },
+  "renderChecks": [
+    {
+      "id": "renderer-camera-contract",
+      "status": "pass",
+      "message": "Renderer camera position, semantic target, lens, and tracking contract match the declarative path",
+      "measurements": {
+        "valid": true,
+        "trackingConstraint": "TRACK_TO",
+        "trackAxis": "TRACK_NEGATIVE_Z",
+        "upAxis": "UP_Y",
+        "interpolationImplementation": "frame-baked-declarative-v1",
+        "maximumPositionErrorMeters": 0,
+        "maximumTargetErrorMeters": 0,
+        "maximumLensErrorMillimeters": 0,
+        "positionToleranceMeters": 0.00001,
+        "targetToleranceMeters": 0.00001,
+        "lensToleranceMillimeters": 0.005,
+        "samples": [
+          {
+            "landmarkId": "right-glancing",
+            "frame": 1,
+            "positionErrorMeters": 0,
+            "targetErrorMeters": 0,
+            "lensErrorMillimeters": 0,
+            "actualLensMillimeters": 58,
+            "expectedLensMillimeters": 58
+          },
+          {
+            "landmarkId": "frontal",
+            "frame": 2,
+            "positionErrorMeters": 0,
+            "targetErrorMeters": 0,
+            "lensErrorMillimeters": 0,
+            "actualLensMillimeters": 62,
+            "expectedLensMillimeters": 62
+          },
+          {
+            "landmarkId": "left-glancing",
+            "frame": 3,
+            "positionErrorMeters": 0,
+            "targetErrorMeters": 0,
+            "lensErrorMillimeters": 0,
+            "actualLensMillimeters": 58,
+            "expectedLensMillimeters": 58
+          }
+        ]
+      }
+    },
+    {
+      "id": "window-scene-visible",
+      "status": "pass",
+      "message": "Semantic frames retain the required visible image coverage",
+      "measurements": {
+        "maximumBlackPercentage": 39,
+        "allowedBlackPercentage": 62,
+        "perFrameBlackPercentage": [
+          39,
+          21,
+          35
+        ]
+      }
+    },
+    {
+      "id": "window-highlight-detail",
+      "status": "pass",
+      "message": "Semantic frames retain highlight detail within the declared limit",
+      "measurements": {
+        "maximumWhitePercentage": 0,
+        "allowedWhitePercentage": 5,
+        "perFrameWhitePercentage": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "window-framing",
+      "status": "pass",
+      "message": "Entity 'inset-window' remains fully framed at semantic landmarks",
+      "measurements": {
+        "entityId": "inset-window",
+        "minimumScreenHeightPercentage": 50,
+        "maximumScreenHeightPercentage": 80,
+        "marginPercentage": 3,
+        "samples": [
+          {
+            "landmarkId": "right-glancing",
+            "bounds": {
+              "minimumX": 0.2588103115558624,
+              "maximumX": 0.7172732949256897,
+              "minimumY": 0.16975679993629456,
+              "maximumY": 0.759232223033905,
+              "widthPercentage": 45.84629833698273,
+              "heightPercentage": 58.94754230976105
+            }
+          },
+          {
+            "landmarkId": "frontal",
+            "bounds": {
+              "minimumX": 0.18329371511936188,
+              "maximumX": 0.8167062997817993,
+              "minimumY": 0.10488191992044449,
+              "maximumY": 0.8375928997993469,
+              "widthPercentage": 63.341258466243744,
+              "heightPercentage": 73.27109798789024
+            }
+          },
+          {
+            "landmarkId": "left-glancing",
+            "bounds": {
+              "minimumX": 0.2827267050743103,
+              "maximumX": 0.74118971824646,
+              "minimumY": 0.16975679993629456,
+              "maximumY": 0.759232223033905,
+              "widthPercentage": 45.846301317214966,
+              "heightPercentage": 58.94754230976105
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "window-local-highlight-detail",
+      "status": "pass",
+      "message": "Entity 'inset-window' retains subject-local highlight detail",
+      "measurements": {
+        "entityId": "inset-window",
+        "maximumWhitePercentage": 0,
+        "allowedWhitePercentage": 4,
+        "perFrameWhitePercentage": [
+          0,
+          0,
+          0
+        ]
+      }
+    }
+  ],
+  "blender": {
+    "mode": "render",
+    "stdout": "Blender 4.5.13 LTS (hash daeeeca98fb0 built 2026-08-25 01:30:50)\nFra:1 Mem:11.61M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | host-wall-mesh\nFra:1 Mem:11.61M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | interior-warmth\nFra:1 Mem:11.61M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | cool-exterior-key\nFra:1 Mem:11.61M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | inset-window-mesh\nFra:1 Mem:11.65M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing\nFra:1 Mem:10.42M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Waiting for render to start\nFra:1 Mem:10.42M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene\nFra:1 Mem:10.42M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Shaders\nFra:1 Mem:10.42M (Peak 22.20M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)\nFra:1 Mem:10.56M (Peak 22.20M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Procedurals\nFra:1 Mem:10.56M (Peak 22.20M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Background\nFra:1 Mem:10.56M (Peak 22.20M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Camera\nFra:1 Mem:10.56M (Peak 22.20M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Meshes Flags\nFra:1 Mem:10.56M (Peak 22.20M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Objects\nFra:1 Mem:10.56M (Peak 22.20M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Objects | Copying Transformations to device\nFra:1 Mem:10.57M (Peak 22.20M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Particle Systems\nFra:1 Mem:10.57M (Peak 22.20M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device\nFra:1 Mem:10.57M (Peak 22.20M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Meshes\nFra:1 Mem:10.57M (Peak 22.20M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Objects | Applying Static Transformations\nFra:1 Mem:10.57M (Peak 22.20M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Mesh | Computing attributes\nFra:1 Mem:10.57M (Peak 22.20M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device\nFra:1 Mem:10.57M (Peak 22.20M) | Time:00:00.00 | Mem:0.07M, Peak:0.07M | Scene, ViewLayer | Updating Scene BVH | Building\nFra:1 Mem:10.57M (Peak 22.20M) | Time:00:00.00 | Mem:0.07M, Peak:0.07M | Scene, ViewLayer | Updating Scene BVH | Building BVH\nFra:1 Mem:10.57M (Peak 22.20M) | Time:00:00.00 | Mem:0.07M, Peak:0.07M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%\nFra:1 Mem:10.57M (Peak 22.20M) | Time:00:00.00 | Mem:0.09M, Peak:0.09M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device\nFra:1 Mem:10.57M (Peak 22.20M) | Time:00:00.00 | Mem:0.09M, Peak:0.09M | Scene, ViewLayer | Updating Mesh | Computing normals\nFra:1 Mem:10.58M (Peak 22.20M) | Time:00:00.00 | Mem:0.09M, Peak:0.09M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device\nFra:1 Mem:10.58M (Peak 22.20M) | Time:00:00.00 | Mem:0.10M, Peak:0.10M | Scene, ViewLayer | Updating Objects Flags\nFra:1 Mem:10.58M (Peak 22.20M) | Time:00:00.00 | Mem:0.10M, Peak:0.10M | Scene, ViewLayer | Updating Primitive Offsets\nFra:1 Mem:10.58M (Peak 22.20M) | Time:00:00.00 | Mem:0.10M, Peak:0.10M | Scene, ViewLayer | Updating Images\nFra:1 Mem:10.58M (Peak 22.20M) | Time:00:00.00 | Mem:0.10M, Peak:0.10M | Scene, ViewLayer | Updating Camera Volume\nFra:1 Mem:10.58M (Peak 22.20M) | Time:00:00.00 | Mem:0.10M, Peak:0.10M | Scene, ViewLayer | Updating Lookup Tables\nFra:1 Mem:10.58M (Peak 22.20M) | Time:00:00.00 | Mem:0.18M, Peak:0.18M | Scene, ViewLayer | Updating Lights\nFra:1 Mem:10.58M (Peak 22.20M) | Time:00:00.00 | Mem:0.18M, Peak:0.18M | Scene, ViewLayer | Updating Lights | Computing tree\nFra:1 Mem:10.58M (Peak 22.20M) | Time:00:00.00 | Mem:0.18M, Peak:0.18M | Scene, ViewLayer | Updating Integrator\nFra:1 Mem:10.58M (Peak 22.20M) | Time:00:00.00 | Mem:0.18M, Peak:0.18M | Scene, ViewLayer | Updating Film\nFra:1 Mem:10.59M (Peak 22.20M) | Time:00:00.00 | Mem:0.10M, Peak:0.18M | Scene, ViewLayer | Updating Lookup Tables\nFra:1 Mem:10.59M (Peak 22.20M) | Time:00:00.00 | Mem:0.18M, Peak:0.18M | Scene, ViewLayer | Updating Baking\nFra:1 Mem:10.59M (Peak 22.20M) | Time:00:00.00 | Mem:0.18M, Peak:0.18M | Scene, ViewLayer | Updating Device | Writing constant memory\nFra:1 Mem:10.59M (Peak 22.20M) | Time:00:00.00 | Mem:0.18M, Peak:0.18M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)\nFra:1 Mem:10.59M (Peak 22.20M) | Time:00:00.00 | Mem:0.18M, Peak:0.18M | Scene, ViewLayer | Sample 0/128\nFra:1 Mem:29.21M (Peak 29.21M) | Time:00:00.22 | Remaining:00:28.29 | Mem:18.64M, Peak:18.64M | Scene, ViewLayer | Sample 1/128\nFra:1 Mem:39.76M (Peak 55.58M) | Time:00:24.30 | Mem:18.64M, Peak:18.64M | Scene, ViewLayer | Sample 128/128\nFra:1 Mem:39.76M (Peak 55.58M) | Time:00:24.30 | Mem:18.64M, Peak:18.64M | Scene, ViewLayer | Finished\nSaved: '/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/environments/inset-window-module-v4/verification/old-city-brick/lossless-frames/inset-window-old-city-brick-transfer-0001.png'\nTime: 00:24.35 (Saving: 00:00.05)\n\nFra:2 Mem:11.61M (Peak 55.58M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | host-wall-mesh\nFra:2 Mem:11.61M (Peak 55.58M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | cool-exterior-key\nFra:2 Mem:11.65M (Peak 55.58M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing\nFra:2 Mem:10.42M (Peak 55.58M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Waiting for render to start\nFra:2 Mem:10.42M (Peak 55.58M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene\nFra:2 Mem:10.42M (Peak 55.58M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Shaders\nFra:2 Mem:10.42M (Peak 55.58M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)\nFra:2 Mem:10.56M (Peak 55.58M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Procedurals\nFra:2 Mem:10.56M (Peak 55.58M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Background\nFra:2 Mem:10.56M (Peak 55.58M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Camera\nFra:2 Mem:10.56M (Peak 55.58M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Meshes Flags\nFra:2 Mem:10.56M (Peak 55.58M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Objects\nFra:2 Mem:10.56M (Peak 55.58M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Objects | Copying Transformations to device\nFra:2 Mem:10.57M (Peak 55.58M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Particle Systems\nFra:2 Mem:10.57M (Peak 55.58M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device\nFra:2 Mem:10.57M (Peak 55.58M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Meshes\nFra:2 Mem:10.57M (Peak 55.58M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Objects | Applying Static Transformations\nFra:2 Mem:10.57M (Peak 55.58M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Mesh | Computing attributes\nFra:2 Mem:10.57M (Peak 55.58M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device\nFra:2 Mem:10.57M (Peak 55.58M) | Time:00:00.00 | Mem:0.07M, Peak:0.07M | Scene, ViewLayer | Updating Scene BVH | Building\nFra:2 Mem:10.57M (Peak 55.58M) | Time:00:00.00 | Mem:0.07M, Peak:0.07M | Scene, ViewLayer | Updating Scene BVH | Building BVH\nFra:2 Mem:10.57M (Peak 55.58M) | Time:00:00.00 | Mem:0.07M, Peak:0.07M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%\nFra:2 Mem:10.57M (Peak 55.58M) | Time:00:00.00 | Mem:0.09M, Peak:0.09M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device\nFra:2 Mem:10.57M (Peak 55.58M) | Time:00:00.00 | Mem:0.09M, Peak:0.09M | Scene, ViewLayer | Updating Mesh | Computing normals\nFra:2 Mem:10.58M (Peak 55.58M) | Time:00:00.00 | Mem:0.09M, Peak:0.09M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device\nFra:2 Mem:10.58M (Peak 55.58M) | Time:00:00.00 | Mem:0.10M, Peak:0.10M | Scene, ViewLayer | Updating Objects Flags\nFra:2 Mem:10.58M (Peak 55.58M) | Time:00:00.00 | Mem:0.10M, Peak:0.10M | Scene, ViewLayer | Updating Primitive Offsets\nFra:2 Mem:10.58M (Peak 55.58M) | Time:00:00.00 | Mem:0.10M, Peak:0.10M | Scene, ViewLayer | Updating Images\nFra:2 Mem:10.58M (Peak 55.58M) | Time:00:00.00 | Mem:0.10M, Peak:0.10M | Scene, ViewLayer | Updating Camera Volume\nFra:2 Mem:10.58M (Peak 55.58M) | Time:00:00.00 | Mem:0.10M, Peak:0.10M | Scene, ViewLayer | Updating Lookup Tables\nFra:2 Mem:10.58M (Peak 55.58M) | Time:00:00.00 | Mem:0.18M, Peak:0.18M | Scene, ViewLayer | Updating Lights\nFra:2 Mem:10.58M (Peak 55.58M) | Time:00:00.00 | Mem:0.18M, Peak:0.18M | Scene, ViewLayer | Updating Lights | Computing tree\nFra:2 Mem:10.58M (Peak 55.58M) | Time:00:00.00 | Mem:0.18M, Peak:0.18M | Scene, ViewLayer | Updating Integrator\nFra:2 Mem:10.58M (Peak 55.58M) | Time:00:00.00 | Mem:0.18M, Peak:0.18M | Scene, ViewLayer | Updating Film\nFra:2 Mem:10.59M (Peak 55.58M) | Time:00:00.00 | Mem:0.10M, Peak:0.18M | Scene, ViewLayer | Updating Lookup Tables\nFra:2 Mem:10.59M (Peak 55.58M) | Time:00:00.00 | Mem:0.18M, Peak:0.18M | Scene, ViewLayer | Updating Baking\nFra:2 Mem:10.59M (Peak 55.58M) | Time:00:00.00 | Mem:0.18M, Peak:0.18M | Scene, ViewLayer | Updating Device | Writing constant memory\nFra:2 Mem:10.59M (Peak 55.58M) | Time:00:00.00 | Mem:0.18M, Peak:0.18M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)\nFra:2 Mem:10.59M (Peak 55.58M) | Time:00:00.00 | Mem:0.18M, Peak:0.18M | Scene, ViewLayer | Sample 0/128\nFra:2 Mem:29.21M (Peak 55.58M) | Time:00:00.20 | Remaining:00:26.25 | Mem:18.64M, Peak:18.64M | Scene, ViewLayer | Sample 1/128\nFra:2 Mem:39.76M (Peak 55.58M) | Time:00:27.42 | Mem:18.64M, Peak:18.64M | Scene, ViewLayer | Sample 128/128\nFra:2 Mem:39.76M (Peak 55.58M) | Time:00:27.42 | Mem:18.64M, Peak:18.64M | Scene, ViewLayer | Finished\nSaved: '/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/environments/inset-window-module-v4/verification/old-city-brick/lossless-frames/inset-window-old-city-brick-transfer-0002.png'\nTime: 00:27.43 (Saving: 00:00.01)\n\nFra:3 Mem:11.61M (Peak 55.58M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | host-wall-mesh\nFra:3 Mem:11.61M (Peak 55.58M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | interior-warmth\nFra:3 Mem:11.63M (Peak 55.58M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Synchronizing object | cool-exterior-key\nFra:3 Mem:11.65M (Peak 55.58M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Initializing\nFra:3 Mem:10.42M (Peak 55.58M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Waiting for render to start\nFra:3 Mem:10.42M (Peak 55.58M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Scene\nFra:3 Mem:10.42M (Peak 55.58M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Updating Shaders\nFra:3 Mem:10.42M (Peak 55.58M) | Time:00:00.00 | Mem:0.00M, Peak:0.00M | Scene, ViewLayer | Loading render kernels (may take a few minutes the first time)\nFra:3 Mem:10.56M (Peak 55.58M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Procedurals\nFra:3 Mem:10.56M (Peak 55.58M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Background\nFra:3 Mem:10.56M (Peak 55.58M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Camera\nFra:3 Mem:10.56M (Peak 55.58M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Meshes Flags\nFra:3 Mem:10.56M (Peak 55.58M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Objects\nFra:3 Mem:10.56M (Peak 55.58M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Objects | Copying Transformations to device\nFra:3 Mem:10.57M (Peak 55.58M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Particle Systems\nFra:3 Mem:10.57M (Peak 55.58M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Particle Systems | Copying Particles to device\nFra:3 Mem:10.57M (Peak 55.58M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Meshes\nFra:3 Mem:10.57M (Peak 55.58M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Objects | Applying Static Transformations\nFra:3 Mem:10.57M (Peak 55.58M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Mesh | Computing attributes\nFra:3 Mem:10.57M (Peak 55.58M) | Time:00:00.00 | Mem:0.06M, Peak:0.06M | Scene, ViewLayer | Updating Mesh | Copying Attributes to device\nFra:3 Mem:10.57M (Peak 55.58M) | Time:00:00.00 | Mem:0.07M, Peak:0.07M | Scene, ViewLayer | Updating Scene BVH | Building\nFra:3 Mem:10.57M (Peak 55.58M) | Time:00:00.00 | Mem:0.07M, Peak:0.07M | Scene, ViewLayer | Updating Scene BVH | Building BVH\nFra:3 Mem:10.57M (Peak 55.58M) | Time:00:00.00 | Mem:0.07M, Peak:0.07M | Scene, ViewLayer | Updating Scene BVH | Building BVH 0%\nFra:3 Mem:10.57M (Peak 55.58M) | Time:00:00.00 | Mem:0.09M, Peak:0.09M | Scene, ViewLayer | Updating Scene BVH | Copying BVH to device\nFra:3 Mem:10.57M (Peak 55.58M) | Time:00:00.00 | Mem:0.09M, Peak:0.09M | Scene, ViewLayer | Updating Mesh | Computing normals\nFra:3 Mem:10.58M (Peak 55.58M) | Time:00:00.00 | Mem:0.09M, Peak:0.09M | Scene, ViewLayer | Updating Mesh | Copying Mesh to device\nFra:3 Mem:10.58M (Peak 55.58M) | Time:00:00.00 | Mem:0.10M, Peak:0.10M | Scene, ViewLayer | Updating Objects Flags\nFra:3 Mem:10.58M (Peak 55.58M) | Time:00:00.00 | Mem:0.10M, Peak:0.10M | Scene, ViewLayer | Updating Primitive Offsets\nFra:3 Mem:10.58M (Peak 55.58M) | Time:00:00.00 | Mem:0.10M, Peak:0.10M | Scene, ViewLayer | Updating Images\nFra:3 Mem:10.58M (Peak 55.58M) | Time:00:00.00 | Mem:0.10M, Peak:0.10M | Scene, ViewLayer | Updating Camera Volume\nFra:3 Mem:10.58M (Peak 55.58M) | Time:00:00.00 | Mem:0.10M, Peak:0.10M | Scene, ViewLayer | Updating Lookup Tables\nFra:3 Mem:10.58M (Peak 55.58M) | Time:00:00.00 | Mem:0.18M, Peak:0.18M | Scene, ViewLayer | Updating Lights\nFra:3 Mem:10.58M (Peak 55.58M) | Time:00:00.00 | Mem:0.18M, Peak:0.18M | Scene, ViewLayer | Updating Lights | Computing tree\nFra:3 Mem:10.58M (Peak 55.58M) | Time:00:00.00 | Mem:0.18M, Peak:0.18M | Scene, ViewLayer | Updating Integrator\nFra:3 Mem:10.58M (Peak 55.58M) | Time:00:00.00 | Mem:0.18M, Peak:0.18M | Scene, ViewLayer | Updating Film\nFra:3 Mem:10.59M (Peak 55.58M) | Time:00:00.00 | Mem:0.10M, Peak:0.18M | Scene, ViewLayer | Updating Lookup Tables\nFra:3 Mem:10.59M (Peak 55.58M) | Time:00:00.00 | Mem:0.18M, Peak:0.18M | Scene, ViewLayer | Updating Baking\nFra:3 Mem:10.59M (Peak 55.58M) | Time:00:00.00 | Mem:0.18M, Peak:0.18M | Scene, ViewLayer | Updating Device | Writing constant memory\nFra:3 Mem:10.59M (Peak 55.58M) | Time:00:00.00 | Mem:0.18M, Peak:0.18M | Scene, ViewLayer | Loading denoising kernels (may take a few minutes the first time)\nFra:3 Mem:10.59M (Peak 55.58M) | Time:00:00.00 | Mem:0.18M, Peak:0.18M | Scene, ViewLayer | Sample 0/128\nFra:3 Mem:29.21M (Peak 55.58M) | Time:00:00.18 | Remaining:00:23.91 | Mem:18.64M, Peak:18.64M | Scene, ViewLayer | Sample 1/128\nFra:3 Mem:39.76M (Peak 55.58M) | Time:00:24.97 | Mem:18.64M, Peak:18.64M | Scene, ViewLayer | Sample 128/128\nFra:3 Mem:39.76M (Peak 55.58M) | Time:00:24.97 | Mem:18.64M, Peak:18.64M | Scene, ViewLayer | Finished\nSaved: '/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-benchmark/work/environments/inset-window-module-v4/verification/old-city-brick/lossless-frames/inset-window-old-city-brick-transfer-0003.png'\nTime: 00:24.98 (Saving: 00:00.01)\n\nInfo: Saved as \"inset-window-old-city-brick-transfer.blend\"\n\nBlender quit\n",
+    "stderr": ""
+  }
+}

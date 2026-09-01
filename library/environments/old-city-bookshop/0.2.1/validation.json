@@ -1,0 +1,10 @@
+{
+  "valid": true,
+  "issues": [],
+  "stats": {
+    "vertices": 13008,
+    "triangles": 6504,
+    "joints": 1,
+    "skinned": true
+  }
+}

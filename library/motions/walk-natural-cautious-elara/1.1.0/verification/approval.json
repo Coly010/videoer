@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "campaign": "campaign.last-platform-multicharacter",
+  "sourceId": "elara-grounded-pose",
+  "asset": {
+    "id": "motion.walk-natural-cautious-elara",
+    "version": "1.1.0"
+  },
+  "reviewer": "codex-visual-and-mechanical-review",
+  "rationale": "Reviewed exact delivery, semantic contact sheet, compatibility reports, temporal cloth/body collision metrics, silhouette stability, and reusable lineage.",
+  "approvedAt": "2026-08-31T04:28:37.566Z"
+}

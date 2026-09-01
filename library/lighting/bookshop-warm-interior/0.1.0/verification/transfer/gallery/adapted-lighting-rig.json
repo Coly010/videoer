@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "id": "lighting.gallery-interior-v03-transfer",
+  "exposure": {
+    "look": "AgX - Medium High Contrast",
+    "coherentAcrossShots": true
+  },
+  "worldColor": [
+    0.004,
+    0.006,
+    0.014
+  ],
+  "lights": [
+    {
+      "id": "warm-reading-key",
+      "type": "area",
+      "position": [
+        -1.95,
+        2.65,
+        -1.1999999999999997
+      ],
+      "target": [
+        0,
+        1.3499999999999999,
+        -2.1999999999999997
+      ],
+      "color": [
+        0.96,
+        0.6579999999999999,
+        0.46
+      ],
+      "energy": 435.1600000000001,
+      "sizeMeters": 1.25,
+      "angleDegrees": 45,
+      "purpose": "key"
+    },
+    {
+      "id": "cool-window-fill",
+      "type": "area",
+      "position": [
+        1.7,
+        2.1999999999999997,
+        -1.5499999999999998
+      ],
+      "target": [
+        0,
+        1.3499999999999999,
+        -2.1999999999999997
+      ],
+      "color": [
+        0.3264,
+        0.5357999999999999,
+        1
+      ],
+      "energy": 276,
+      "sizeMeters": 2.9,
+      "angleDegrees": 45,
+      "purpose": "fill"
+    },
+    {
+      "id": "shelf-rim",
+      "type": "spot",
+      "position": [
+        0.10000000000000003,
+        2.9,
+        -3.4499999999999997
+      ],
+      "target": [
+        0,
+        1.4,
+        -2.0999999999999996
+      ],
+      "color": [
+        0.96,
+        0.5828,
+        0.34
+      ],
+      "energy": 232.76000000000005,
+      "sizeMeters": 1,
+      "angleDegrees": 42,
+      "purpose": "rim"
+    }
+  ],
+  "metadata": {
+    "context": "unrelated-contemporary-gallery-transfer",
+    "faceKey": "warm-reading-key",
+    "windowFill": "cool-window-fill",
+    "balanceStrategy": "off-axis-warm-key-plus-camera-side-cool-fill-and-rear-shelf-rim",
+    "sourceCandidate": "lighting.bookshop-warm-interior@0.1.0",
+    "derivedFrom": "lighting.bookshop-warm-interior",
+    "lightingAdaptation": "lighting-rig-transform-v1"
+  }
+}

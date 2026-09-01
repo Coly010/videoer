@@ -1,0 +1,531 @@
+{
+  "schemaVersion": 1,
+  "id": "scene.character-approach",
+  "durationSeconds": 2.4166666666666665,
+  "fps": 24,
+  "resolution": {
+    "width": 540,
+    "height": 960,
+    "percentage": 100
+  },
+  "renderProfile": {
+    "engine": "cycles-cpu",
+    "samples": 128,
+    "seed": 1729,
+    "denoise": true,
+    "intent": "deterministic-final"
+  },
+  "entities": [
+    {
+      "id": "bookshop-set",
+      "role": "environment",
+      "geometryPath": "/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-production-audit/work/geometry/bookshop-production-surfaces.json",
+      "transform": {
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "visible": true
+    },
+    {
+      "id": "elara",
+      "role": "character",
+      "geometryPath": "/Users/colum/dev/personal/videoer/.videoer-cache/deformations/ab0728e04ae1-ab0728e04ae1-1af947669a22/geometry.json",
+      "transform": {
+        "position": [
+          3.5,
+          0,
+          -1.3
+        ],
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "motion": {
+        "path": "/Users/colum/dev/personal/videoer/.videoer-cache/deformations/ab0728e04ae1-ab0728e04ae1-1af947669a22/motion.json",
+        "startSeconds": 0,
+        "endSeconds": 2.4166666666666665,
+        "sourceStartSeconds": 0
+      },
+      "visible": true
+    },
+    {
+      "id": "elara-hair",
+      "role": "prop",
+      "geometryPath": "/Users/colum/dev/personal/videoer/library/hair/pulled-back-low-bun/0.7.0/geometry.json",
+      "transform": {
+        "position": [
+          3.5,
+          0,
+          -1.3
+        ],
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "motion": {
+        "path": "/Users/colum/dev/personal/videoer/campaigns/reference-cinematic-production-audit/work/motions/approach-performance.json",
+        "startSeconds": 0,
+        "endSeconds": 2.4166666666666665,
+        "sourceStartSeconds": 0
+      },
+      "visible": true
+    },
+    {
+      "id": "canopy",
+      "role": "set-dressing",
+      "geometryPath": "/Users/colum/dev/personal/videoer/library/props/projecting-supported-canopy/0.1.0/geometry.json",
+      "transform": {
+        "position": [
+          2.15,
+          3.18,
+          -0.02
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "visible": true
+    },
+    {
+      "id": "sign",
+      "role": "set-dressing",
+      "geometryPath": "/Users/colum/dev/personal/videoer/library/props/projecting-hanging-sign/0.1.0/geometry.json",
+      "transform": {
+        "position": [
+          4.15,
+          3.45,
+          -0.02
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "visible": true
+    },
+    {
+      "id": "lantern",
+      "role": "set-dressing",
+      "geometryPath": "/Users/colum/dev/personal/videoer/library/props/old-city-wall-lantern/0.5.0/geometry.json",
+      "transform": {
+        "position": [
+          -2.2,
+          2.85,
+          -0.02
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "visible": true
+    },
+    {
+      "id": "barrel",
+      "role": "set-dressing",
+      "geometryPath": "/Users/colum/dev/personal/videoer/library/props/storage-barrel/0.1.0/geometry.json",
+      "transform": {
+        "position": [
+          -3.75,
+          0,
+          -2.35
+        ],
+        "rotation": [
+          0,
+          0.22,
+          0
+        ],
+        "scale": [
+          1,
+          1,
+          1
+        ]
+      },
+      "visible": true
+    },
+    {
+      "id": "fern",
+      "role": "set-dressing",
+      "geometryPath": "/Users/colum/dev/personal/videoer/library/props/potted-fern/0.1.0/geometry.json",
+      "transform": {
+        "position": [
+          3.75,
+          0,
+          -0.48
+        ],
+        "rotation": [
+          0,
+          -0.3,
+          0
+        ],
+        "scale": [
+          0.78,
+          0.78,
+          0.78
+        ]
+      },
+      "visible": true
+    }
+  ],
+  "camera": {
+    "keyframes": [
+      {
+        "time": 0,
+        "position": [
+          3.2,
+          1.1,
+          -3.8
+        ],
+        "target": [
+          3.2,
+          0.86,
+          -1.3
+        ],
+        "lensMillimeters": 45,
+        "easing": "ease-in-out"
+      },
+      {
+        "time": 2.4166666666666665,
+        "position": [
+          1.9,
+          1.1,
+          -3.8
+        ],
+        "target": [
+          1.9,
+          0.86,
+          -1.3
+        ],
+        "lensMillimeters": 45,
+        "easing": "ease-in-out"
+      }
+    ]
+  },
+  "lights": [
+    {
+      "id": "moon-directional-key",
+      "type": "area",
+      "position": [
+        -4.8,
+        7.6,
+        -4.2
+      ],
+      "target": [
+        0,
+        0.95,
+        0.8
+      ],
+      "color": [
+        0.32,
+        0.48,
+        1
+      ],
+      "energy": 980,
+      "sizeMeters": 3.2,
+      "angleDegrees": 45
+    },
+    {
+      "id": "night-sky-fill",
+      "type": "area",
+      "position": [
+        3.8,
+        6.4,
+        -1.2
+      ],
+      "target": [
+        0,
+        1.1,
+        0.7
+      ],
+      "color": [
+        0.12,
+        0.2,
+        0.46
+      ],
+      "energy": 270,
+      "sizeMeters": 6.5,
+      "angleDegrees": 45
+    },
+    {
+      "id": "silver-edge-rim",
+      "type": "spot",
+      "position": [
+        4.5,
+        3.9,
+        3.8
+      ],
+      "target": [
+        0.2,
+        1.05,
+        0.8
+      ],
+      "color": [
+        0.45,
+        0.64,
+        1
+      ],
+      "energy": 460,
+      "sizeMeters": 0.45,
+      "angleDegrees": 52
+    },
+    {
+      "id": "warm-aperture-practical",
+      "type": "point",
+      "position": [
+        2.72,
+        1.75,
+        3.62
+      ],
+      "target": [
+        0.35,
+        0.9,
+        0.25
+      ],
+      "color": [
+        1,
+        0.37,
+        0.105
+      ],
+      "energy": 420,
+      "sizeMeters": 0.18,
+      "angleDegrees": 45
+    },
+    {
+      "id": "cool-ground-bounce",
+      "type": "area",
+      "position": [
+        -0.8,
+        0.28,
+        -1.4
+      ],
+      "target": [
+        0,
+        1,
+        0.75
+      ],
+      "color": [
+        0.12,
+        0.24,
+        0.58
+      ],
+      "energy": 120,
+      "sizeMeters": 3.4,
+      "angleDegrees": 45
+    }
+  ],
+  "atmosphere": {
+    "worldColor": [
+      0.006,
+      0.012,
+      0.025
+    ],
+    "fogDensity": 0.008,
+    "fogColor": [
+      0.16,
+      0.2,
+      0.28
+    ],
+    "rain": {
+      "enabled": true,
+      "layers": [
+        {
+          "id": "foreground",
+          "count": 58,
+          "seed": 1701,
+          "depthMinimumMeters": 1.4,
+          "depthMaximumMeters": 3.2,
+          "horizontalSpanMeters": 6.4,
+          "verticalSpanMeters": 5.2,
+          "streakLengthMeters": 0.11,
+          "streakRadiusMeters": 0.0012,
+          "fallSpeedMetersPerSecond": 10.5,
+          "lengthVariation": 0.24,
+          "speedVariation": 0.18,
+          "opacity": 0.28,
+          "color": [
+            0.42,
+            0.62,
+            0.86
+          ]
+        },
+        {
+          "id": "midground",
+          "count": 168,
+          "seed": 1702,
+          "depthMinimumMeters": 3.2,
+          "depthMaximumMeters": 6.5,
+          "horizontalSpanMeters": 10,
+          "verticalSpanMeters": 6.5,
+          "streakLengthMeters": 0.09,
+          "streakRadiusMeters": 0.0011,
+          "fallSpeedMetersPerSecond": 8.5,
+          "lengthVariation": 0.24,
+          "speedVariation": 0.18,
+          "opacity": 0.25,
+          "color": [
+            0.35,
+            0.55,
+            0.8
+          ]
+        },
+        {
+          "id": "background",
+          "count": 260,
+          "seed": 1703,
+          "depthMinimumMeters": 6.5,
+          "depthMaximumMeters": 16,
+          "horizontalSpanMeters": 18,
+          "verticalSpanMeters": 9,
+          "streakLengthMeters": 0.06,
+          "streakRadiusMeters": 0.0007,
+          "fallSpeedMetersPerSecond": 7,
+          "lengthVariation": 0.24,
+          "speedVariation": 0.18,
+          "opacity": 0.16,
+          "color": [
+            0.3,
+            0.48,
+            0.72
+          ]
+        }
+      ],
+      "windMetersPerSecond": [
+        1.15,
+        -0.22
+      ],
+      "groundSplashes": {
+        "enabled": true,
+        "count": 58,
+        "seed": 1711,
+        "boundsMinimum": [
+          -3.8,
+          0.015,
+          -3.5
+        ],
+        "boundsMaximum": [
+          5.2,
+          0.04,
+          -1.05
+        ],
+        "radiusMinimumMeters": 0.008,
+        "radiusMaximumMeters": 0.026,
+        "crownHeightMeters": 0.012,
+        "lifetimeSeconds": 0.32,
+        "opacity": 0.18,
+        "color": [
+          0.38,
+          0.58,
+          0.82
+        ]
+      },
+      "count": 0,
+      "seed": 1,
+      "boundsMinimum": [
+        -5,
+        0,
+        -5
+      ],
+      "boundsMaximum": [
+        5,
+        5,
+        5
+      ],
+      "streakLengthMeters": 0.14,
+      "fallSpeedMetersPerSecond": 8
+    },
+    "aerosols": []
+  },
+  "overlays": [],
+  "finishProfilePath": "/Users/colum/dev/personal/videoer/library/vfx/soft-atmospheric-finish/0.1.0/finish-profile.json",
+  "renderGates": [
+    {
+      "id": "profile-frame-visible",
+      "type": "frame-visibility",
+      "maximumBlackPercentage": 40,
+      "blackThreshold": 32
+    }
+  ],
+  "qualityGates": [
+    {
+      "id": "body-faces-travel",
+      "type": "directional-motion",
+      "entityId": "elara",
+      "minimumDistanceMeters": 1.1,
+      "minimumForwardDot": 0.9
+    }
+  ],
+  "landmarks": [
+    {
+      "id": "initial-contact",
+      "progress": 0,
+      "description": "Profile gait begins on a grounded contact"
+    },
+    {
+      "id": "weight-transfer",
+      "progress": 0.3,
+      "description": "Pelvis transfers over the stance foot"
+    },
+    {
+      "id": "passing-shop",
+      "progress": 0.62,
+      "description": "Recurring identity passes the shop facade"
+    },
+    {
+      "id": "next-contact",
+      "progress": 1,
+      "description": "Root continues in the facing direction"
+    }
+  ],
+  "metadata": {
+    "declarativeCampaign": "campaign.reference-cinematic-production-audit",
+    "templateSource": "../../../cinematic-campaign.yaml",
+    "campaignClass": "reference-cinematic",
+    "grammar": "recurring-character-profile-walk"
+  }
+}
