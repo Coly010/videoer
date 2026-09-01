@@ -208,6 +208,57 @@ export async function inspectBlackPixelPercentageInRegion(
   );
 }
 
+export async function inspectNormalizedColorEntropyInRegion(
+  path: string,
+  region: { x: number; y: number; width: number; height: number },
+) {
+  const x = Math.max(0, Math.floor(region.x));
+  const y = Math.max(0, Math.floor(region.y));
+  const width = Math.max(1, Math.floor(region.width));
+  const height = Math.max(1, Math.floor(region.height));
+  return new Promise<{ red: number; green: number; blue: number; mean: number }>(
+    (resolve, reject) => {
+      const child = spawn('ffmpeg', [
+        '-hide_banner',
+        '-i',
+        path,
+        '-vf',
+        `crop=${width}:${height}:${x}:${y},format=rgb24,entropy,metadata=print`,
+        '-frames:v',
+        '1',
+        '-f',
+        'null',
+        '-',
+      ]);
+      let error = '';
+      child.stderr.on('data', (data) => {
+        error += String(data);
+      });
+      child.on('error', reject);
+      child.on('close', (code) => {
+        if (code !== 0)
+          return reject(new Error(`ffmpeg color-entropy inspection failed: ${error}`));
+        const channel = (name: 'R' | 'G' | 'B') => {
+          const match = new RegExp(
+            `lavfi\\.entropy\\.normalized_entropy\\.normal\\.${name}=([0-9.]+)`,
+          ).exec(error);
+          if (!match)
+            throw new Error(`ffmpeg did not report normalized ${name} entropy for ${path}`);
+          return Number(match[1]);
+        };
+        try {
+          const red = channel('R');
+          const green = channel('G');
+          const blue = channel('B');
+          resolve({ red, green, blue, mean: (red + green + blue) / 3 });
+        } catch (inspectionError) {
+          reject(inspectionError);
+        }
+      });
+    },
+  );
+}
+
 async function inspectPixelPercentage(path: string, filter: string, label: string) {
   return new Promise<number>((resolve, reject) => {
     const child = spawn('ffmpeg', [

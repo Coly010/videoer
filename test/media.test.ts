@@ -11,6 +11,7 @@ import {
   inspectWhitePixelPercentage,
   inspectWhitePixelPercentageInRegion,
   inspectImage,
+  inspectNormalizedColorEntropyInRegion,
 } from '../src/media/inspection.js';
 import { verifyImage } from '../src/verification/image.js';
 import { blenderProbeDetail } from '../src/media/blender.js';
@@ -127,6 +128,26 @@ describe('media inspection', () => {
     ).toBe(100);
     expect(
       await inspectBlackPixelPercentageInRegion(split, { x: 16, y: 0, width: 16, height: 16 }),
+    ).toBe(0);
+    expect(
+      (
+        await inspectNormalizedColorEntropyInRegion(split, {
+          x: 0,
+          y: 0,
+          width: 32,
+          height: 16,
+        })
+      ).mean,
+    ).toBeGreaterThan(0.1);
+    expect(
+      (
+        await inspectNormalizedColorEntropyInRegion(split, {
+          x: 0,
+          y: 0,
+          width: 16,
+          height: 16,
+        })
+      ).mean,
     ).toBe(0);
   });
   it('explains Metal sandbox denial instead of recommending a renderer fallback', () => {

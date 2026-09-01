@@ -1,5 +1,10 @@
 import { spawn } from 'node:child_process';
 import { blenderProbeDetail, resolveBlenderExecutable } from './blender.js';
+import {
+  inspectOpenExrWithTool,
+  openExrDoctorFixtureBytes,
+  type OpenExrInspector,
+} from '../assets/sources/openexr.js';
 
 export interface DependencyStatus {
   name: string;
@@ -34,21 +39,69 @@ export const REQUIRED_FFMPEG_FILTERS = [
   'noise',
 ] as const;
 
-async function capture(name: string, args: string[]) {
+async function capture(
+  name: string,
+  args: string[],
+  timeoutMilliseconds = 30_000,
+  maximumBytes = 4_000_000,
+) {
   return new Promise<{ code: number; output: string }>((resolve) => {
     const child = spawn(name, args);
     let output = '';
-    child.stdout.on('data', (data) => {
+    let settled = false;
+    const finish = (value: { code: number; output: string }) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      resolve(value);
+    };
+    const append = (data: unknown) => {
       output += String(data);
+      if (Buffer.byteLength(output, 'utf8') > maximumBytes) {
+        child.kill('SIGKILL');
+        finish({ code: 1, output: `${name} output exceeded ${maximumBytes} bytes` });
+      }
+    };
+    const timer = setTimeout(() => {
+      child.kill('SIGKILL');
+      finish({ code: 1, output: `${name} timed out after ${timeoutMilliseconds}ms` });
+    }, timeoutMilliseconds);
+    child.stdout.on('data', (data) => {
+      append(data);
     });
     child.stderr.on('data', (data) => {
-      output += String(data);
+      append(data);
     });
-    child.on('error', () => resolve({ code: 127, output: `${name} was not found on PATH` }));
+    child.on('error', () => finish({ code: 127, output: `${name} was not found on PATH` }));
     child.on('close', (code, signal) =>
-      resolve({ code: code ?? (signal === 'SIGSEGV' ? 139 : 1), output }),
+      finish({ code: code ?? (signal === 'SIGSEGV' ? 139 : 1), output }),
     );
   });
+}
+
+export async function checkOpenExrInspectorDependency(
+  inspector: OpenExrInspector = inspectOpenExrWithTool,
+): Promise<DependencyStatus> {
+  try {
+    const evidence = await inspector(openExrDoctorFixtureBytes(), {
+      maximumOutputBytes: 1_000_000,
+      timeoutMilliseconds: 15_000,
+      maximumPixels: 2,
+    });
+    if (evidence.widthPixels !== 2 || evidence.heightPixels !== 1)
+      throw new Error('OpenEXR inspector smoke probe returned incorrect dimensions');
+    return {
+      name: 'OpenEXR source inspector',
+      available: true,
+      detail: `${evidence.inspector.tool} OpenEXR ${evidence.inspector.version} (${evidence.inspector.licenceSpdx}); verified -v -s inspection`,
+    };
+  } catch (error) {
+    return {
+      name: 'OpenEXR source inspector',
+      available: false,
+      detail: `${error instanceof Error ? error.message : String(error)}; install the patched open-source OpenEXR runtime documented in README.md`,
+    };
+  }
 }
 
 function has(output: string, feature: string) {
@@ -66,6 +119,7 @@ export async function checkMediaDependencies() {
     blenderStartup,
     espeakVersion,
     compilerVersion,
+    openExrInspector,
   ] = await Promise.all([
     capture('ffmpeg', ['-version']),
     capture('ffprobe', ['-version']),
@@ -80,6 +134,7 @@ export async function checkMediaDependencies() {
     ]),
     capture('espeak-ng', ['--version']),
     capture('cc', ['--version']),
+    checkOpenExrInspectorDependency(),
   ]);
   const blenderStatus = blenderProbeDetail(blenderStartup);
   const checks: DependencyStatus[] = [
@@ -127,6 +182,7 @@ export async function checkMediaDependencies() {
           ? compilerVersion.output.split('\n')[0]!
           : `${compilerVersion.output.trim()}; install the platform C toolchain documented in README.md`,
     },
+    openExrInspector,
   ];
   for (const filter of REQUIRED_FFMPEG_FILTERS)
     checks.push({

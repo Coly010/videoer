@@ -1,12 +1,13 @@
 import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
-import { dirname, resolve } from 'node:path';
+import { dirname, relative, resolve, sep } from 'node:path';
 import { loadCinematicScene } from './io.js';
 import {
   loadProductionCharacterBinding,
   productionCharacterBindingArtifacts,
 } from '../characters/production-binding.js';
 import { geometryTextureDependencies } from '../materials/texture-maps.js';
+import { lightingRigTransitiveDependencies, loadLightingRig } from '../lighting/io.js';
 
 async function fileSha256(path: string) {
   return createHash('sha256')
@@ -60,6 +61,14 @@ export async function fingerprintCinematicScene(sceneFile: string) {
       ),
     )
   ).flat();
+  const lightingRigPath = scene.lightingRigPath
+    ? resolve(directory, scene.lightingRigPath)
+    : undefined;
+  const lightingRig = lightingRigPath ? await loadLightingRig(lightingRigPath) : undefined;
+  const lightingDependencies =
+    lightingRigPath && lightingRig
+      ? await lightingRigTransitiveDependencies(lightingRigPath, lightingRig)
+      : [];
   const dependencies = [
     ...scene.entities.flatMap((entity) => [
       { role: `geometry:${entity.id}`, path: resolve(directory, entity.geometryPath) },
@@ -98,13 +107,18 @@ export async function fingerprintCinematicScene(sceneFile: string) {
     ...(scene.finishProfilePath
       ? [{ role: 'finish-profile', path: resolve(directory, scene.finishProfilePath) }]
       : []),
+    ...(lightingRigPath ? [{ role: 'lighting-rig', path: lightingRigPath }] : []),
+    ...lightingDependencies.map((dependency) => ({
+      role: `lighting-${dependency.role}`,
+      path: dependency.path,
+    })),
     ...productionCharacterDependencies,
     ...textureDependencies,
   ];
   const artifacts = await Promise.all(
     dependencies.map(async (dependency) => ({
       role: dependency.role,
-      path: dependency.path,
+      path: relative(directory, dependency.path).split(sep).join('/'),
       sha256: await fileSha256(dependency.path),
     })),
   );
@@ -149,6 +163,7 @@ export async function fingerprintCinematicScene(sceneFile: string) {
     camera: scene.camera,
     lights: scene.lights,
     atmosphere: scene.atmosphere,
+    ...(scene.lightingRigPath ? { lightingRigPath: 'artifact:lighting-rig' } : {}),
     overlays: scene.overlays.map((overlay, index) => ({
       imagePath: `artifact:overlay:${index}`,
       startSeconds: overlay.startSeconds,
@@ -162,7 +177,7 @@ export async function fingerprintCinematicScene(sceneFile: string) {
   return {
     schemaVersion: 1 as const,
     sceneId: scene.id,
-    sceneFile: source,
+    sceneFile: relative(directory, source).split(sep).join('/'),
     sceneSha256,
     artifacts,
     renderSha256: digest({ renderInputs, artifacts: artifactIdentities }),

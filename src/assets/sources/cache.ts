@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto';
-import { access, mkdir, readFile, rename, writeFile } from 'node:fs/promises';
+import { createReadStream } from 'node:fs';
+import { access, link, mkdir, readFile, rename, rm, writeFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { z } from 'zod';
 import { sourceSha256Schema } from './model.js';
@@ -27,21 +28,71 @@ async function exists(path: string) {
   }
 }
 
+export async function writeImmutableFile(path: string, bytes: Uint8Array) {
+  await mkdir(dirname(path), { recursive: true });
+  const temporary = `${path}.incoming-${process.pid}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  await writeFile(temporary, bytes, { flag: 'wx' });
+  try {
+    try {
+      await link(temporary, path);
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== 'EEXIST') throw error;
+      const existing = await readFile(path);
+      if (!Buffer.from(existing).equals(Buffer.from(bytes)))
+        throw new Error(`Immutable source-cache collision at ${path}`);
+    }
+  } finally {
+    await rm(temporary, { force: true });
+  }
+  return path;
+}
+
 export async function storeContentObject(cacheDirectory: string, bytes: Uint8Array) {
   const sha256 = sha256Bytes(bytes);
   const path = contentObjectPath(cacheDirectory, sha256);
   if (await exists(path)) {
-    if (sha256Bytes(await readFile(path)) !== sha256)
+    const existing = await readFile(path);
+    if (sha256Bytes(existing) !== sha256 || !Buffer.from(existing).equals(Buffer.from(bytes)))
       throw new Error(`Content-addressed cache object is corrupt: ${sha256}`);
     return { path, sha256, sizeBytes: bytes.byteLength };
   }
-  await mkdir(dirname(path), { recursive: true });
-  const temporary = `${path}.incoming-${process.pid}-${Date.now()}`;
-  await writeFile(temporary, bytes, { flag: 'wx' });
-  if (sha256Bytes(await readFile(temporary)) !== sha256)
+  await writeImmutableFile(path, bytes);
+  if (sha256Bytes(await readFile(path)) !== sha256)
     throw new Error(`Content-addressed cache write changed bytes: ${sha256}`);
-  await rename(temporary, path);
   return { path, sha256, sizeBytes: bytes.byteLength };
+}
+
+async function sha256File(path: string) {
+  const hash = createHash('sha256');
+  let sizeBytes = 0;
+  for await (const chunk of createReadStream(path)) {
+    hash.update(chunk);
+    sizeBytes += chunk.length;
+  }
+  return { sha256: hash.digest('hex'), sizeBytes };
+}
+
+export async function storeContentObjectFile(
+  cacheDirectory: string,
+  sourcePath: string,
+  expectedSha256: string,
+  expectedSizeBytes: number,
+) {
+  sourceSha256Schema.parse(expectedSha256);
+  const source = await sha256File(sourcePath);
+  if (source.sha256 !== expectedSha256 || source.sizeBytes !== expectedSizeBytes)
+    throw new Error('Content-addressed source file changed before cache publication');
+  const path = contentObjectPath(cacheDirectory, expectedSha256);
+  await mkdir(dirname(path), { recursive: true });
+  try {
+    await link(sourcePath, path);
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== 'EEXIST') throw error;
+    const existing = await sha256File(path);
+    if (existing.sha256 !== expectedSha256 || existing.sizeBytes !== expectedSizeBytes)
+      throw new Error(`Content-addressed cache object is corrupt: ${expectedSha256}`);
+  }
+  return { path, sha256: expectedSha256, sizeBytes: expectedSizeBytes };
 }
 
 export async function loadContentObject(cacheDirectory: string, sha256: string) {
@@ -122,7 +173,7 @@ function recordDirectory(cacheDirectory: string, assetId: string, variant: strin
 async function writeJsonAtomic(path: string, value: unknown) {
   const bytes = `${JSON.stringify(value, null, 2)}\n`;
   await mkdir(dirname(path), { recursive: true });
-  const temporary = `${path}.incoming-${process.pid}-${Date.now()}`;
+  const temporary = `${path}.incoming-${process.pid}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
   await writeFile(temporary, bytes, { flag: 'wx' });
   await rename(temporary, path);
 }
@@ -138,7 +189,10 @@ export async function writeSourceCacheRecord(cacheDirectory: string, record: Sou
     );
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
-    await writeJsonAtomic(recordPath, parsed);
+    await writeImmutableFile(
+      recordPath,
+      Buffer.from(`${JSON.stringify(parsed, null, 2)}\n`, 'utf8'),
+    );
   }
   await writeJsonAtomic(join(directory, 'latest.json'), immutable);
   return immutable;

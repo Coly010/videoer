@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "status": "rejected",
+  "publicationAllowed": false,
+  "scope": "reusable environment-illumination and atmosphere audit across unrelated architectural hosts",
+  "lightingSource": {
+    "provider": "ambientcg",
+    "assetId": "EveningEnvironmentHDRI002",
+    "licence": "CC0-1.0",
+    "sourceIdentitySha256": "3bf37029c42ae2bdccad3e44d8bc0b246b78f37e0e00cea92b057bf95fa890ff",
+    "sourceManifestSha256": "b7acca3c1055c0eacc621d715763a57aef7936f08543266334dc8e2c1f45c7d7",
+    "radianceSha256": "e1b18ff005cf92220d6a2d183c53b5748fea7831d0288b0de8c381f05a9f80dc",
+    "dimensions": [2048, 1024],
+    "mediaType": "image/x-exr",
+    "colorSpaceEvidence": "openexr-default-rec709"
+  },
+  "reviewedArtifacts": [
+    "work/lighting/environment-evening-village-v2/verification/neutral-cycles/contact-sheet.png",
+    "work/lighting/environment-evening-village-v2/verification/neutral-cycles/scene-render.json",
+    "work/environments/architectural-envelope-transfer/historic-masonry-shopfront/verification/environment-hdri-v1/render/contact-sheet.png",
+    "work/environments/architectural-envelope-transfer/historic-masonry-shopfront/verification/environment-hdri-v1/render/scene-render.json",
+    "work/environments/architectural-envelope-transfer/historic-masonry-shopfront/verification/environment-hdri-v1/render/world-report.json",
+    "work/environments/architectural-envelope-transfer/contemporary-plaster-mixed-use/verification/environment-hdri-v1/render/contact-sheet.png",
+    "work/environments/architectural-envelope-transfer/contemporary-plaster-mixed-use/verification/environment-hdri-v1/render/scene-render.json",
+    "work/environments/architectural-envelope-transfer/contemporary-plaster-mixed-use/verification/environment-hdri-v1/render/world-report.json"
+  ],
+  "acceptedSystemEvidence": [
+    "live online acquisition passes bounded HTTPS redirect, provider licence, exact resolution, archive-entry, OpenEXR structure, colour-space and deterministic identity checks",
+    "the lighting schema v2 package binds and restages the complete source manifest, API response, provider licence page, Videoer assessment, archive, OpenEXR inspection and radiance bytes",
+    "negated Blender Geometry Incoming direction maps source sky above source ground and Z-axis yaw moves recognizable panorama regions",
+    "the neutral Cycles transfer passes unchanged visibility, highlight, tonal-balance and spatial-colour-variation gates after a declared two-stop adaptation",
+    "rig-owned lights remain exact while unrelated shot-local practical lights compose without being mistaken for rig drift",
+    "both architectural hosts consume the identical radiance SHA-256 through Cycles while retaining their existing local and interior lights",
+    "finite smoothly tapered mesh volumes replace infinite World fog, leave World Volume unlinked, preserve HDRI illumination and contain every evaluated visible mesh, camera and target over every rendered frame",
+    "both host renders pass their structural, camera, texture, water-field, optical-surface, lighting and finite-fog verification gates"
+  ],
+  "blockingVisualDefects": [
+    "neither host is photorealistic enough for publication despite the corrected reflection-bearing lighting context",
+    "historic paving has exaggerated relief, deep black gaps and excessively noisy/repeated stone response; wet optical regions can read as missing units or dark holes",
+    "contemporary pavers remain oversized and slab-like, with broad dark joints, abrupt missing-looking regions and insufficient unit-to-unit construction variation",
+    "facade shells remain clean blockout forms with mechanically sharp profiles, sparse weathering and weak material-layer depth",
+    "windows and interiors remain sparse witness spaces with flat or empty-looking glazing, limited furnishing density and insufficient lived-in variation",
+    "rain remains a collection of detached bright streaks without convincing splash, mist, runoff and depth-dependent atmospheric integration",
+    "the finite fog contract is structurally correct but the current density and host staging do not yet produce rich cinematic depth separation",
+    "the shared HDRI improves reflections and exposes materials honestly, but it also makes scale, roughness, bevel, repetition and environment-integration errors more visible"
+  ],
+  "nextGenericDependencies": [
+    "physically plausible paving dimensions and joint depths per construction class",
+    "multi-scale per-unit colour, roughness, dirt, wear and edge-breakup variation without photographed-layout duplication",
+    "calibrated optical-water reconstruction and material response that cannot resemble holes or missing paving",
+    "layered facade construction materials with believable bevel scale, weathering, runoff, staining and repair history",
+    "denser reusable interior-room kits, glazing variation, practical fixtures and occupancy evidence",
+    "receiver-aware splash, runoff, mist and depth-layered rain integration",
+    "shot-distance-specific atmospheric calibration using the accepted finite-volume contract",
+    "additional legally cleared HDRI/environment families selected by host, weather and time-of-day semantics rather than one universal source"
+  ],
+  "notes": "This is an audit of reusable production systems, not benchmark-specific polishing. Correct HDRI directionality and finite fog materially improved the evidence and isolated the next deficiencies in shared geometry, materials, water, interiors and atmospheric integration. Automated pass status does not override the visual rejection, and no lighting, environment or host asset is published by this review. Production clothing remains queued behind this environment/material tranche exactly as recorded in the progress document."
+}

@@ -204,10 +204,13 @@ describe('paving surface-water assembly', () => {
     const initialFingerprint = await fingerprintCinematicScene(scenePath);
     expect(initialFingerprint.artifacts).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ role: 'surface-water:receiver', path: result.path }),
+        expect.objectContaining({
+          role: 'surface-water:receiver',
+          path: 'surface-water-field.json',
+        }),
         expect.objectContaining({
           role: 'surface-water-optical:receiver',
-          path: optical.path,
+          path: 'surface-water-optical.json',
         }),
       ]),
     );

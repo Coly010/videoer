@@ -22,6 +22,7 @@ Rich `scene` shots compose independently timed image, video, text, shape, sprite
 - npm 11
 - Three.js 0.185.1 (installed by npm; MIT)
 - Blender 4.5 LTS or newer with working background Python, bundled OpenVDB and NumPy modules, fixed-seed Cycles CPU final rendering, and Eevee preview rendering (GPL tooling)
+- OpenEXR `exrinfo` from a security-patched OpenEXR release for fail-closed inspection of CC0 environment-radiance sources (BSD-3-Clause tooling)
 - MPFB 2.0.17 commit `437dd513888a92399d1d3200d2e80859fae55abc` plus Blender's bundled Rigify addon for the production-character rig backend (GPL tooling with CC0 rig/weight/mesh assets; installed by the repository script)
 - eSpeak NG 1.52+ with development headers for deterministic speech audio and native phoneme timing (GPL-3.0-or-later)
 - A C compiler for the small eSpeak NG event bridge (Apple Clang/Xcode Command Line Tools on macOS, build-essential on Debian/Ubuntu)
@@ -40,6 +41,7 @@ The small/default FFmpeg package supplied by some package managers omits require
 ```bash
 brew install ffmpeg-full
 brew install espeak-ng
+brew install openexr
 brew install --cask blender font-cormorant-garamond
 scripts/install-mpfb-extension.sh
 brew unlink ffmpeg            # only when the minimal formula is currently linked
@@ -78,6 +80,8 @@ Videoer prefers `/Applications/Blender.app/Contents/MacOS/Blender` on macOS and 
 The npm dependency `@fontsource/cormorant-garamond` pins the web-rendering copy, while Blender/FFmpeg require the matching system font. Both are open source under OFL-1.1. Do not substitute a metrically different font silently because it changes title and cover layout.
 
 The doctor check imports `bpy` in background mode and verifies Blender's bundled `openvdb` and `numpy` modules; `blender --version` alone is not sufficient. Those OSS modules power project-owned deterministic sparse-volume simulation and must be available on every production machine. In a restricted Codex run, Blender may exit with signal 11/139 in `supports_barycentric_whitelist` because the sandbox hides `MTLCreateSystemDefaultDevice()`. Approve host/GPU execution and rerun the same command. The official `bpy` wheel reaches the same native Metal detector and does not avoid this failure. Do not respond by downgrading output, skipping probes, reinstalling `bpy`, switching architectures, or carrying an unnecessary private Blender fork. See [Blender installation and Metal diagnostics](docs/install-blender.md).
+
+OpenEXR environment-source inspection requires the patched BSD-3-Clause `exrinfo` utility. The doctor checks its version and licence evidence and performs a bounded `-v -s` inspection of a project-owned smoke fixture; see [OpenEXR source-inspection installation](docs/install-openexr.md). This records the current ambientCG EXR archive convention for reproducible setup on new machines.
 
 ### Deterministic speech and lip synchronization
 

@@ -15,7 +15,8 @@ export async function createLightingTransferProbe(definitionPath: string, output
     JSON.parse(await readFile(definitionFile, 'utf8')),
   );
   const baseDirectory = dirname(definitionFile);
-  const sourceRig = await loadLightingRig(resolve(baseDirectory, definition.sourceRigPath));
+  const sourceRigFile = resolve(baseDirectory, definition.sourceRigPath);
+  const sourceRig = await loadLightingRig(sourceRigFile);
   const adaptedRig = adaptLightingRig(sourceRig, definition.adaptation);
   const adaptationReport = verifyLightingRigAdaptation(
     sourceRig,
@@ -32,6 +33,7 @@ export async function createLightingTransferProbe(definitionPath: string, output
   const adaptedRigFile = await saveLightingRig(
     join(output, 'adapted-lighting-rig.json'),
     adaptedRig,
+    { environmentSourceRigPath: sourceRigFile },
   );
   const reportFile = join(output, 'lighting-adaptation-report.json');
   await writeFile(reportFile, `${JSON.stringify(adaptationReport, null, 2)}\n`, 'utf8');
@@ -45,11 +47,12 @@ export async function createLightingTransferProbe(definitionPath: string, output
     return { ...light, ...(binding ? { visibleSourceBinding: binding } : {}) };
   });
   const scene = cinematicSceneSchema.parse({
-    schemaVersion: 1,
+    schemaVersion: 2,
     id: `scene.${definition.id.replace(/^lighting-probe\./u, '')}`,
     durationSeconds: 0.5,
     fps: 24,
     resolution: definition.resolution,
+    ...(definition.renderProfile ? { renderProfile: definition.renderProfile } : {}),
     entities: [
       {
         id: 'transfer-environment',
@@ -69,10 +72,11 @@ export async function createLightingTransferProbe(definitionPath: string, output
         { time: 0.5, ...definition.camera.end },
       ],
     },
+    lightingRigPath: 'adapted-lighting-rig.json',
     lights,
     atmosphere: {
       worldColor: adaptedRig.worldColor,
-      fogDensity: 0.002,
+      fogDensity: definition.fogDensity,
       rain: { enabled: false },
     },
     landmarks: [
@@ -120,6 +124,21 @@ export async function createLightingTransferProbe(definitionPath: string, output
         blackThreshold: 28,
         whiteThreshold: 245,
       },
+      ...(definition.minimumSpatialColorVariationEntropy === undefined
+        ? []
+        : [
+            {
+              id: 'transfer-spatial-color-variation',
+              type: 'region-spatial-color-variation' as const,
+              region: {
+                x: definition.exposureRegion.x,
+                y: definition.exposureRegion.y,
+                width: definition.exposureRegion.width,
+                height: definition.exposureRegion.height,
+              },
+              minimumMeanNormalizedColorEntropy: definition.minimumSpatialColorVariationEntropy,
+            },
+          ]),
     ],
     metadata: {
       ...definition.metadata,

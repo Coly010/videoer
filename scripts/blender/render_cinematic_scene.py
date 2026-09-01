@@ -1,4 +1,5 @@
 import bpy
+import hashlib
 import importlib.util
 import json
 import math
@@ -15,6 +16,14 @@ mpfb_module_name = None
 WORLD_OUTPUT_NODE = "videoer-world-output"
 WORLD_BACKGROUND_NODE = "videoer-world-background"
 WORLD_VOLUME_NODE = "videoer-world-volume"
+WORLD_COORDINATE_NODE = "videoer-world-coordinate"
+WORLD_DIRECTION_SCALE_NODE = "videoer-world-direction-scale"
+WORLD_VECTOR_ROTATE_NODE = "videoer-world-vector-rotate"
+WORLD_ENVIRONMENT_NODE = "videoer-world-environment"
+FOG_OBJECT_NAME = "videoer-finite-fog-domain"
+FOG_MATERIAL_NAME = "videoer-finite-fog-material"
+world_configuration_report = None
+color_management_report = None
 
 
 def load_module(filename, name):
@@ -553,7 +562,104 @@ def create_fixture_lights(definition, entity_id, asset, armature, mesh):
             })
 
 
-def configure_world(scene, color, strength=1.0):
+def sha256_file(path):
+    digest = hashlib.sha256()
+    with open(path, "rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def validate_environment_illumination(environment):
+    if not isinstance(environment, dict):
+        raise RuntimeError("Environment illumination must be an object")
+    if environment.get("kind") != "hash-bound-equirectangular-radiance":
+        raise RuntimeError(
+            f"Unsupported environment illumination kind: {environment.get('kind')}"
+        )
+    source = environment.get("source")
+    if not isinstance(source, dict):
+        raise RuntimeError("Environment illumination source binding is missing")
+    media_type = source.get("mediaType")
+    expected_blender_format = {
+        "image/vnd.radiance": "HDR",
+        "image/x-exr": "OPEN_EXR",
+    }.get(media_type)
+    if expected_blender_format is None:
+        raise RuntimeError(
+            f"Unsupported environment illumination media type: {media_type}"
+        )
+    if environment.get("colorSpace") != "scene-linear-rec709":
+        raise RuntimeError("Environment illumination must declare scene-linear-rec709")
+    if environment.get("projection") != "equirectangular":
+        raise RuntimeError("Environment illumination must use equirectangular projection")
+    path = source.get("path")
+    if not isinstance(path, str) or not os.path.isabs(path):
+        raise RuntimeError("Resolved environment illumination source path must be absolute")
+    if not os.path.isfile(path):
+        raise RuntimeError(f"Environment illumination source is missing: {path}")
+    expected_size = source.get("sizeBytes")
+    if not isinstance(expected_size, int) or isinstance(expected_size, bool) or expected_size <= 0:
+        raise RuntimeError("Environment illumination source byte size is invalid")
+    actual_size = os.path.getsize(path)
+    if actual_size != expected_size:
+        raise RuntimeError(
+            f"Environment illumination byte size mismatch: expected {expected_size}, got {actual_size}"
+        )
+    expected_hash = source.get("sha256")
+    if (
+        not isinstance(expected_hash, str)
+        or len(expected_hash) != 64
+        or any(character not in "0123456789abcdef" for character in expected_hash)
+    ):
+        raise RuntimeError("Environment illumination SHA-256 binding is invalid")
+    actual_hash = sha256_file(path)
+    if actual_hash != expected_hash:
+        raise RuntimeError(
+            f"Environment illumination SHA-256 mismatch: expected {expected_hash}, got {actual_hash}"
+        )
+    dimensions = environment.get("dimensions")
+    if not isinstance(dimensions, dict):
+        raise RuntimeError("Environment illumination dimensions are missing")
+    width = dimensions.get("widthPixels")
+    height = dimensions.get("heightPixels")
+    if (
+        not isinstance(width, int)
+        or isinstance(width, bool)
+        or not isinstance(height, int)
+        or isinstance(height, bool)
+        or width <= 0
+        or height <= 0
+        or width > 65536
+        or height > 32768
+        or width != height * 2
+    ):
+        raise RuntimeError("Environment illumination dimensions must be bounded exact 2:1 integers")
+    yaw = environment.get("yawDegrees", 0)
+    exposure = environment.get("exposureStops", 0)
+    if not isinstance(yaw, (int, float)) or not math.isfinite(yaw) or yaw < -180 or yaw > 180:
+        raise RuntimeError("Environment illumination yaw must be within -180 to 180 degrees")
+    if (
+        not isinstance(exposure, (int, float))
+        or not math.isfinite(exposure)
+        or exposure < -6
+        or exposure > 6
+    ):
+        raise RuntimeError("Environment illumination exposure must be within -6 to 6 stops")
+    return {
+        "path": path,
+        "sha256": actual_hash,
+        "sizeBytes": actual_size,
+        "mediaType": media_type,
+        "expectedBlenderFormat": expected_blender_format,
+        "widthPixels": width,
+        "heightPixels": height,
+        "yawDegrees": yaw,
+        "exposureStops": exposure,
+    }
+
+
+def configure_world(scene, color, strength=1.0, environment_illumination=None):
     if (
         not isinstance(color, (list, tuple))
         or len(color) != 3
@@ -579,16 +685,291 @@ def configure_world(scene, color, strength=1.0):
     background.inputs["Color"].default_value = (*color, 1)
     background.inputs["Strength"].default_value = strength
     links.new(background.outputs["Background"], output.inputs["Surface"])
-    return {
+    report = {
         "surfaceKind": "flat-color",
         "color": list(color),
         "strength": strength,
         "surfaceLinked": True,
         "volumeLinked": False,
     }
+    if environment_illumination is None:
+        return report
+
+    validated = validate_environment_illumination(environment_illumination)
+    image = bpy.data.images.load(validated["path"], check_existing=False)
+    if tuple(image.size) != (validated["widthPixels"], validated["heightPixels"]):
+        bpy.data.images.remove(image)
+        raise RuntimeError(
+            "Decoded environment illumination dimensions do not match the declared binding"
+        )
+    decoded_format = image.file_format
+    if decoded_format != validated["expectedBlenderFormat"]:
+        bpy.data.images.remove(image)
+        raise RuntimeError(
+            "Decoded environment illumination format does not match its declared media type: "
+            f"got {decoded_format}, expected {validated['expectedBlenderFormat']}"
+        )
+    try:
+        image.colorspace_settings.name = "Linear Rec.709"
+    except TypeError as error:
+        bpy.data.images.remove(image)
+        raise RuntimeError("Blender lacks the required Linear Rec.709 input color space") from error
+    coordinate = nodes.new("ShaderNodeNewGeometry")
+    coordinate.name = WORLD_COORDINATE_NODE
+    coordinate.label = "Videoer World incoming direction"
+    direction_scale = nodes.new("ShaderNodeVectorMath")
+    direction_scale.name = WORLD_DIRECTION_SCALE_NODE
+    direction_scale.label = "Videoer outward environment direction"
+    direction_scale.operation = "SCALE"
+    direction_scale.inputs["Scale"].default_value = -1
+    vector_rotate = nodes.new("ShaderNodeVectorRotate")
+    vector_rotate.name = WORLD_VECTOR_ROTATE_NODE
+    vector_rotate.label = "Videoer environment yaw"
+    vector_rotate.rotation_type = "AXIS_ANGLE"
+    vector_rotate.invert = False
+    vector_rotate.inputs["Axis"].default_value = (0, 0, 1)
+    vector_rotate.inputs["Angle"].default_value = math.radians(validated["yawDegrees"])
+    texture = nodes.new("ShaderNodeTexEnvironment")
+    texture.name = WORLD_ENVIRONMENT_NODE
+    texture.label = "Videoer hash-bound radiance"
+    texture.image = image
+    texture.projection = "EQUIRECTANGULAR"
+    texture.interpolation = "Linear"
+    background.inputs["Strength"].default_value = 2 ** validated["exposureStops"]
+    links.new(coordinate.outputs["Incoming"], direction_scale.inputs["Vector"])
+    links.new(direction_scale.outputs["Vector"], vector_rotate.inputs["Vector"])
+    links.new(vector_rotate.outputs["Vector"], texture.inputs["Vector"])
+    links.new(texture.outputs["Color"], background.inputs["Color"])
+    world.cycles.sampling_method = "AUTOMATIC"
+    report.update({
+        "surfaceKind": "hash-bound-equirectangular-radiance",
+        "strength": background.inputs["Strength"].default_value,
+        "source": {
+            "path": validated["path"],
+            "sha256": validated["sha256"],
+            "sizeBytes": validated["sizeBytes"],
+            "mediaType": validated["mediaType"],
+        },
+        "colorSpace": image.colorspace_settings.name,
+        "decodedBlenderFormat": decoded_format,
+        "projection": "equirectangular",
+        "dimensions": {
+            "widthPixels": validated["widthPixels"],
+            "heightPixels": validated["heightPixels"],
+        },
+        "yawDegrees": validated["yawDegrees"],
+        "yawRadiansBlenderZ": vector_rotate.inputs["Angle"].default_value,
+        "coordinateOutput": "negated-Incoming",
+        "directionScale": direction_scale.inputs["Scale"].default_value,
+        "vectorInputLinked": texture.inputs["Vector"].is_linked,
+        "exposureStops": validated["exposureStops"],
+        "cyclesSamplingMethod": world.cycles.sampling_method,
+    })
+    return report
 
 
-def create_fog(scene, density, color=(0.16, 0.2, 0.28)):
+def canonical_bounds_to_blender(bounds_minimum, bounds_maximum):
+    corners = [
+        to_blender((x, y, z))
+        for x in (bounds_minimum[0], bounds_maximum[0])
+        for y in (bounds_minimum[1], bounds_maximum[1])
+        for z in (bounds_minimum[2], bounds_maximum[2])
+    ]
+    minimum = [min(point[axis] for point in corners) for axis in range(3)]
+    maximum = [max(point[axis] for point in corners) for axis in range(3)]
+    return minimum, maximum
+
+
+def from_blender(value):
+    return [value[0], value[2], -value[1]]
+
+
+def evaluated_fog_domain(scene, domain):
+    policy = domain.get("requestedPolicy")
+    if not isinstance(policy, dict) or policy.get("policy") not in (
+        "scene-envelope-v1",
+        "explicit-box-v1",
+    ):
+        raise RuntimeError("Finite fog domain lacks its requested renderer-independent policy")
+    original_frame = scene.frame_current
+    sampled_frames = list(range(scene.frame_start, scene.frame_end + 1))
+    visible_meshes = sorted(
+        (
+            obj
+            for obj in scene.objects
+            if obj.type == "MESH" and not obj.hide_render and obj.name != FOG_OBJECT_NAME
+        ),
+        key=lambda obj: obj.name,
+    )
+    minimum = [math.inf, math.inf, math.inf]
+    maximum = [-math.inf, -math.inf, -math.inf]
+    evaluated_point_count = 0
+
+    def include(point):
+        nonlocal evaluated_point_count
+        canonical = from_blender(point)
+        for axis in range(3):
+            minimum[axis] = min(minimum[axis], canonical[axis])
+            maximum[axis] = max(maximum[axis], canonical[axis])
+        evaluated_point_count += 1
+
+    target = bpy.data.objects.get("cinematic-camera-target")
+    try:
+        for frame in sampled_frames:
+            scene.frame_set(frame)
+            dependency_graph = bpy.context.evaluated_depsgraph_get()
+            for obj in visible_meshes:
+                evaluated = obj.evaluated_get(dependency_graph)
+                for corner in evaluated.bound_box:
+                    include(evaluated.matrix_world @ Vector(corner))
+            if scene.camera is not None:
+                include(scene.camera.matrix_world.translation)
+            if target is not None:
+                include(target.matrix_world.translation)
+    finally:
+        scene.frame_set(original_frame)
+    if not evaluated_point_count:
+        raise RuntimeError("Finite fog domain has no evaluated render points")
+
+    if policy["policy"] == "scene-envelope-v1":
+        horizontal_padding = policy.get("horizontalPaddingMeters")
+        below_padding = policy.get("belowPaddingMeters")
+        above_padding = policy.get("abovePaddingMeters")
+        minimum_horizontal = policy.get("minimumHorizontalSpanMeters")
+        minimum_vertical = policy.get("minimumVerticalSpanMeters")
+        values = (
+            horizontal_padding,
+            below_padding,
+            above_padding,
+            minimum_horizontal,
+            minimum_vertical,
+        )
+        if not all(isinstance(value, (int, float)) and value >= 0 for value in values):
+            raise RuntimeError("Finite fog scene-envelope parameters are invalid")
+
+        def symmetric_axis(axis, minimum_span, padding):
+            center = (minimum[axis] + maximum[axis]) / 2
+            span = max(maximum[axis] - minimum[axis], minimum_span)
+            return center - span / 2 - padding, center + span / 2 + padding
+
+        x = symmetric_axis(0, minimum_horizontal, horizontal_padding)
+        vertical_center = (minimum[1] + maximum[1]) / 2
+        vertical_span = max(maximum[1] - minimum[1], minimum_vertical)
+        y = (
+            vertical_center - vertical_span / 2 - below_padding,
+            vertical_center + vertical_span / 2 + above_padding,
+        )
+        z = symmetric_axis(2, minimum_horizontal, horizontal_padding)
+        bounds_minimum = [x[0], y[0], z[0]]
+        bounds_maximum = [x[1], y[1], z[1]]
+    else:
+        bounds_minimum = list(policy.get("boundsMinimum", []))
+        bounds_maximum = list(policy.get("boundsMaximum", []))
+        if len(bounds_minimum) != 3 or len(bounds_maximum) != 3:
+            raise RuntimeError("Explicit finite fog box bounds are invalid")
+
+    containment = all(
+        bounds_minimum[axis] <= minimum[axis] + 1e-9
+        and bounds_maximum[axis] >= maximum[axis] - 1e-9
+        for axis in range(3)
+    )
+    if not containment:
+        raise RuntimeError(
+            "Finite fog domain does not contain every visible evaluated mesh/camera frame"
+        )
+    size = [bounds_maximum[axis] - bounds_minimum[axis] for axis in range(3)]
+    maximum_extent = policy.get("maximumExtentMeters")
+    if (
+        not isinstance(maximum_extent, (int, float))
+        or not math.isfinite(maximum_extent)
+        or maximum_extent <= 0
+        or any(extent <= 0 or extent > maximum_extent for extent in size)
+    ):
+        raise RuntimeError("Finite fog domain exceeds maximumExtentMeters")
+    renderer_derivation = {
+        "policy": policy,
+        "sampledFrames": sampled_frames,
+        "includedVisibleObjects": [obj.name for obj in visible_meshes],
+        "evaluatedSourceBoundsMinimum": minimum,
+        "evaluatedSourceBoundsMaximum": maximum,
+        "boundsMinimum": bounds_minimum,
+        "boundsMaximum": bounds_maximum,
+    }
+    renderer_hash = hashlib.sha256(
+        json.dumps(renderer_derivation, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    ).hexdigest()
+    return {
+        **renderer_derivation,
+        "boundsMinimum": bounds_minimum,
+        "boundsMaximum": bounds_maximum,
+        "size": size,
+        "evaluatedPointCount": evaluated_point_count,
+        "allVisibleObjectsContained": True,
+        "allSampledFramesContained": True,
+        "cameraAndTargetContained": True,
+        "rendererDerivationSha256": renderer_hash,
+    }
+
+
+def validate_finite_fog_domain(domain):
+    if not isinstance(domain, dict):
+        raise RuntimeError("Finite fog requires a resolved scene-envelope domain")
+    if domain.get("schemaVersion") != 1 or domain.get("policy") not in (
+        "scene-envelope-v1",
+        "explicit-box-v1",
+    ):
+        raise RuntimeError("Unsupported finite fog domain policy")
+    if domain.get("coordinateSystem") != "videoer-y-up-meters":
+        raise RuntimeError("Finite fog domain must use Videoer's Y-up metre coordinates")
+
+    def vector(name):
+        value = domain.get(name)
+        if (
+            not isinstance(value, list)
+            or len(value) != 3
+            or not all(isinstance(component, (int, float)) and math.isfinite(component) for component in value)
+        ):
+            raise RuntimeError(f"Finite fog domain {name} is invalid")
+        return value
+
+    bounds_minimum = vector("boundsMinimum")
+    bounds_maximum = vector("boundsMaximum")
+    center = vector("center")
+    size = vector("size")
+    for axis in range(3):
+        expected_size = bounds_maximum[axis] - bounds_minimum[axis]
+        expected_center = (bounds_maximum[axis] + bounds_minimum[axis]) / 2
+        if expected_size <= 0 or abs(size[axis] - expected_size) > 1e-8:
+            raise RuntimeError("Finite fog domain size does not match its bounds")
+        if abs(center[axis] - expected_center) > 1e-8:
+            raise RuntimeError("Finite fog domain center does not match its bounds")
+    edge_falloff = domain.get("edgeFalloffMeters")
+    if (
+        not isinstance(edge_falloff, (int, float))
+        or not math.isfinite(edge_falloff)
+        or edge_falloff <= 0
+        or edge_falloff >= min(size) / 2
+    ):
+        raise RuntimeError("Finite fog domain edge falloff is invalid for its bounds")
+    derivation_hash = domain.get("derivationSha256")
+    if (
+        not isinstance(derivation_hash, str)
+        or len(derivation_hash) != 64
+        or any(character not in "0123456789abcdef" for character in derivation_hash)
+    ):
+        raise RuntimeError("Finite fog domain derivation hash is invalid")
+    maximum_extent = domain.get("maximumExtentMeters")
+    if (
+        not isinstance(maximum_extent, (int, float))
+        or not math.isfinite(maximum_extent)
+        or maximum_extent <= 0
+        or any(extent > maximum_extent for extent in size)
+    ):
+        raise RuntimeError("Finite fog domain exceeds maximumExtentMeters")
+    return edge_falloff, derivation_hash
+
+
+def create_fog(scene, density, color=(0.16, 0.2, 0.28), domain=None):
     world = scene.world
     if world is None or not world.use_nodes:
         raise RuntimeError("Cinematic fog requires the explicit Videoer world-node surface")
@@ -609,18 +990,118 @@ def create_fog(scene, density, color=(0.16, 0.2, 0.28)):
         )
     ):
         raise RuntimeError("Cinematic fog found an invalid or replaced Videoer world surface")
-    existing = nodes.get(WORLD_VOLUME_NODE)
-    if existing is not None:
-        nodes.remove(existing)
+    for link in list(output.inputs["Volume"].links):
+        links.remove(link)
+    existing_world_volume = nodes.get(WORLD_VOLUME_NODE)
+    if existing_world_volume is not None:
+        nodes.remove(existing_world_volume)
+    existing_object = bpy.data.objects.get(FOG_OBJECT_NAME)
+    if existing_object is not None:
+        bpy.data.objects.remove(existing_object, do_unlink=True)
+    existing_material = bpy.data.materials.get(FOG_MATERIAL_NAME)
+    if existing_material is not None:
+        bpy.data.materials.remove(existing_material)
     if density <= 0:
-        return {"enabled": False, "density": density, "surfacePreserved": True}
-    volume = nodes.new("ShaderNodeVolumePrincipled")
-    volume.name = WORLD_VOLUME_NODE
-    volume.label = "Videoer declared atmosphere fog"
-    volume.inputs["Density"].default_value = density
+        return {
+            "enabled": False,
+            "density": density,
+            "surfacePreserved": True,
+            "worldVolumeLinked": False,
+        }
+    edge_falloff, derivation_hash = validate_finite_fog_domain(domain)
+    evaluated_domain = evaluated_fog_domain(scene, domain)
+    bounds_minimum = evaluated_domain["boundsMinimum"]
+    bounds_maximum = evaluated_domain["boundsMaximum"]
+    blender_minimum, blender_maximum = canonical_bounds_to_blender(bounds_minimum, bounds_maximum)
+    blender_size = [blender_maximum[axis] - blender_minimum[axis] for axis in range(3)]
+    blender_center = [
+        (blender_maximum[axis] + blender_minimum[axis]) / 2 for axis in range(3)
+    ]
+    bpy.ops.mesh.primitive_cube_add(size=1, location=blender_center)
+    fog_object = bpy.context.object
+    fog_object.name = FOG_OBJECT_NAME
+    fog_object.scale = [extent for extent in blender_size]
+    bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+    fog_object.display_type = "WIRE"
+
+    material = bpy.data.materials.new(FOG_MATERIAL_NAME)
+    material.use_nodes = True
+    material.node_tree.nodes.clear()
+    material_nodes = material.node_tree.nodes
+    material_links = material.node_tree.links
+    material_output = material_nodes.new("ShaderNodeOutputMaterial")
+    material_output.name = "videoer-fog-material-output"
+    volume = material_nodes.new("ShaderNodeVolumePrincipled")
+    volume.name = "videoer-fog-principled-volume"
     volume.inputs["Color"].default_value = (*color, 1)
-    links.new(volume.outputs["Volume"], output.inputs["Volume"])
-    return {"enabled": True, "density": density, "surfacePreserved": True}
+    coordinates = material_nodes.new("ShaderNodeTexCoord")
+    coordinates.name = "videoer-fog-generated-coordinates"
+    separate = material_nodes.new("ShaderNodeSeparateXYZ")
+    separate.name = "videoer-fog-separate-coordinates"
+    material_links.new(coordinates.outputs["Generated"], separate.inputs["Vector"])
+    axis_distances = []
+    for axis, socket_name in enumerate(("X", "Y", "Z")):
+        complement = material_nodes.new("ShaderNodeMath")
+        complement.operation = "SUBTRACT"
+        complement.inputs[0].default_value = 1
+        material_links.new(separate.outputs[socket_name], complement.inputs[1])
+        nearest_edge = material_nodes.new("ShaderNodeMath")
+        nearest_edge.operation = "MINIMUM"
+        material_links.new(separate.outputs[socket_name], nearest_edge.inputs[0])
+        material_links.new(complement.outputs[0], nearest_edge.inputs[1])
+        metres = material_nodes.new("ShaderNodeMath")
+        metres.operation = "MULTIPLY"
+        metres.inputs[1].default_value = blender_size[axis]
+        material_links.new(nearest_edge.outputs[0], metres.inputs[0])
+        axis_distances.append(metres.outputs[0])
+    minimum_xy = material_nodes.new("ShaderNodeMath")
+    minimum_xy.operation = "MINIMUM"
+    material_links.new(axis_distances[0], minimum_xy.inputs[0])
+    material_links.new(axis_distances[1], minimum_xy.inputs[1])
+    minimum_xyz = material_nodes.new("ShaderNodeMath")
+    minimum_xyz.operation = "MINIMUM"
+    material_links.new(minimum_xy.outputs[0], minimum_xyz.inputs[0])
+    material_links.new(axis_distances[2], minimum_xyz.inputs[1])
+    taper = material_nodes.new("ShaderNodeMapRange")
+    taper.name = "videoer-fog-smootherstep-taper"
+    taper.data_type = "FLOAT"
+    taper.interpolation_type = "SMOOTHERSTEP"
+    taper.clamp = True
+    taper.inputs["From Min"].default_value = 0
+    taper.inputs["From Max"].default_value = edge_falloff
+    taper.inputs["To Min"].default_value = 0
+    taper.inputs["To Max"].default_value = 1
+    material_links.new(minimum_xyz.outputs[0], taper.inputs["Value"])
+    density_scale = material_nodes.new("ShaderNodeMath")
+    density_scale.name = "videoer-fog-density-scale"
+    density_scale.operation = "MULTIPLY"
+    density_scale.inputs[1].default_value = density
+    material_links.new(taper.outputs["Result"], density_scale.inputs[0])
+    material_links.new(density_scale.outputs[0], volume.inputs["Density"])
+    material_links.new(volume.outputs["Volume"], material_output.inputs["Volume"])
+    fog_object.data.materials.append(material)
+    return {
+        "enabled": True,
+        "implementation": "finite-mesh-volume-v1",
+        "density": density,
+        "color": list(color),
+        "surfacePreserved": True,
+        "worldVolumeLinked": output.inputs["Volume"].is_linked,
+        "materialVolumeLinked": material_output.inputs["Volume"].is_linked,
+        "objectName": fog_object.name,
+        "materialName": material.name,
+        "coordinateSystem": "videoer-y-up-meters",
+        "boundsMinimum": bounds_minimum,
+        "boundsMaximum": bounds_maximum,
+        "blenderBoundsMinimum": blender_minimum,
+        "blenderBoundsMaximum": blender_maximum,
+        "blenderSizeMeters": blender_size,
+        "edgeFalloffMeters": edge_falloff,
+        "edgeFalloffImplementation": "minimum-distance-smootherstep-v1",
+        "derivationSha256": derivation_hash,
+        "requestedPolicy": domain["requestedPolicy"],
+        "evaluatedBounds": evaluated_domain,
+    }
 
 
 def create_translucent_vfx_material(name, color, opacity, roughness, emission_strength=0.0):
@@ -1518,8 +1999,17 @@ def create_aerosols(instances, fps, frame_count, output):
 
 
 def configure_scene(manifest):
+    global color_management_report, world_configuration_report
     scene = bpy.context.scene
     render_profile = manifest["renderProfile"]
+    if (
+        render_profile["engine"] == "eevee-next"
+        and manifest.get("environmentIllumination") is not None
+    ):
+        raise RuntimeError(
+            "Eevee Next cannot consume reflection-bearing environment illumination: "
+            "Cycles is required until a renderer-independent Eevee light-probe bake contract exists"
+        )
     if render_profile["engine"] == "cycles-cpu":
         scene.render.engine = "CYCLES"
         scene.cycles.device = "CPU"
@@ -1547,7 +2037,11 @@ def configure_scene(manifest):
     scene.render.fps = manifest["fps"]
     scene.frame_start = 1
     scene.frame_end = round(manifest["durationSeconds"] * manifest["fps"])
-    configure_world(scene, manifest["atmosphere"]["worldColor"])
+    world_configuration_report = configure_world(
+        scene,
+        manifest["atmosphere"]["worldColor"],
+        environment_illumination=manifest.get("environmentIllumination"),
+    )
     scene.render.image_settings.file_format = "PNG"
     scene.render.image_settings.color_mode = "RGB"
     scene.render.image_settings.color_depth = "8"
@@ -1556,7 +2050,35 @@ def configure_scene(manifest):
     # Production evidence must be content-addressable, so disable the final colour perturbation.
     scene.render.dither_intensity = 0.0
     scene.render.film_transparent = False
+    exposure = manifest.get("exposure") or {
+        "viewTransform": "AgX",
+        "look": "AgX - Medium High Contrast",
+        "exposureStops": 0,
+    }
+    if not isinstance(exposure, dict):
+        raise RuntimeError("Cinematic exposure contract must be an object")
+    if exposure.get("viewTransform") != "AgX":
+        raise RuntimeError(
+            f"Unsupported cinematic view transform: {exposure.get('viewTransform')}"
+        )
+    if exposure.get("look") != "AgX - Medium High Contrast":
+        raise RuntimeError(f"Unsupported cinematic AgX look: {exposure.get('look')}")
+    exposure_stops = exposure.get("exposureStops", 0)
+    if (
+        not isinstance(exposure_stops, (int, float))
+        or not math.isfinite(exposure_stops)
+        or exposure_stops < -4
+        or exposure_stops > 4
+    ):
+        raise RuntimeError("Cinematic exposure must be within -4 to 4 stops")
+    scene.view_settings.view_transform = "AgX"
     scene.view_settings.look = "AgX - Medium High Contrast"
+    scene.view_settings.exposure = exposure_stops
+    color_management_report = {
+        "viewTransform": scene.view_settings.view_transform,
+        "look": scene.view_settings.look,
+        "exposureStops": scene.view_settings.exposure,
+    }
     return scene
 
 
@@ -1741,11 +2263,6 @@ def main():
             indent=2,
         )
         handle.write("\n")
-    create_fog(
-        scene,
-        manifest["atmosphere"].get("fogDensity", 0),
-        manifest["atmosphere"].get("fogColor", (0.16, 0.2, 0.28)),
-    )
     create_rain(
         manifest["atmosphere"]["rain"],
         camera,
@@ -1766,6 +2283,28 @@ def main():
                 "schemaVersion": 1,
                 "sceneId": manifest["id"],
                 "layers": aerosol_report,
+            },
+            handle,
+            indent=2,
+        )
+        handle.write("\n")
+    # Resolve the final fog envelope only after rain splashes and aerosol particles exist.
+    # Their animated render meshes must participate in the same every-frame containment proof
+    # as ordinary scene entities.
+    fog_report = create_fog(
+        scene,
+        manifest["atmosphere"].get("fogDensity", 0),
+        manifest["atmosphere"].get("fogColor", (0.16, 0.2, 0.28)),
+        manifest.get("finiteFogDomain"),
+    )
+    with open(os.path.join(output, "world-report.json"), "w", encoding="utf-8") as handle:
+        json.dump(
+            {
+                "schemaVersion": 1,
+                "sceneId": manifest["id"],
+                "surface": world_configuration_report,
+                "fog": fog_report,
+                "colorManagement": color_management_report,
             },
             handle,
             indent=2,

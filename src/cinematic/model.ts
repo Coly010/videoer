@@ -163,11 +163,76 @@ export const cinematicRenderProfileSchema = z.discriminatedUnion('engine', [
   }),
 ]);
 
+const sceneEnvelopeFogDomainPolicySchema = z
+  .object({
+    policy: z.literal('scene-envelope-v1'),
+    horizontalPaddingMeters: z.number().finite().min(0.25).max(100).default(4),
+    belowPaddingMeters: z.number().finite().min(0.1).max(100).default(1),
+    abovePaddingMeters: z.number().finite().min(0.25).max(100).default(4),
+    minimumHorizontalSpanMeters: z.number().finite().min(1).max(1000).default(12),
+    minimumVerticalSpanMeters: z.number().finite().min(1).max(1000).default(6),
+    maximumExtentMeters: z.number().finite().min(2).max(5000).default(200),
+    edgeFalloffMeters: z.number().finite().min(0.05).max(50).default(1.5),
+  })
+  .superRefine((domain, context) => {
+    const minimumHalfSpan =
+      Math.min(domain.minimumHorizontalSpanMeters, domain.minimumVerticalSpanMeters) / 2;
+    if (domain.edgeFalloffMeters >= minimumHalfSpan)
+      context.addIssue({
+        code: 'custom',
+        path: ['edgeFalloffMeters'],
+        message: 'fog edge falloff must be smaller than half the minimum declared span',
+      });
+  });
+
+const explicitBoxFogDomainPolicySchema = z
+  .object({
+    policy: z.literal('explicit-box-v1'),
+    boundsMinimum: cinematicVec3Schema,
+    boundsMaximum: cinematicVec3Schema,
+    maximumExtentMeters: z.number().finite().min(2).max(5000).default(200),
+    edgeFalloffMeters: z.number().finite().min(0.05).max(50).default(1.5),
+  })
+  .superRefine((domain, context) => {
+    const extents = domain.boundsMinimum.map(
+      (minimum, axis) => domain.boundsMaximum[axis]! - minimum,
+    );
+    if (extents.some((extent) => extent <= 0 || extent > domain.maximumExtentMeters))
+      context.addIssue({
+        code: 'custom',
+        path: ['boundsMaximum'],
+        message: 'explicit fog bounds must be positive and within maximumExtentMeters',
+      });
+    if (domain.edgeFalloffMeters >= Math.min(...extents) / 2)
+      context.addIssue({
+        code: 'custom',
+        path: ['edgeFalloffMeters'],
+        message: 'fog edge falloff must be smaller than half the smallest explicit extent',
+      });
+  });
+
+export const cinematicFogDomainPolicySchema = z.union([
+  sceneEnvelopeFogDomainPolicySchema,
+  explicitBoxFogDomainPolicySchema,
+]);
+
+export const defaultCinematicFogDomainPolicy = {
+  policy: 'scene-envelope-v1',
+  horizontalPaddingMeters: 4,
+  belowPaddingMeters: 1,
+  abovePaddingMeters: 4,
+  minimumHorizontalSpanMeters: 12,
+  minimumVerticalSpanMeters: 6,
+  maximumExtentMeters: 200,
+  edgeFalloffMeters: 1.5,
+} as const;
+
 export const cinematicAtmosphereSchema = z
   .object({
     worldColor: colorSchema.default([0.01, 0.015, 0.025]),
     fogDensity: z.number().min(0).max(0.2).default(0),
     fogColor: colorSchema.default([0.16, 0.2, 0.28]),
+    fogDomain: cinematicFogDomainPolicySchema.optional(),
     rain: z
       .object({
         enabled: z.boolean().default(false),
@@ -308,6 +373,17 @@ export const cinematicRenderGateSchema = z.discriminatedUnion('type', [
   }),
   z.object({
     id: cinematicIdentifierSchema,
+    type: z.literal('region-spatial-color-variation'),
+    region: z.object({
+      x: z.number().min(0).max(1),
+      y: z.number().min(0).max(1),
+      width: z.number().positive().max(1),
+      height: z.number().positive().max(1),
+    }),
+    minimumMeanNormalizedColorEntropy: z.number().min(0).max(1),
+  }),
+  z.object({
+    id: cinematicIdentifierSchema,
     type: z.literal('subject-coverage'),
     entityId: cinematicIdentifierSchema,
     minimumVisibleAreaPercentage: z.number().min(0).max(100),
@@ -356,7 +432,7 @@ export const cinematicLandmarkSchema = z.object({
 
 export const cinematicSceneSchema = z
   .object({
-    schemaVersion: z.literal(1),
+    schemaVersion: z.union([z.literal(1), z.literal(2)]),
     id: cinematicIdentifierSchema,
     durationSeconds: z.number().positive(),
     fps: z.number().int().min(12).max(120).default(24),
@@ -370,7 +446,8 @@ export const cinematicSceneSchema = z
     }),
     entities: z.array(cinematicSceneEntitySchema).min(1),
     camera: z.object({ keyframes: z.array(cinematicCameraKeyframeSchema).min(1) }),
-    lights: z.array(cinematicLightSchema).min(1),
+    lightingRigPath: z.string().min(1).optional(),
+    lights: z.array(cinematicLightSchema).default([]),
     atmosphere: cinematicAtmosphereSchema,
     overlays: z.array(cinematicOverlaySchema).max(3).default([]),
     finishProfilePath: z.string().min(1).optional(),
@@ -380,6 +457,40 @@ export const cinematicSceneSchema = z
     metadata: z.record(z.string(), z.unknown()).default({}),
   })
   .superRefine((scene, ctx) => {
+    if (scene.schemaVersion === 1 && scene.lightingRigPath)
+      ctx.addIssue({
+        code: 'custom',
+        path: ['lightingRigPath'],
+        message: 'legacy cinematic scene v1 cannot bind a reusable lighting rig; use v2',
+      });
+    if (scene.schemaVersion === 1 && scene.atmosphere.fogDomain)
+      ctx.addIssue({
+        code: 'custom',
+        path: ['atmosphere', 'fogDomain'],
+        message: 'legacy cinematic scene v1 cannot declare a finite fog domain; use v2',
+      });
+    if (scene.schemaVersion === 1 && !scene.lights.length)
+      ctx.addIssue({
+        code: 'custom',
+        path: ['lights'],
+        message: 'legacy cinematic scene v1 requires at least one inline light',
+      });
+    if (!scene.lights.length && !scene.lightingRigPath)
+      ctx.addIssue({
+        code: 'custom',
+        path: ['lights'],
+        message: 'cinematic scenes require inline lights or an exact lighting rig binding',
+      });
+    const lightIds = new Set<string>();
+    for (const [index, light] of scene.lights.entries()) {
+      if (lightIds.has(light.id))
+        ctx.addIssue({
+          code: 'custom',
+          path: ['lights', index, 'id'],
+          message: 'duplicate cinematic scene light id',
+        });
+      lightIds.add(light.id);
+    }
     if (
       Math.abs(scene.durationSeconds * scene.fps - Math.round(scene.durationSeconds * scene.fps)) >
       1e-8
@@ -458,13 +569,13 @@ export const cinematicSceneSchema = z
     }
     for (const [index, gate] of scene.renderGates.entries()) {
       if (
-        gate.type === 'region-exposure' &&
+        (gate.type === 'region-exposure' || gate.type === 'region-spatial-color-variation') &&
         (gate.region.x + gate.region.width > 1 || gate.region.y + gate.region.height > 1)
       )
         ctx.addIssue({
           code: 'custom',
           path: ['renderGates', index, 'region'],
-          message: 'region exposure gate must remain within normalized frame bounds',
+          message: 'region render gate must remain within normalized frame bounds',
         });
       if (gate.type === 'overlay-visibility') {
         if (!scene.overlays.some((overlay) => overlay.id === gate.overlayId))

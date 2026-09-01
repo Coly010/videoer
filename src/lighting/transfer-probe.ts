@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { lightingRigAdaptationSchema } from './adaptation.js';
+import { cinematicRenderProfileSchema } from '../cinematic/model.js';
 
 const vec3Schema = z.tuple([z.number().finite(), z.number().finite(), z.number().finite()]);
 const cameraSchema = z.object({
@@ -34,6 +35,9 @@ export const lightingTransferProbeSchema = z.object({
     height: z.number().int().min(240).max(1920),
     percentage: z.literal(100).default(100),
   }),
+  renderProfile: cinematicRenderProfileSchema.optional(),
+  fogDensity: z.number().min(0).max(0.2).default(0.002),
+  minimumSpatialColorVariationEntropy: z.number().min(0).max(1).optional(),
   exposureRegion: z
     .object({
       x: z.number().min(0).max(1),

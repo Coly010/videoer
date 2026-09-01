@@ -1,7 +1,21 @@
-import { describe, expect, it } from 'vitest';
+import { mkdtemp, readFile, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { describe, expect, it, vi } from 'vitest';
+import { createLightingTransferProbe } from '../src/application/lighting-transfer.js';
+import { saveGeometry } from '../src/geometry/io.js';
 import { createWarmInteriorLightingRig } from '../src/lighting/bookshop.js';
 import { adaptLightingRig, verifyLightingRigAdaptation } from '../src/lighting/adaptation.js';
+import { saveLightingRig } from '../src/lighting/io.js';
 import { lightingTransferProbeSchema } from '../src/lighting/transfer-probe.js';
+
+vi.mock('../src/cinematic/blender.js', () => ({
+  renderCinematicScene: vi.fn(async (sceneFile: string, output: string) => ({
+    sceneFile,
+    output,
+    mocked: true,
+  })),
+}));
 
 const definition = {
   schemaVersion: 1 as const,
@@ -71,5 +85,47 @@ describe('lighting transfer probes', () => {
         exposureRegion: { ...definition.exposureRegion, x: 0.7, width: 0.5 },
       }),
     ).toThrow();
+  });
+
+  it('emits a v2 scene with an exact adapted-rig binding', async () => {
+    const directory = await mkdtemp(join(tmpdir(), 'videoer-lighting-transfer-v2-'));
+    await saveLightingRig(
+      join(directory, 'warm-interior', 'lighting-rig.json'),
+      createWarmInteriorLightingRig(),
+    );
+    await saveGeometry(join(directory, 'environment.json'), {
+      schemaVersion: 1,
+      id: 'environment.transfer-test',
+      units: 'meters',
+      coordinateSystem: { handedness: 'right', up: 'y', forward: '-z' },
+      positions: [
+        [-1, 0, -1],
+        [1, 0, -1],
+        [0, 0, 1],
+      ],
+      indices: [0, 1, 2],
+      materials: [],
+      materialGroups: [],
+      skeleton: [],
+      morphTargets: [],
+      attachments: {},
+      metadata: {},
+    });
+    const definitionFile = join(directory, 'definition.json');
+    await writeFile(
+      definitionFile,
+      JSON.stringify({
+        ...definition,
+        environmentGeometryPath: 'environment.json',
+        fogDensity: 0,
+      }),
+    );
+
+    const result = await createLightingTransferProbe(definitionFile, join(directory, 'output'));
+    const scene = JSON.parse(await readFile(result.sceneFile, 'utf8'));
+    expect(scene).toMatchObject({
+      schemaVersion: 2,
+      lightingRigPath: 'adapted-lighting-rig.json',
+    });
   });
 });

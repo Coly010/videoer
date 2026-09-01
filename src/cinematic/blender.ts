@@ -11,6 +11,7 @@ import {
   inspectImage,
   inspectWhitePixelPercentage,
   inspectWhitePixelPercentageInRegion,
+  inspectNormalizedColorEntropyInRegion,
   inspectVideo,
 } from '../media/inspection.js';
 import { resolveBlenderExecutable } from '../media/blender.js';
@@ -18,6 +19,9 @@ import { loadCinematicFinishProfile } from '../finishing/io.js';
 import { renderCinematicFinish } from '../finishing/render.js';
 import { loadCinematicScene } from './io.js';
 import { verifyCinematicScene, type CinematicQualityCheck } from './verification.js';
+import { loadLightingRig } from '../lighting/io.js';
+import { resolveFiniteFogDomain } from './fog.js';
+import { resolveRigBoundAtmosphere } from './lighting.js';
 
 const exec = promisify(execFile);
 
@@ -60,8 +64,33 @@ async function prepareCinematicRender(sceneFile: string, outputDirectory: string
   const output = resolve(outputDirectory);
   await mkdir(output, { recursive: true });
   const manifest = join(output, 'resolved-scene.json');
+  const lightingRig = scene.lightingRigPath
+    ? await loadLightingRig(resolve(sourceDirectory, scene.lightingRigPath))
+    : undefined;
+  const environmentIllumination =
+    lightingRig?.environmentIllumination?.kind === 'hash-bound-equirectangular-radiance'
+      ? {
+          ...lightingRig.environmentIllumination,
+          source: {
+            ...lightingRig.environmentIllumination.source,
+            path: resolve(
+              dirname(resolve(sourceDirectory, scene.lightingRigPath!)),
+              lightingRig.environmentIllumination.source.path,
+            ),
+          },
+        }
+      : lightingRig?.environmentIllumination;
+  const finiteFogDomain =
+    scene.atmosphere.fogDensity > 0 ? await resolveFiniteFogDomain(scene, source) : undefined;
   const resolved = {
     ...scene,
+    atmosphere: resolveRigBoundAtmosphere(scene.atmosphere, lightingRig),
+    ...(finiteFogDomain ? { finiteFogDomain } : {}),
+    ...(scene.lightingRigPath
+      ? { lightingRigPath: resolve(sourceDirectory, scene.lightingRigPath) }
+      : {}),
+    ...(lightingRig ? { exposure: lightingRig.exposure } : {}),
+    ...(environmentIllumination ? { environmentIllumination } : {}),
     entities: scene.entities.map((entity) => ({
       ...entity,
       geometryPath: resolve(sourceDirectory, entity.geometryPath),
@@ -320,6 +349,29 @@ export async function renderCinematicScene(
         } | null
       >;
     }>;
+  };
+  const worldReport = JSON.parse(await readFile(join(output, 'world-report.json'), 'utf8')) as {
+    fog?: {
+      enabled?: boolean;
+      implementation?: string;
+      density?: number;
+      worldVolumeLinked?: boolean;
+      materialVolumeLinked?: boolean;
+      boundsMinimum?: number[];
+      boundsMaximum?: number[];
+      edgeFalloffMeters?: number;
+      edgeFalloffImplementation?: string;
+      derivationSha256?: string;
+      requestedPolicy?: unknown;
+      evaluatedBounds?: {
+        sampledFrames?: number[];
+        includedVisibleObjects?: string[];
+        allVisibleObjectsContained?: boolean;
+        allSampledFramesContained?: boolean;
+        cameraAndTargetContained?: boolean;
+        rendererDerivationSha256?: string;
+      };
+    };
   };
   const declaredRenderChecks = await Promise.all(
     scene.renderGates.map(async (gate) => {
@@ -657,6 +709,35 @@ export async function renderCinematicScene(
           },
         };
       }
+      if (gate.type === 'region-spatial-color-variation') {
+        const samples = await Promise.all(
+          frames.map(async (frame) => {
+            const image = await inspectImage(frame.path);
+            if (!image.width || !image.height) return { red: 0, green: 0, blue: 0, mean: 0 };
+            return inspectNormalizedColorEntropyInRegion(frame.path, {
+              x: gate.region.x * image.width,
+              y: gate.region.y * image.height,
+              width: gate.region.width * image.width,
+              height: gate.region.height * image.height,
+            });
+          }),
+        );
+        const passed = samples.every(
+          (sample) => sample.mean >= gate.minimumMeanNormalizedColorEntropy,
+        );
+        return {
+          id: gate.id,
+          status: passed ? ('pass' as const) : ('fail' as const),
+          message: passed
+            ? 'Declared region retains the required spatial color variation'
+            : 'Declared region is too spatially flat for the color-variation contract',
+          measurements: {
+            region: gate.region,
+            minimumMeanNormalizedColorEntropy: gate.minimumMeanNormalizedColorEntropy,
+            samples,
+          },
+        };
+      }
       const percentages = await Promise.all(
         frames.map((frame) => inspectBlackPixelPercentage(frame.path, gate.blackThreshold)),
       );
@@ -683,6 +764,33 @@ export async function renderCinematicScene(
     cameraContract.trackAxis === 'TRACK_NEGATIVE_Z' &&
     cameraContract.upAxis === 'UP_Y' &&
     cameraContract.interpolationImplementation === 'frame-baked-declarative-v1';
+  const expectedFog = resolved.finiteFogDomain;
+  const actualFog = worldReport.fog;
+  const exactExplicitBoundsMatched =
+    !expectedFog ||
+    expectedFog.policy !== 'explicit-box-v1' ||
+    (JSON.stringify(actualFog?.boundsMinimum) === JSON.stringify(expectedFog.boundsMinimum) &&
+      JSON.stringify(actualFog?.boundsMaximum) === JSON.stringify(expectedFog.boundsMaximum));
+  const finiteFogPassed =
+    scene.atmosphere.fogDensity === 0
+      ? actualFog?.enabled === false && actualFog.worldVolumeLinked === false
+      : expectedFog !== undefined &&
+        actualFog?.enabled === true &&
+        actualFog.implementation === 'finite-mesh-volume-v1' &&
+        actualFog.worldVolumeLinked === false &&
+        actualFog.materialVolumeLinked === true &&
+        actualFog.density === scene.atmosphere.fogDensity &&
+        actualFog.derivationSha256 === expectedFog.derivationSha256 &&
+        JSON.stringify(actualFog.requestedPolicy) === JSON.stringify(expectedFog.requestedPolicy) &&
+        exactExplicitBoundsMatched &&
+        actualFog.edgeFalloffMeters === expectedFog.edgeFalloffMeters &&
+        actualFog.edgeFalloffImplementation === 'minimum-distance-smootherstep-v1' &&
+        actualFog.evaluatedBounds?.allVisibleObjectsContained === true &&
+        actualFog.evaluatedBounds.allSampledFramesContained === true &&
+        actualFog.evaluatedBounds.cameraAndTargetContained === true &&
+        actualFog.evaluatedBounds.sampledFrames?.length ===
+          Math.round(scene.durationSeconds * scene.fps) &&
+        Boolean(actualFog.evaluatedBounds.rendererDerivationSha256);
   const renderChecks = [
     {
       id: 'renderer-camera-contract',
@@ -691,6 +799,20 @@ export async function renderCinematicScene(
         ? 'Renderer camera position, semantic target, lens, and tracking contract match the declarative path'
         : 'Renderer camera does not faithfully implement the declarative position, target, lens, or tracking contract',
       measurements: cameraContract ?? {},
+    },
+    {
+      id: 'renderer-finite-fog-domain',
+      status: finiteFogPassed ? ('pass' as const) : ('fail' as const),
+      message: finiteFogPassed
+        ? scene.atmosphere.fogDensity > 0
+          ? 'Renderer uses the exact deterministic finite tapered fog domain without a World volume'
+          : 'Renderer leaves both finite and World fog disabled at zero declared density'
+        : 'Renderer fog ownership, bounds, density, taper, or derivation differs from the scene contract',
+      measurements: {
+        expectedDensity: scene.atmosphere.fogDensity,
+        expectedDomain: expectedFog,
+        actualFog,
+      },
     },
     ...declaredRenderChecks,
   ];

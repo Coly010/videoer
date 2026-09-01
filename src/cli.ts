@@ -34,7 +34,11 @@ import {
 } from './assets/library.js';
 import { auditAssetLibrary, repairAssetLibraryFromSources } from './assets/integrity.js';
 import { importAmbientCgMaterialSource } from './assets/sources/ambientcg.js';
-import { openMaterialSourceImportRequestSchema } from './assets/sources/model.js';
+import { importAmbientCgEnvironmentRadianceSource } from './assets/sources/ambientcg-environment.js';
+import {
+  openEnvironmentRadianceSourceImportRequestSchema,
+  openMaterialSourceImportRequestSchema,
+} from './assets/sources/model.js';
 import { resolveProductionAssets, validateProductionPlan } from './application/production.js';
 import type { AssetKind } from './production/model.js';
 import {
@@ -117,6 +121,7 @@ import { acceptInteriorFurnishingFamily } from './application/interior-furnishin
 import { acceptPortableFixtureCandidate } from './application/fixture-acceptance.js';
 import { compareDeterministicRenderProfile } from './application/render-profile-comparison.js';
 import { createLightingTransferProbe } from './application/lighting-transfer.js';
+import { createEnvironmentLightingRigFromSource } from './lighting/environment-source.js';
 import { acceptLightingCandidate } from './application/lighting-acceptance.js';
 import { createEditorialAssets } from './application/editorial.js';
 import { assembleEdit } from './application/editing.js';
@@ -552,6 +557,42 @@ const lighting = program
   .command('lighting')
   .description('renderer-independent reusable lighting-rig operations');
 lighting
+  .command('create-environment-rig')
+  .argument('<source-manifest>', 'verified open environment-radiance source manifest')
+  .argument('<output-directory>', 'portable lighting candidate output')
+  .requiredOption('--id <asset-id>', 'stable lighting.* candidate identity')
+  .option('--yaw <degrees>', 'panorama yaw in degrees', '0')
+  .option('--environment-exposure <stops>', 'world radiance exposure in stops', '0')
+  .option('--scene-exposure <stops>', 'AgX scene exposure in stops', '0')
+  .description(
+    'derive a provider-free environment-only lighting candidate from exact ingested source bytes',
+  )
+  .action(async function (
+    sourceManifest: string,
+    outputDirectory: string,
+    options: {
+      id: string;
+      yaw: string;
+      environmentExposure: string;
+      sceneExposure: string;
+    },
+  ) {
+    const data = await createEnvironmentLightingRigFromSource({
+      sourceManifestPath: sourceManifest,
+      outputDirectory,
+      assetId: options.id,
+      yawDegrees: Number(options.yaw),
+      environmentExposureStops: Number(options.environmentExposure),
+      sceneExposureStops: Number(options.sceneExposure),
+    });
+    output(
+      this,
+      'lighting.create-environment-rig',
+      data,
+      (result) => `✓ ${result.rig.id} exact environment-lighting candidate → ${result.rigPath}`,
+    );
+  });
+lighting
   .command('create-moonlit-exterior')
   .argument('<output-directory>')
   .description('build and cross-environment verify a reusable moonlit exterior rig candidate')
@@ -802,6 +843,53 @@ importMaterialSource
     output(
       this,
       'asset.source.import-material.ambientcg',
+      data,
+      (result) =>
+        `✓ ${result.manifest.asset.id} ${result.manifest.selection.resolution}-${result.manifest.selection.encoding} ${result.fromCache ? 'from cache' : 'acquired'} → ${result.candidate}`,
+    );
+  });
+const importEnvironmentRadianceSource = assetSource
+  .command('import-environment-radiance')
+  .description('acquire an HDR environment-radiance source without publishing or rendering it');
+importEnvironmentRadianceSource
+  .command('ambientcg')
+  .requiredOption('--asset <id>', 'exact ambientCG HDRI asset ID')
+  .requiredOption('--resolution <resolution>', 'environment-map resolution such as 1K or 2K')
+  .requiredOption('--cache <directory>', 'content-addressed source cache root')
+  .requiredOption('--output <directory>', 'candidate package output root')
+  .requiredOption('--mode <mode>', 'source acquisition mode: online or offline')
+  .option('--refresh', 'explicitly reacquire current provider bytes in online mode', false)
+  .option('--exact-identity <sha256>', 'require this exact source identity SHA-256')
+  .description(
+    'import one ambientCG v3 Radiance HDRI through the explicit operator boundary; never publishes or renders',
+  )
+  .action(async function (options: {
+    asset: string;
+    resolution: string;
+    cache: string;
+    output: string;
+    mode: string;
+    refresh: boolean;
+    exactIdentity?: string;
+  }) {
+    const request = openEnvironmentRadianceSourceImportRequestSchema.parse({
+      provider: 'ambientcg',
+      assetId: options.asset,
+      resolution: options.resolution,
+      cacheDirectory: resolve(options.cache),
+      outputDirectory: resolve(options.output),
+      mode: options.mode,
+      refresh: options.refresh,
+      ...(options.exactIdentity ? { expectedSourceIdentitySha256: options.exactIdentity } : {}),
+    });
+    const { expectedSourceIdentitySha256, ...sourceRequest } = request;
+    const data = await importAmbientCgEnvironmentRadianceSource({
+      ...sourceRequest,
+      ...(expectedSourceIdentitySha256 ? { expectedSourceIdentitySha256 } : {}),
+    });
+    output(
+      this,
+      'asset.source.import-environment-radiance.ambientcg',
       data,
       (result) =>
         `✓ ${result.manifest.asset.id} ${result.manifest.selection.resolution}-${result.manifest.selection.encoding} ${result.fromCache ? 'from cache' : 'acquired'} → ${result.candidate}`,

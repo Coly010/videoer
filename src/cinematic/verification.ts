@@ -1,5 +1,6 @@
 import { dirname, resolve } from 'node:path';
 import { readFile } from 'node:fs/promises';
+import { isDeepStrictEqual } from 'node:util';
 import { loadMotionClip } from '../motion/io.js';
 import { sampleMotionTrack } from '../motion/model.js';
 import { transformPoint } from '../interactions/transforms.js';
@@ -18,6 +19,9 @@ import {
   reconstructSurfaceWaterOpticalSurface,
   verifySurfaceWaterOpticalSurface,
 } from '../environments/surface-water-surface.js';
+import { loadLightingRig } from '../lighting/io.js';
+import { resolveFiniteFogDomain } from './fog.js';
+import { resolveRigBoundAtmosphere, rigWorldColorPrecedence } from './lighting.js';
 
 export interface CinematicQualityCheck {
   id: string;
@@ -43,6 +47,109 @@ function worldVector(
 export async function verifyCinematicScene(scene: CinematicScene, sceneFile: string) {
   const sourceDirectory = dirname(resolve(sceneFile));
   const checks: CinematicQualityCheck[] = [];
+  if (scene.atmosphere.fogDensity > 0)
+    try {
+      const domain = await resolveFiniteFogDomain(scene, sceneFile);
+      const enabled = scene.atmosphere.fogDensity > 0;
+      checks.push({
+        id: 'finite-fog-domain',
+        status: 'pass',
+        message: enabled
+          ? 'Atmospheric fog has a deterministic finite scene-envelope domain'
+          : 'The deterministic finite fog domain is resolved and fog is disabled',
+        measurements: {
+          enabled,
+          policy: domain.policy,
+          requestedPolicy: domain.requestedPolicy,
+          boundsMinimum: domain.boundsMinimum,
+          boundsMaximum: domain.boundsMaximum,
+          size: domain.size,
+          edgeFalloffMeters: domain.edgeFalloffMeters,
+          sourcePointCount: domain.sourcePointCount,
+          includedVisibleEntityIds: domain.includedVisibleEntityIds,
+          includedCameraKeyframeTimes: domain.includedCameraKeyframeTimes,
+          containment: domain.containment,
+          derivationSha256: domain.derivationSha256,
+        },
+      });
+    } catch (error) {
+      checks.push({
+        id: 'finite-fog-domain',
+        status: 'fail',
+        message: 'Atmospheric fog domain could not be resolved from scene geometry and camera data',
+        measurements: { error: error instanceof Error ? error.message : String(error) },
+      });
+    }
+  if (scene.lightingRigPath) {
+    const rigPath = resolve(sourceDirectory, scene.lightingRigPath);
+    try {
+      const rig = await loadLightingRig(rigPath);
+      const expectedLights = rig.lights.map(({ purpose, ...light }) => {
+        void purpose;
+        return light;
+      });
+      const normalizedSceneLights = scene.lights.map(({ visibleSourceBinding, ...light }) => {
+        void visibleSourceBinding;
+        return light;
+      });
+      const sceneLightsById = new Map(normalizedSceneLights.map((light) => [light.id, light]));
+      const sceneLightIdCounts = normalizedSceneLights.reduce((counts, light) => {
+        counts.set(light.id, (counts.get(light.id) ?? 0) + 1);
+        return counts;
+      }, new Map<string, number>());
+      const duplicateSceneLightIds = [...sceneLightIdCounts]
+        .filter(([, count]) => count > 1)
+        .map(([id]) => id);
+      const missingRigLightIds = expectedLights
+        .filter((light) => !sceneLightsById.has(light.id))
+        .map((light) => light.id);
+      const driftedRigLightIds = expectedLights
+        .filter((light) => {
+          const sceneLight = sceneLightsById.get(light.id);
+          return sceneLight !== undefined && !isDeepStrictEqual(sceneLight, light);
+        })
+        .map((light) => light.id);
+      const rigLightIds = new Set(expectedLights.map((light) => light.id));
+      const supplementalLightIds = normalizedSceneLights
+        .filter((light) => !rigLightIds.has(light.id))
+        .map((light) => light.id);
+      const lightsMatched =
+        duplicateSceneLightIds.length === 0 &&
+        missingRigLightIds.length === 0 &&
+        driftedRigLightIds.length === 0;
+      const resolvedAtmosphere = resolveRigBoundAtmosphere(scene.atmosphere, rig);
+      checks.push({
+        id: 'lighting-rig-binding',
+        status: lightsMatched ? 'pass' : 'fail',
+        message: lightsMatched
+          ? `Scene lights are bound to verified lighting rig '${rig.id}'`
+          : `Scene lights have drifted from lighting rig '${rig.id}'`,
+        measurements: {
+          lightingRigPath: rigPath,
+          lightingRigId: rig.id,
+          lightsMatched,
+          rigLightCount: rig.lights.length,
+          supplementalLightCount: supplementalLightIds.length,
+          supplementalLightIds,
+          duplicateSceneLightIds,
+          missingRigLightIds,
+          driftedRigLightIds,
+          environmentIlluminationKind: rig.environmentIllumination?.kind,
+          exposure: rig.exposure,
+          sceneAtmosphereWorldColor: scene.atmosphere.worldColor,
+          resolvedWorldColor: resolvedAtmosphere.worldColor,
+          worldColorPrecedence: rigWorldColorPrecedence,
+        },
+      });
+    } catch (error) {
+      checks.push({
+        id: 'lighting-rig-binding',
+        status: 'fail',
+        message: 'Scene lighting rig or its environment illumination could not be verified',
+        measurements: { error: error instanceof Error ? error.message : String(error) },
+      });
+    }
+  }
   for (const entity of scene.entities) {
     try {
       const dependencies = await geometryTextureDependencies(

@@ -37,10 +37,44 @@ export const lightingRigAdaptationSchema = z.object({
     .tuple([z.number().min(0.25).max(2), z.number().min(0.25).max(2), z.number().min(0.25).max(2)])
     .default([1, 1, 1]),
   worldColor: colorSchema.optional(),
+  environmentIllumination: z
+    .object({
+      yawDegreesOffset: z.number().finite().min(-45).max(45).default(0),
+      exposureStopsOffset: z.number().finite().min(-2).max(2).default(0),
+    })
+    .optional(),
   metadata: z.record(z.string(), z.unknown()).default({}),
 });
 
 export type LightingRigAdaptation = z.infer<typeof lightingRigAdaptationSchema>;
+export type LightingRigAdaptationInput = z.input<typeof lightingRigAdaptationSchema>;
+
+function wrapDegrees(value: number) {
+  return ((((value + 180) % 360) + 360) % 360) - 180;
+}
+
+function adaptEnvironmentIllumination(
+  base: LightingRig['environmentIllumination'],
+  adaptation: NonNullable<LightingRigAdaptation['environmentIllumination']> | undefined,
+) {
+  if (!adaptation) return base;
+  if (!base)
+    throw new Error('environment illumination adaptation requires a base environment illumination');
+  if (base.kind === 'hash-bound-equirectangular-radiance')
+    return {
+      ...structuredClone(base),
+      yawDegrees: wrapDegrees(base.yawDegrees + adaptation.yawDegreesOffset),
+      exposureStops: base.exposureStops + adaptation.exposureStopsOffset,
+    };
+  return {
+    ...structuredClone(base),
+    sun: {
+      ...base.sun,
+      azimuthDegrees: wrapDegrees(base.sun.azimuthDegrees + adaptation.yawDegreesOffset),
+    },
+    exposureStops: base.exposureStops + adaptation.exposureStopsOffset,
+  };
+}
 
 function transformPoint(
   point: [number, number, number],
@@ -68,11 +102,15 @@ function colorMultiply(
   ];
 }
 
-export function adaptLightingRig(base: LightingRig, input: LightingRigAdaptation) {
+export function adaptLightingRig(base: LightingRig, input: LightingRigAdaptationInput) {
   const adaptation = lightingRigAdaptationSchema.parse(input);
   return lightingRigSchema.parse({
     ...structuredClone(base),
     id: adaptation.assetId,
+    environmentIllumination: adaptEnvironmentIllumination(
+      base.environmentIllumination,
+      adaptation.environmentIllumination,
+    ),
     worldColor: adaptation.worldColor ?? colorMultiply(base.worldColor, adaptation.colorMultiply),
     lights: base.lights.map((light) => ({
       ...light,
@@ -98,7 +136,7 @@ function distance(first: number[], second: number[]) {
 export function verifyLightingRigAdaptation(
   base: LightingRig,
   adapted: LightingRig,
-  input: LightingRigAdaptation,
+  input: LightingRigAdaptationInput,
 ) {
   const adaptation = lightingRigAdaptationSchema.parse(input);
   const expected = adaptLightingRig(base, adaptation);
@@ -114,9 +152,7 @@ export function verifyLightingRigAdaptation(
       );
     });
   if (!topologyPreserved) issues.push('lighting identity, type, purpose, or order changed');
-  const exposurePreserved =
-    adapted.exposure.look === base.exposure.look &&
-    adapted.exposure.coherentAcrossShots === base.exposure.coherentAcrossShots;
+  const exposurePreserved = JSON.stringify(adapted.exposure) === JSON.stringify(base.exposure);
   if (!exposurePreserved) issues.push('lighting exposure contract changed');
   const spatialTransformMatched = adapted.lights.every((light, index) => {
     const candidate = expected.lights[index];
@@ -139,6 +175,24 @@ export function verifyLightingRigAdaptation(
     (light, index) => Math.abs(light.sizeMeters - expected.lights[index]!.sizeMeters) <= 1e-8,
   );
   if (!sizeTransformMatched) issues.push('lighting emitter size does not match spatial scale');
+  const environmentIlluminationMatched =
+    JSON.stringify(adapted.environmentIllumination) ===
+    JSON.stringify(expected.environmentIllumination);
+  if (!environmentIlluminationMatched)
+    issues.push('environment illumination does not match bounded adaptation');
+  const environmentSourceIdentityPreserved =
+    base.environmentIllumination?.kind !== 'hash-bound-equirectangular-radiance' ||
+    (adapted.environmentIllumination?.kind === 'hash-bound-equirectangular-radiance' &&
+      JSON.stringify(adapted.environmentIllumination.source) ===
+        JSON.stringify(base.environmentIllumination.source) &&
+      JSON.stringify(adapted.environmentIllumination.dimensions) ===
+        JSON.stringify(base.environmentIllumination.dimensions) &&
+      JSON.stringify(adapted.environmentIllumination.sourcePackage) ===
+        JSON.stringify(base.environmentIllumination.sourcePackage) &&
+      adapted.environmentIllumination.colorSpace === base.environmentIllumination.colorSpace &&
+      adapted.environmentIllumination.projection === base.environmentIllumination.projection);
+  if (!environmentSourceIdentityPreserved)
+    issues.push('environment illumination source identity changed');
   const roleCoverage = Object.fromEntries(
     ['key', 'fill', 'rim', 'practical', 'environment'].map((purpose) => [
       purpose,
@@ -147,6 +201,7 @@ export function verifyLightingRigAdaptation(
   );
   const nonBlackWorld = adapted.worldColor.some((channel) => channel > 0);
   if (!nonBlackWorld) issues.push('lighting world color is fully black');
+  const energies = adapted.lights.map((light) => light.energy);
   return {
     valid: issues.length === 0,
     issues,
@@ -157,13 +212,15 @@ export function verifyLightingRigAdaptation(
     energyTransformMatched,
     colorTransformMatched,
     sizeTransformMatched,
+    environmentIlluminationMatched,
+    environmentSourceIdentityPreserved,
     nonBlackWorld,
     roleCoverage,
     baseLightCount: base.lights.length,
     adaptedLightCount: adapted.lights.length,
     energyRange: {
-      minimum: Math.min(...adapted.lights.map((light) => light.energy)),
-      maximum: Math.max(...adapted.lights.map((light) => light.energy)),
+      minimum: energies.length ? Math.min(...energies) : null,
+      maximum: energies.length ? Math.max(...energies) : null,
     },
   };
 }

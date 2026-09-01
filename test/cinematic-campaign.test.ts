@@ -371,7 +371,11 @@ describe('declarative cinematic campaigns', () => {
     const scene = JSON.parse(
       await readFile(join(directory, 'work/scenes/product-shot/scene.json'), 'utf8'),
     );
+    expect(scene.schemaVersion).toBe(2);
     expect(scene.lights.map((light: { id: string }) => light.id)).toEqual(['library-key']);
+    expect(scene.lightingRigPath).toContain(
+      'library/environments/test-lighting/1.0.0/lighting-rig.json',
+    );
     expect(scene.overlays[0].imagePath).toContain(
       'library/materials/test-overlay/1.0.0/overlay.png',
     );
@@ -496,6 +500,7 @@ describe('declarative cinematic campaigns', () => {
         'utf8',
       ),
     );
+    expect(scene.schemaVersion).toBe(2);
     expect(scene.lights[0]).toMatchObject({ id: 'key', position: [2.2, 2.4, -4.4] });
     expect(compatibility).toMatchObject({
       adaptationKind: 'lighting-rig-transform-v1',

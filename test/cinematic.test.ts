@@ -14,6 +14,7 @@ import {
   aggregateCinematicRenderVerification,
   cinematicLandmarkFrame,
 } from '../src/cinematic/blender.js';
+import { resolveFiniteFogDomain } from '../src/cinematic/fog.js';
 
 const fixture = {
   schemaVersion: 1 as const,
@@ -113,6 +114,128 @@ describe('renderer-independent executable cinematic scenes', () => {
         renderProfile: { engine: 'eevee-next', samples: 32 },
       }).renderProfile,
     ).toEqual({ engine: 'eevee-next', samples: 32, intent: 'preview' });
+  });
+
+  it('keeps v1 legacy invariants while v2 owns lighting rigs and finite fog domains', () => {
+    expect(
+      cinematicSceneSchema.safeParse({
+        ...fixture,
+        lights: [],
+        lightingRigPath: 'rig.json',
+      }).success,
+    ).toBe(false);
+    expect(
+      cinematicSceneSchema.safeParse({
+        ...fixture,
+        atmosphere: {
+          fogDomain: { policy: 'scene-envelope-v1' },
+          rain: { enabled: false },
+        },
+      }).success,
+    ).toBe(false);
+    const v2 = cinematicSceneSchema.parse({
+      ...fixture,
+      schemaVersion: 2,
+      lights: [],
+      lightingRigPath: 'rig.json',
+      atmosphere: {
+        fogDensity: 0.01,
+        fogDomain: {
+          policy: 'explicit-box-v1',
+          boundsMinimum: [-10, -2, -10],
+          boundsMaximum: [10, 8, 10],
+          maximumExtentMeters: 50,
+          edgeFalloffMeters: 1,
+        },
+        rain: { enabled: false },
+      },
+    });
+    expect(v2.schemaVersion).toBe(2);
+    expect(v2.atmosphere.fogDomain).toMatchObject({ policy: 'explicit-box-v1' });
+  });
+
+  it('rejects duplicate scene-light identities and out-of-frame regional render gates', () => {
+    expect(
+      cinematicSceneSchema.safeParse({
+        ...fixture,
+        lights: [fixture.lights[0], structuredClone(fixture.lights[0])],
+      }).success,
+    ).toBe(false);
+    expect(
+      cinematicSceneSchema.safeParse({
+        ...fixture,
+        renderGates: [
+          {
+            id: 'invalid-spatial-region',
+            type: 'region-spatial-color-variation',
+            region: { x: 0.75, y: 0.1, width: 0.5, height: 0.5 },
+            minimumMeanNormalizedColorEntropy: 0.1,
+          },
+        ],
+      }).success,
+    ).toBe(false);
+  });
+
+  it('derives asymmetric bounded fog envelopes and rejects explicit boxes that miss scene evidence', async () => {
+    const directory = await mkdtemp(join(tmpdir(), 'videoer-fog-domain-'));
+    try {
+      const environment = mergeMeshParts(
+        'environment.fog-domain',
+        [boxPart([-1, 0, -1], [1, 3, 1], 0, undefined)],
+        [{ id: 'root', restPosition: [0, 0, 0], constraints: {} }],
+        {},
+      );
+      await saveGeometry(join(directory, 'environment.json'), environment);
+      const sceneFile = join(directory, 'scene.json');
+      const scene = cinematicSceneSchema.parse({
+        ...fixture,
+        schemaVersion: 2,
+        entities: [{ id: 'environment', role: 'environment', geometryPath: 'environment.json' }],
+        atmosphere: {
+          fogDensity: 0.01,
+          fogDomain: {
+            policy: 'scene-envelope-v1',
+            horizontalPaddingMeters: 4,
+            belowPaddingMeters: 1,
+            abovePaddingMeters: 4,
+            minimumHorizontalSpanMeters: 12,
+            minimumVerticalSpanMeters: 6,
+            maximumExtentMeters: 50,
+            edgeFalloffMeters: 1,
+          },
+          rain: { enabled: false },
+        },
+      });
+      const domain = await resolveFiniteFogDomain(scene, sceneFile);
+      expect(domain).toMatchObject({
+        policy: 'scene-envelope-v1',
+        size: [20, 11, 20],
+        containment: {
+          allSourcePointsContained: true,
+          allVisibleEntityBoundsContained: true,
+          allCameraPositionsContained: true,
+          allCameraTargetsContained: true,
+        },
+      });
+      const explicit = cinematicSceneSchema.parse({
+        ...scene,
+        atmosphere: {
+          ...scene.atmosphere,
+          fogDomain: {
+            policy: 'explicit-box-v1',
+            boundsMinimum: [-1, -1, -1],
+            boundsMaximum: [1, 3, 1],
+            maximumExtentMeters: 10,
+            edgeFalloffMeters: 0.2,
+          },
+        },
+      });
+      await expect(resolveFiniteFogDomain(explicit, sceneFile)).rejects.toThrow(
+        /does not contain every visible entity and camera keyframe/u,
+      );
+    } finally {
+      await rm(directory, { recursive: true, force: true });
+    }
   });
 
   it('requires overlay visibility gates to reference declared overlays and landmarks', () => {

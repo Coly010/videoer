@@ -843,7 +843,7 @@ export async function buildDeclarativeCinematicCampaign(
           `Lighting adaptation '${source.id}' failed semantic gates: ${verification.issues.join('; ')}`,
         );
       path = resolve(root, source.path!);
-      await saveLightingRig(path, asset);
+      await saveLightingRig(path, asset, { environmentSourceRigPath: resolved.path });
       const reportPath = resolve(
         root,
         'work',
@@ -1998,7 +1998,7 @@ export async function buildDeclarativeCinematicCampaign(
     }
     const scene = assembleCinematicShot(
       {
-        schemaVersion: 1,
+        schemaVersion: 2,
         id: `scene.${shot.id}`,
         durationSeconds,
         fps: campaign.fps,
@@ -2020,6 +2020,11 @@ export async function buildDeclarativeCinematicCampaign(
             : []),
           ...shot.lights,
         ],
+        ...(shot.lighting
+          ? {
+              lightingRigPath: portablePath(sceneDirectory, lightingPaths.get(shot.lighting)!),
+            }
+          : {}),
         atmosphere: shot.vfx ? toCinematicAtmosphere(vfx.get(shot.vfx)!.asset) : shot.atmosphere!,
         ...(shot.finish
           ? { finishProfilePath: portablePath(sceneDirectory, finishPaths.get(shot.finish)!) }
