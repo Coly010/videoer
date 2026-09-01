@@ -10,6 +10,12 @@ export function createRainyDuskVfx(): AtmosphericVfx {
     rain: {
       enabled: true,
       windMetersPerSecond: [1.15, -0.22],
+      surfaceFlux: {
+        intensityMillimetersPerHour: 18,
+        durationSeconds: 900,
+        dropDiameterMillimeters: 1.8,
+        impactSpeedMetersPerSecond: 7.4,
+      },
       layers: [
         {
           id: 'foreground',

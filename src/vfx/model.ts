@@ -7,6 +7,13 @@ const colorSchema = z.tuple([
 ]);
 const vec3Schema = z.tuple([z.number().finite(), z.number().finite(), z.number().finite()]);
 
+export const surfaceFluxSchema = z.object({
+  intensityMillimetersPerHour: z.number().nonnegative().max(500),
+  durationSeconds: z.number().nonnegative().max(86_400),
+  dropDiameterMillimeters: z.number().positive().max(20),
+  impactSpeedMetersPerSecond: z.number().nonnegative().max(100),
+});
+
 export const rainLayerSchema = z.object({
   id: z.enum(['foreground', 'midground', 'background']),
   count: z.number().int().positive(),
@@ -34,6 +41,7 @@ export const atmosphericVfxSchema = z
     rain: z.object({
       enabled: z.boolean(),
       windMetersPerSecond: z.tuple([z.number(), z.number()]).default([0, 0]),
+      surfaceFlux: surfaceFluxSchema.optional(),
       layers: z.array(rainLayerSchema).length(3),
       groundSplashes: z
         .object({

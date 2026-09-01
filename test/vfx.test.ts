@@ -50,6 +50,12 @@ describe('rainy dusk atmospheric VFX', () => {
 
   it('declares non-uniform drops and physically located surface response', () => {
     const rain = createRainyDuskVfx().rain;
+    expect(rain.surfaceFlux).toEqual({
+      intensityMillimetersPerHour: 18,
+      durationSeconds: 900,
+      dropDiameterMillimeters: 1.8,
+      impactSpeedMetersPerSecond: 7.4,
+    });
     expect(rain.layers.every((layer) => layer.lengthVariation > 0)).toBe(true);
     expect(rain.layers.every((layer) => layer.speedVariation > 0)).toBe(true);
     expect(rain.groundSplashes?.boundsMinimum[1]).toBeGreaterThanOrEqual(0);

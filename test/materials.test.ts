@@ -74,6 +74,38 @@ describe('renderer-independent reusable materials', () => {
     ).toThrow();
   });
 
+  it('validates explicit physical surface-water response independently of presentation wetness', () => {
+    const base = createWetCobbleSurfaceMaterial();
+    const material = surfaceMaterialSchema.parse({
+      ...base,
+      surfaceWaterResponse: {
+        absorption: {
+          capacityMeters: 0.0018,
+          rateMetersPerSecond: 0.000015,
+          initialSaturation: 0.25,
+        },
+        retention: {
+          filmCapacityMeters: 0.0008,
+          edgeCapacityMeters: 0.002,
+          maximumPuddleDepthMeters: 0.018,
+        },
+        wetRoughness: { multiplier: 0.34, floor: 0.045 },
+        splash: { minimumFreeWaterDepthMeters: 0.00035, maximumSlopeDegrees: 12 },
+      },
+    });
+    expect(material.surfaceWaterResponse?.absorption.capacityMeters).toBe(0.0018);
+    expect(material.roughness.wetness).toBe(base.roughness.wetness);
+    expect(() =>
+      surfaceMaterialSchema.parse({
+        ...material,
+        surfaceWaterResponse: {
+          ...material.surfaceWaterResponse,
+          absorption: { ...material.surfaceWaterResponse!.absorption, initialSaturation: 1.1 },
+        },
+      }),
+    ).toThrow();
+  });
+
   it('supports metre-scaled textile, brushed-metal, and ceramic production surfaces', () => {
     const base = createWetCobbleSurfaceMaterial();
     expect(

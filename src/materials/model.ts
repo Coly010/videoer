@@ -241,6 +241,28 @@ export const surfaceMaterialSchema = z
       variationScaleMeters: z.number().positive(),
       wetness: z.number().min(0).max(1).default(0),
     }),
+    surfaceWaterResponse: z
+      .object({
+        absorption: z.object({
+          capacityMeters: z.number().nonnegative().max(0.2),
+          rateMetersPerSecond: z.number().nonnegative().max(0.02),
+          initialSaturation: z.number().min(0).max(1).default(0),
+        }),
+        retention: z.object({
+          filmCapacityMeters: z.number().nonnegative().max(0.02),
+          edgeCapacityMeters: z.number().nonnegative().max(0.05),
+          maximumPuddleDepthMeters: z.number().nonnegative().max(0.25),
+        }),
+        wetRoughness: z.object({
+          multiplier: z.number().min(0).max(1),
+          floor: z.number().min(0).max(1),
+        }),
+        splash: z.object({
+          minimumFreeWaterDepthMeters: z.number().nonnegative().max(0.05),
+          maximumSlopeDegrees: z.number().min(0).max(45),
+        }),
+      })
+      .optional(),
     pattern: surfacePatternSchema.default({ kind: 'isotropic' }),
     weathering: z
       .object({
@@ -289,6 +311,7 @@ export const surfaceMaterialSchema = z
   });
 
 export type SurfaceMaterial = z.infer<typeof surfaceMaterialSchema>;
+export type SurfaceWaterMaterialResponse = NonNullable<SurfaceMaterial['surfaceWaterResponse']>;
 export type HashBoundTextureMapSet = z.infer<typeof hashBoundTextureMapSetSchema>;
 export type ConstructionDomain = z.infer<typeof constructionDomainSchema>;
 export type TextureMaterialSuitability = z.infer<typeof textureMaterialSuitabilitySchema>;

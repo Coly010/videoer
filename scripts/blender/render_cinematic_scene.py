@@ -648,7 +648,187 @@ def create_camera_relative_rain(layer, camera, fps, wind):
         curve.modifiers.new(type="CYCLES")
 
 
-def create_ground_splashes(definition, fps):
+def transform_canonical_point(point, transform):
+    x = point[0] * transform["scale"][0]
+    y = point[1] * transform["scale"][1]
+    z = point[2] * transform["scale"][2]
+    rx, ry, rz = transform["rotation"]
+    y, z = y * math.cos(rx) - z * math.sin(rx), y * math.sin(rx) + z * math.cos(rx)
+    x, z = x * math.cos(ry) + z * math.sin(ry), -x * math.sin(ry) + z * math.cos(ry)
+    x, y = x * math.cos(rz) - y * math.sin(rz), x * math.sin(rz) + y * math.cos(rz)
+    return (
+        x + transform["position"][0],
+        y + transform["position"][1],
+        z + transform["position"][2],
+    )
+
+
+def create_surface_water(definition, receiver_asset, receiver_mesh):
+    field = load_json(definition["surfaceWaterFieldPath"])
+    if field.get("generator") != "videoer.static-surface-water.v1":
+        raise RuntimeError(
+            f"Entity '{definition['id']}' surface-water field has an unsupported generator"
+        )
+    if field.get("receiver", {}).get("geometryId") != receiver_asset.get("id"):
+        raise RuntimeError(
+            f"Entity '{definition['id']}' surface-water receiver identity does not match its geometry"
+        )
+    if field.get("receiver", {}).get("transform") != definition.get("transform"):
+        raise RuntimeError(
+            f"Entity '{definition['id']}' surface-water receiver transform does not match the entity"
+        )
+    mass = field.get("massBalance", {})
+    if abs(mass.get("errorCubicMeters", 1)) > max(
+        1e-12, mass.get("incidentCubicMeters", 0) * 1e-10
+    ):
+        raise RuntimeError(f"Entity '{definition['id']}' surface-water field fails mass balance")
+
+    maximum_free_depth = max(
+        1e-8,
+        *[
+            cell["filmDepthMeters"]
+            + cell["edgeAccumulationDepthMeters"]
+            + cell["puddleDepthMeters"]
+            for cell in field["cells"]
+        ],
+    )
+    columns = field["grid"]["columns"]
+    rows = field["grid"]["rows"]
+    cell_size = field["grid"]["cellSizeMeters"]
+    pixels = [0.0] * (columns * rows * 4)
+    wet_cell_count = 0
+    for cell in field["cells"]:
+        free_depth = (
+            cell["filmDepthMeters"]
+            + cell["edgeAccumulationDepthMeters"]
+            + cell["puddleDepthMeters"]
+        )
+        absorbed = cell["absorbedDepthMeters"]
+        strength = min(
+            1.0,
+            (0.28 if absorbed > 1e-9 else 0.0)
+            + (0.72 * math.sqrt(free_depth / maximum_free_depth) if free_depth > 0 else 0.0),
+        )
+        pixel = cell["index"] * 4
+        pixels[pixel : pixel + 4] = [
+            strength * cell["coverage"],
+            min(1.0, cell["puddleDepthMeters"] / maximum_free_depth),
+            cell["effectiveRoughness"],
+            cell["exposure"],
+        ]
+        if strength > 0:
+            wet_cell_count += 1
+
+    image = bpy.data.images.new(
+        f"{definition['id']}-surface-water-field",
+        width=columns,
+        height=rows,
+        alpha=True,
+        float_buffer=True,
+    )
+    image.colorspace_settings.name = "Non-Color"
+    image.pixels.foreach_set(pixels)
+    image.pack()
+    uv_layer = receiver_mesh.data.uv_layers.get("surface_water_uv")
+    if uv_layer is None:
+        uv_layer = receiver_mesh.data.uv_layers.new(name="surface_water_uv")
+    origin_x, origin_z = field["grid"]["worldOriginXZ"]
+    extent_x = columns * cell_size
+    extent_z = rows * cell_size
+    for loop in receiver_mesh.data.loops:
+        point = transform_canonical_point(
+            receiver_asset["positions"][loop.vertex_index], definition["transform"]
+        )
+        uv_layer.data[loop.index].uv = (
+            (point[0] - origin_x) / extent_x,
+            (point[2] - origin_z) / extent_z,
+        )
+
+    for slot_index, original in enumerate(list(receiver_mesh.data.materials)):
+        material = original.copy()
+        material.name = f"{original.name}-receiver-water"
+        receiver_mesh.data.materials[slot_index] = material
+        material.use_nodes = True
+        nodes = material.node_tree.nodes
+        links = material.node_tree.links
+        principled = nodes.get("Principled BSDF")
+        if principled is None:
+            raise RuntimeError(
+                f"Entity '{definition['id']}' material '{material.name}' lacks Principled BSDF"
+            )
+        uv = nodes.new("ShaderNodeUVMap")
+        uv.uv_map = "surface_water_uv"
+        texture = nodes.new("ShaderNodeTexImage")
+        texture.image = image
+        texture.interpolation = "Linear"
+        texture.extension = "EXTEND"
+        separate = nodes.new("ShaderNodeSeparateColor")
+        links.new(uv.outputs["UV"], texture.inputs["Vector"])
+        links.new(texture.outputs["Color"], separate.inputs["Color"])
+
+        base = principled.inputs["Base Color"]
+        base_source = base.links[0].from_socket if base.is_linked else None
+        base_default = tuple(base.default_value)
+        if base.is_linked:
+            links.remove(base.links[0])
+        darken = nodes.new("ShaderNodeMixRGB")
+        darken.blend_type = "MULTIPLY"
+        darken.inputs[2].default_value = (0.66, 0.7, 0.76, 1)
+        links.new(separate.outputs["Red"], darken.inputs[0])
+        if base_source:
+            links.new(base_source, darken.inputs[1])
+        else:
+            darken.inputs[1].default_value = base_default
+        links.new(darken.outputs[0], base)
+
+        roughness = principled.inputs["Roughness"]
+        roughness_source = roughness.links[0].from_socket if roughness.is_linked else None
+        roughness_default = roughness.default_value
+        if roughness.is_linked:
+            links.remove(roughness.links[0])
+        dry_weight = nodes.new("ShaderNodeMath")
+        dry_weight.operation = "SUBTRACT"
+        dry_weight.inputs[0].default_value = 1
+        links.new(separate.outputs["Red"], dry_weight.inputs[1])
+        dry_roughness = nodes.new("ShaderNodeMath")
+        dry_roughness.operation = "MULTIPLY"
+        if roughness_source:
+            links.new(roughness_source, dry_roughness.inputs[0])
+        else:
+            dry_roughness.inputs[0].default_value = roughness_default
+        links.new(dry_weight.outputs[0], dry_roughness.inputs[1])
+        wet_roughness = nodes.new("ShaderNodeMath")
+        wet_roughness.operation = "MULTIPLY"
+        links.new(separate.outputs["Blue"], wet_roughness.inputs[0])
+        links.new(separate.outputs["Red"], wet_roughness.inputs[1])
+        combined_roughness = nodes.new("ShaderNodeMath")
+        combined_roughness.operation = "ADD"
+        links.new(dry_roughness.outputs[0], combined_roughness.inputs[0])
+        links.new(wet_roughness.outputs[0], combined_roughness.inputs[1])
+        links.new(combined_roughness.outputs[0], roughness)
+        coat = principled.inputs.get("Coat Weight")
+        if coat and not coat.is_linked:
+            coat_scale = nodes.new("ShaderNodeMath")
+            coat_scale.operation = "MULTIPLY"
+            coat_scale.inputs[1].default_value = 0.72
+            links.new(separate.outputs["Red"], coat_scale.inputs[0])
+            links.new(coat_scale.outputs[0], coat)
+        coat_roughness = principled.inputs.get("Coat Roughness")
+        if coat_roughness and not coat_roughness.is_linked:
+            coat_roughness.default_value = 0.055
+    return {
+        "entityId": definition["id"],
+        "fieldId": field["id"],
+        "fieldSha256": field["fieldSha256"],
+        "activeCellCount": field["grid"]["activeCellCount"],
+        "renderedWetCellCount": wet_cell_count,
+        "splashEligibleCells": [cell for cell in field["cells"] if cell["splashEligible"]],
+        "cellSizeMeters": cell_size,
+        "massBalance": mass,
+    }
+
+
+def create_ground_splashes(definition, fps, surface_water_fields=None):
     if not definition or not definition.get("enabled") or definition.get("count", 0) <= 0:
         return
     generator = random.Random(definition["seed"])
@@ -674,6 +854,13 @@ def create_ground_splashes(definition, fps):
             principled.inputs["IOR"].default_value = 1.333
     minimum = definition["boundsMinimum"]
     maximum = definition["boundsMaximum"]
+    eligible = [
+        (cell, water_field["cellSizeMeters"])
+        for water_field in (surface_water_fields or [])
+        for cell in water_field["splashEligibleCells"]
+    ]
+    if surface_water_fields is not None and not eligible:
+        return
     lifetime_frames = max(3, round(definition["lifetimeSeconds"] * fps))
     for index in range(definition["count"]):
         radius = generator.uniform(definition["radiusMinimumMeters"], definition["radiusMaximumMeters"])
@@ -752,11 +939,38 @@ def create_ground_splashes(definition, fps):
             polygon.use_smooth = True
         splash = bpy.data.objects.new(f"cinematic-splash-{index}", mesh)
         bpy.context.collection.objects.link(splash)
-        splash.location = to_blender([
-            generator.uniform(minimum[0], maximum[0]),
-            generator.uniform(minimum[1], maximum[1]),
-            generator.uniform(minimum[2], maximum[2]),
-        ])
+        if eligible:
+            weights = [
+                max(
+                    1e-9,
+                    cell["exposure"]
+                    * (
+                        cell["filmDepthMeters"]
+                        + cell["edgeAccumulationDepthMeters"]
+                        + cell["puddleDepthMeters"]
+                    ),
+                )
+                for cell, _ in eligible
+            ]
+            cell, eligible_cell_size = generator.choices(eligible, weights=weights, k=1)[0]
+            position = cell["worldPosition"]
+            splash.location = to_blender(
+                [
+                    position[0] + generator.uniform(-0.4, 0.4) * eligible_cell_size,
+                    position[1]
+                    + cell["filmDepthMeters"]
+                    + cell["edgeAccumulationDepthMeters"]
+                    + cell["puddleDepthMeters"]
+                    + 0.001,
+                    position[2] + generator.uniform(-0.4, 0.4) * eligible_cell_size,
+                ]
+            )
+        else:
+            splash.location = to_blender([
+                generator.uniform(minimum[0], maximum[0]),
+                generator.uniform(minimum[1], maximum[1]),
+                generator.uniform(minimum[2], maximum[2]),
+            ])
         start = 1 + generator.randrange(max(1, lifetime_frames))
         splash.scale = (0.08, 0.08, 0.08)
         splash.keyframe_insert(data_path="scale", frame=start)
@@ -770,7 +984,7 @@ def create_ground_splashes(definition, fps):
             fcurve.modifiers.new(type="CYCLES")
 
 
-def create_rain(definition, camera, fps):
+def create_rain(definition, camera, fps, surface_water_fields=None):
     if not definition.get("enabled") or definition.get("count", 0) <= 0:
         if not definition.get("layers"):
             return
@@ -778,7 +992,9 @@ def create_rain(definition, camera, fps):
         wind = definition.get("windMetersPerSecond", (0, 0))
         for layer in definition["layers"]:
             create_camera_relative_rain(layer, camera, fps, wind)
-        create_ground_splashes(definition.get("groundSplashes"), fps)
+        create_ground_splashes(
+            definition.get("groundSplashes"), fps, surface_water_fields
+        )
         return
     generator = random.Random(definition.get("seed", 1))
     minimum = definition["boundsMinimum"]
@@ -1205,11 +1421,32 @@ def main():
     geometry_probe.clear_scene()
     scene = configure_scene(manifest)
     entity_meshes = {}
+    surface_water_fields = []
     for entity in manifest["entities"]:
         asset, armature, mesh = create_entity(entity, manifest["fps"], manifest["durationSeconds"])
         entity_meshes[entity["id"]] = mesh
+        if entity.get("surfaceWaterFieldPath"):
+            surface_water_fields.append(create_surface_water(entity, asset, mesh))
         if entity.get("fixturePath"):
             create_fixture_lights(entity, entity["id"], asset, armature, mesh)
+    with open(
+        os.path.join(output, "surface-water-report.json"),
+        "w",
+        encoding="utf-8",
+    ) as handle:
+        json.dump(
+            {
+                "schemaVersion": 1,
+                "sceneId": manifest["id"],
+                "fields": [
+                    {key: value for key, value in field.items() if key != "splashEligibleCells"}
+                    for field in surface_water_fields
+                ],
+            },
+            handle,
+            indent=2,
+        )
+        handle.write("\n")
     with open(
         os.path.join(output, "fixture-modulation-report.json"),
         "w",
@@ -1266,7 +1503,12 @@ def main():
         manifest["atmosphere"].get("fogDensity", 0),
         manifest["atmosphere"].get("fogColor", (0.16, 0.2, 0.28)),
     )
-    create_rain(manifest["atmosphere"]["rain"], camera, manifest["fps"])
+    create_rain(
+        manifest["atmosphere"]["rain"],
+        camera,
+        manifest["fps"],
+        surface_water_fields if surface_water_fields else None,
+    )
     aerosol_report = create_aerosols(
         manifest["atmosphere"].get("aerosols", []),
         manifest["fps"],

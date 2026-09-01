@@ -1,0 +1,221 @@
+import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
+import { dirname, resolve } from 'node:path';
+import { z } from 'zod';
+import { sha256File } from '../assets/library.js';
+import {
+  compileStaticSurfaceWater,
+  surfaceWaterMaterialResponseSchema,
+  type SurfaceWaterField,
+} from '../environments/surface-water.js';
+import {
+  irregularPavingDefinitionSchema,
+  pavingSurfaceMaterialTargetsSchema,
+} from '../environments/irregular-paving.js';
+import { loadGeometry } from '../geometry/io.js';
+import type { Vec3 } from '../geometry/model.js';
+import { sceneTransformSchema, type SceneTransform } from '../interactions/model.js';
+import { loadAtmosphericVfx } from '../vfx/io.js';
+
+const sha256 = z.string().regex(/^[a-f0-9]{64}$/u);
+const localIdentifier = z.string().regex(/^[a-z][a-z0-9-]*$/u);
+
+export const surfaceWaterAssemblyProfileSchema = z.object({
+  schemaVersion: z.literal(1),
+  id: z.string().regex(/^[a-z][a-z0-9-]*(?:\.[a-z0-9-]+)*$/u),
+  receiverSha256: sha256,
+  atmosphericVfxSha256: sha256,
+  receiverTransform: sceneTransformSchema.default({
+    position: [0, 0, 0],
+    rotation: [0, 0, 0],
+    scale: [1, 1, 1],
+  }),
+  materialResponses: z.record(localIdentifier, surfaceWaterMaterialResponseSchema),
+  shelters: z
+    .array(
+      z.object({
+        id: localIdentifier,
+        geometryPath: z.string().min(1),
+        geometrySha256: sha256,
+        transform: sceneTransformSchema,
+      }),
+    )
+    .default([]),
+  grid: z.object({
+    cellSizeMeters: z.number().positive().max(2),
+    supersample: z.union([z.literal(1), z.literal(4), z.literal(9)]).default(4),
+    shelterRayMaximumMeters: z.number().positive().max(1_000).default(100),
+  }),
+  solver: z
+    .object({
+      edgeHeightThresholdMeters: z.number().nonnegative().max(0.25).default(0.003),
+      maximumCellCount: z.number().int().positive().max(1_000_000).default(250_000),
+    })
+    .default({ edgeHeightThresholdMeters: 0.003, maximumCellCount: 250_000 }),
+});
+
+export type SurfaceWaterAssemblyProfile = z.infer<typeof surfaceWaterAssemblyProfileSchema>;
+
+function transformPoint(point: Vec3, transform: SceneTransform): Vec3 {
+  let [x, y, zValue] = point.map((value, index) => value * transform.scale[index]!) as Vec3;
+  const [rx, ry, rz] = transform.rotation;
+  [y, zValue] = [
+    y * Math.cos(rx) - zValue * Math.sin(rx),
+    y * Math.sin(rx) + zValue * Math.cos(rx),
+  ];
+  [x, zValue] = [
+    x * Math.cos(ry) + zValue * Math.sin(ry),
+    -x * Math.sin(ry) + zValue * Math.cos(ry),
+  ];
+  [x, y] = [x * Math.cos(rz) - y * Math.sin(rz), x * Math.sin(rz) + y * Math.cos(rz)];
+  return [
+    x + transform.position[0],
+    y + transform.position[1],
+    zValue + transform.position[2],
+  ];
+}
+
+async function writeJsonAtomically(path: string, value: unknown) {
+  const absolute = resolve(path);
+  await mkdir(dirname(absolute), { recursive: true });
+  const temporary = `${absolute}.tmp`;
+  await writeFile(temporary, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
+  await rename(temporary, absolute);
+  return absolute;
+}
+
+function expectedTargetClass(
+  materialId: string,
+  targets: z.infer<typeof pavingSurfaceMaterialTargetsSchema>,
+) {
+  if (targets.modeledUnits.includes(materialId)) return 'modeled-unit' as const;
+  if (targets.continuousJoint === materialId) return 'joint' as const;
+  if (targets.continuousSubstrate === materialId) return 'substrate' as const;
+  if (targets.borders.includes(materialId)) return 'border' as const;
+  return undefined;
+}
+
+export async function createPavingSurfaceWaterField(options: {
+  pavingGeometryPath: string;
+  atmosphericVfxPath: string;
+  profile: SurfaceWaterAssemblyProfile;
+  profileDirectory: string;
+  outputPath: string;
+  reportPath?: string;
+}): Promise<{ field: SurfaceWaterField; path: string; report: unknown; reportPath: string }> {
+  const profile = surfaceWaterAssemblyProfileSchema.parse(options.profile);
+  const pavingPath = resolve(options.pavingGeometryPath);
+  const vfxPath = resolve(options.atmosphericVfxPath);
+  const [geometry, vfx, liveGeometrySha256, liveVfxSha256] = await Promise.all([
+    loadGeometry(pavingPath),
+    loadAtmosphericVfx(vfxPath),
+    sha256File(pavingPath),
+    sha256File(vfxPath),
+  ]);
+  if (liveGeometrySha256 !== profile.receiverSha256)
+    throw new Error(
+      `surface-water receiver hash mismatch: expected ${profile.receiverSha256}, got ${liveGeometrySha256}`,
+    );
+  if (liveVfxSha256 !== profile.atmosphericVfxSha256)
+    throw new Error(
+      `surface-water atmosphere hash mismatch: expected ${profile.atmosphericVfxSha256}, got ${liveVfxSha256}`,
+    );
+  if (!vfx.rain.enabled || !vfx.rain.surfaceFlux)
+    throw new Error('surface-water assembly requires enabled rain with an explicit surfaceFlux');
+
+  const definition = irregularPavingDefinitionSchema.parse(geometry.metadata.definition);
+  const targets = pavingSurfaceMaterialTargetsSchema.parse(
+    geometry.metadata.surfaceMaterialTargets,
+  );
+  const liveMaterials = new Set(geometry.materials.map((material) => material.id));
+  for (const [materialId, response] of Object.entries(profile.materialResponses)) {
+    if (!liveMaterials.has(materialId))
+      throw new Error(`surface-water profile references absent material '${materialId}'`);
+    const expected = expectedTargetClass(materialId, targets);
+    if (!expected)
+      throw new Error(`surface-water material '${materialId}' has no paving target class`);
+    if (response.targetClass !== expected)
+      throw new Error(
+        `surface-water material '${materialId}' declares ${response.targetClass}, expected ${expected}`,
+      );
+  }
+  for (const materialId of definition.drainage.wetReceiverMaterialIds)
+    if (!profile.materialResponses[materialId])
+      throw new Error(`surface-water profile is missing wet receiver '${materialId}'`);
+
+  const shelterDirectory = resolve(options.profileDirectory);
+  const shelters = await Promise.all(
+    profile.shelters.map(async (shelter) => {
+      const path = resolve(shelterDirectory, shelter.geometryPath);
+      const actualSha256 = await sha256File(path);
+      if (actualSha256 !== shelter.geometrySha256)
+        throw new Error(
+          `surface-water shelter '${shelter.id}' hash mismatch: expected ${shelter.geometrySha256}, got ${actualSha256}`,
+        );
+      return {
+        id: shelter.id,
+        geometry: await loadGeometry(path),
+        geometrySha256: actualSha256,
+        transform: shelter.transform,
+      };
+    }),
+  );
+  const outlets = definition.drainage.runoffAnchorIds.map((id) => {
+    const attachment = geometry.attachments[id];
+    if (!attachment) throw new Error(`surface-water runoff attachment '${id}' is missing`);
+    return {
+      id,
+      worldPosition: transformPoint(attachment.position, profile.receiverTransform),
+      radiusMeters: Math.max(profile.grid.cellSizeMeters, definition.joints.widthMeters * 2),
+    };
+  });
+  const flux = vfx.rain.surfaceFlux;
+  const field = compileStaticSurfaceWater({
+    schemaVersion: 1,
+    id: profile.id,
+    receiver: {
+      geometry,
+      geometrySha256: liveGeometrySha256,
+      transform: profile.receiverTransform,
+    },
+    drainage: {
+      localDirection: definition.drainage.fall,
+      gradientMetersPerMeter: definition.drainage.gradientMetersPerMeter,
+      outlets,
+    },
+    precipitation: {
+      intensityMillimetersPerHour: flux.intensityMillimetersPerHour,
+      durationSeconds: flux.durationSeconds,
+      windMetersPerSecond: vfx.rain.windMetersPerSecond,
+      impactSpeedMetersPerSecond: flux.impactSpeedMetersPerSecond,
+      dropDiameterMillimeters: flux.dropDiameterMillimeters,
+    },
+    materialResponses: profile.materialResponses,
+    shelters,
+    grid: profile.grid,
+    solver: profile.solver,
+  });
+  const path = await writeJsonAtomically(options.outputPath, field);
+  const reportPath = resolve(
+    options.reportPath ?? `${options.outputPath.replace(/\.json$/u, '')}-report.json`,
+  );
+  const report = {
+    schemaVersion: 1,
+    generator: 'videoer.surface-water-assembly.v1',
+    result: 'structural-pass',
+    field: { path, sha256: await sha256File(path), semanticSha256: field.fieldSha256 },
+    receiver: { id: geometry.id, path: pavingPath, sha256: liveGeometrySha256 },
+    atmosphere: { id: vfx.id, path: vfxPath, sha256: liveVfxSha256 },
+    activeCellCount: field.grid.activeCellCount,
+    splashEligibleCellCount: field.cells.filter((cell) => cell.splashEligible).length,
+    massBalance: field.massBalance,
+    visualAcceptance: 'not-assessed',
+  };
+  await writeJsonAtomically(reportPath, report);
+  return { field, path, report, reportPath };
+}
+
+export async function loadSurfaceWaterAssemblyProfile(path: string) {
+  return surfaceWaterAssemblyProfileSchema.parse(
+    JSON.parse(await readFile(resolve(path), 'utf8')),
+  );
+}

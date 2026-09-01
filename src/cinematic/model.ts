@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { sceneTransformSchema } from '../interactions/model.js';
-import { aerosolLayerSchema } from '../vfx/model.js';
+import { aerosolLayerSchema, surfaceFluxSchema } from '../vfx/model.js';
 import { temporalLightModulationSchema } from '../lighting/temporal.js';
 
 export const cinematicIdentifierSchema = z.string().regex(/^[a-z][a-z0-9-]*(?:\.[a-z0-9-]+)*$/);
@@ -29,6 +29,7 @@ export const cinematicSceneEntitySchema = z.object({
   geometryPath: z.string().min(1),
   productionRigProfilePath: z.string().min(1).optional(),
   productionCharacterBindingPath: z.string().min(1).optional(),
+  surfaceWaterFieldPath: z.string().min(1).optional(),
   fixturePath: z.string().min(1).optional(),
   transform: sceneTransformSchema.default({
     position: [0, 0, 0],
@@ -175,6 +176,7 @@ export const cinematicAtmosphereSchema = z
           )
           .default([]),
         windMetersPerSecond: z.tuple([z.number(), z.number()]).default([0, 0]),
+        surfaceFlux: surfaceFluxSchema.optional(),
         groundSplashes: z
           .object({
             enabled: z.boolean(),

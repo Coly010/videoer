@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
 import { readFile } from 'node:fs/promises';
-import { resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
 import YAML from 'yaml';
 import {
   inspectCampaign,
@@ -59,6 +59,10 @@ import { createProjectingSupportedCanopyAsset } from './application/projecting-c
 import { acceptProjectingSupportedCanopy } from './application/projecting-canopy-acceptance.js';
 import { createArchitecturalEnvelopeTransferFixtures } from './application/architectural-envelope-fixtures.js';
 import { bindPavingUnitMaterial } from './application/paving-material-assembly.js';
+import {
+  createPavingSurfaceWaterField,
+  loadSurfaceWaterAssemblyProfile,
+} from './application/surface-water.js';
 import {
   createOldCitySurfaceMaterialAssets,
   createOldCitySurfaceMaterialAsset,
@@ -1109,6 +1113,38 @@ environment
       data,
       (result) =>
         `✓ ${result.report.modeledUnitTargets.length} modeled paving targets bound with unit-local metre frames → ${result.path}`,
+    );
+  });
+environment
+  .command('create-surface-water-field')
+  .argument('<paving-geometry>')
+  .argument('<atmospheric-vfx>')
+  .argument('<assembly-profile>')
+  .argument('<output-field>')
+  .description(
+    'derive a deterministic mass-conserving surface-water field from paving, rain, material and shelter evidence',
+  )
+  .action(async function (
+    pavingGeometry: string,
+    atmosphericVfx: string,
+    assemblyProfile: string,
+    outputField: string,
+  ) {
+    const profilePath = resolve(assemblyProfile);
+    const profile = await loadSurfaceWaterAssemblyProfile(profilePath);
+    const data = await createPavingSurfaceWaterField({
+      pavingGeometryPath: pavingGeometry,
+      atmosphericVfxPath: atmosphericVfx,
+      profile,
+      profileDirectory: dirname(profilePath),
+      outputPath: outputField,
+    });
+    output(
+      this,
+      'environment.create-surface-water-field',
+      data,
+      (result) =>
+        `✓ ${result.field.grid.activeCellCount} receiver cells solved with mass-balance error ${result.field.massBalance.errorCubicMeters} → ${result.path}`,
     );
   });
 environment

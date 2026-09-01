@@ -19,6 +19,20 @@ export function createWetCobbleSurfaceMaterial() {
     },
     normal: { kind: 'procedural-noise', strength: 0.34, scaleMeters: 0.055 },
     roughness: { minimum: 0.12, maximum: 0.3, variationScaleMeters: 0.45, wetness: 0.86 },
+    surfaceWaterResponse: {
+      absorption: {
+        capacityMeters: 0.0018,
+        rateMetersPerSecond: 0.000015,
+        initialSaturation: 0.35,
+      },
+      retention: {
+        filmCapacityMeters: 0.0008,
+        edgeCapacityMeters: 0.0024,
+        maximumPuddleDepthMeters: 0.022,
+      },
+      wetRoughness: { multiplier: 0.34, floor: 0.045 },
+      splash: { minimumFreeWaterDepthMeters: 0.00035, maximumSlopeDegrees: 12 },
+    },
     metallic: 0.045,
     metadata: {
       generator: 'videoer.wet-cobble-material.v1',

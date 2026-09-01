@@ -1,4 +1,5 @@
 import { dirname, resolve } from 'node:path';
+import { readFile } from 'node:fs/promises';
 import { loadMotionClip } from '../motion/io.js';
 import { sampleMotionTrack } from '../motion/model.js';
 import { transformPoint } from '../interactions/transforms.js';
@@ -12,6 +13,7 @@ import {
 import { loadProductionCharacterBinding } from '../characters/production-binding.js';
 import { sha256File } from '../assets/library.js';
 import { geometryTextureDependencies } from '../materials/texture-maps.js';
+import { verifyStaticSurfaceWaterField } from '../environments/surface-water.js';
 
 export interface CinematicQualityCheck {
   id: string;
@@ -65,6 +67,50 @@ export async function verifyCinematicScene(scene: CinematicScene, sceneFile: str
         measurements: {
           error: error instanceof Error ? error.message : String(error),
         },
+      });
+    }
+  }
+  for (const entity of scene.entities.filter((candidate) => candidate.surfaceWaterFieldPath)) {
+    const geometryPath = resolve(sourceDirectory, entity.geometryPath);
+    const fieldPath = resolve(sourceDirectory, entity.surfaceWaterFieldPath!);
+    try {
+      const verification = verifyStaticSurfaceWaterField(
+        JSON.parse(await readFile(fieldPath, 'utf8')),
+      );
+      const geometry = await loadGeometry(geometryPath);
+      const geometrySha256 = await sha256File(geometryPath);
+      const receiverMatches =
+        verification.field.receiver.geometryId === geometry.id &&
+        verification.field.receiver.geometrySha256 === geometrySha256 &&
+        JSON.stringify(verification.field.receiver.transform) === JSON.stringify(entity.transform);
+      const valid = verification.valid && entity.role === 'environment' && receiverMatches;
+      checks.push({
+        id: `${entity.id}.surface-water-field`,
+        status: valid ? 'pass' : 'fail',
+        message: valid
+          ? `Environment '${entity.id}' has a verified receiver-aware surface-water field`
+          : `Entity '${entity.id}' has an invalid or mismatched surface-water field`,
+        measurements: {
+          fieldId: verification.field.id,
+          semanticHashMatched: verification.valid,
+          receiverGeometryMatched:
+            verification.field.receiver.geometryId === geometry.id &&
+            verification.field.receiver.geometrySha256 === geometrySha256,
+          receiverTransformMatched:
+            JSON.stringify(verification.field.receiver.transform) === JSON.stringify(entity.transform),
+          activeCellCount: verification.field.grid.activeCellCount,
+          splashEligibleCellCount: verification.field.cells.filter((cell) => cell.splashEligible)
+            .length,
+          massBalanceErrorCubicMeters: verification.field.massBalance.errorCubicMeters,
+          issues: verification.issues,
+        },
+      });
+    } catch (error) {
+      checks.push({
+        id: `${entity.id}.surface-water-field`,
+        status: 'fail',
+        message: `Entity '${entity.id}' surface-water field could not be verified`,
+        measurements: { error: error instanceof Error ? error.message : String(error) },
       });
     }
   }

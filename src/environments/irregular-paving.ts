@@ -100,6 +100,7 @@ export const irregularPavingDefinitionSchema = z
     }),
     drainage: z.object({
       fall: vec2,
+      gradientMetersPerMeter: z.number().positive().max(0.25),
       wetReceiverMaterialIds: z.array(localIdentifier).min(1),
       runoffAnchorIds: z.array(localIdentifier).default([]),
     }),
@@ -196,6 +197,7 @@ export const irregularPavingDefinitionSchema = z
     const validReceivers = new Set([
       ...definition.materials.stoneIds,
       ...definition.repairPatches.flatMap((patch) => patch.materialIds),
+      definition.joints.materialId,
       definition.materials.kerbId,
       definition.materials.gutterId,
     ]);
@@ -1053,12 +1055,14 @@ export function createHistoricSettPavingDefinition(): IrregularPavingDefinition 
     },
     drainage: {
       fall: [0.12, -1],
+      gradientMetersPerMeter: 0.012,
       wetReceiverMaterialIds: [
         'wet-granite-a',
         'wet-granite-b',
         'wet-granite-c',
         'warm-repair-stone',
         'dark-repair-stone',
+        'dark-grit-joint',
         'granite-kerb',
         'dark-stone-gutter',
       ],
@@ -1151,12 +1155,14 @@ export function createContemporaryPaverDefinition(): IrregularPavingDefinition {
     },
     drainage: {
       fall: [-0.08, 1],
+      gradientMetersPerMeter: 0.008,
       wetReceiverMaterialIds: [
         'concrete-paver-a',
         'concrete-paver-b',
         'concrete-paver-c',
         'reinstatement-paver-a',
         'reinstatement-paver-b',
+        'polymeric-dark-joint',
         'contemporary-kerb',
         'linear-channel-stone',
       ],

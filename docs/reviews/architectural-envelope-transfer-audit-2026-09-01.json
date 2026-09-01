@@ -11,6 +11,7 @@
     "historic-masonry-shopfront/verification/neutral-material-v2/contact-sheet.png",
     "historic-masonry-shopfront/verification/wet-material-v2/contact-sheet.png",
     "historic-masonry-shopfront/verification/unit-aware-material-v5/contact-sheet.png",
+    "historic-masonry-shopfront/verification/receiver-water-v3/render/contact-sheet.png",
     "contemporary-plaster-mixed-use/verification/neutral-diagnostic/contact-sheet.png",
     "contemporary-plaster-mixed-use/verification/neutral-textured/contact-sheet.png",
     "contemporary-plaster-mixed-use/verification/neutral-surface-suite/contact-sheet.png",
@@ -18,7 +19,8 @@
     "contemporary-plaster-mixed-use/verification/wet-night/contact-sheet.png",
     "contemporary-plaster-mixed-use/verification/neutral-material-v2/contact-sheet.png",
     "contemporary-plaster-mixed-use/verification/wet-material-v2/contact-sheet.png",
-    "contemporary-plaster-mixed-use/verification/unit-aware-material-v5/contact-sheet.png"
+    "contemporary-plaster-mixed-use/verification/unit-aware-material-v5/contact-sheet.png",
+    "contemporary-plaster-mixed-use/verification/receiver-water-v3/render/contact-sheet.png"
   ],
   "acceptedStructuralEvidence": [
     "real facade apertures expose non-zero room depth",
@@ -43,6 +45,9 @@
     "unit, joint, substrate and border targets are disjoint and content-checked across TypeScript assembly and Blender consumption",
     "coverage, skipped-boundary-span and minimum joint-plane clearance gates prevent missing edge cells and settled repair units from becoming hidden beneath the continuous joint bed",
     "historic and contemporary unit-aware transfer probes remove the rejected photographed-layout-on-modeled-layout double structure and the unit-sized repair-paver holes without scene-specific geometry",
+    "receiver-aware water conserves physical rain volume through material absorption, film, edge storage, depression puddles and outlet/boundary discharge on both paving hosts",
+    "exact canopy geometry produces 183 historic and 157 contemporary sheltered cells with suppressed incident water and splash eligibility",
+    "surface-water fields are content-addressed, exact-geometry and transform bound, renderer-fingerprinted and consumed by Blender through one continuous spatial field texture",
     "the canonical inset-window asset transfers without scaling into exact-contract openings in both host classes",
     "historic gable and contemporary parapet establish distinct roof massing",
     "historic sett scale is materially improved from the first rejected render"
@@ -57,6 +62,8 @@
     "Concrete034 gives the contemporary render real fine surface response but remains too uniform and clean for production acceptance",
     "the material-v2 neutral probes remain synthetic: the historic ground still shows repeated/doubled stone structure and the contemporary ground still exposes oversized units, broad bright joints and weak per-unit differentiation",
     "the unit-aware probes remain rejected: the historic joint bed reads as pale graphic outlines, both hosts lack granular joint/substrate response and convincing multi-scale weathering, and contemporary pavers remain oversized and chalky",
+    "receiver-water v1 was rejected and removed because per-cell transparent overlay quads exposed white/black solver tiles and tar-like paving",
+    "receiver-water v3 removes grid artifacts but historic stone remains too dark and contrasty, contemporary stone remains oversized/chalky, and computed puddle depth lacks a sufficiently smooth and legible optical surface",
     "upper-storey inhabited-room dressing remains too weak through canonical window glazing for a reliable visual depth claim",
     "interiors remain sparse witness rooms rather than production-dressed spaces",
     "facade materials and edges remain pristine, flat and blockout-quality",
@@ -71,7 +78,7 @@
     "semantic source-selection and per-host material adaptation that preserve provenance while avoiding layout-on-geometry conflicts",
     "renderer-independent per-unit colour/roughness/weathering attributes over the accepted correlated local-metre sampling contract",
     "granular joint/substrate materials, independent of modeled-unit surfaces, with credible depth, dirt and water response",
-    "receiver-aware wetness with slope, drainage, shelter, edge accumulation and puddle masks rather than one uniform film amount",
+    "smooth renderer-independent puddle-boundary reconstruction and calibrated material-specific water optics over the accepted conserved receiver field",
     "texture-backed host-specific construction finishes for the assembled aperture modules",
     "stronger production interior dressing and upper-window depth readability",
     "construction-visible reveals, sills, lintels, trim and facade edge weathering",
