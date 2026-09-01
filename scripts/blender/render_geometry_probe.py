@@ -1,4 +1,5 @@
 import bpy
+import hashlib
 import json
 import math
 import os
@@ -76,7 +77,238 @@ def create_armature(asset):
     return armature
 
 
-def configure_surface_nodes(material, principled, surface):
+def verified_texture_path(asset_directory, channel):
+    if not asset_directory:
+        raise RuntimeError(
+            f"Texture-backed material requires an asset directory for '{channel['semantic']}'"
+        )
+    portable = channel.get("path")
+    if (
+        not isinstance(portable, str)
+        or not portable
+        or os.path.isabs(portable)
+        or "\\" in portable
+        or any(part in ("", ".", "..") for part in portable.split("/"))
+    ):
+        raise RuntimeError(f"Texture dependency has an invalid relative path: {portable}")
+    root = os.path.realpath(asset_directory)
+    path = os.path.realpath(os.path.join(root, portable))
+    if path == root or not path.startswith(root + os.sep):
+        raise RuntimeError(f"Texture dependency escapes its asset package: {portable}")
+    try:
+        size = os.path.getsize(path)
+    except FileNotFoundError as error:
+        raise RuntimeError(f"Texture dependency is missing: {path}") from error
+    if size != channel.get("sizeBytes"):
+        raise RuntimeError(
+            f"Texture dependency size mismatch for {path}: "
+            f"expected {channel.get('sizeBytes')}, got {size}"
+        )
+    digest = hashlib.sha256()
+    with open(path, "rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    if digest.hexdigest() != channel.get("sha256"):
+        raise RuntimeError(f"Texture dependency hash mismatch: {path}")
+    if not str(channel.get("mediaType", "")).startswith("image/"):
+        raise RuntimeError(f"Texture dependency is not an image: {path}")
+    return path
+
+
+def configure_texture_map_nodes(material, principled, surface, asset_directory):
+    texture_maps = surface.get("textureMaps")
+    if not texture_maps:
+        return None
+    if texture_maps.get("kind") != "hash-bound":
+        raise RuntimeError("Blender only consumes hash-bound texture-map sets")
+    physical_scale = texture_maps.get("physicalScale", {})
+    width = physical_scale.get("widthMeters")
+    height = physical_scale.get("heightMeters")
+    if not isinstance(width, (int, float)) or width <= 0 or not isinstance(height, (int, float)) or height <= 0:
+        raise RuntimeError("Texture-map physical scale must contain positive metre dimensions")
+    channels = texture_maps.get("channels", [])
+    semantic_channels = {channel.get("semantic"): channel for channel in channels}
+    if len(semantic_channels) != len(channels):
+        raise RuntimeError("Texture-map channel semantics must be unique")
+    for required in ("base-color", "normal", "roughness"):
+        if required not in semantic_channels:
+            raise RuntimeError(f"Texture-map set is missing required channel '{required}'")
+    nodes = material.node_tree.nodes
+    links = material.node_tree.links
+    coordinates = nodes.new("ShaderNodeTexCoord")
+    coordinates.name = "videoer-texture-coordinates"
+
+    object_axes = nodes.new("ShaderNodeSeparateXYZ")
+    object_axes.name = "videoer-object-metre-axes"
+    links.new(coordinates.outputs["Object"], object_axes.inputs["Vector"])
+
+    def scaled_axis(axis, scale):
+        scaled = nodes.new("ShaderNodeMath")
+        scaled.operation = "MULTIPLY"
+        scaled.inputs[1].default_value = scale
+        links.new(object_axes.outputs[axis], scaled.inputs[0])
+        return scaled.outputs[0]
+
+    # A rectangular 2-D texture cannot use one scaled 3-D BOX vector: there is
+    # no assignment of three vector components that gives all of XY, XZ and YZ
+    # both the declared width and height. Build one metre-space vector per
+    # projection instead, always assigning the first plane axis to texture width
+    # and the second to texture height.
+    plane_axes = {"xy": ("X", "Y"), "xz": ("X", "Z"), "yz": ("Y", "Z")}
+    plane_vectors = {}
+    for plane, (u_axis, v_axis) in plane_axes.items():
+        vector = nodes.new("ShaderNodeCombineXYZ")
+        vector.name = f"videoer-physical-{plane}-mapping"
+        links.new(scaled_axis(u_axis, 1.0 / width), vector.inputs["X"])
+        links.new(scaled_axis(v_axis, 1.0 / height), vector.inputs["Y"])
+        plane_vectors[plane] = vector.outputs["Vector"]
+
+    normal_axes = nodes.new("ShaderNodeSeparateXYZ")
+    normal_axes.name = "videoer-triplanar-normal-axes"
+    links.new(coordinates.outputs["Normal"], normal_axes.inputs["Vector"])
+    axis_weights = {}
+    for axis in ("X", "Y", "Z"):
+        absolute = nodes.new("ShaderNodeMath")
+        absolute.operation = "ABSOLUTE"
+        links.new(normal_axes.outputs[axis], absolute.inputs[0])
+        sharpened = nodes.new("ShaderNodeMath")
+        sharpened.operation = "POWER"
+        sharpened.inputs[1].default_value = 4.0
+        links.new(absolute.outputs[0], sharpened.inputs[0])
+        axis_weights[axis] = sharpened.outputs[0]
+    weight_xy_xz = nodes.new("ShaderNodeMath")
+    weight_xy_xz.operation = "ADD"
+    links.new(axis_weights["Z"], weight_xy_xz.inputs[0])
+    links.new(axis_weights["Y"], weight_xy_xz.inputs[1])
+    weight_total = nodes.new("ShaderNodeMath")
+    weight_total.operation = "ADD"
+    links.new(weight_xy_xz.outputs[0], weight_total.inputs[0])
+    links.new(axis_weights["X"], weight_total.inputs[1])
+    plane_weights = {}
+    for plane, normal_axis in {"xy": "Z", "xz": "Y", "yz": "X"}.items():
+        normalized = nodes.new("ShaderNodeMath")
+        normalized.operation = "DIVIDE"
+        links.new(axis_weights[normal_axis], normalized.inputs[0])
+        links.new(weight_total.outputs[0], normalized.inputs[1])
+        normalized.name = f"videoer-triplanar-{plane}-weight"
+        plane_weights[plane] = normalized.outputs[0]
+
+    def weighted_plane_sum(outputs, semantic):
+        weighted = []
+        for plane in ("xy", "xz", "yz"):
+            scale = nodes.new("ShaderNodeVectorMath")
+            scale.operation = "SCALE"
+            links.new(outputs[plane], scale.inputs[0])
+            links.new(plane_weights[plane], scale.inputs["Scale"])
+            weighted.append(scale.outputs["Vector"])
+        first_sum = nodes.new("ShaderNodeVectorMath")
+        first_sum.operation = "ADD"
+        links.new(weighted[0], first_sum.inputs[0])
+        links.new(weighted[1], first_sum.inputs[1])
+        total = nodes.new("ShaderNodeVectorMath")
+        total.operation = "ADD"
+        total.name = f"videoer-texture-{semantic}"
+        links.new(first_sum.outputs["Vector"], total.inputs[0])
+        links.new(weighted[2], total.inputs[1])
+        return total.outputs["Vector"]
+
+    image_nodes = {}
+    report_channels = []
+    for semantic, channel in semantic_channels.items():
+        expected_color_space = "srgb-texture" if semantic == "base-color" else "non-color"
+        if channel.get("colorSpace") != expected_color_space:
+            raise RuntimeError(
+                f"Texture channel '{semantic}' must use {expected_color_space}"
+            )
+        if semantic == "normal" and channel.get("normalConvention") != "opengl-positive-green":
+            raise RuntimeError("Blender requires canonical OpenGL positive-green normal maps")
+        path = verified_texture_path(asset_directory, channel)
+        try:
+            image = bpy.data.images.load(path, check_existing=True)
+            if image.size[0] <= 0 or image.size[1] <= 0:
+                raise RuntimeError("loaded image contains no decoded pixels")
+        except RuntimeError as error:
+            raise RuntimeError(
+                f"Texture dependency '{semantic}' cannot be decoded as an image: {path}"
+            ) from error
+        image.colorspace_settings.name = "sRGB" if semantic == "base-color" else "Non-Color"
+        projected_outputs = {}
+        for plane in ("xy", "xz", "yz"):
+            texture = nodes.new("ShaderNodeTexImage")
+            texture.name = f"videoer-texture-{semantic}-{plane}"
+            texture.label = f"{semantic} {plane.upper()}"
+            texture.image = image
+            texture.extension = "REPEAT"
+            texture.projection = "FLAT"
+            links.new(plane_vectors[plane], texture.inputs["Vector"])
+            projected_outputs[plane] = texture.outputs["Color"]
+        image_nodes[semantic] = weighted_plane_sum(projected_outputs, semantic)
+        report_channels.append(
+            {
+                "semantic": semantic,
+                "path": path,
+                "colorSpace": image.colorspace_settings.name,
+                "sha256": channel["sha256"],
+            }
+        )
+
+    base_color_output = image_nodes["base-color"]
+    if "ambient-occlusion" in image_nodes:
+        ao_multiply = nodes.new("ShaderNodeMixRGB")
+        ao_multiply.name = "videoer-base-color-ambient-occlusion"
+        ao_multiply.blend_type = "MULTIPLY"
+        ao_multiply.inputs[0].default_value = 1.0
+        links.new(base_color_output, ao_multiply.inputs[1])
+        links.new(image_nodes["ambient-occlusion"], ao_multiply.inputs[2])
+        base_color_output = ao_multiply.outputs["Color"]
+    links.new(base_color_output, principled.inputs["Base Color"])
+    links.new(image_nodes["roughness"], principled.inputs["Roughness"])
+    if "metallic" in image_nodes:
+        links.new(image_nodes["metallic"], principled.inputs["Metallic"])
+
+    normal_map = nodes.new("ShaderNodeNormalMap")
+    normal_map.name = "videoer-opengl-normal-map"
+    normal_map.space = "TANGENT"
+    normal_map.inputs["Strength"].default_value = surface["normal"].get("strength", 1.0)
+    links.new(image_nodes["normal"], normal_map.inputs["Color"])
+    links.new(normal_map.outputs["Normal"], principled.inputs["Normal"])
+
+    if "displacement" in image_nodes:
+        displacement = nodes.new("ShaderNodeDisplacement")
+        displacement.name = "videoer-texture-displacement"
+        displacement.inputs["Midlevel"].default_value = 0.5
+        displacement.inputs["Scale"].default_value = surface["normal"].get("scaleMeters", 0.01)
+        links.new(image_nodes["displacement"], displacement.inputs["Height"])
+        output = nodes.get("Material Output")
+        if output:
+            links.new(displacement.outputs["Displacement"], output.inputs["Displacement"])
+
+    if "opacity" in image_nodes:
+        links.new(image_nodes["opacity"], principled.inputs["Alpha"])
+        if hasattr(material, "surface_render_method"):
+            material.surface_render_method = "DITHERED"
+
+    report = {
+        "kind": "hash-bound-pbr-textures-v1",
+        "physicalScale": {"widthMeters": width, "heightMeters": height},
+        "mapping": {
+            "kind": "aspect-correct-metre-triplanar",
+            "blendSharpness": 4.0,
+            "planes": {
+                plane: {
+                    "axes": list(axes),
+                    "scale": [1.0 / width, 1.0 / height],
+                }
+                for plane, axes in plane_axes.items()
+            },
+        },
+        "channels": report_channels,
+    }
+    material["videoer_texture_report"] = json.dumps(report, sort_keys=True)
+    return report
+
+
+def configure_surface_nodes(material, principled, surface, asset_directory=None):
     if not principled or not surface:
         return
     nodes = material.node_tree.nodes
@@ -549,10 +781,73 @@ def configure_surface_nodes(material, principled, surface):
         links.new(bump.outputs["Normal"], principled.inputs["Normal"])
     elif pattern_normal:
         links.new(pattern_normal, principled.inputs["Normal"])
+    configure_texture_map_nodes(material, principled, surface, asset_directory)
 
 
-def create_mesh(asset, armature, asset_directory=None):
-    vertices = [to_blender(position) for position in asset["positions"]]
+def create_material(material_definition, asset_directory=None):
+    material = bpy.data.materials.new(material_definition["id"])
+    base_color = material_definition["baseColor"]
+    material.diffuse_color = base_color
+    material.metallic = material_definition.get("metallic", 0)
+    material.roughness = material_definition.get("roughness", 0.5)
+    material.use_nodes = True
+    principled = material.node_tree.nodes.get("Principled BSDF")
+    if principled:
+        principled.inputs["Base Color"].default_value = base_color
+        principled.inputs["Metallic"].default_value = material.metallic
+        principled.inputs["Roughness"].default_value = material.roughness
+        specular_ior = principled.inputs.get("Specular IOR Level")
+        if specular_ior and "specularIorLevel" in material_definition:
+            specular_ior.default_value = material_definition["specularIorLevel"]
+        anisotropy = principled.inputs.get("Anisotropic IOR Level") or principled.inputs.get("Anisotropic")
+        if anisotropy:
+            anisotropy.default_value = material_definition.get("anisotropy", 0)
+        anisotropy_rotation = principled.inputs.get("Anisotropic Rotation")
+        if anisotropy_rotation:
+            anisotropy_rotation.default_value = material_definition.get("anisotropyRotation", 0)
+        if "Alpha" in principled.inputs:
+            principled.inputs["Alpha"].default_value = base_color[3]
+        emission = material_definition.get("emission", [0, 0, 0])
+        emission_socket = principled.inputs.get("Emission Color") or principled.inputs.get("Emission")
+        if emission_socket:
+            emission_socket.default_value = (*emission, 1)
+        if "Emission Strength" in principled.inputs:
+            principled.inputs["Emission Strength"].default_value = material_definition.get(
+                "emissionStrength", 0
+            )
+        configure_surface_nodes(
+            material, principled, material_definition.get("surface"), asset_directory
+        )
+        fiber = material_definition.get("fiber")
+        if fiber and fiber.get("kind") == "uv-hair-flow":
+            nodes = material.node_tree.nodes
+            links = material.node_tree.links
+            coordinates = nodes.new("ShaderNodeTexCoord")
+            wave = nodes.new("ShaderNodeTexWave")
+            wave.wave_type = "BANDS"
+            wave.bands_direction = "Y"
+            wave.inputs["Scale"].default_value = fiber["strandFrequency"]
+            wave.inputs["Distortion"].default_value = 2.2
+            wave.inputs["Detail"].default_value = 3.0
+            links.new(coordinates.outputs["UV"], wave.inputs["Vector"])
+            variation = fiber["colorVariation"]
+            ramp = nodes.new("ShaderNodeValToRGB")
+            ramp.color_ramp.elements[0].color = tuple(max(0, channel * (1 - variation)) for channel in base_color[:3]) + (1,)
+            ramp.color_ramp.elements[1].color = tuple(min(1, channel * (1 + variation)) for channel in base_color[:3]) + (1,)
+            links.new(wave.outputs["Color"], ramp.inputs["Fac"])
+            links.new(ramp.outputs["Color"], principled.inputs["Base Color"])
+            bump = nodes.new("ShaderNodeBump")
+            bump.inputs["Strength"].default_value = fiber["normalStrength"]
+            bump.inputs["Distance"].default_value = 0.00035
+            links.new(wave.outputs["Color"], bump.inputs["Height"])
+            links.new(bump.outputs["Normal"], principled.inputs["Normal"])
+    if base_color[3] < 1 and hasattr(material, "surface_render_method"):
+        material.surface_render_method = "DITHERED"
+    return material
+
+
+def create_mesh(asset, armature=None, asset_directory=None, vertex_converter=to_blender):
+    vertices = [vertex_converter(position) for position in asset["positions"]]
     indices = asset["indices"]
     faces = [(indices[i], indices[i + 1], indices[i + 2]) for i in range(0, len(indices), 3)]
     data = bpy.data.meshes.new(asset["id"])
@@ -564,7 +859,7 @@ def create_mesh(asset, armature, asset_directory=None):
         source_normals = asset.get("normals", [])
         if len(source_normals) == len(vertices):
             data.normals_split_custom_set_from_vertices(
-                [to_blender(normal) for normal in source_normals]
+                [vertex_converter(normal) for normal in source_normals]
             )
     source_uvs = asset.get("uvs", [])
     if source_uvs:
@@ -580,7 +875,7 @@ def create_mesh(asset, armature, asset_directory=None):
             shape = mesh.shape_key_add(name=target["id"])
             shape.value = 0.0
             for vertex_index, delta in zip(target["vertexIndices"], target["positionDeltas"]):
-                shape.data[vertex_index].co = Vector(vertices[vertex_index]) + Vector(to_blender(delta))
+                shape.data[vertex_index].co = Vector(vertices[vertex_index]) + Vector(vertex_converter(delta))
 
     material_indices = {}
     materials = asset.get("materials", [])
@@ -594,62 +889,7 @@ def create_mesh(asset, armature, asset_directory=None):
             }
         ]
     for material_definition in materials:
-        material = bpy.data.materials.new(material_definition["id"])
-        base_color = material_definition["baseColor"]
-        material.diffuse_color = base_color
-        material.metallic = material_definition.get("metallic", 0)
-        material.roughness = material_definition.get("roughness", 0.5)
-        material.use_nodes = True
-        principled = material.node_tree.nodes.get("Principled BSDF")
-        if principled:
-            principled.inputs["Base Color"].default_value = base_color
-            principled.inputs["Metallic"].default_value = material.metallic
-            principled.inputs["Roughness"].default_value = material.roughness
-            specular_ior = principled.inputs.get("Specular IOR Level")
-            if specular_ior and "specularIorLevel" in material_definition:
-                specular_ior.default_value = material_definition["specularIorLevel"]
-            anisotropy = principled.inputs.get("Anisotropic IOR Level") or principled.inputs.get("Anisotropic")
-            if anisotropy:
-                anisotropy.default_value = material_definition.get("anisotropy", 0)
-            anisotropy_rotation = principled.inputs.get("Anisotropic Rotation")
-            if anisotropy_rotation:
-                anisotropy_rotation.default_value = material_definition.get("anisotropyRotation", 0)
-            if "Alpha" in principled.inputs:
-                principled.inputs["Alpha"].default_value = base_color[3]
-            emission = material_definition.get("emission", [0, 0, 0])
-            emission_socket = principled.inputs.get("Emission Color") or principled.inputs.get("Emission")
-            if emission_socket:
-                emission_socket.default_value = (*emission, 1)
-            if "Emission Strength" in principled.inputs:
-                principled.inputs["Emission Strength"].default_value = material_definition.get(
-                    "emissionStrength", 0
-                )
-            configure_surface_nodes(material, principled, material_definition.get("surface"))
-            fiber = material_definition.get("fiber")
-            if fiber and fiber.get("kind") == "uv-hair-flow":
-                nodes = material.node_tree.nodes
-                links = material.node_tree.links
-                coordinates = nodes.new("ShaderNodeTexCoord")
-                wave = nodes.new("ShaderNodeTexWave")
-                wave.wave_type = "BANDS"
-                wave.bands_direction = "Y"
-                wave.inputs["Scale"].default_value = fiber["strandFrequency"]
-                wave.inputs["Distortion"].default_value = 2.2
-                wave.inputs["Detail"].default_value = 3.0
-                links.new(coordinates.outputs["UV"], wave.inputs["Vector"])
-                variation = fiber["colorVariation"]
-                ramp = nodes.new("ShaderNodeValToRGB")
-                ramp.color_ramp.elements[0].color = tuple(max(0, channel * (1 - variation)) for channel in base_color[:3]) + (1,)
-                ramp.color_ramp.elements[1].color = tuple(min(1, channel * (1 + variation)) for channel in base_color[:3]) + (1,)
-                links.new(wave.outputs["Color"], ramp.inputs["Fac"])
-                links.new(ramp.outputs["Color"], principled.inputs["Base Color"])
-                bump = nodes.new("ShaderNodeBump")
-                bump.inputs["Strength"].default_value = fiber["normalStrength"]
-                bump.inputs["Distance"].default_value = 0.00035
-                links.new(wave.outputs["Color"], bump.inputs["Height"])
-                links.new(bump.outputs["Normal"], principled.inputs["Normal"])
-        if base_color[3] < 1 and hasattr(material, "surface_render_method"):
-            material.surface_render_method = "DITHERED"
+        material = create_material(material_definition, asset_directory)
         material_indices[material_definition["id"]] = len(mesh.data.materials)
         mesh.data.materials.append(material)
         metadata = asset.get("metadata", {})
@@ -659,6 +899,7 @@ def create_mesh(asset, armature, asset_directory=None):
             and metadata.get("textureMaterialId") == material_definition["id"]
         ):
             texture_path = os.path.join(asset_directory, metadata["frontTexture"])
+            principled = material.node_tree.nodes.get("Principled BSDF")
             texture = material.node_tree.nodes.new("ShaderNodeTexImage")
             texture.image = bpy.data.images.load(texture_path, check_existing=True)
             material.node_tree.links.new(texture.outputs["Color"], principled.inputs["Base Color"])
@@ -677,12 +918,13 @@ def create_mesh(asset, armature, asset_directory=None):
         for bone_index, weight in zip(bone_indices, weights):
             if weight > 0 and bone_index < len(groups):
                 groups[bone_index].add([vertex_index], weight, "REPLACE")
-    modifier = mesh.modifiers.new(name="canonical-humanoid-skin", type="ARMATURE")
-    modifier.object = armature
-    if asset.get("metadata", {}).get("skinning") == "deterministic-dual-quaternion-v1":
-        modifier.use_deform_preserve_volume = True
-    mesh.parent = armature
-    mesh.matrix_parent_inverse = armature.matrix_world.inverted()
+    if armature is not None:
+        modifier = mesh.modifiers.new(name="canonical-humanoid-skin", type="ARMATURE")
+        modifier.object = armature
+        if asset.get("metadata", {}).get("skinning") == "deterministic-dual-quaternion-v1":
+            modifier.use_deform_preserve_volume = True
+        mesh.parent = armature
+        mesh.matrix_parent_inverse = armature.matrix_world.inverted()
     return mesh
 
 

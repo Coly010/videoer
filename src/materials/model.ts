@@ -1,4 +1,8 @@
 import { z } from 'zod';
+import {
+  materialTextureChannelSchema,
+  sourceSha256Schema,
+} from '../assets/sources/model.js';
 
 const colorSchema = z.tuple([
   z.number().min(0).max(1),
@@ -8,6 +12,57 @@ const colorSchema = z.tuple([
 ]);
 
 const surfaceAxisSchema = z.enum(['x', 'y', 'z']);
+
+export const hashBoundTextureMapSetSchema = z
+  .object({
+    kind: z.literal('hash-bound'),
+    source: z.object({
+      provider: z.enum(['ambientcg', 'poly-haven']),
+      sourceIdentitySha256: sourceSha256Schema,
+      manifestSha256: sourceSha256Schema,
+      licenceSpdx: z.literal('CC0-1.0'),
+    }),
+    physicalScale: z.object({
+      widthMeters: z.number().positive(),
+      heightMeters: z.number().positive(),
+    }),
+    channels: z.array(materialTextureChannelSchema).min(3),
+  })
+  .superRefine((textureMaps, ctx) => {
+    const semantics = textureMaps.channels.map((channel) => channel.semantic);
+    if (new Set(semantics).size !== semantics.length)
+      ctx.addIssue({
+        code: 'custom',
+        path: ['channels'],
+        message: 'texture-map channel semantics must be unique',
+      });
+    for (const required of ['base-color', 'normal', 'roughness'] as const)
+      if (!semantics.includes(required))
+        ctx.addIssue({
+          code: 'custom',
+          path: ['channels'],
+          message: `texture-map set requires ${required}`,
+        });
+    for (const [index, channel] of textureMaps.channels.entries()) {
+      const expectedColorSpace =
+        channel.semantic === 'base-color' ? 'srgb-texture' : 'non-color';
+      if (channel.colorSpace !== expectedColorSpace)
+        ctx.addIssue({
+          code: 'custom',
+          path: ['channels', index, 'colorSpace'],
+          message: `${channel.semantic} texture must use ${expectedColorSpace}`,
+        });
+      if (
+        channel.semantic === 'normal' &&
+        channel.normalConvention !== 'opengl-positive-green'
+      )
+        ctx.addIssue({
+          code: 'custom',
+          path: ['channels', index, 'normalConvention'],
+          message: 'normal texture must use the canonical OpenGL convention',
+        });
+    }
+  });
 
 const surfacePatternSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('isotropic') }),
@@ -128,6 +183,7 @@ export const surfaceMaterialSchema = z
       })
       .optional(),
     metallic: z.number().min(0).max(1).default(0),
+    textureMaps: hashBoundTextureMapSetSchema.optional(),
     metadata: z.record(z.string(), z.unknown()).default({}),
   })
   .superRefine((material, ctx) => {
@@ -150,3 +206,4 @@ export const surfaceMaterialSchema = z
   });
 
 export type SurfaceMaterial = z.infer<typeof surfaceMaterialSchema>;
+export type HashBoundTextureMapSet = z.infer<typeof hashBoundTextureMapSetSchema>;

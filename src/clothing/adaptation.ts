@@ -43,6 +43,46 @@ function skeletonScale(source: GeometryAsset, target: GeometryAsset) {
   return targetExtent / sourceExtent;
 }
 
+export function extendCanonicalClothingSkeleton(
+  garment: GeometryAsset,
+  target: GeometryAsset,
+  assetId = garment.id,
+) {
+  const sourceIds = garment.skeleton.map((joint) => joint.id);
+  const targetIds = target.skeleton.map((joint) => joint.id);
+  if (
+    sourceIds.length >= targetIds.length ||
+    sourceIds.some((joint, index) => targetIds[index] !== joint)
+  )
+    throw new Error(
+      'Clothing skeleton extension requires the source joints to be an exact ordered target prefix',
+    );
+  const highestInfluence = Math.max(...(garment.skinIndices?.flat() ?? [-1]));
+  if (highestInfluence >= sourceIds.length)
+    throw new Error('Clothing skeleton extension found an influence outside the source skeleton');
+  const extended = geometryAssetSchema.parse({
+    ...structuredClone(garment),
+    id: assetId,
+    skeleton: [
+      ...structuredClone(garment.skeleton),
+      ...structuredClone(target.skeleton.slice(garment.skeleton.length)),
+    ],
+    metadata: {
+      ...garment.metadata,
+      skeletonExtendedFromJointCount: garment.skeleton.length,
+      skeletonExtendedToJointCount: target.skeleton.length,
+      skeletonExtensionTarget: target.id,
+      skeletonExtensionGenerator: 'videoer.canonical-clothing-skeleton-extension.v1',
+    },
+  });
+  const validation = validateGeometry(extended);
+  if (!validation.valid)
+    throw new Error(
+      `Extended clothing skeleton failed geometry validation: ${validation.issues.map((issue) => issue.message).join('; ')}`,
+    );
+  return extended;
+}
+
 export function fitCanonicalClothing(
   garment: GeometryAsset,
   target: GeometryAsset,

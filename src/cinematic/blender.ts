@@ -148,6 +148,9 @@ export async function renderCinematicScene(
     ],
     { maxBuffer: 30 * 1024 * 1024 },
   );
+  const productionCharacterAssemblies = JSON.parse(
+    await readFile(join(output, 'production-character-assembly-report.json'), 'utf8'),
+  ) as { schemaVersion: 1; sceneId: string; assemblies: unknown[] };
   if (!options.reuseExistingPixels) {
     const losslessFrames = join(output, 'lossless-frames');
     await exec(
@@ -680,14 +683,11 @@ export async function renderCinematicScene(
     },
     ...declaredRenderChecks,
   ];
-  const combinedVerification = aggregateCinematicRenderVerification(
-    verification,
-    renderChecks,
-  );
+  const combinedVerification = aggregateCinematicRenderVerification(verification, renderChecks);
   const report = join(output, 'scene-render.json');
   await writeFile(
     report,
-    `${JSON.stringify({ schemaVersion: 1, source, manifest, video, blend, frames, contactSheet, media, verification: combinedVerification, evidenceRefresh: options.reuseExistingPixels ? 'existing-pixels' : 'new-pixel-render', renderProfile: scene.renderProfile, deterministicEvidence: scene.renderProfile.intent === 'deterministic-final' ? { boundary: 'cycles-cpu-fixed-seed-to-lossless-png-to-single-thread-x264', expected: 'byte-identical-on-matching-runtime-and-input-fingerprint' } : { boundary: 'preview-only', expected: 'not-content-addressable' }, renderChecks, blender: { mode: options.reuseExistingPixels ? 'inspect-only' : 'render', stdout, stderr } }, null, 2)}\n`,
+    `${JSON.stringify({ schemaVersion: 1, source, manifest, video, blend, frames, contactSheet, media, verification: combinedVerification, productionCharacterAssemblies, evidenceRefresh: options.reuseExistingPixels ? 'existing-pixels' : 'new-pixel-render', renderProfile: scene.renderProfile, deterministicEvidence: scene.renderProfile.intent === 'deterministic-final' ? { boundary: 'cycles-cpu-fixed-seed-to-lossless-png-to-single-thread-x264', expected: 'byte-identical-on-matching-runtime-and-input-fingerprint' } : { boundary: 'preview-only', expected: 'not-content-addressable' }, renderChecks, blender: { mode: options.reuseExistingPixels ? 'inspect-only' : 'render', stdout, stderr } }, null, 2)}\n`,
     'utf8',
   );
   const failedRenderChecks = renderChecks.filter((check) => check.status === 'fail');
@@ -706,6 +706,7 @@ export async function renderCinematicScene(
     report,
     media,
     verification: combinedVerification,
+    productionCharacterAssemblies,
     renderChecks,
   };
 }
@@ -748,6 +749,9 @@ export async function renderCinematicProbe(
       { maxBuffer: 30 * 1024 * 1024 },
     ));
   }
+  const productionCharacterAssemblies = JSON.parse(
+    await readFile(join(output, 'production-character-assembly-report.json'), 'utf8'),
+  ) as { schemaVersion: 1; sceneId: string; assemblies: unknown[] };
   const frames = await Promise.all(
     scene.landmarks.map(async (landmark, index) => {
       const path = probePaths[index]!;
@@ -782,6 +786,7 @@ export async function renderCinematicProbe(
         frames,
         contactSheet,
         verification,
+        productionCharacterAssemblies,
         renderProfile: scene.renderProfile,
         evidenceScope: 'authoritative-profile-semantic-landmarks-only',
         evidenceRefresh: options.reuseExistingPixels ? 'existing-pixels' : 'new-pixel-render',
@@ -807,6 +812,7 @@ export async function renderCinematicProbe(
     contactSheet,
     report,
     verification,
+    productionCharacterAssemblies,
     publicationEligible: false as const,
   };
 }

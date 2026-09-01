@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { createHumanoidMannequin } from '../src/characters/mannequin.js';
-import { fitCanonicalClothing, verifyCanonicalClothingFit } from '../src/clothing/adaptation.js';
+import {
+  extendCanonicalClothingSkeleton,
+  fitCanonicalClothing,
+  verifyCanonicalClothingFit,
+} from '../src/clothing/adaptation.js';
 import { extractMaterialGeometry } from '../src/geometry/extract.js';
 
 describe('canonical clothing fitting', () => {
@@ -60,6 +64,35 @@ describe('canonical clothing fitting', () => {
       valid: false,
       issues: [expect.stringMatching(/exact target skeleton/)],
       targetSkeletonMatched: false,
+    });
+  });
+
+  it('extends a legacy canonical-prefix garment without changing its topology or weights', () => {
+    const character = createHumanoidMannequin({}, appearance);
+    const garment = extractMaterialGeometry(character, ['dress'], 'clothing.test-prefix-dress');
+    const target = structuredClone(character);
+    target.id = 'character.test-extended-skeleton';
+    target.skeleton.push({
+      id: 'left-thumb-1',
+      parent: 'left-hand',
+      restPosition: [0.02, 0, 0],
+      constraints: {},
+    });
+    const extended = extendCanonicalClothingSkeleton(
+      garment,
+      target,
+      'clothing.test-extended-dress',
+    );
+    expect(extended.skeleton.map((joint) => joint.id)).toEqual(
+      target.skeleton.map((joint) => joint.id),
+    );
+    expect(extended.indices).toEqual(garment.indices);
+    expect(extended.skinIndices).toEqual(garment.skinIndices);
+    expect(extended.skinWeights).toEqual(garment.skinWeights);
+    expect(extended.metadata).toMatchObject({
+      skeletonExtendedFromJointCount: garment.skeleton.length,
+      skeletonExtendedToJointCount: target.skeleton.length,
+      skeletonExtensionTarget: target.id,
     });
   });
 });

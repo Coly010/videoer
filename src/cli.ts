@@ -32,6 +32,8 @@ import {
   validateLibraryAsset,
 } from './assets/library.js';
 import { auditAssetLibrary, repairAssetLibraryFromSources } from './assets/integrity.js';
+import { importAmbientCgMaterialSource } from './assets/sources/ambientcg.js';
+import { openMaterialSourceImportRequestSchema } from './assets/sources/model.js';
 import { resolveProductionAssets, validateProductionPlan } from './application/production.js';
 import type { AssetKind } from './production/model.js';
 import {
@@ -54,6 +56,7 @@ import { createProjectingHangingSignAsset } from './application/projecting-signs
 import { acceptProjectingHangingSign } from './application/projecting-sign-acceptance.js';
 import { createProjectingSupportedCanopyAsset } from './application/projecting-canopies.js';
 import { acceptProjectingSupportedCanopy } from './application/projecting-canopy-acceptance.js';
+import { createArchitecturalEnvelopeTransferFixtures } from './application/architectural-envelope-fixtures.js';
 import {
   createOldCitySurfaceMaterialAssets,
   createOldCitySurfaceMaterialAsset,
@@ -730,6 +733,63 @@ production
   });
 
 const asset = program.command('asset').description('shared production asset library operations');
+const assetSource = asset
+  .command('source')
+  .description('explicit provenance-aware open asset source operations');
+const importMaterialSource = assetSource
+  .command('import-material')
+  .description('acquire a material source package without publishing or rendering it');
+importMaterialSource
+  .command('ambientcg')
+  .requiredOption('--asset <id>', 'exact ambientCG material asset ID')
+  .requiredOption('--resolution <resolution>', 'download resolution such as 1K or 2K')
+  .requiredOption('--encoding <encoding>', 'texture encoding: JPG or PNG')
+  .requiredOption('--cache <directory>', 'content-addressed source cache root')
+  .requiredOption('--output <directory>', 'candidate package output root')
+  .requiredOption('--mode <mode>', 'source acquisition mode: online or offline')
+  .option('--refresh', 'explicitly reacquire current provider bytes in online mode', false)
+  .option('--exact-identity <sha256>', 'require this exact source identity SHA-256')
+  .description(
+    'import one ambientCG v3 material through the explicit operator boundary; never publishes or renders',
+  )
+  .action(async function (
+    options: {
+      asset: string;
+      resolution: string;
+      encoding: string;
+      cache: string;
+      output: string;
+      mode: string;
+      refresh: boolean;
+      exactIdentity?: string;
+    },
+  ) {
+    const request = openMaterialSourceImportRequestSchema.parse({
+      provider: 'ambientcg',
+      assetId: options.asset,
+      resolution: options.resolution,
+      encoding: options.encoding,
+      cacheDirectory: resolve(options.cache),
+      outputDirectory: resolve(options.output),
+      mode: options.mode,
+      refresh: options.refresh,
+      ...(options.exactIdentity
+        ? { expectedSourceIdentitySha256: options.exactIdentity }
+        : {}),
+    });
+    const { expectedSourceIdentitySha256, ...sourceRequest } = request;
+    const data = await importAmbientCgMaterialSource({
+      ...sourceRequest,
+      ...(expectedSourceIdentitySha256 ? { expectedSourceIdentitySha256 } : {}),
+    });
+    output(
+      this,
+      'asset.source.import-material.ambientcg',
+      data,
+      (result) =>
+        `✓ ${result.manifest.asset.id} ${result.manifest.selection.resolution}-${result.manifest.selection.encoding} ${result.fromCache ? 'from cache' : 'acquired'} → ${result.candidate}`,
+    );
+  });
 asset
   .command('search')
   .argument('[query]', 'words describing the required asset', '')
@@ -986,6 +1046,28 @@ interaction
 const environment = program
   .command('environment')
   .description('renderer-independent procedural environment factories');
+environment
+  .command('create-architectural-envelope-fixtures')
+  .argument('<output-directory>')
+  .option('--no-render', 'write deterministic fixture scenes and reports without rendering')
+  .option('--neutral-only', 'generate only the bounded neutral diagnostic probes')
+  .description('assemble historic and contemporary envelope+paving transfer fixtures')
+  .action(async function (
+    directory: string,
+    options: { render: boolean; neutralOnly?: boolean },
+  ) {
+    const data = await createArchitecturalEnvelopeTransferFixtures(directory, {
+      render: options.render,
+      ...(options.neutralOnly ? { intents: ['neutral-diagnostic'] } : {}),
+    });
+    output(
+      this,
+      'environment.create-architectural-envelope-fixtures',
+      data,
+      (result) =>
+        `✓ two architectural envelope transfer fixtures generated as candidates → ${result.output}`,
+    );
+  });
 environment
   .command('create-bookshop')
   .argument('<output-directory>')

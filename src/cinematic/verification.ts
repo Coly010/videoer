@@ -11,6 +11,7 @@ import {
 } from '../characters/rig-profile.js';
 import { loadProductionCharacterBinding } from '../characters/production-binding.js';
 import { sha256File } from '../assets/library.js';
+import { geometryTextureDependencies } from '../materials/texture-maps.js';
 
 export interface CinematicQualityCheck {
   id: string;
@@ -36,6 +37,37 @@ function worldVector(
 export async function verifyCinematicScene(scene: CinematicScene, sceneFile: string) {
   const sourceDirectory = dirname(resolve(sceneFile));
   const checks: CinematicQualityCheck[] = [];
+  for (const entity of scene.entities) {
+    try {
+      const dependencies = await geometryTextureDependencies(
+        resolve(sourceDirectory, entity.geometryPath),
+      );
+      if (dependencies.length)
+        checks.push({
+          id: `${entity.id}.texture-dependencies`,
+          status: 'pass',
+          message: `Entity '${entity.id}' has ${dependencies.length} verified hash-bound texture dependencies`,
+          measurements: {
+            dependencies: dependencies.map(({ materialId, semantic, sha256, sizeBytes }) => ({
+              materialId,
+              semantic,
+              sha256,
+              sizeBytes,
+            })),
+          },
+        });
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code === 'ENOENT') continue;
+      checks.push({
+        id: `${entity.id}.texture-dependencies`,
+        status: 'fail',
+        message: `Entity '${entity.id}' has invalid hash-bound texture dependencies`,
+        measurements: {
+          error: error instanceof Error ? error.message : String(error),
+        },
+      });
+    }
+  }
   for (const entity of scene.entities.filter(
     (candidate) => candidate.productionCharacterBindingPath,
   )) {

@@ -10,6 +10,7 @@ from mathutils import Matrix, Vector
 
 
 fixture_modulation_reports = []
+production_character_reports = []
 mpfb_module_name = None
 
 
@@ -66,6 +67,12 @@ def create_entity(definition, fps, duration):
         )
         armature.name = definition["id"]
         mesh.name = f"{definition['id']}-mesh"
+        assembly_objects = []
+        if definition.get("productionCharacterBindingPath"):
+            assembly_objects, assembly_report = production_character_assembly.assemble(
+                definition, asset, armature, mesh, profile, geometry_probe
+            )
+            production_character_reports.append(assembly_report)
         motion = load_json(motion_binding["path"])
         rigify_adapter.apply_canonical_motion(
             armature,
@@ -93,6 +100,8 @@ def create_entity(definition, fps, duration):
             mesh.matrix_world = world @ backend_alignment
         armature.hide_render = not definition.get("visible", True)
         mesh.hide_render = not definition.get("visible", True)
+        for assembly_object in assembly_objects:
+            assembly_object.hide_render = not definition.get("visible", True)
         return asset, armature, mesh
     armature = geometry_probe.create_armature(asset)
     armature.name = definition["id"]
@@ -1218,6 +1227,21 @@ def main():
             indent=2,
         )
         handle.write("\n")
+    with open(
+        os.path.join(output, "production-character-assembly-report.json"),
+        "w",
+        encoding="utf-8",
+    ) as handle:
+        json.dump(
+            {
+                "schemaVersion": 1,
+                "sceneId": manifest["id"],
+                "assemblies": production_character_reports,
+            },
+            handle,
+            indent=2,
+        )
+        handle.write("\n")
     camera = create_camera(scene, manifest["camera"], manifest["fps"])
     lighting_modulation_reports = create_lights(manifest["lights"], entity_meshes)
     with open(
@@ -1296,6 +1320,9 @@ geometry_probe = load_module("render_geometry_probe.py", "videoer_geometry_probe
 motion_probe = load_module("render_motion_probe.py", "videoer_motion_probe")
 interaction_probe = load_module("render_interaction_probe.py", "videoer_interaction_probe")
 rigify_adapter = load_module("render_mpfb_motion_probe.py", "videoer_mpfb_rigify_adapter")
+production_character_assembly = load_module(
+    "production_character_assembly.py", "videoer_production_character_assembly"
+)
 openvdb_smoke = load_module("openvdb_smoke.py", "videoer_openvdb_smoke")
 
 if __name__ == "__main__":

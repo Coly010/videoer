@@ -6,6 +6,7 @@ import {
   loadProductionCharacterBinding,
   productionCharacterBindingArtifacts,
 } from '../characters/production-binding.js';
+import { geometryTextureDependencies } from '../materials/texture-maps.js';
 
 async function fileSha256(path: string) {
   return createHash('sha256')
@@ -47,6 +48,18 @@ export async function fingerprintCinematicScene(sceneFile: string) {
       ),
     )
   ).flat();
+  const textureDependencies = (
+    await Promise.all(
+      scene.entities.map(async (entity) =>
+        (await geometryTextureDependencies(resolve(directory, entity.geometryPath))).map(
+          (dependency) => ({
+            role: `texture:${entity.id}:${dependency.materialId}:${dependency.semantic}`,
+            path: dependency.path,
+          }),
+        ),
+      ),
+    )
+  ).flat();
   const dependencies = [
     ...scene.entities.flatMap((entity) => [
       { role: `geometry:${entity.id}`, path: resolve(directory, entity.geometryPath) },
@@ -70,6 +83,7 @@ export async function fingerprintCinematicScene(sceneFile: string) {
       ? [{ role: 'finish-profile', path: resolve(directory, scene.finishProfilePath) }]
       : []),
     ...productionCharacterDependencies,
+    ...textureDependencies,
   ];
   const artifacts = await Promise.all(
     dependencies.map(async (dependency) => ({

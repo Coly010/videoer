@@ -16,6 +16,8 @@ import { saveAtmosphericVfx } from '../src/vfx/io.js';
 import { createRainyDuskVfx } from '../src/vfx/rainy-dusk.js';
 import { saveSurfaceMaterial } from '../src/materials/io.js';
 import { createWetCobbleSurfaceMaterial } from '../src/materials/wet-cobble.js';
+import { surfaceMaterialSchema } from '../src/materials/model.js';
+import { sha256Bytes } from '../src/assets/sources/cache.js';
 import { extractMaterialGeometry } from '../src/geometry/extract.js';
 import { saveLightingRig } from '../src/lighting/io.js';
 import { saveTitleTreatment } from '../src/titles/io.js';
@@ -846,6 +848,69 @@ describe('declarative cinematic campaigns', () => {
       validation: { valid: true },
     });
     expect(report).toMatchObject({ adaptedMaterialSources: 1, bespokeOrchestrationSourceFiles: 0 });
+  });
+
+  it('stages texture-backed material dependencies beside ordinary declarative geometry', async () => {
+    directory = await mkdtemp(join(tmpdir(), 'videoer-declarative-texture-material-'));
+    const materialDirectory = join(directory, 'source-material');
+    await mkdir(join(materialDirectory, 'textures'), { recursive: true });
+    const channelDefinitions = [
+      ['base-color', 'srgb-texture'],
+      ['normal', 'non-color'],
+      ['roughness', 'non-color'],
+    ] as const;
+    const channels = [];
+    for (const [semantic, colorSpace] of channelDefinitions) {
+      const bytes = Buffer.from(`declarative-${semantic}`);
+      const path = `textures/${semantic}.png`;
+      await writeFile(join(materialDirectory, path), bytes);
+      channels.push({
+        semantic,
+        providerName: semantic === 'normal' ? 'NormalGL' : semantic,
+        path,
+        mediaType: 'image/png',
+        sha256: sha256Bytes(bytes),
+        sizeBytes: bytes.byteLength,
+        colorSpace,
+        ...(semantic === 'normal'
+          ? { normalConvention: 'opengl-positive-green' as const }
+          : {}),
+      });
+    }
+    const surface = surfaceMaterialSchema.parse({
+      ...createWetCobbleSurfaceMaterial(),
+      id: 'material.declarative-texture-fixture',
+      textureMaps: {
+        kind: 'hash-bound',
+        source: {
+          provider: 'ambientcg',
+          sourceIdentitySha256: '1'.repeat(64),
+          manifestSha256: '2'.repeat(64),
+          licenceSpdx: 'CC0-1.0',
+        },
+        physicalScale: { widthMeters: 1.1, heightMeters: 1.1 },
+        channels,
+      },
+    });
+    const materialPath = join(materialDirectory, 'material.json');
+    await saveSurfaceMaterial(materialPath, surface);
+    const fixture = campaignFixture();
+    Object.assign(fixture, {
+      materialSources: [{ id: 'texture-source', path: 'source-material/material.json' }],
+    });
+    Object.assign(fixture.geometry[0]!, {
+      materialBindings: [{ targetMaterialId: 'body', material: 'texture-source' }],
+    });
+    const campaignFile = join(directory, 'campaign.json');
+    await writeFile(campaignFile, JSON.stringify(fixture), 'utf8');
+    await buildDeclarativeCinematicCampaign(campaignFile, { render: false });
+    const geometry = await loadGeometry(join(directory, 'work/product.json'));
+    const stagedChannels = geometry.materials[0]!.surface!.textureMaps!.channels;
+    expect(stagedChannels.every((channel) => channel.path.startsWith('textures/'))).toBe(true);
+    for (const channel of stagedChannels)
+      expect(sha256Bytes(await readFile(join(directory, 'work', channel.path)))).toBe(
+        channel.sha256,
+      );
   });
 
   it('fits verified clothing to a library character and composes it as a synchronised wardrobe entity', async () => {

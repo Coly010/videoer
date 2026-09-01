@@ -52,6 +52,7 @@ import {
   verifySurfaceMaterialAdaptation,
 } from '../materials/adaptation.js';
 import { loadSurfaceMaterial, saveSurfaceMaterial } from '../materials/io.js';
+import { bindStagedSurfaceMaterialValue } from '../materials/texture-maps.js';
 import { fitCanonicalClothing, verifyCanonicalClothingFit } from '../clothing/adaptation.js';
 import { bakePoseSpaceClothCorrectives, verifyTemporalClothing } from '../clothing/temporal.js';
 import { adaptLightingRig, verifyLightingRigAdaptation } from '../lighting/adaptation.js';
@@ -248,7 +249,11 @@ export async function buildDeclarativeCinematicCampaign(
   };
   const materials = new Map<
     string,
-    { path: string; asset: Awaited<ReturnType<typeof loadSurfaceMaterial>> }
+    {
+      path: string;
+      textureRoot: string;
+      asset: Awaited<ReturnType<typeof loadSurfaceMaterial>>;
+    }
   >();
   const materialAdaptationReports = new Map<
     string,
@@ -337,7 +342,7 @@ export async function buildDeclarativeCinematicCampaign(
         reason: 'Campaign supplies an existing local persisted surface material.',
       });
     }
-    materials.set(source.id, { path, asset });
+    materials.set(source.id, { path, textureRoot: dirname(sourcePath), asset });
   }
 
   const geometry = new Map<
@@ -411,18 +416,26 @@ export async function buildDeclarativeCinematicCampaign(
       };
       if (source.adaptation.speechMorphs)
         asset = createEnglishSpeechMorphRig(asset, source.adaptation.assetId);
-      for (const binding of source.materialBindings)
-        asset = bindSurfaceMaterial(
-          asset,
-          binding.targetMaterialId,
-          materials.get(binding.material)!.asset,
-        );
+      path = resolve(root, source.path!);
+      for (const binding of source.materialBindings) {
+        const material = materials.get(binding.material)!;
+        asset = material.asset.textureMaps
+          ? (
+              await bindStagedSurfaceMaterialValue({
+                geometry: asset,
+                targetMaterialId: binding.targetMaterialId,
+                surface: material.asset,
+                sourceTextureDirectory: material.textureRoot,
+                outputGeometryPath: path,
+              })
+            ).geometry
+          : bindSurfaceMaterial(asset, binding.targetMaterialId, material.asset);
+      }
       const validation = validateGeometry(asset);
       if (!validation.valid)
         throw new Error(
           `Geometry adaptation '${source.id}' failed validation: ${validation.issues.map((issue) => issue.message).join('; ')}`,
         );
-      path = resolve(root, source.path!);
       await saveGeometry(path, asset);
       const reportPath = resolve(
         root,
@@ -489,14 +502,22 @@ export async function buildDeclarativeCinematicCampaign(
         baseAsset: { id: resolvedLibrary!.asset.id, version: resolvedLibrary!.asset.version },
       });
     } else {
-      for (const binding of source.materialBindings)
-        asset = bindSurfaceMaterial(
-          asset,
-          binding.targetMaterialId,
-          materials.get(binding.material)!.asset,
-        );
       if (source.materialBindings.length) {
         path = resolve(root, source.path!);
+        for (const binding of source.materialBindings) {
+          const material = materials.get(binding.material)!;
+          asset = material.asset.textureMaps
+            ? (
+                await bindStagedSurfaceMaterialValue({
+                  geometry: asset,
+                  targetMaterialId: binding.targetMaterialId,
+                  surface: material.asset,
+                  sourceTextureDirectory: material.textureRoot,
+                  outputGeometryPath: path,
+                })
+              ).geometry
+            : bindSurfaceMaterial(asset, binding.targetMaterialId, material.asset);
+        }
         await saveGeometry(path, asset);
         if (resolvedLibrary)
           resolvedLibrary.resolutionRecord.materialBindings = source.materialBindings.map(

@@ -261,6 +261,7 @@ export interface ArchitecturalModulePlacement {
   assetId: string;
   version: string;
   position: Vec3;
+  floorY: number;
   opening: WallOpening;
 }
 
@@ -438,6 +439,7 @@ export function compileArchitecturalEnvelope(input: ArchitecturalEnvelopeDefinit
           assetId: bay.opening.module.assetId,
           version: bay.opening.module.version,
           position: [(opening.minimumX + opening.maximumX) * 0.5, opening.minimumY, frontZ],
+          floorY: storeyMinimumY,
           opening,
         });
         parts.push(
@@ -608,18 +610,28 @@ export function compileArchitecturalEnvelope(input: ArchitecturalEnvelopeDefinit
   ]);
   geometry.materials = [...materialIds].sort().map(basicMaterial);
   for (const placement of modulePlacements) {
+    const roomDepth = allOpenings.find(
+      (opening) => opening.id === placement.openingId,
+    )!.roomDepthMeters;
+    const openingCentreX = (placement.opening.minimumX + placement.opening.maximumX) * 0.5;
+    const openingCentreY = (placement.opening.minimumY + placement.opening.maximumY) * 0.5;
     geometry.attachments[`opening-${placement.openingId}`] = {
       position: placement.position,
       rotation: [0, 0, 0],
       bone: 'root',
     };
     geometry.attachments[`room-focus-${placement.openingId}`] = {
-      position: [
-        (placement.opening.minimumX + placement.opening.maximumX) * 0.5,
-        (placement.opening.minimumY + placement.opening.maximumY) * 0.5,
-        backZ +
-          allOpenings.find((opening) => opening.id === placement.openingId)!.roomDepthMeters * 0.62,
-      ],
+      position: [openingCentreX, openingCentreY, backZ + roomDepth * 0.62],
+      rotation: [0, 0, 0],
+      bone: 'root',
+    };
+    geometry.attachments[`interior-depth-near-${placement.openingId}`] = {
+      position: [openingCentreX, placement.floorY, backZ + Math.min(0.9, roomDepth * 0.28)],
+      rotation: [0, 0, 0],
+      bone: 'root',
+    };
+    geometry.attachments[`interior-depth-far-${placement.openingId}`] = {
+      position: [openingCentreX, placement.floorY, backZ + roomDepth * 0.78],
       rotation: [0, 0, 0],
       bone: 'root',
     };
@@ -697,8 +709,8 @@ export function createHistoricShopfrontEnvelopeDefinition(): ArchitecturalEnvelo
             opening: {
               id: 'entry-door',
               kind: 'door',
-              widthMeters: 1.04,
-              heightMeters: 2.2,
+              widthMeters: 1.2,
+              heightMeters: 2.16,
               sillMeters: 0,
               module: { assetId: 'prop.bookshop-door', version: '0.1.0' },
               room: { depthMeters: 3.8, occupancy: 'lit-empty' },
@@ -723,9 +735,9 @@ export function createHistoricShopfrontEnvelopeDefinition(): ArchitecturalEnvelo
             opening: {
               id: 'service-window',
               kind: 'window',
-              widthMeters: 1.18,
-              heightMeters: 1.36,
-              sillMeters: 1.05,
+              widthMeters: 1.28,
+              heightMeters: 0.96,
+              sillMeters: 1.24,
               module: { assetId: 'prop.inset-architectural-window', version: '0.1.0' },
               room: { depthMeters: 3.1, occupancy: 'dark' },
             },
@@ -742,9 +754,9 @@ export function createHistoricShopfrontEnvelopeDefinition(): ArchitecturalEnvelo
             opening: {
               id: 'upper-left-window',
               kind: 'window',
-              widthMeters: 1.16,
-              heightMeters: 1.38,
-              sillMeters: 0.82,
+              widthMeters: 1.28,
+              heightMeters: 0.96,
+              sillMeters: 1.02,
               module: { assetId: 'prop.inset-architectural-window', version: '0.1.0' },
               room: { depthMeters: 3.2, occupancy: 'lit-empty' },
             },
@@ -756,8 +768,8 @@ export function createHistoricShopfrontEnvelopeDefinition(): ArchitecturalEnvelo
               id: 'upper-centre-window',
               kind: 'window',
               widthMeters: 1.28,
-              heightMeters: 1.42,
-              sillMeters: 0.78,
+              heightMeters: 0.96,
+              sillMeters: 1.02,
               module: { assetId: 'prop.inset-architectural-window', version: '0.1.0' },
               room: { depthMeters: 3.5, occupancy: 'inhabited' },
             },
@@ -768,9 +780,9 @@ export function createHistoricShopfrontEnvelopeDefinition(): ArchitecturalEnvelo
             opening: {
               id: 'upper-right-window',
               kind: 'window',
-              widthMeters: 1.06,
-              heightMeters: 1.3,
-              sillMeters: 0.88,
+              widthMeters: 1.28,
+              heightMeters: 0.96,
+              sillMeters: 1.02,
               module: { assetId: 'prop.inset-architectural-window', version: '0.1.0' },
               room: { depthMeters: 2.9, occupancy: 'dark' },
             },
@@ -849,8 +861,8 @@ export function createContemporaryMixedUseEnvelopeDefinition(): ArchitecturalEnv
             opening: {
               id: 'lobby-door',
               kind: 'door',
-              widthMeters: 1.3,
-              heightMeters: 2.45,
+              widthMeters: 1.2,
+              heightMeters: 2.16,
               sillMeters: 0,
               module: { assetId: 'prop.bookshop-door', version: '0.1.0' },
               room: { depthMeters: 4.4, occupancy: 'lit-empty' },
@@ -875,8 +887,8 @@ export function createContemporaryMixedUseEnvelopeDefinition(): ArchitecturalEnv
             opening: {
               id: 'service-door',
               kind: 'door',
-              widthMeters: 1.05,
-              heightMeters: 2.3,
+              widthMeters: 1.2,
+              heightMeters: 2.16,
               sillMeters: 0,
               module: { assetId: 'prop.bookshop-door', version: '0.1.0' },
               room: { depthMeters: 3.6, occupancy: 'dark' },
@@ -894,9 +906,9 @@ export function createContemporaryMixedUseEnvelopeDefinition(): ArchitecturalEnv
             opening: {
               id: 'office-west-window',
               kind: 'window',
-              widthMeters: 2.3,
-              heightMeters: 1.55,
-              sillMeters: 0.74,
+              widthMeters: 1.28,
+              heightMeters: 0.96,
+              sillMeters: 1.03,
               module: { assetId: 'prop.inset-architectural-window', version: '0.1.0' },
               room: { depthMeters: 4.5, occupancy: 'lit-empty' },
             },
@@ -908,9 +920,9 @@ export function createContemporaryMixedUseEnvelopeDefinition(): ArchitecturalEnv
             opening: {
               id: 'office-east-window',
               kind: 'window',
-              widthMeters: 2.55,
-              heightMeters: 1.62,
-              sillMeters: 0.7,
+              widthMeters: 1.28,
+              heightMeters: 0.96,
+              sillMeters: 1.03,
               module: { assetId: 'prop.inset-architectural-window', version: '0.1.0' },
               room: { depthMeters: 4.9, occupancy: 'inhabited' },
             },

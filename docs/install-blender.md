@@ -13,6 +13,8 @@ npm run video -- doctor
 
 Videoer prefers the canonical application binary at `/Applications/Blender.app/Contents/MacOS/Blender`, then falls back to `blender` on `PATH`. A nonstandard installation can set `VIDEOER_BLENDER` to the executable path. `video doctor` performs a real background `bpy` startup, not only `--version`, and verifies the bundled `openvdb` and `numpy` Python modules required by deterministic sparse smoke simulation.
 
+On the verified Homebrew cask installation, `/opt/homebrew/bin/blender` is a symlink to the application binary. Invoking that symlink directly can make Blender 4.5.13 derive its resource root from the symlink path and fail to find bundled Python, fonts and `bpy_types`, even though the application is correctly installed. Videoer avoids that failure by resolving `/Applications/Blender.app/Contents/MacOS/Blender` first. Use the canonical application path in manual probe commands, or set `VIDEOER_BLENDER` to an equivalent real application binary; do not diagnose the resulting missing-bundle crash as a Metal, MPFB or scene defect.
+
 ### New-machine checklist
 
 1. Install the repository's Node version and run `npm install`; do not substitute globally installed Remotion packages.
