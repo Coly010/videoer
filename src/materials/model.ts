@@ -19,6 +19,7 @@ export const textureSurfaceCompositionSchema = z.enum([
 export const constructionDomainSchema = z.enum([
   'flat-ground-surface',
   'modeled-paving-unit',
+  'paving-joint-substrate',
   'flat-facade-surface',
   'modeled-masonry-unit',
   'monolithic-architectural-surface',
@@ -80,7 +81,12 @@ const textureMacroVariationSchema = z
 
 export const textureMaterialPlacementSchema = z.object({
   scalePolicy: z.literal('preserve-source-physical-scale'),
-  orientation: z.enum(['uv-authored', 'world-horizontal', 'world-vertical']),
+  orientation: z.enum([
+    'uv-authored',
+    'unit-local-uv-meters',
+    'world-horizontal',
+    'world-vertical',
+  ]),
   offsetMeters: z.tuple([z.number().finite(), z.number().finite()]),
   rotationDegrees: z.number().min(-180).max(180),
   appearance: boundedTextureAppearanceSchema,

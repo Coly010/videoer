@@ -58,6 +58,7 @@ import { acceptProjectingHangingSign } from './application/projecting-sign-accep
 import { createProjectingSupportedCanopyAsset } from './application/projecting-canopies.js';
 import { acceptProjectingSupportedCanopy } from './application/projecting-canopy-acceptance.js';
 import { createArchitecturalEnvelopeTransferFixtures } from './application/architectural-envelope-fixtures.js';
+import { bindPavingUnitMaterial } from './application/paving-material-assembly.js';
 import {
   createOldCitySurfaceMaterialAssets,
   createOldCitySurfaceMaterialAsset,
@@ -1076,6 +1077,38 @@ environment
       data,
       (result) =>
         `✓ two architectural envelope transfer fixtures generated as candidates → ${result.output}`,
+    );
+  });
+environment
+  .command('bind-paving-unit-material')
+  .argument('<paving-geometry>')
+  .argument('<unit-material>')
+  .argument('<unit-application>')
+  .argument('<output-geometry>')
+  .description(
+    'bind one homogeneous texture source to every modeled unit in an irregular paving asset',
+  )
+  .action(async function (
+    pavingGeometry: string,
+    unitMaterial: string,
+    unitApplication: string,
+    outputGeometry: string,
+  ) {
+    const application = textureMaterialApplicationSchema.parse(
+      JSON.parse(await readFile(resolve(unitApplication), 'utf8')),
+    );
+    const data = await bindPavingUnitMaterial({
+      pavingGeometryPath: pavingGeometry,
+      unitMaterialPath: unitMaterial,
+      unitApplication: application,
+      outputGeometryPath: outputGeometry,
+    });
+    output(
+      this,
+      'environment.bind-paving-unit-material',
+      data,
+      (result) =>
+        `✓ ${result.report.modeledUnitTargets.length} modeled paving targets bound with unit-local metre frames → ${result.path}`,
     );
   });
 environment

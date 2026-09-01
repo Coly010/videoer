@@ -122,7 +122,7 @@ def validated_texture_application(texture_maps):
     domains = {
         "flat-ground-surface", "modeled-paving-unit", "flat-facade-surface",
         "modeled-masonry-unit", "monolithic-architectural-surface",
-        "natural-rock-surface", "prop-surface",
+        "natural-rock-surface", "prop-surface", "paving-joint-substrate",
     }
     domain = application.get("constructionDomain")
     if domain not in domains:
@@ -133,9 +133,14 @@ def validated_texture_application(texture_maps):
     if placement.get("scalePolicy") != "preserve-source-physical-scale":
         raise RuntimeError("Texture application must preserve source physical scale")
     orientation = placement.get("orientation")
-    if orientation not in {"uv-authored", "world-horizontal", "world-vertical"}:
+    if orientation not in {
+        "uv-authored", "unit-local-uv-meters", "world-horizontal", "world-vertical",
+    }:
         raise RuntimeError(f"Texture application has invalid orientation: {orientation}")
-    horizontal_domain = domain in {"flat-ground-surface", "modeled-paving-unit"}
+    modeled_unit_domain = domain in {"modeled-paving-unit", "modeled-masonry-unit"}
+    horizontal_domain = domain in {
+        "flat-ground-surface", "modeled-paving-unit", "paving-joint-substrate",
+    }
     vertical_domain = domain in {"flat-facade-surface", "modeled-masonry-unit"}
     if (horizontal_domain and orientation == "world-vertical") or (
         vertical_domain and orientation == "world-horizontal"
@@ -143,6 +148,14 @@ def validated_texture_application(texture_maps):
         raise RuntimeError(
             f"Texture orientation '{orientation}' is incompatible with '{domain}'"
         )
+    if domain == "modeled-paving-unit" and orientation != "unit-local-uv-meters":
+        raise RuntimeError("Modeled paving units require unit-local metre UV placement")
+    if orientation == "unit-local-uv-meters" and not modeled_unit_domain:
+        raise RuntimeError(
+            "Unit-local metre UV placement is only valid on modeled construction units"
+        )
+    if domain == "paving-joint-substrate" and orientation != "world-horizontal":
+        raise RuntimeError("Paving joint substrates require world-horizontal placement")
 
     def number(value, label, minimum=None, maximum=None):
         if (
@@ -210,6 +223,13 @@ def configure_texture_map_nodes(material, principled, surface, asset_directory):
     domain = application["constructionDomain"]
     if not isinstance(intended_domains, list) or domain not in intended_domains:
         raise RuntimeError(f"Texture source does not declare construction domain '{domain}'")
+    if (
+        placement["orientation"] == "unit-local-uv-meters"
+        and composition != "homogeneous-unit-material"
+    ):
+        raise RuntimeError("Unit-local metre UV placement requires a homogeneous source")
+    if domain == "paving-joint-substrate" and composition != "homogeneous-unit-material":
+        raise RuntimeError("Paving joint substrates require a homogeneous source")
     if composition == "continuous-layout-scan" and domain in {
         "modeled-paving-unit", "modeled-masonry-unit",
     }:
@@ -310,11 +330,14 @@ def configure_texture_map_nodes(material, principled, surface, asset_directory):
         return vector.outputs["Vector"]
 
     orientation = placement["orientation"]
-    if orientation == "uv-authored":
+    if orientation in {"uv-authored", "unit-local-uv-meters"}:
         plane_axes = {"uv": ("U", "V")}
         plane_vectors = {
             "uv": placement_vector(
-                "uv", uv_axes.outputs["X"], uv_axes.outputs["Y"], uv_normalized=True
+                "uv",
+                uv_axes.outputs["X"],
+                uv_axes.outputs["Y"],
+                uv_normalized=orientation == "uv-authored",
             )
         }
     elif orientation == "world-horizontal":
@@ -617,6 +640,7 @@ def configure_texture_map_nodes(material, principled, surface, asset_directory):
         "mapping": {
             "kind": {
                 "uv-authored": "authored-uv-physical",
+                "unit-local-uv-meters": "unit-local-uv-meters-physical",
                 "world-horizontal": "world-horizontal-physical",
                 "world-vertical": "world-vertical-triplanar",
             }[orientation],
@@ -1204,11 +1228,13 @@ def create_mesh(asset, armature=None, asset_directory=None, vertex_converter=to_
         if (
             texture_maps
             and texture_maps.get("application", {}).get("placement", {}).get("orientation")
-            == "uv-authored"
+            in {"uv-authored", "unit-local-uv-meters"}
             and len(source_uvs) != len(vertices)
         ):
+            orientation = texture_maps["application"]["placement"]["orientation"]
             raise RuntimeError(
-                f"UV-authored texture material '{material_definition['id']}' requires one UV per vertex"
+                f"Texture orientation '{orientation}' on material "
+                f"'{material_definition['id']}' requires one UV per vertex"
             )
     if source_uvs:
         uv_layer = data.uv_layers.new(name="UVMap")

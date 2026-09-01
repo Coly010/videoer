@@ -4,6 +4,7 @@ import copy
 import hashlib
 import importlib.util
 import json
+import math
 import os
 import sys
 
@@ -375,6 +376,206 @@ def main():
     if not rejected_missing_uv:
         raise RuntimeError("Blender accepted UV-authored texture application without UVs")
 
+    unit_definition = copy.deepcopy(definition)
+    unit_definition["id"] = "probe-material-modeled-paving-unit"
+    unit_maps = unit_definition["surface"]["textureMaps"]
+    unit_maps["suitability"]["intendedConstructionDomains"] = ["modeled-paving-unit"]
+    unit_application = unit_maps["application"]
+    unit_application["constructionDomain"] = "modeled-paving-unit"
+    unit_application["placement"]["orientation"] = "unit-local-uv-meters"
+    unit_application["placement"]["offsetMeters"] = [0.035, -0.02]
+    unit_application["placement"]["rotationDegrees"] = 15
+    unit_application["placement"]["macroVariation"]["seed"] = 421
+    unit_asset = {
+        "id": "geometry.modeled-paving-unit-local-uv-witness",
+        "positions": [
+            [-0.94, 0.055, 0.72], [-0.62, 0.055, 0.72],
+            [-0.62, 0.055, 0.54], [-0.94, 0.055, 0.54],
+            [0.42, 0.055, 0.73], [0.66, 0.055, 0.73],
+            [0.66, 0.055, 0.59], [0.42, 0.055, 0.59],
+        ],
+        "indices": [0, 1, 2, 0, 2, 3, 4, 5, 6, 4, 6, 7],
+        # Each separately modeled unit owns a deterministic local frame in
+        # metres. The second frame is rotated and phase-shifted deliberately;
+        # neither frame is normalized to 0..1.
+        "uvs": [
+            [0.011, 0.017], [0.331, 0.017], [0.331, 0.197], [0.011, 0.197],
+            [0.043, 0.029], [0.043, 0.269], [-0.097, 0.269], [-0.097, 0.029],
+        ],
+        "materials": [unit_definition],
+        "materialGroups": [
+            {"materialId": unit_definition["id"], "start": 0, "count": 12},
+        ],
+        "skeleton": [{"id": "root", "restPosition": [0, 0, 0], "constraints": {}}],
+        "metadata": {"fixture": "two-modeled-unit-local-metre-uv-frames"},
+    }
+    unit_mesh = geometry_probe.create_mesh(unit_asset, None, output)
+    unit_mesh.name = "modeled-paving-unit-local-uv-witness"
+    unit_material = unit_mesh.data.materials[0]
+    unit_report = json.loads(unit_material["videoer_texture_report"])
+    expected_unit_mapping = {
+        "kind": "unit-local-uv-meters-physical",
+        "orientation": "unit-local-uv-meters",
+        "offsetMeters": [0.035, -0.02],
+        "rotationDegrees": 15,
+        "blendSharpness": 4.0,
+        "planes": {"uv": {"axes": ["U", "V"], "scale": [2.0, 4.0]}},
+    }
+    if unit_report["mapping"] != expected_unit_mapping:
+        raise RuntimeError(
+            f"Unit-local metre UV application was not consumed exactly: {unit_report['mapping']}"
+        )
+    if unit_report["application"]["constructionDomain"] != "modeled-paving-unit":
+        raise RuntimeError("Modeled paving construction domain was not persisted in the report")
+    unit_uv_loops = [
+        tuple(round(value, 6) for value in loop.uv)
+        for loop in unit_mesh.data.uv_layers["UVMap"].data
+    ]
+    expected_uv_loops = [
+        tuple(unit_asset["uvs"][loop.vertex_index]) for loop in unit_mesh.data.loops
+    ]
+    if unit_uv_loops != expected_uv_loops:
+        raise RuntimeError(
+            f"Unit-local metre UV frames changed during Blender mesh creation: {unit_uv_loops}"
+        )
+    unit_nodes = unit_material.node_tree.nodes
+    synchronized_sources = {
+        unit_nodes[f"videoer-texture-{semantic}-uv"].inputs["Vector"].links[0].from_node.name
+        for semantic in semantics
+    }
+    if synchronized_sources != {"videoer-physical-uv-mapping"}:
+        raise RuntimeError(
+            f"Unit-local PBR channels do not share one registered mapping: {synchronized_sources}"
+        )
+    u_offset_source = unit_nodes["videoer-application-uv-u-offset"].inputs[0].links[0]
+    v_offset_source = unit_nodes["videoer-application-uv-v-offset"].inputs[0].links[0]
+    if {
+        u_offset_source.from_node.name, v_offset_source.from_node.name,
+    } != {"videoer-authored-uv-axes"}:
+        raise RuntimeError("Unit-local UV values were normalized instead of consumed as metres")
+    unit_live_placement = {
+        "uOffsetMeters": unit_nodes["videoer-application-uv-u-offset"].inputs[1].default_value,
+        "vOffsetMeters": unit_nodes["videoer-application-uv-v-offset"].inputs[1].default_value,
+        "rotationCosine": unit_nodes[
+            "videoer-application-uv-rotation-cosine"
+        ].inputs[1].default_value,
+        "rotationSine": unit_nodes[
+            "videoer-application-uv-rotation-sine"
+        ].inputs[1].default_value,
+        "sourceWidthMeters": unit_nodes[
+            "videoer-application-uv-u-source-scale"
+        ].inputs[1].default_value,
+        "sourceHeightMeters": unit_nodes[
+            "videoer-application-uv-v-source-scale"
+        ].inputs[1].default_value,
+    }
+    expected_unit_live = {
+        "uOffsetMeters": 0.035,
+        "vOffsetMeters": -0.02,
+        "rotationCosine": math.cos(math.radians(15)),
+        "rotationSine": math.sin(math.radians(15)),
+        "sourceWidthMeters": 0.5,
+        "sourceHeightMeters": 0.25,
+    }
+    if any(
+        abs(unit_live_placement[key] - expected) > 1e-6
+        for key, expected in expected_unit_live.items()
+    ):
+        raise RuntimeError(f"Unit-local live placement values are incorrect: {unit_live_placement}")
+
+    joint_definition = copy.deepcopy(definition)
+    joint_definition["id"] = "probe-material-paving-joint-substrate"
+    joint_maps = joint_definition["surface"]["textureMaps"]
+    joint_maps["suitability"]["intendedConstructionDomains"] = [
+        "paving-joint-substrate"
+    ]
+    joint_application = joint_maps["application"]
+    joint_application["constructionDomain"] = "paving-joint-substrate"
+    joint_application["placement"]["orientation"] = "world-horizontal"
+    joint_material = geometry_probe.create_material(joint_definition, output)
+    joint_report = json.loads(joint_material["videoer_texture_report"])
+    if (
+        joint_report["application"]["constructionDomain"] != "paving-joint-substrate"
+        or joint_report["mapping"]["kind"] != "world-horizontal-physical"
+    ):
+        raise RuntimeError(f"Paving joint substrate mapping is incorrect: {joint_report}")
+
+    rejected_modeled_paving_world_mapping = False
+    invalid_modeled_orientation = copy.deepcopy(unit_definition)
+    invalid_modeled_orientation["id"] = "probe-material-modeled-paving-world-mapping"
+    invalid_modeled_orientation["surface"]["textureMaps"]["application"]["placement"][
+        "orientation"
+    ] = "world-horizontal"
+    try:
+        geometry_probe.create_material(invalid_modeled_orientation, output)
+    except RuntimeError:
+        rejected_modeled_paving_world_mapping = True
+    if not rejected_modeled_paving_world_mapping:
+        raise RuntimeError("Blender accepted modeled paving without unit-local metre UVs")
+
+    rejected_unit_local_domain = False
+    invalid_unit_domain = copy.deepcopy(unit_definition)
+    invalid_unit_domain["id"] = "probe-material-unit-local-prop"
+    invalid_unit_maps = invalid_unit_domain["surface"]["textureMaps"]
+    invalid_unit_maps["application"]["constructionDomain"] = "prop-surface"
+    invalid_unit_maps["suitability"]["intendedConstructionDomains"] = ["prop-surface"]
+    try:
+        geometry_probe.create_material(invalid_unit_domain, output)
+    except RuntimeError:
+        rejected_unit_local_domain = True
+    if not rejected_unit_local_domain:
+        raise RuntimeError("Blender accepted unit-local metre UVs on a non-modeled domain")
+
+    rejected_unit_local_source = False
+    invalid_unit_source = copy.deepcopy(unit_definition)
+    invalid_unit_source["id"] = "probe-material-unit-local-layout-scan"
+    invalid_unit_source["surface"]["textureMaps"]["suitability"][
+        "composition"
+    ] = "continuous-layout-scan"
+    try:
+        geometry_probe.create_material(invalid_unit_source, output)
+    except RuntimeError:
+        rejected_unit_local_source = True
+    if not rejected_unit_local_source:
+        raise RuntimeError("Blender accepted unit-local metre UVs with a non-homogeneous source")
+
+    rejected_joint_orientation = False
+    invalid_joint_orientation = copy.deepcopy(joint_definition)
+    invalid_joint_orientation["id"] = "probe-material-joint-uv-authored"
+    invalid_joint_orientation["surface"]["textureMaps"]["application"]["placement"][
+        "orientation"
+    ] = "uv-authored"
+    try:
+        geometry_probe.create_material(invalid_joint_orientation, output)
+    except RuntimeError:
+        rejected_joint_orientation = True
+    if not rejected_joint_orientation:
+        raise RuntimeError("Blender accepted a paving joint substrate without world-horizontal mapping")
+
+    rejected_joint_source = False
+    invalid_joint_source = copy.deepcopy(joint_definition)
+    invalid_joint_source["id"] = "probe-material-joint-layout-scan"
+    invalid_joint_source["surface"]["textureMaps"]["suitability"][
+        "composition"
+    ] = "continuous-layout-scan"
+    try:
+        geometry_probe.create_material(invalid_joint_source, output)
+    except RuntimeError:
+        rejected_joint_source = True
+    if not rejected_joint_source:
+        raise RuntimeError("Blender accepted a paving joint substrate with a layout scan")
+
+    rejected_unit_missing_uv = False
+    unit_missing_uv_asset = copy.deepcopy(unit_asset)
+    unit_missing_uv_asset["id"] = "geometry.modeled-paving-unit-missing-uv"
+    unit_missing_uv_asset["uvs"] = []
+    try:
+        geometry_probe.create_mesh(unit_missing_uv_asset, None, output)
+    except RuntimeError:
+        rejected_unit_missing_uv = True
+    if not rejected_unit_missing_uv:
+        raise RuntimeError("Blender accepted unit-local metre UV mapping without UVs")
+
     rejected_missing_application = False
     missing_application = copy.deepcopy(definition)
     missing_application["id"] = "probe-material-missing-application"
@@ -494,6 +695,12 @@ def main():
                 "failClosedChecks": {
                     "missingApplicationRejected": rejected_missing_application,
                     "missingUvRejected": rejected_missing_uv,
+                    "unitLocalMissingUvRejected": rejected_unit_missing_uv,
+                    "modeledPavingWorldMappingRejected": rejected_modeled_paving_world_mapping,
+                    "unitLocalInvalidDomainRejected": rejected_unit_local_domain,
+                    "unitLocalNonHomogeneousSourceRejected": rejected_unit_local_source,
+                    "jointSubstrateInvalidOrientationRejected": rejected_joint_orientation,
+                    "jointSubstrateInvalidSourceRejected": rejected_joint_source,
                     "missingTextureRejected": rejected_missing,
                     "hashMismatchRejected": rejected_hash,
                     "pathEscapeRejected": rejected_path_escape,
@@ -509,6 +716,11 @@ def main():
                     "verticalSeedOffset": vertical_seed_offset,
                     "macroScaleInverseMeters": horizontal_macro_scale,
                     "uvAuthored": uv_report["mapping"],
+                    "unitLocalUvMeters": unit_report["mapping"],
+                    "unitLocalUvFrames": unit_asset["uvs"],
+                    "unitLocalLivePlacement": unit_live_placement,
+                    "unitLocalSynchronizedPbrMappingSource": next(iter(synchronized_sources)),
+                    "pavingJointSubstrate": joint_report["mapping"],
                     "liveAppearanceAndMacro": live_application_values,
                     "livePlacement": live_placement_values,
                 },

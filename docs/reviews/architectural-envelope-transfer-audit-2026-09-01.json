@@ -10,13 +10,15 @@
     "historic-masonry-shopfront/verification/wet-night/contact-sheet.png",
     "historic-masonry-shopfront/verification/neutral-material-v2/contact-sheet.png",
     "historic-masonry-shopfront/verification/wet-material-v2/contact-sheet.png",
+    "historic-masonry-shopfront/verification/unit-aware-material-v5/contact-sheet.png",
     "contemporary-plaster-mixed-use/verification/neutral-diagnostic/contact-sheet.png",
     "contemporary-plaster-mixed-use/verification/neutral-textured/contact-sheet.png",
     "contemporary-plaster-mixed-use/verification/neutral-surface-suite/contact-sheet.png",
     "contemporary-plaster-mixed-use/verification/neutral-surface-suite-grey/contact-sheet.png",
     "contemporary-plaster-mixed-use/verification/wet-night/contact-sheet.png",
     "contemporary-plaster-mixed-use/verification/neutral-material-v2/contact-sheet.png",
-    "contemporary-plaster-mixed-use/verification/wet-material-v2/contact-sheet.png"
+    "contemporary-plaster-mixed-use/verification/wet-material-v2/contact-sheet.png",
+    "contemporary-plaster-mixed-use/verification/unit-aware-material-v5/contact-sheet.png"
   ],
   "acceptedStructuralEvidence": [
     "real facade apertures expose non-zero room depth",
@@ -37,6 +39,10 @@
     "texture placement now preserves declared physical scale, surface orientation, bounded adaptation and deterministic large-scale variation through the renderer boundary",
     "the wet-material probes prove a renderer-wide water-film response with darker base response, reduced roughness and a physically bounded clear coat rather than scene-specific gloss tuning",
     "physical paving units expose deterministic relief and joints",
+    "modeled paving now carries deterministic local-metre UV frames with spatially correlated source sampling, bounded per-unit jitter and construction-domain-safe material binding",
+    "unit, joint, substrate and border targets are disjoint and content-checked across TypeScript assembly and Blender consumption",
+    "coverage, skipped-boundary-span and minimum joint-plane clearance gates prevent missing edge cells and settled repair units from becoming hidden beneath the continuous joint bed",
+    "historic and contemporary unit-aware transfer probes remove the rejected photographed-layout-on-modeled-layout double structure and the unit-sized repair-paver holes without scene-specific geometry",
     "the canonical inset-window asset transfers without scaling into exact-contract openings in both host classes",
     "historic gable and contemporary parapet establish distinct roof massing",
     "historic sett scale is materially improved from the first rejected render"
@@ -50,6 +56,7 @@
     "Bricks094 appears only on the historic host surfaces assigned to the masonry domain and does not by itself resolve the flat primary facade",
     "Concrete034 gives the contemporary render real fine surface response but remains too uniform and clean for production acceptance",
     "the material-v2 neutral probes remain synthetic: the historic ground still shows repeated/doubled stone structure and the contemporary ground still exposes oversized units, broad bright joints and weak per-unit differentiation",
+    "the unit-aware probes remain rejected: the historic joint bed reads as pale graphic outlines, both hosts lack granular joint/substrate response and convincing multi-scale weathering, and contemporary pavers remain oversized and chalky",
     "upper-storey inhabited-room dressing remains too weak through canonical window glazing for a reliable visual depth claim",
     "interiors remain sparse witness rooms rather than production-dressed spaces",
     "facade materials and edges remain pristine, flat and blockout-quality",
@@ -62,13 +69,13 @@
   "nextGenericDependencies": [
     "texture-backed construction materials with correct joint-bed response",
     "semantic source-selection and per-host material adaptation that preserve provenance while avoiding layout-on-geometry conflicts",
-    "bounded per-instance texture orientation/offset and macro-colour variation over physically scaled microstructure",
-    "unit-aware paving materials that separate continuous substrate and joint beds from per-stone surface variation instead of projecting photographed layouts across modelled units",
+    "renderer-independent per-unit colour/roughness/weathering attributes over the accepted correlated local-metre sampling contract",
+    "granular joint/substrate materials, independent of modeled-unit surfaces, with credible depth, dirt and water response",
     "receiver-aware wetness with slope, drainage, shelter, edge accumulation and puddle masks rather than one uniform film amount",
     "texture-backed host-specific construction finishes for the assembled aperture modules",
     "stronger production interior dressing and upper-window depth readability",
     "construction-visible reveals, sills, lintels, trim and facade edge weathering",
     "environment-backed atmosphere and receiver-aware rain integration"
   ],
-  "notes": "Reusable structural-transfer evidence only; no benchmark-specific tuning and no library acceptance. This audit tranche is evidence-saturated: it established reusable suitability, placement/adaptation and wet-response contracts, and it localized the remaining failure to construction geometry, unit-aware substrates, weathering, interior density and atmosphere. Further tuning of these two scenes is not justified until one of those shared subsystems materially advances."
+  "notes": "Reusable structural-transfer evidence only; no benchmark-specific tuning and no library acceptance. The unit-aware paving tranche materially advanced the shared subsystem: local-metre sampling, construction-safe binding, coverage and visibility invariants now transfer across both hosts. Visual acceptance remains rejected and the remaining paving failure is localized to granular joint/substrate response, per-unit and macro weathering, oversized contemporary construction, and receiver-aware water. Further scene-local tuning is not justified."
 }

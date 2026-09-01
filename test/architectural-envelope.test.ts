@@ -107,6 +107,36 @@ describe('irregular paving grammar', () => {
     expect(first.report.stoneCount).toBeGreaterThan(180);
     expect(first.report.courseCount).toBeGreaterThan(8);
     expect(first.report.uniqueFootprintSignatures).toBeGreaterThan(first.report.stoneCount * 0.8);
+    expect(first.report.uniqueSurfaceFrameSignatures).toBeGreaterThan(
+      first.report.stoneCount * 0.95,
+    );
+    expect(first.report.unitPlanCoverageRatio).toBeGreaterThanOrEqual(
+      first.definition.joints.minimumUnitCoverageRatio,
+    );
+    expect(first.report.maximumSkippedCellSpanMeters).toBeLessThanOrEqual(
+      first.definition.joints.maximumUnfilledSpanMeters,
+    );
+    expect(first.report.minimumObservedUnitClearanceMeters).toBeGreaterThanOrEqual(
+      first.definition.joints.minimumUnitClearanceMeters,
+    );
+    expect(
+      first.report.stones.every((stone) => stone.surfaceFrame.kind === 'unit-local-uv-meters'),
+    ).toBe(true);
+    expect(first.report.surfaceMaterialTargets).toEqual({
+      modeledUnits: [
+        'dark-repair-stone',
+        'warm-repair-stone',
+        'wet-granite-a',
+        'wet-granite-b',
+        'wet-granite-c',
+      ],
+      continuousJoint: 'dark-grit-joint',
+      continuousSubstrate: 'compacted-paving-substrate',
+      borders: ['dark-stone-gutter', 'granite-kerb'],
+    });
+    expect(first.geometry.metadata.surfaceMaterialTargets).toEqual(
+      first.report.surfaceMaterialTargets,
+    );
     expect(first.report.settlementRangeMeters[1]).toBeGreaterThan(
       first.report.settlementRangeMeters[0],
     );
@@ -122,6 +152,28 @@ describe('irregular paving grammar', () => {
     expect(query.query(12, -2.5)).toBeUndefined();
   });
 
+  it('changes only unit-local surface sampling when the independent sampling seed changes', () => {
+    const definition = createHistoricSettPavingDefinition();
+    const changedSampling = structuredClone(definition);
+    changedSampling.surfaceSampling.seed += 1;
+    const first = compileIrregularPaving(definition);
+    const changed = compileIrregularPaving(changedSampling);
+
+    expect(changed.geometry.positions).toEqual(first.geometry.positions);
+    expect(changed.geometry.indices).toEqual(first.geometry.indices);
+    expect(changed.geometry.materialGroups).toEqual(first.geometry.materialGroups);
+    expect(changed.geometry.uvs).not.toEqual(first.geometry.uvs);
+    expect(changed.report.stones.map((stone) => stone.surfaceFrame)).not.toEqual(
+      first.report.stones.map((stone) => stone.surfaceFrame),
+    );
+    expect(changed.report.stones.map((stone) => ({ ...stone, surfaceFrame: undefined }))).toEqual(
+      first.report.stones.map((stone) => ({ ...stone, surfaceFrame: undefined })),
+    );
+    expect(
+      changed.geometry.uvs?.every((uv) => uv.every((component) => Number.isFinite(component))),
+    ).toBe(true);
+  });
+
   it('transfers the same compiler across historic setts and contemporary pavers', () => {
     const historic = compileIrregularPaving(createHistoricSettPavingDefinition());
     const contemporary = compileIrregularPaving(createContemporaryPaverDefinition());
@@ -132,6 +184,15 @@ describe('irregular paving grammar', () => {
     expect(contemporary.definition.units.profile).toBe('irregular-paver');
     expect(historic.report.deterministicSha256).not.toBe(contemporary.report.deterministicSha256);
     expect(contemporary.report.repairPatchStoneCounts['utility-reinstatement']).toBeGreaterThan(0);
+    expect(contemporary.report.unitPlanCoverageRatio).toBeGreaterThanOrEqual(
+      contemporary.definition.joints.minimumUnitCoverageRatio,
+    );
+    expect(contemporary.report.maximumSkippedCellSpanMeters).toBeLessThanOrEqual(
+      contemporary.definition.joints.maximumUnfilledSpanMeters,
+    );
+    expect(contemporary.report.minimumObservedUnitClearanceMeters).toBeGreaterThanOrEqual(
+      contemporary.definition.joints.minimumUnitClearanceMeters,
+    );
     expect(contemporary.geometry.attachments['channel-outfall']).toBeDefined();
     expect(historic.geometry.attachments['gutter-outfall']).toBeDefined();
     expect(
@@ -161,5 +222,18 @@ describe('irregular paving grammar', () => {
     impossibleJoint.joints.widthMeters = 0.08;
     impossibleJoint.units.nominalLengthMeters = 0.12;
     expect(irregularPavingDefinitionSchema.safeParse(impossibleJoint).success).toBe(false);
+
+    const impossibleCoverage = structuredClone(createContemporaryPaverDefinition());
+    impossibleCoverage.joints.minimumUnitCoverageRatio = 0.99;
+    expect(() => compileIrregularPaving(impossibleCoverage)).toThrow(/coverage/u);
+
+    const hiddenRepairUnits = structuredClone(createContemporaryPaverDefinition());
+    hiddenRepairUnits.repairPatches[0]!.settlementBiasMeters = -0.02;
+    expect(() => compileIrregularPaving(hiddenRepairUnits)).toThrow(/clearance/u);
+
+    const overlappingSurfaceTarget = structuredClone(createHistoricSettPavingDefinition());
+    overlappingSurfaceTarget.materials.substrateId =
+      overlappingSurfaceTarget.materials.stoneIds[0]!;
+    expect(irregularPavingDefinitionSchema.safeParse(overlappingSurfaceTarget).success).toBe(false);
   });
 });

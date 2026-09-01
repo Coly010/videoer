@@ -42,9 +42,30 @@ export const irregularPavingDefinitionSchema = z
       chipProbability: z.number().min(0).max(0.8),
       maximumChipDepthMeters: z.number().min(0).max(0.025),
     }),
+    surfaceSampling: z.object({
+      kind: z.literal('deterministic-unit-local-uv-meters'),
+      seed: z.number().int(),
+      offsetPeriodMeters: z.tuple([
+        z.number().positive().max(1_000),
+        z.number().positive().max(1_000),
+      ]),
+      correlationLengthMeters: z.number().positive().max(1_000),
+      unitJitterMeters: z.tuple([
+        z.number().nonnegative().max(100),
+        z.number().nonnegative().max(100),
+      ]),
+      rotationChoicesDegrees: z
+        .array(z.number().finite().min(-180).max(180))
+        .min(1)
+        .max(16)
+        .refine((values) => new Set(values).size === values.length, 'rotations must be unique'),
+    }),
     joints: z.object({
       widthMeters: z.number().min(0.003).max(0.08),
       depthMeters: z.number().min(0.002).max(0.08),
+      minimumUnitCoverageRatio: z.number().min(0.7).max(0.99),
+      maximumUnfilledSpanMeters: z.number().min(0).max(0.08),
+      minimumUnitClearanceMeters: z.number().min(0.0005).max(0.02),
       materialId: localIdentifier,
     }),
     borders: z
@@ -119,6 +140,16 @@ export const irregularPavingDefinitionSchema = z
         path: ['units', 'maximumChipDepthMeters'],
         message: 'chip depth must not exceed the chamfer',
       });
+    for (const axis of [0, 1] as const)
+      if (
+        definition.surfaceSampling.unitJitterMeters[axis] * 2 >=
+        definition.surfaceSampling.offsetPeriodMeters[axis]
+      )
+        context.addIssue({
+          code: 'custom',
+          path: ['surfaceSampling', 'unitJitterMeters', axis],
+          message: 'unit jitter must remain below half the sampling period',
+        });
     if (Math.hypot(...definition.drainage.fall) < 1e-8)
       context.addIssue({
         code: 'custom',
@@ -175,6 +206,28 @@ export const irregularPavingDefinitionSchema = z
           path: ['drainage', 'wetReceiverMaterialIds', index],
           message: `unknown wet receiver material '${materialId}'`,
         });
+    const materialTargets = new Map<string, Set<string>>();
+    const recordTarget = (materialId: string, target: string) => {
+      const targets = materialTargets.get(materialId) ?? new Set<string>();
+      targets.add(target);
+      materialTargets.set(materialId, targets);
+    };
+    for (const materialId of [
+      ...definition.materials.stoneIds,
+      ...definition.repairPatches.flatMap((patch) => patch.materialIds),
+    ])
+      recordTarget(materialId, 'modeledUnits');
+    recordTarget(definition.joints.materialId, 'continuousJoint');
+    recordTarget(definition.materials.substrateId, 'continuousSubstrate');
+    for (const materialId of definition.borders.map((border) => border.materialId))
+      recordTarget(materialId, 'borders');
+    for (const [materialId, targets] of materialTargets)
+      if (targets.size > 1)
+        context.addIssue({
+          code: 'custom',
+          path: ['materials'],
+          message: `surface material '${materialId}' overlaps targets: ${[...targets].join(', ')}`,
+        });
   });
 
 export type IrregularPavingDefinition = z.infer<typeof irregularPavingDefinitionSchema>;
@@ -184,6 +237,38 @@ interface Point2 {
   x: number;
   z: number;
 }
+
+interface UnitSurfaceFrame {
+  kind: 'unit-local-uv-meters';
+  offsetMeters: [number, number];
+  rotationDegrees: number;
+  batchCell: [number, number];
+}
+
+export const pavingSurfaceMaterialTargetsSchema = z
+  .object({
+    modeledUnits: z.array(localIdentifier).min(1),
+    continuousJoint: localIdentifier,
+    continuousSubstrate: localIdentifier,
+    borders: z.array(localIdentifier),
+  })
+  .superRefine((targets, context) => {
+    const groups = [
+      targets.modeledUnits,
+      [targets.continuousJoint],
+      [targets.continuousSubstrate],
+      targets.borders,
+    ];
+    const all = groups.flat();
+    if (new Set(all).size !== all.length)
+      context.addIssue({
+        code: 'custom',
+        path: [],
+        message: 'paving surface material targets must be mutually disjoint',
+      });
+  });
+
+export type PavingSurfaceMaterialTargets = z.infer<typeof pavingSurfaceMaterialTargetsSchema>;
 
 interface StoneEvidence {
   id: string;
@@ -197,6 +282,9 @@ interface StoneEvidence {
   tiltDegrees: [number, number];
   repairPatchId?: string;
   chipped: boolean;
+  planAreaSquareMeters: number;
+  minimumTopY: number;
+  surfaceFrame: UnitSurfaceFrame;
 }
 
 export interface IrregularPavingReport {
@@ -207,12 +295,18 @@ export interface IrregularPavingReport {
   stoneCount: number;
   courseCount: number;
   uniqueFootprintSignatures: number;
+  uniqueSurfaceFrameSignatures: number;
+  unitPlanCoverageRatio: number;
+  skippedCellCount: number;
+  maximumSkippedCellSpanMeters: number;
+  minimumObservedUnitClearanceMeters: number;
   settlementRangeMeters: [number, number];
   maximumObservedStepMeters: number;
   maximumObservedTiltDegrees: number;
   repairPatchStoneCounts: Record<string, number>;
   supportQueryCoverage: { samples: number; hits: number };
   wetReceiverMaterialIds: string[];
+  surfaceMaterialTargets: PavingSurfaceMaterialTargets;
   stones: StoneEvidence[];
 }
 
@@ -222,6 +316,79 @@ function deterministicRandom(seed: number) {
     state = (state * 1664525 + 1013904223) >>> 0;
     return state / 0x1_0000_0000;
   };
+}
+
+function surfaceFrameForUnit(
+  definition: IrregularPavingDefinition,
+  unitId: string,
+  centre: Point2,
+): UnitSurfaceFrame {
+  const sample = (label: string) =>
+    createHash('sha256')
+      .update(`${definition.surfaceSampling.seed}:${label}`)
+      .digest()
+      .readUInt32BE(0) /
+    0x1_0000_0000;
+  const correlation = definition.surfaceSampling.correlationLengthMeters;
+  const gridX = Math.floor(centre.x / correlation);
+  const gridZ = Math.floor(centre.z / correlation);
+  const smooth = (value: number) => value * value * (3 - 2 * value);
+  const tx = smooth(centre.x / correlation - gridX);
+  const tz = smooth(centre.z / correlation - gridZ);
+  const mix = (left: number, right: number, amount: number) =>
+    left + (right - left) * amount;
+  const correlatedSample = (channel: number) => {
+    const lower = mix(
+      sample(`batch:${channel}:${gridX}:${gridZ}`),
+      sample(`batch:${channel}:${gridX + 1}:${gridZ}`),
+      tx,
+    );
+    const upper = mix(
+      sample(`batch:${channel}:${gridX}:${gridZ + 1}`),
+      sample(`batch:${channel}:${gridX + 1}:${gridZ + 1}`),
+      tx,
+    );
+    return mix(lower, upper, tz);
+  };
+  const wrap = (value: number, period: number) => ((value % period) + period) % period;
+  const rotationIndex =
+    Math.floor(sample(`unit:${unitId}:rotation`) * 0x1_0000_0000) %
+    definition.surfaceSampling.rotationChoicesDegrees.length;
+  return {
+    kind: 'unit-local-uv-meters',
+    offsetMeters: [
+      wrap(
+        correlatedSample(0) * definition.surfaceSampling.offsetPeriodMeters[0] +
+          (sample(`unit:${unitId}:u`) * 2 - 1) *
+            definition.surfaceSampling.unitJitterMeters[0],
+        definition.surfaceSampling.offsetPeriodMeters[0],
+      ),
+      wrap(
+        correlatedSample(1) * definition.surfaceSampling.offsetPeriodMeters[1] +
+          (sample(`unit:${unitId}:v`) * 2 - 1) *
+            definition.surfaceSampling.unitJitterMeters[1],
+        definition.surfaceSampling.offsetPeriodMeters[1],
+      ),
+    ],
+    rotationDegrees: definition.surfaceSampling.rotationChoicesDegrees[rotationIndex]!,
+    batchCell: [gridX, gridZ],
+  };
+}
+
+function surfaceMaterialTargets(
+  definition: IrregularPavingDefinition,
+): PavingSurfaceMaterialTargets {
+  return pavingSurfaceMaterialTargetsSchema.parse({
+    modeledUnits: [
+      ...new Set([
+        ...definition.materials.stoneIds,
+        ...definition.repairPatches.flatMap((patch) => patch.materialIds),
+      ]),
+    ].sort(),
+    continuousJoint: definition.joints.materialId,
+    continuousSubstrate: definition.materials.substrateId,
+    borders: [...new Set(definition.borders.map((border) => border.materialId))].sort(),
+  });
 }
 
 function normal(a: Vec3, b: Vec3, c: Vec3): Vec3 {
@@ -236,6 +403,16 @@ function normal(a: Vec3, b: Vec3, c: Vec3): Vec3 {
   return length > 1e-12 ? [value[0] / length, value[1] / length, value[2] / length] : [0, 1, 0];
 }
 
+function planAreaSquareMeters(plan: Point2[]) {
+  let twiceArea = 0;
+  for (let index = 0; index < plan.length; index++) {
+    const current = plan[index]!;
+    const next = plan[(index + 1) % plan.length]!;
+    twiceArea += current.x * next.z - next.x * current.z;
+  }
+  return Math.abs(twiceArea) * 0.5;
+}
+
 function pavingStonePart(options: {
   plan: Point2[];
   centre: Point2;
@@ -244,8 +421,20 @@ function pavingStonePart(options: {
   chamferMeters: number;
   tiltRadians: [number, number];
   materialId: string;
+  geometryYawRadians: number;
+  surfaceFrame: UnitSurfaceFrame;
 }): MeshPart {
-  const { plan, centre, bottomY, topY, chamferMeters, tiltRadians, materialId } = options;
+  const {
+    plan,
+    centre,
+    bottomY,
+    topY,
+    chamferMeters,
+    tiltRadians,
+    materialId,
+    geometryYawRadians,
+    surfaceFrame,
+  } = options;
   const averageRadius =
     plan.reduce((sum, point) => sum + Math.hypot(point.x - centre.x, point.z - centre.z), 0) /
     plan.length;
@@ -264,6 +453,23 @@ function pavingStonePart(options: {
   const indices: number[] = [];
   const skinIndices: Vec4[] = [];
   const skinWeights: Vec4[] = [];
+  const surfaceUv = (uMeters: number, vMeters: number): [number, number] => {
+    const rotation = (surfaceFrame.rotationDegrees * Math.PI) / 180;
+    const cosine = Math.cos(rotation);
+    const sine = Math.sin(rotation);
+    return [
+      surfaceFrame.offsetMeters[0] + uMeters * cosine - vMeters * sine,
+      surfaceFrame.offsetMeters[1] + uMeters * sine + vMeters * cosine,
+    ];
+  };
+  const planUv = (point: Point2): [number, number] => {
+    const x = point.x - centre.x;
+    const z = point.z - centre.z;
+    return surfaceUv(
+      x * Math.cos(geometryYawRadians) + z * Math.sin(geometryYawRadians),
+      -x * Math.sin(geometryYawRadians) + z * Math.cos(geometryYawRadians),
+    );
+  };
   const vertex = (position: Vec3, faceNormal: Vec3, uv: [number, number]) => {
     positions.push(position);
     normals.push(faceNormal);
@@ -272,26 +478,41 @@ function pavingStonePart(options: {
     skinWeights.push([1, 0, 0, 0]);
     return positions.length - 1;
   };
-  const quad = (a: Vec3, b: Vec3, c: Vec3, d: Vec3) => {
+  const quad = (
+    a: Vec3,
+    b: Vec3,
+    c: Vec3,
+    d: Vec3,
+    faceUvs: [[number, number], [number, number], [number, number], [number, number]],
+  ) => {
     const faceNormal = normal(a, b, c);
     const start = positions.length;
-    vertex(a, faceNormal, [0, 0]);
-    vertex(b, faceNormal, [1, 0]);
-    vertex(c, faceNormal, [1, 1]);
-    vertex(d, faceNormal, [0, 1]);
+    vertex(a, faceNormal, faceUvs[0]);
+    vertex(b, faceNormal, faceUvs[1]);
+    vertex(c, faceNormal, faceUvs[2]);
+    vertex(d, faceNormal, faceUvs[3]);
     indices.push(start, start + 1, start + 2, start, start + 2, start + 3);
   };
+  let perimeterMeters = 0;
   for (let index = 0; index < plan.length; index++) {
     const next = (index + 1) % plan.length;
     const a = plan[index]!;
     const b = plan[next]!;
     const at = topAt(a);
     const bt = topAt(b);
+    const edgeMeters = Math.hypot(b.x - a.x, b.z - a.z);
+    const nextPerimeterMeters = perimeterMeters + edgeMeters;
     quad(
       [a.x, bottomY, a.z],
       [b.x, bottomY, b.z],
       [b.x, bt - chamferMeters, b.z],
       [a.x, at - chamferMeters, a.z],
+      [
+        surfaceUv(perimeterMeters, 0),
+        surfaceUv(nextPerimeterMeters, 0),
+        surfaceUv(nextPerimeterMeters, bt - chamferMeters - bottomY),
+        surfaceUv(perimeterMeters, at - chamferMeters - bottomY),
+      ],
     );
     const ta = topPlan[index]!;
     const tb = topPlan[next]!;
@@ -300,7 +521,14 @@ function pavingStonePart(options: {
       [b.x, bt - chamferMeters, b.z],
       [tb.x, topAt(tb), tb.z],
       [ta.x, topAt(ta), ta.z],
+      [
+        surfaceUv(perimeterMeters, at - chamferMeters - bottomY),
+        surfaceUv(nextPerimeterMeters, bt - chamferMeters - bottomY),
+        surfaceUv(nextPerimeterMeters, topAt(tb) - bottomY),
+        surfaceUv(perimeterMeters, topAt(ta) - bottomY),
+      ],
     );
+    perimeterMeters = nextPerimeterMeters;
   }
   const topNormal = normal(
     [topPlan[0]!.x, topAt(topPlan[0]!), topPlan[0]!.z],
@@ -309,12 +537,12 @@ function pavingStonePart(options: {
   );
   const topStart = positions.length;
   for (const point of topPlan)
-    vertex([point.x, topAt(point), point.z], topNormal, [point.x, point.z]);
+    vertex([point.x, topAt(point), point.z], topNormal, planUv(point));
   for (let index = 1; index < topPlan.length - 1; index++)
     indices.push(topStart, topStart + index, topStart + index + 1);
   const bottomStart = positions.length;
   for (const point of [...plan].reverse())
-    vertex([point.x, bottomY, point.z], [0, -1, 0], [point.x, point.z]);
+    vertex([point.x, bottomY, point.z], [0, -1, 0], planUv(point));
   for (let index = 1; index < plan.length - 1; index++)
     indices.push(bottomStart, bottomStart + index, bottomStart + index + 1);
   return { positions, normals, uvs, indices, skinIndices, skinWeights, materialId };
@@ -394,6 +622,7 @@ function borderPart(
   const centre = { x: (bounds[0] + bounds[1]) * 0.5, z: (bounds[2] + bounds[3]) * 0.5 };
   const fall = (border.fallDegrees * Math.PI) / 180;
   const tilt: [number, number] = border.side.endsWith('x') ? [fall, 0] : [0, fall];
+  const geometryYawRadians = border.side.endsWith('x') ? Math.PI / 2 : 0;
   return pavingStonePart({
     plan: [
       { x: bounds[0], z: bounds[2] },
@@ -407,6 +636,8 @@ function borderPart(
     chamferMeters: Math.min(0.012, border.widthMeters * 0.08),
     tiltRadians: tilt,
     materialId: border.materialId,
+    geometryYawRadians,
+    surfaceFrame: surfaceFrameForUnit(definition, `border-${border.id}`, centre),
   });
 }
 
@@ -443,7 +674,9 @@ export function compileIrregularPaving(input: IrregularPavingDefinitionInput): {
       definition.joints.materialId,
     ),
   ];
+  const materialTargets = surfaceMaterialTargets(definition);
   const stones: StoneEvidence[] = [];
+  const skippedCellSpans: number[] = [];
   let course = 0;
   let cursorV = minimumV;
   while (cursorV < maximumV - 1e-6) {
@@ -451,7 +684,15 @@ export function compileIrregularPaving(input: IrregularPavingDefinitionInput): {
       definition.courses.nominalWidthMeters *
         (1 + (random() * 2 - 1) * definition.courses.widthVariation) +
       (random() * 2 - 1) * definition.courses.edgeJitterMeters;
-    const courseMaximumV = Math.min(maximumV, cursorV + variedCourseWidth);
+    const proposedCourseMaximumV = cursorV + variedCourseWidth;
+    const remainingCourseWidth = maximumV - proposedCourseMaximumV;
+    const minimumPartialCourseWidth = definition.courses.nominalWidthMeters * 0.25;
+    const courseMaximumV = Math.min(
+      maximumV,
+      remainingCourseWidth > 0 && remainingCourseWidth < minimumPartialCourseWidth
+        ? maximumV
+        : proposedCourseMaximumV,
+    );
     const cellWidth = courseMaximumV - cursorV;
     const stagger =
       course % 2 === 1
@@ -463,20 +704,40 @@ export function compileIrregularPaving(input: IrregularPavingDefinitionInput): {
       const cellLength =
         definition.units.nominalLengthMeters *
         (1 + (random() * 2 - 1) * definition.units.lengthVariation);
+      const minimumPartialLength = definition.units.nominalLengthMeters * 0.25;
+      if (
+        cursorU < minimumU &&
+        cursorU + cellLength - minimumU < minimumPartialLength
+      )
+        cursorU = minimumU;
       const cellMinimumU = Math.max(minimumU, cursorU);
-      const cellMaximumU = Math.min(maximumU, cursorU + cellLength);
+      const proposedCellMaximumU = cursorU + cellLength;
+      const remainingCellLength = maximumU - proposedCellMaximumU;
+      const cellMaximumU = Math.min(
+        maximumU,
+        remainingCellLength > 0 && remainingCellLength < minimumPartialLength
+          ? maximumU
+          : proposedCellMaximumU,
+      );
       const availableLength = cellMaximumU - cellMinimumU - definition.joints.widthMeters;
       const availableWidth = cellWidth - definition.joints.widthMeters;
+      // Boundary-clipped courses may legitimately expose a narrow cut unit. Rejecting them with
+      // the interior-unit threshold left long open strips at staggered field edges. Interior cells
+      // remain full-sized by construction; this lower bound exists only to avoid degenerate cuts.
+      const minimumCutDimension = Math.min(definition.joints.widthMeters * 0.5, 0.004);
       if (
-        availableLength > definition.joints.widthMeters * 1.5 &&
-        availableWidth > definition.joints.widthMeters * 1.5
+        availableLength > minimumCutDimension &&
+        availableWidth > minimumCutDimension
       ) {
         const centreU = (cellMinimumU + cellMaximumU) * 0.5;
         const centreV = (cursorV + courseMaximumV) * 0.5;
         const centre: Point2 = alongX ? { x: centreU, z: centreV } : { x: centreV, z: centreU };
-        const widthMultiplier = 1 + (random() * 2 - 1) * definition.units.widthVariation;
-        const rawHalfLength = availableLength * 0.5 * Math.min(1, widthMultiplier + 0.08);
-        const rawHalfWidth = availableWidth * 0.5 * Math.min(1, widthMultiplier);
+        // Course width and cell length already carry the physical dimension variation. Shrinking
+        // both axes again created unit-sized exposed bed patches instead of plausible joints.
+        // Keep the complete joint-bounded cell coverage and express the remaining per-unit width
+        // character through the irregular edge profile.
+        const rawHalfLength = availableLength * 0.5;
+        const rawHalfWidth = availableWidth * 0.5;
         const yawDegrees = (random() * 2 - 1) * definition.units.yawVariationDegrees;
         const yawRadians = (yawDegrees * Math.PI) / 180;
         const cosine = Math.abs(Math.cos(yawRadians));
@@ -503,27 +764,48 @@ export function compileIrregularPaving(input: IrregularPavingDefinitionInput): {
         const materialId = materialPool[Math.floor(random() * materialPool.length)]!;
         const chipped = random() < definition.units.chipProbability;
         const chipDepth = chipped ? random() * definition.units.maximumChipDepthMeters : 0;
+        const stoneId = `stone-${course}-${unit}`;
+        const geometryYawRadians = yawRadians + (alongX ? 0 : Math.PI / 2);
+        const surfaceFrame = surfaceFrameForUnit(definition, stoneId, centre);
         const plan = irregularPlan(
           centre,
           halfLength,
           halfWidth,
-          yawRadians + (alongX ? 0 : Math.PI / 2),
-          definition.units.cornerJitterMeters + chipDepth,
+          geometryYawRadians,
+          definition.units.cornerJitterMeters *
+            (1 + (random() * 2 - 1) * definition.units.widthVariation) +
+            chipDepth,
           random,
+        );
+        const stoneTopY =
+          definition.baseY + settlement + (repairPatch?.settlementBiasMeters ?? 0);
+        const tiltRadians: [number, number] = [
+          (tiltDegrees[0] * Math.PI) / 180,
+          (tiltDegrees[1] * Math.PI) / 180,
+        ];
+        const minimumTopY = Math.min(
+          ...plan.map(
+            (point) =>
+              stoneTopY +
+              Math.tan(tiltRadians[0]) * (point.x - centre.x) +
+              Math.tan(tiltRadians[1]) * (point.z - centre.z),
+          ),
         );
         parts.push(
           pavingStonePart({
             plan,
             centre,
             bottomY: definition.baseY - definition.units.heightMeters,
-            topY: definition.baseY + settlement + (repairPatch?.settlementBiasMeters ?? 0),
+            topY: stoneTopY,
             chamferMeters: definition.units.chamferMeters,
-            tiltRadians: [(tiltDegrees[0] * Math.PI) / 180, (tiltDegrees[1] * Math.PI) / 180],
+            tiltRadians,
             materialId,
+            geometryYawRadians,
+            surfaceFrame,
           }),
         );
         stones.push({
-          id: `stone-${course}-${unit}`,
+          id: stoneId,
           course,
           materialId,
           centre: centreTuple,
@@ -534,7 +816,12 @@ export function compileIrregularPaving(input: IrregularPavingDefinitionInput): {
           tiltDegrees,
           ...(repairPatch ? { repairPatchId: repairPatch.id } : {}),
           chipped,
+          planAreaSquareMeters: planAreaSquareMeters(plan),
+          minimumTopY,
+          surfaceFrame,
         });
+      } else {
+        skippedCellSpans.push(Math.max(0, cellMaximumU - cellMinimumU));
       }
       cursorU += cellLength;
       unit += 1;
@@ -548,9 +835,10 @@ export function compileIrregularPaving(input: IrregularPavingDefinitionInput): {
     parts,
     [{ id: 'root', restPosition: [0, 0, 0], constraints: {} }],
     {
-      generator: 'videoer.irregular-paving.v1',
+      generator: 'videoer.irregular-paving.v2',
       definition,
       stones,
+      surfaceMaterialTargets: materialTargets,
       wetReceiverMaterialIds: definition.drainage.wetReceiverMaterialIds,
     },
   );
@@ -612,6 +900,17 @@ export function compileIrregularPaving(input: IrregularPavingDefinitionInput): {
         .join(':'),
     ),
   );
+  const surfaceFrameSignatures = new Set(
+    stones.map((stone) =>
+      [
+        stone.surfaceFrame.offsetMeters[0],
+        stone.surfaceFrame.offsetMeters[1],
+        stone.surfaceFrame.rotationDegrees,
+        stone.surfaceFrame.batchCell[0],
+        stone.surfaceFrame.batchCell[1],
+      ].join(':'),
+    ),
+  );
   const maximumObservedStepMeters =
     settlements.length > 0 ? Math.max(...settlements) - Math.min(...settlements) : 0;
   const repairPatchStoneCounts = Object.fromEntries(
@@ -620,6 +919,27 @@ export function compileIrregularPaving(input: IrregularPavingDefinitionInput): {
       stones.filter((stone) => stone.repairPatchId === patch.id).length,
     ]),
   );
+  const boundaryAreaSquareMeters = (maximumX - minimumX) * (maximumZ - minimumZ);
+  const unitPlanCoverageRatio =
+    stones.reduce((sum, stone) => sum + stone.planAreaSquareMeters, 0) /
+    boundaryAreaSquareMeters;
+  if (unitPlanCoverageRatio < definition.joints.minimumUnitCoverageRatio)
+    throw new Error(
+      `Paving unit coverage ${unitPlanCoverageRatio.toFixed(4)} is below the declared minimum ${definition.joints.minimumUnitCoverageRatio.toFixed(4)}`,
+    );
+  const maximumSkippedCellSpanMeters = Math.max(0, ...skippedCellSpans);
+  if (maximumSkippedCellSpanMeters > definition.joints.maximumUnfilledSpanMeters)
+    throw new Error(
+      `Paving contains an unfilled cell span of ${maximumSkippedCellSpanMeters.toFixed(4)}m, above the declared maximum ${definition.joints.maximumUnfilledSpanMeters.toFixed(4)}m`,
+    );
+  const jointSurfaceY = definition.baseY - definition.joints.depthMeters;
+  const minimumObservedUnitClearanceMeters = Math.min(
+    ...stones.map((stone) => stone.minimumTopY - jointSurfaceY),
+  );
+  if (minimumObservedUnitClearanceMeters < definition.joints.minimumUnitClearanceMeters)
+    throw new Error(
+      `Paving unit clearance ${minimumObservedUnitClearanceMeters.toFixed(4)}m is below the declared joint-surface minimum ${definition.joints.minimumUnitClearanceMeters.toFixed(4)}m`,
+    );
   const digestInput = JSON.stringify({ definition, geometry, supportGeometry });
   const report: IrregularPavingReport = {
     definitionId: definition.id,
@@ -629,6 +949,11 @@ export function compileIrregularPaving(input: IrregularPavingDefinitionInput): {
     stoneCount: stones.length,
     courseCount: course,
     uniqueFootprintSignatures: signatures.size,
+    uniqueSurfaceFrameSignatures: surfaceFrameSignatures.size,
+    unitPlanCoverageRatio,
+    skippedCellCount: skippedCellSpans.length,
+    maximumSkippedCellSpanMeters,
+    minimumObservedUnitClearanceMeters,
     settlementRangeMeters: settlements.length
       ? [Math.min(...settlements), Math.max(...settlements)]
       : [0, 0],
@@ -640,6 +965,7 @@ export function compileIrregularPaving(input: IrregularPavingDefinitionInput): {
     repairPatchStoneCounts,
     supportQueryCoverage: { samples: supportSamples, hits: supportHits },
     wetReceiverMaterialIds: definition.drainage.wetReceiverMaterialIds,
+    surfaceMaterialTargets: materialTargets,
     stones,
   };
   return { definition, geometry, supportGeometry, report };
@@ -674,7 +1000,22 @@ export function createHistoricSettPavingDefinition(): IrregularPavingDefinition 
       chipProbability: 0.22,
       maximumChipDepthMeters: 0.004,
     },
-    joints: { widthMeters: 0.01, depthMeters: 0.006, materialId: 'dark-grit-joint' },
+    surfaceSampling: {
+      kind: 'deterministic-unit-local-uv-meters',
+      seed: 31_847,
+      offsetPeriodMeters: [17, 19],
+      correlationLengthMeters: 1.4,
+      unitJitterMeters: [0.18, 0.18],
+      rotationChoicesDegrees: [0, 90, 180, -90],
+    },
+    joints: {
+      widthMeters: 0.01,
+      depthMeters: 0.009,
+      minimumUnitCoverageRatio: 0.86,
+      maximumUnfilledSpanMeters: 0.02,
+      minimumUnitClearanceMeters: 0.001,
+      materialId: 'dark-grit-joint',
+    },
     borders: [
       {
         id: 'shop-kerb',
@@ -700,13 +1041,13 @@ export function createHistoricSettPavingDefinition(): IrregularPavingDefinition 
         id: 'older-repair',
         minimum: [-2.8, -3.55],
         maximum: [-0.45, -2.05],
-        settlementBiasMeters: -0.006,
+        settlementBiasMeters: -0.002,
         materialIds: ['warm-repair-stone', 'dark-repair-stone'],
       },
     ],
     materials: {
       stoneIds: ['wet-granite-a', 'wet-granite-b', 'wet-granite-c'],
-      substrateId: 'dark-grit-joint',
+      substrateId: 'compacted-paving-substrate',
       kerbId: 'granite-kerb',
       gutterId: 'dark-stone-gutter',
     },
@@ -757,7 +1098,22 @@ export function createContemporaryPaverDefinition(): IrregularPavingDefinition {
       chipProbability: 0.08,
       maximumChipDepthMeters: 0.003,
     },
-    joints: { widthMeters: 0.008, depthMeters: 0.004, materialId: 'polymeric-dark-joint' },
+    surfaceSampling: {
+      kind: 'deterministic-unit-local-uv-meters',
+      seed: 190_211,
+      offsetPeriodMeters: [23, 29],
+      correlationLengthMeters: 2.8,
+      unitJitterMeters: [0.06, 0.06],
+      rotationChoicesDegrees: [0, 180],
+    },
+    joints: {
+      widthMeters: 0.008,
+      depthMeters: 0.006,
+      minimumUnitCoverageRatio: 0.91,
+      maximumUnfilledSpanMeters: 0.018,
+      minimumUnitClearanceMeters: 0.001,
+      materialId: 'polymeric-dark-joint',
+    },
     borders: [
       {
         id: 'channel-drain',
@@ -783,13 +1139,13 @@ export function createContemporaryPaverDefinition(): IrregularPavingDefinition {
         id: 'utility-reinstatement',
         minimum: [1.15, -4.45],
         maximum: [3.65, -2.4],
-        settlementBiasMeters: -0.003,
+        settlementBiasMeters: -0.001,
         materialIds: ['reinstatement-paver-a', 'reinstatement-paver-b'],
       },
     ],
     materials: {
       stoneIds: ['concrete-paver-a', 'concrete-paver-b', 'concrete-paver-c'],
-      substrateId: 'polymeric-dark-joint',
+      substrateId: 'compacted-paver-substrate',
       kerbId: 'contemporary-kerb',
       gutterId: 'linear-channel-stone',
     },

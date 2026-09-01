@@ -211,7 +211,9 @@ describe('hash-bound texture surface materials', () => {
         intendedConstructionDomains: [
           'flat-ground-surface',
           'modeled-paving-unit',
+          'paving-joint-substrate',
           'flat-facade-surface',
+          'modeled-masonry-unit',
         ],
         rationale:
           'Fixture intentionally declares broad domains so structural rejection is tested.',
@@ -219,9 +221,15 @@ describe('hash-bound texture surface materials', () => {
     });
     const modeledSetts = structuredClone(flatGroundApplication);
     modeledSetts.constructionDomain = 'modeled-paving-unit';
+    modeledSetts.placement.orientation = 'unit-local-uv-meters';
     expect(assessTextureMaterialSuitability(derived.material, modeledSetts)).toMatchObject({
       accepted: false,
-      reasons: [expect.objectContaining({ code: 'layout-scan-on-modeled-units' })],
+      reasons: [
+        expect.objectContaining({ code: 'layout-scan-on-modeled-units' }),
+        expect.objectContaining({
+          code: 'unit-local-mapping-requires-homogeneous-unit-material',
+        }),
+      ],
     });
 
     const facadePattern = structuredClone(derived.material);
@@ -234,6 +242,72 @@ describe('hash-bound texture surface materials', () => {
     const homogeneous = structuredClone(derived.material);
     homogeneous.textureMaps!.suitability.composition = 'homogeneous-unit-material';
     expect(assessTextureMaterialSuitability(homogeneous, modeledSetts)).toMatchObject({
+      accepted: true,
+      reasons: [],
+    });
+    const modeledMasonry = structuredClone(modeledSetts);
+    modeledMasonry.constructionDomain = 'modeled-masonry-unit';
+    expect(assessTextureMaterialSuitability(homogeneous, modeledMasonry)).toMatchObject({
+      accepted: true,
+      reasons: [],
+    });
+
+    const worldMappedSetts = structuredClone(modeledSetts);
+    worldMappedSetts.placement.orientation = 'world-horizontal';
+    expect(assessTextureMaterialSuitability(homogeneous, worldMappedSetts)).toMatchObject({
+      accepted: false,
+      reasons: [
+        expect.objectContaining({
+          code: 'modeled-paving-unit-requires-unit-local-mapping',
+        }),
+      ],
+    });
+
+    const unitMappedFlatGround = structuredClone(flatGroundApplication);
+    unitMappedFlatGround.placement.orientation = 'unit-local-uv-meters';
+    expect(assessTextureMaterialSuitability(homogeneous, unitMappedFlatGround)).toMatchObject({
+      accepted: false,
+      reasons: [
+        expect.objectContaining({ code: 'unit-local-mapping-on-non-modeled-unit' }),
+      ],
+    });
+
+    const jointBed = structuredClone(flatGroundApplication);
+    jointBed.constructionDomain = 'paving-joint-substrate';
+    expect(assessTextureMaterialSuitability(homogeneous, jointBed)).toMatchObject({
+      accepted: true,
+      reasons: [],
+    });
+    expect(assessTextureMaterialSuitability(derived.material, jointBed)).toMatchObject({
+      accepted: false,
+      reasons: [
+        expect.objectContaining({
+          code: 'paving-joint-substrate-composition-incompatible',
+        }),
+      ],
+    });
+    expect(assessTextureMaterialSuitability(facadePattern, jointBed)).toMatchObject({
+      accepted: false,
+      reasons: [
+        expect.objectContaining({ code: 'facade-pattern-on-non-facade' }),
+        expect.objectContaining({
+          code: 'paving-joint-substrate-composition-incompatible',
+        }),
+      ],
+    });
+    const uvAuthoredJointBed = structuredClone(jointBed);
+    uvAuthoredJointBed.placement.orientation = 'uv-authored';
+    expect(assessTextureMaterialSuitability(homogeneous, uvAuthoredJointBed)).toMatchObject({
+      accepted: false,
+      reasons: [
+        expect.objectContaining({
+          code: 'paving-joint-substrate-requires-world-horizontal',
+        }),
+      ],
+    });
+    const uvAuthoredFlatGround = structuredClone(flatGroundApplication);
+    uvAuthoredFlatGround.placement.orientation = 'uv-authored';
+    expect(assessTextureMaterialSuitability(derived.material, uvAuthoredFlatGround)).toMatchObject({
       accepted: true,
       reasons: [],
     });
@@ -357,6 +431,72 @@ describe('hash-bound texture surface materials', () => {
         suitability: flatGroundSuitability,
       }),
     ).rejects.toThrow(/staging target already contains different bytes/);
+  });
+
+  it('stages only valid unit-local paving and world-horizontal joint applications', async () => {
+    const source = await sourcePackage();
+    const materialPath = join(directory, 'unit-material/material.json');
+    await deriveTextureSurfaceMaterial({
+      base: createWetCobbleSurfaceMaterial(),
+      assetId: 'material.homogeneous-paving-fixture',
+      sourceManifestPath: source.manifestPath,
+      outputMaterialPath: materialPath,
+      suitability: {
+        composition: 'homogeneous-unit-material',
+        intendedConstructionDomains: ['modeled-paving-unit', 'paving-joint-substrate'],
+        rationale: 'Fixture isolates the modeled unit and continuous joint-bed mapping contracts.',
+      },
+    });
+    const unitApplication = structuredClone(flatGroundApplication);
+    unitApplication.constructionDomain = 'modeled-paving-unit';
+    unitApplication.placement.orientation = 'unit-local-uv-meters';
+    const unitBound = await bindStagedSurfaceMaterial({
+      geometry: fixtureGeometry(),
+      targetMaterialId: 'ground',
+      surfaceMaterialPath: materialPath,
+      outputGeometryPath: join(directory, 'unit-bound/geometry.json'),
+      application: unitApplication,
+    });
+    expect(
+      unitBound.geometry.materials[0]!.surface!.textureMaps!.application,
+    ).toMatchObject(unitApplication);
+
+    const jointApplication = structuredClone(flatGroundApplication);
+    jointApplication.constructionDomain = 'paving-joint-substrate';
+    const jointBound = await bindStagedSurfaceMaterial({
+      geometry: fixtureGeometry(),
+      targetMaterialId: 'ground',
+      surfaceMaterialPath: materialPath,
+      outputGeometryPath: join(directory, 'joint-bound/geometry.json'),
+      application: jointApplication,
+    });
+    expect(
+      jointBound.geometry.materials[0]!.surface!.textureMaps!.application,
+    ).toMatchObject(jointApplication);
+
+    const invalidUnitApplication = structuredClone(unitApplication);
+    invalidUnitApplication.placement.orientation = 'world-horizontal';
+    await expect(
+      bindStagedSurfaceMaterial({
+        geometry: fixtureGeometry(),
+        targetMaterialId: 'ground',
+        surfaceMaterialPath: materialPath,
+        outputGeometryPath: join(directory, 'invalid-unit-bound/geometry.json'),
+        application: invalidUnitApplication,
+      }),
+    ).rejects.toThrow(/modeled-paving-unit-requires-unit-local-mapping/);
+
+    const invalidJointApplication = structuredClone(jointApplication);
+    invalidJointApplication.placement.orientation = 'unit-local-uv-meters';
+    await expect(
+      bindStagedSurfaceMaterial({
+        geometry: fixtureGeometry(),
+        targetMaterialId: 'ground',
+        surfaceMaterialPath: materialPath,
+        outputGeometryPath: join(directory, 'invalid-joint-bound/geometry.json'),
+        application: invalidJointApplication,
+      }),
+    ).rejects.toThrow(/unit-local-mapping-on-non-modeled-unit/);
   });
 
   it('stages maps beside geometry and makes cinematic verification and fingerprints transitive', async () => {

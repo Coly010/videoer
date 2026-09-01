@@ -196,6 +196,11 @@ export interface TextureMaterialRejectionReason {
     | 'construction-domain-not-declared'
     | 'layout-scan-on-modeled-units'
     | 'facade-pattern-on-non-facade'
+    | 'modeled-paving-unit-requires-unit-local-mapping'
+    | 'unit-local-mapping-on-non-modeled-unit'
+    | 'unit-local-mapping-requires-homogeneous-unit-material'
+    | 'paving-joint-substrate-requires-world-horizontal'
+    | 'paving-joint-substrate-composition-incompatible'
     | 'orientation-incompatible'
     | 'macro-variation-scale-too-small';
   message: string;
@@ -239,7 +244,50 @@ export function assessTextureMaterialSuitability(
       code: 'facade-pattern-on-non-facade',
       message: 'A photographed facade course/pattern requires a flat facade host',
     });
-  const horizontalDomain = domain === 'flat-ground-surface' || domain === 'modeled-paving-unit';
+  const modeledUnitDomain =
+    domain === 'modeled-paving-unit' || domain === 'modeled-masonry-unit';
+  if (
+    domain === 'modeled-paving-unit' &&
+    applied.placement.orientation !== 'unit-local-uv-meters'
+  )
+    reasons.push({
+      code: 'modeled-paving-unit-requires-unit-local-mapping',
+      message: 'Individually modeled paving units require unit-local UV coordinates in metres',
+    });
+  if (applied.placement.orientation === 'unit-local-uv-meters' && !modeledUnitDomain)
+    reasons.push({
+      code: 'unit-local-mapping-on-non-modeled-unit',
+      message: `Unit-local UV mapping cannot be applied to '${domain}'`,
+    });
+  if (
+    applied.placement.orientation === 'unit-local-uv-meters' &&
+    textureMaps.suitability.composition !== 'homogeneous-unit-material'
+  )
+    reasons.push({
+      code: 'unit-local-mapping-requires-homogeneous-unit-material',
+      message: 'Unit-local UV mapping requires a homogeneous unit material',
+    });
+  if (
+    domain === 'paving-joint-substrate' &&
+    applied.placement.orientation !== 'world-horizontal'
+  )
+    reasons.push({
+      code: 'paving-joint-substrate-requires-world-horizontal',
+      message: 'A paving joint/substrate bed requires world-horizontal mapping',
+    });
+  if (
+    domain === 'paving-joint-substrate' &&
+    textureMaps.suitability.composition !== 'homogeneous-unit-material'
+  )
+    reasons.push({
+      code: 'paving-joint-substrate-composition-incompatible',
+      message:
+        'A paving joint/substrate bed cannot use a photographed paving layout or facade course',
+    });
+  const horizontalDomain =
+    domain === 'flat-ground-surface' ||
+    domain === 'modeled-paving-unit' ||
+    domain === 'paving-joint-substrate';
   const verticalDomain = domain === 'flat-facade-surface' || domain === 'modeled-masonry-unit';
   if (
     (horizontalDomain && applied.placement.orientation === 'world-vertical') ||
