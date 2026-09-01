@@ -6,6 +6,10 @@ import {
   createWetCobbleSwatch,
   wetCobbleGeometryMaterials,
 } from '../src/materials/wet-cobble.js';
+import {
+  createPavingGranularSurfaceMaterial,
+  createPavingGranularSwatch,
+} from '../src/materials/paving-joint.js';
 
 describe('renderer-independent reusable materials', () => {
   it('defines wet cobble with procedural albedo, normal relief, and varied roughness', () => {
@@ -149,5 +153,35 @@ describe('renderer-independent reusable materials', () => {
         },
       }).pattern.kind,
     ).toBe('glazed-ceramic');
+  });
+
+  it('defines distinct physical joint and substrate granular materials', () => {
+    const grit = createPavingGranularSurfaceMaterial('natural-grit');
+    const polymeric = createPavingGranularSurfaceMaterial('polymeric-sand');
+    const substrate = createPavingGranularSurfaceMaterial('compacted-base');
+    expect(grit.pattern).toMatchObject({ kind: 'granular-aggregate', compaction: 0.42 });
+    expect(polymeric.pattern).toMatchObject({ kind: 'granular-aggregate', compaction: 0.74 });
+    expect(substrate.pattern).toMatchObject({
+      kind: 'granular-aggregate',
+      aggregateScaleMeters: 0.018,
+    });
+    expect(grit.surfaceWaterResponse!.absorption.capacityMeters).toBeGreaterThan(
+      polymeric.surfaceWaterResponse!.absorption.capacityMeters,
+    );
+    expect(substrate.surfaceWaterResponse!.absorption.capacityMeters).toBeGreaterThan(
+      grit.surfaceWaterResponse!.absorption.capacityMeters,
+    );
+    for (const kind of ['natural-grit', 'polymeric-sand', 'compacted-base'] as const)
+      expect(validateGeometry(createPavingGranularSwatch(kind)).valid).toBe(true);
+  });
+
+  it('rejects granular fines that are not smaller than aggregate', () => {
+    const material = createPavingGranularSurfaceMaterial('natural-grit');
+    expect(() =>
+      surfaceMaterialSchema.parse({
+        ...material,
+        pattern: { ...material.pattern, finesScaleMeters: 0.007 },
+      }),
+    ).toThrow(/fines must be smaller/);
   });
 });

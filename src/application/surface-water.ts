@@ -4,9 +4,11 @@ import { z } from 'zod';
 import { sha256File } from '../assets/library.js';
 import {
   compileStaticSurfaceWater,
+  surfaceWaterFieldSchema,
   surfaceWaterMaterialResponseSchema,
   type SurfaceWaterField,
 } from '../environments/surface-water.js';
+import { loadCinematicScene, saveCinematicScene } from '../cinematic/io.js';
 import {
   irregularPavingDefinitionSchema,
   pavingSurfaceMaterialTargetsSchema,
@@ -29,7 +31,7 @@ export const surfaceWaterAssemblyProfileSchema = z.object({
     rotation: [0, 0, 0],
     scale: [1, 1, 1],
   }),
-  materialResponses: z.record(localIdentifier, surfaceWaterMaterialResponseSchema),
+  materialResponses: z.record(localIdentifier, surfaceWaterMaterialResponseSchema).default({}),
   shelters: z
     .array(
       z.object({
@@ -67,11 +69,7 @@ function transformPoint(point: Vec3, transform: SceneTransform): Vec3 {
     -x * Math.sin(ry) + zValue * Math.cos(ry),
   ];
   [x, y] = [x * Math.cos(rz) - y * Math.sin(rz), x * Math.sin(rz) + y * Math.cos(rz)];
-  return [
-    x + transform.position[0],
-    y + transform.position[1],
-    zValue + transform.position[2],
-  ];
+  return [x + transform.position[0], y + transform.position[1], zValue + transform.position[2]];
 }
 
 async function writeJsonAtomically(path: string, value: unknown) {
@@ -138,9 +136,31 @@ export async function createPavingSurfaceWaterField(options: {
         `surface-water material '${materialId}' declares ${response.targetClass}, expected ${expected}`,
       );
   }
-  for (const materialId of definition.drainage.wetReceiverMaterialIds)
-    if (!profile.materialResponses[materialId])
-      throw new Error(`surface-water profile is missing wet receiver '${materialId}'`);
+  const materialResponses = { ...profile.materialResponses };
+  const embeddedResponseMaterialIds: string[] = [];
+  for (const materialId of definition.drainage.wetReceiverMaterialIds) {
+    if (materialResponses[materialId]) continue;
+    const material = geometry.materials.find((candidate) => candidate.id === materialId);
+    const surface = material?.surface;
+    const response = surface?.surfaceWaterResponse;
+    const expected = expectedTargetClass(materialId, targets);
+    if (!material || !response || !expected)
+      throw new Error(
+        `surface-water wet receiver '${materialId}' has neither a profile response nor an embedded material response`,
+      );
+    materialResponses[materialId] = surfaceWaterMaterialResponseSchema.parse({
+      targetClass: expected,
+      absorption: response.absorption,
+      retention: response.retention,
+      wetRoughness: {
+        dry: (surface.roughness.minimum + surface.roughness.maximum) / 2,
+        multiplier: response.wetRoughness.multiplier,
+        floor: response.wetRoughness.floor,
+      },
+      splash: response.splash,
+    });
+    embeddedResponseMaterialIds.push(materialId);
+  }
 
   const shelterDirectory = resolve(options.profileDirectory);
   const shelters = await Promise.all(
@@ -189,7 +209,7 @@ export async function createPavingSurfaceWaterField(options: {
       impactSpeedMetersPerSecond: flux.impactSpeedMetersPerSecond,
       dropDiameterMillimeters: flux.dropDiameterMillimeters,
     },
-    materialResponses: profile.materialResponses,
+    materialResponses,
     shelters,
     grid: profile.grid,
     solver: profile.solver,
@@ -208,6 +228,10 @@ export async function createPavingSurfaceWaterField(options: {
     activeCellCount: field.grid.activeCellCount,
     splashEligibleCellCount: field.cells.filter((cell) => cell.splashEligible).length,
     massBalance: field.massBalance,
+    materialResponseSources: {
+      profile: Object.keys(profile.materialResponses).sort(),
+      embedded: embeddedResponseMaterialIds.sort(),
+    },
     visualAcceptance: 'not-assessed',
   };
   await writeJsonAtomically(reportPath, report);
@@ -215,7 +239,42 @@ export async function createPavingSurfaceWaterField(options: {
 }
 
 export async function loadSurfaceWaterAssemblyProfile(path: string) {
-  return surfaceWaterAssemblyProfileSchema.parse(
-    JSON.parse(await readFile(resolve(path), 'utf8')),
-  );
+  return surfaceWaterAssemblyProfileSchema.parse(JSON.parse(await readFile(resolve(path), 'utf8')));
+}
+
+export async function rebindCinematicSurfaceWaterReceiver(options: {
+  sourceScenePath: string;
+  receiverEntityId: string;
+  pavingGeometryPath: string;
+  surfaceWaterFieldPath: string;
+  outputScenePath: string;
+  sceneId?: string;
+}) {
+  const scene = await loadCinematicScene(options.sourceScenePath);
+  const geometryPath = resolve(options.pavingGeometryPath);
+  const fieldPath = resolve(options.surfaceWaterFieldPath);
+  const [geometry, geometrySha256, field] = await Promise.all([
+    loadGeometry(geometryPath),
+    sha256File(geometryPath),
+    readFile(fieldPath, 'utf8').then((value) => surfaceWaterFieldSchema.parse(JSON.parse(value))),
+  ]);
+  if (field.receiver.geometryId !== geometry.id || field.receiver.geometrySha256 !== geometrySha256)
+    throw new Error('surface-water field does not bind the requested paving geometry');
+  const entity = scene.entities.find((candidate) => candidate.id === options.receiverEntityId);
+  if (!entity) throw new Error(`scene receiver entity '${options.receiverEntityId}' is missing`);
+  if (JSON.stringify(entity.transform) !== JSON.stringify(field.receiver.transform))
+    throw new Error(
+      `scene receiver entity '${entity.id}' transform does not match surface-water field`,
+    );
+  entity.geometryPath = geometryPath;
+  entity.surfaceWaterFieldPath = fieldPath;
+  if (options.sceneId) scene.id = options.sceneId;
+  const path = await saveCinematicScene(options.outputScenePath, scene);
+  return {
+    scene,
+    path,
+    receiverEntityId: entity.id,
+    geometrySha256,
+    fieldSha256: field.fieldSha256,
+  };
 }

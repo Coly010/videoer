@@ -180,6 +180,15 @@ const surfacePatternSchema = z.discriminatedUnion('kind', [
     porosity: z.number().min(0).max(1),
   }),
   z.object({
+    kind: z.literal('granular-aggregate'),
+    aggregateScaleMeters: z.number().positive().max(0.05),
+    finesScaleMeters: z.number().positive().max(0.02),
+    aggregateContrast: z.number().min(0).max(1),
+    poreAmount: z.number().min(0).max(1),
+    compaction: z.number().min(0).max(1),
+    embeddedDirtAmount: z.number().min(0).max(1),
+  }),
+  z.object({
     kind: z.literal('cut-stone'),
     beddingAxis: surfaceAxisSchema,
     beddingScaleMeters: z.number().positive(),
@@ -307,6 +316,15 @@ export const surfaceMaterialSchema = z
         code: 'custom',
         path: ['pattern', 'mortarWidthMeters'],
         message: 'masonry mortar must be narrower than half the smallest masonry unit dimension',
+      });
+    if (
+      material.pattern.kind === 'granular-aggregate' &&
+      material.pattern.finesScaleMeters >= material.pattern.aggregateScaleMeters
+    )
+      ctx.addIssue({
+        code: 'custom',
+        path: ['pattern', 'finesScaleMeters'],
+        message: 'granular fines must be smaller than the aggregate scale',
       });
   });
 

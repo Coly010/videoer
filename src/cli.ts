@@ -58,14 +58,19 @@ import { acceptProjectingHangingSign } from './application/projecting-sign-accep
 import { createProjectingSupportedCanopyAsset } from './application/projecting-canopies.js';
 import { acceptProjectingSupportedCanopy } from './application/projecting-canopy-acceptance.js';
 import { createArchitecturalEnvelopeTransferFixtures } from './application/architectural-envelope-fixtures.js';
-import { bindPavingUnitMaterial } from './application/paving-material-assembly.js';
+import {
+  bindPavingConstructionMaterials,
+  bindPavingUnitMaterial,
+} from './application/paving-material-assembly.js';
 import {
   createPavingSurfaceWaterField,
   loadSurfaceWaterAssemblyProfile,
+  rebindCinematicSurfaceWaterReceiver,
 } from './application/surface-water.js';
 import {
   createOldCitySurfaceMaterialAssets,
   createOldCitySurfaceMaterialAsset,
+  createPavingGranularMaterialAsset,
   createWetCobbleMaterialAsset,
 } from './application/materials.js';
 import { createEnvironmentalSurfaceGallery } from './application/material-gallery.js';
@@ -767,18 +772,16 @@ importMaterialSource
   .description(
     'import one ambientCG v3 material through the explicit operator boundary; never publishes or renders',
   )
-  .action(async function (
-    options: {
-      asset: string;
-      resolution: string;
-      encoding: string;
-      cache: string;
-      output: string;
-      mode: string;
-      refresh: boolean;
-      exactIdentity?: string;
-    },
-  ) {
+  .action(async function (options: {
+    asset: string;
+    resolution: string;
+    encoding: string;
+    cache: string;
+    output: string;
+    mode: string;
+    refresh: boolean;
+    exactIdentity?: string;
+  }) {
     const request = openMaterialSourceImportRequestSchema.parse({
       provider: 'ambientcg',
       assetId: options.asset,
@@ -788,9 +791,7 @@ importMaterialSource
       outputDirectory: resolve(options.output),
       mode: options.mode,
       refresh: options.refresh,
-      ...(options.exactIdentity
-        ? { expectedSourceIdentitySha256: options.exactIdentity }
-        : {}),
+      ...(options.exactIdentity ? { expectedSourceIdentitySha256: options.exactIdentity } : {}),
     });
     const { expectedSourceIdentitySha256, ...sourceRequest } = request;
     const data = await importAmbientCgMaterialSource({
@@ -1067,10 +1068,7 @@ environment
   .option('--no-render', 'write deterministic fixture scenes and reports without rendering')
   .option('--neutral-only', 'generate only the bounded neutral diagnostic probes')
   .description('assemble historic and contemporary envelope+paving transfer fixtures')
-  .action(async function (
-    directory: string,
-    options: { render: boolean; neutralOnly?: boolean },
-  ) {
+  .action(async function (directory: string, options: { render: boolean; neutralOnly?: boolean }) {
     const data = await createArchitecturalEnvelopeTransferFixtures(directory, {
       render: options.render,
       ...(options.neutralOnly ? { intents: ['neutral-diagnostic'] } : {}),
@@ -1081,6 +1079,33 @@ environment
       data,
       (result) =>
         `✓ two architectural envelope transfer fixtures generated as candidates → ${result.output}`,
+    );
+  });
+environment
+  .command('bind-paving-construction-materials')
+  .argument('<paving-geometry>')
+  .argument('<joint-material>')
+  .argument('<substrate-material>')
+  .argument('<output-geometry>')
+  .description('bind role-checked granular joint and substrate materials to paving construction')
+  .action(async function (
+    pavingGeometry: string,
+    jointMaterial: string,
+    substrateMaterial: string,
+    outputGeometry: string,
+  ) {
+    const data = await bindPavingConstructionMaterials({
+      pavingGeometryPath: pavingGeometry,
+      jointMaterialPath: jointMaterial,
+      substrateMaterialPath: substrateMaterial,
+      outputGeometryPath: outputGeometry,
+    });
+    output(
+      this,
+      'environment.bind-paving-construction-materials',
+      data,
+      (result) =>
+        `✓ granular joint ${result.targets.joint} and substrate ${result.targets.substrate} bound → ${result.path}`,
     );
   });
 environment
@@ -1113,6 +1138,39 @@ environment
       data,
       (result) =>
         `✓ ${result.report.modeledUnitTargets.length} modeled paving targets bound with unit-local metre frames → ${result.path}`,
+    );
+  });
+environment
+  .command('rebind-surface-water-receiver')
+  .argument('<source-scene>')
+  .argument('<receiver-entity-id>')
+  .argument('<paving-geometry>')
+  .argument('<surface-water-field>')
+  .argument('<output-scene>')
+  .requiredOption('--id <scene-id>', 'stable identity for the derived transfer scene')
+  .description('derive a scene with an exact geometry/transform-bound surface-water receiver')
+  .action(async function (
+    sourceScene: string,
+    receiverEntityId: string,
+    pavingGeometry: string,
+    surfaceWaterField: string,
+    outputScene: string,
+    options: { id: string },
+  ) {
+    const data = await rebindCinematicSurfaceWaterReceiver({
+      sourceScenePath: sourceScene,
+      receiverEntityId,
+      pavingGeometryPath: pavingGeometry,
+      surfaceWaterFieldPath: surfaceWaterField,
+      outputScenePath: outputScene,
+      sceneId: options.id,
+    });
+    output(
+      this,
+      'environment.rebind-surface-water-receiver',
+      data,
+      (result) =>
+        `✓ exact surface-water receiver ${result.receiverEntityId} rebound → ${result.path}`,
     );
   });
 environment
@@ -1554,6 +1612,25 @@ surfaceMaterial
         : `✗ ${result.materialId}: ${result.reasons.map((reason) => reason.message).join('; ')}`,
     );
     if (!data.accepted) process.exitCode = 2;
+  });
+surfaceMaterial
+  .command('create-paving-granular')
+  .argument('<kind>')
+  .argument('<output-directory>')
+  .description('build a metre-scaled granular paving joint or compacted substrate material')
+  .action(async function (kind: string, directory: string) {
+    if (!['natural-grit', 'polymeric-sand', 'compacted-base'].includes(kind))
+      throw new Error("kind must be 'natural-grit', 'polymeric-sand', or 'compacted-base'");
+    const data = await createPavingGranularMaterialAsset(
+      kind as Parameters<typeof createPavingGranularMaterialAsset>[0],
+      directory,
+    );
+    output(
+      this,
+      'material.create-paving-granular',
+      data,
+      (result) => `✓ granular paving construction material → ${result.output}`,
+    );
   });
 surfaceMaterial
   .command('create-wet-cobble')

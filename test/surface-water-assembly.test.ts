@@ -18,6 +18,7 @@ import { cinematicSceneSchema } from '../src/cinematic/model.js';
 import { saveCinematicScene } from '../src/cinematic/io.js';
 import { verifyCinematicScene } from '../src/cinematic/verification.js';
 import { fingerprintCinematicScene } from '../src/cinematic/fingerprint.js';
+import { createPavingGranularSurfaceMaterial } from '../src/materials/paving-joint.js';
 
 const temporaryDirectories: string[] = [];
 afterEach(async () => {
@@ -29,9 +30,13 @@ describe('paving surface-water assembly', () => {
     const directory = await mkdtemp(join(tmpdir(), 'videoer-surface-water-'));
     temporaryDirectories.push(directory);
     const generated = compileIrregularPaving(createContemporaryPaverDefinition());
+    const targets = generated.report.surfaceMaterialTargets;
+    const jointMaterial = generated.geometry.materials.find(
+      (material) => material.id === targets.continuousJoint,
+    )!;
+    jointMaterial.surface = createPavingGranularSurfaceMaterial('natural-grit');
     const geometryPath = await saveGeometry(join(directory, 'paving.json'), generated.geometry);
     const vfxPath = await saveAtmosphericVfx(join(directory, 'rain.json'), createRainyDuskVfx());
-    const targets = generated.report.surfaceMaterialTargets;
     const targetClass = (materialId: string) => {
       if (targets.modeledUnits.includes(materialId)) return 'modeled-unit' as const;
       if (targets.continuousJoint === materialId) return 'joint' as const;
@@ -39,24 +44,26 @@ describe('paving surface-water assembly', () => {
       return 'border' as const;
     };
     const responses = Object.fromEntries(
-      generated.geometry.materials.map((material) => [
-        material.id,
-        {
-          targetClass: targetClass(material.id),
-          absorption: {
-            capacityMeters: material.id === targets.continuousJoint ? 0.004 : 0.001,
-            rateMetersPerSecond: material.id === targets.continuousJoint ? 0.00004 : 0.00001,
-            initialSaturation: 0.2,
+      generated.geometry.materials
+        .filter((material) => material.id !== targets.continuousJoint)
+        .map((material) => [
+          material.id,
+          {
+            targetClass: targetClass(material.id),
+            absorption: {
+              capacityMeters: material.id === targets.continuousJoint ? 0.004 : 0.001,
+              rateMetersPerSecond: material.id === targets.continuousJoint ? 0.00004 : 0.00001,
+              initialSaturation: 0.2,
+            },
+            retention: {
+              filmCapacityMeters: 0.0006,
+              edgeCapacityMeters: 0.0015,
+              maximumPuddleDepthMeters: 0.02,
+            },
+            wetRoughness: { dry: material.roughness, multiplier: 0.38, floor: 0.05 },
+            splash: { minimumFreeWaterDepthMeters: 0.0003, maximumSlopeDegrees: 10 },
           },
-          retention: {
-            filmCapacityMeters: 0.0006,
-            edgeCapacityMeters: 0.0015,
-            maximumPuddleDepthMeters: 0.02,
-          },
-          wetRoughness: { dry: material.roughness, multiplier: 0.38, floor: 0.05 },
-          splash: { minimumFreeWaterDepthMeters: 0.0003, maximumSlopeDegrees: 10 },
-        },
-      ]),
+        ]),
     );
     const profile = surfaceWaterAssemblyProfileSchema.parse({
       schemaVersion: 1,
@@ -84,6 +91,7 @@ describe('paving surface-water assembly', () => {
     expect(result.report).toMatchObject({
       result: 'structural-pass',
       visualAcceptance: 'not-assessed',
+      materialResponseSources: { embedded: [targets.continuousJoint] },
     });
     expect(await sha256File(result.path)).toMatch(/^[a-f0-9]{64}$/u);
 
@@ -156,8 +164,14 @@ describe('paving surface-water assembly', () => {
           materialResponses: {
             ...profile.materialResponses,
             [targets.continuousJoint]: {
-              ...profile.materialResponses[targets.continuousJoint]!,
               targetClass: 'modeled-unit',
+              absorption: jointMaterial.surface.surfaceWaterResponse!.absorption,
+              retention: jointMaterial.surface.surfaceWaterResponse!.retention,
+              wetRoughness: {
+                dry: jointMaterial.roughness,
+                ...jointMaterial.surface.surfaceWaterResponse!.wetRoughness,
+              },
+              splash: jointMaterial.surface.surfaceWaterResponse!.splash,
             },
           },
         },

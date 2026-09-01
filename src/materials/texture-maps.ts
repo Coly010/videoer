@@ -190,6 +190,38 @@ export interface TextureDependency {
   sizeBytes: number;
 }
 
+/**
+ * Restages every already-bound texture dependency when geometry is derived into a new package.
+ * Surface channel paths are package-relative, so copying only the JSON would create a valid-looking
+ * asset whose live dependencies resolve against the wrong directory.
+ */
+export async function restageGeometryTextureDependencies(options: {
+  geometry: GeometryAsset;
+  sourceGeometryPath: string;
+  outputGeometryPath: string;
+}) {
+  const geometry = structuredClone(options.geometry);
+  const sourceDirectory = dirname(resolve(options.sourceGeometryPath));
+  const outputDirectory = dirname(resolve(options.outputGeometryPath));
+  for (const material of geometry.materials) {
+    const channels = material.surface?.textureMaps?.channels;
+    if (!channels) continue;
+    for (const channel of channels) {
+      const sourcePath = containedPath(sourceDirectory, channel.path);
+      const bytes = await readExact(sourcePath, channel.sha256, channel.sizeBytes);
+      const extension = extname(channel.path).toLowerCase();
+      const target = join(
+        outputDirectory,
+        'textures',
+        `${channel.semantic}-${channel.sha256}${extension}`,
+      );
+      await writeExact(target, bytes);
+      channel.path = portablePath(outputDirectory, target);
+    }
+  }
+  return geometry;
+}
+
 export interface TextureMaterialRejectionReason {
   code:
     | 'not-texture-backed'
@@ -244,12 +276,8 @@ export function assessTextureMaterialSuitability(
       code: 'facade-pattern-on-non-facade',
       message: 'A photographed facade course/pattern requires a flat facade host',
     });
-  const modeledUnitDomain =
-    domain === 'modeled-paving-unit' || domain === 'modeled-masonry-unit';
-  if (
-    domain === 'modeled-paving-unit' &&
-    applied.placement.orientation !== 'unit-local-uv-meters'
-  )
+  const modeledUnitDomain = domain === 'modeled-paving-unit' || domain === 'modeled-masonry-unit';
+  if (domain === 'modeled-paving-unit' && applied.placement.orientation !== 'unit-local-uv-meters')
     reasons.push({
       code: 'modeled-paving-unit-requires-unit-local-mapping',
       message: 'Individually modeled paving units require unit-local UV coordinates in metres',
@@ -267,10 +295,7 @@ export function assessTextureMaterialSuitability(
       code: 'unit-local-mapping-requires-homogeneous-unit-material',
       message: 'Unit-local UV mapping requires a homogeneous unit material',
     });
-  if (
-    domain === 'paving-joint-substrate' &&
-    applied.placement.orientation !== 'world-horizontal'
-  )
+  if (domain === 'paving-joint-substrate' && applied.placement.orientation !== 'world-horizontal')
     reasons.push({
       code: 'paving-joint-substrate-requires-world-horizontal',
       message: 'A paving joint/substrate bed requires world-horizontal mapping',

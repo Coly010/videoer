@@ -718,6 +718,7 @@ def configure_surface_nodes(material, principled, surface, asset_directory=None)
     wetness = surface["roughness"].get("wetness", 0)
     pattern_factor = None
     pattern_normal = None
+    pattern_roughness = None
     color_noise = nodes.new("ShaderNodeTexNoise")
     color_noise.inputs["Scale"].default_value = 1.0 / surface["baseColor"]["scaleMeters"]
     color_noise.inputs["Detail"].default_value = 3.0
@@ -852,6 +853,142 @@ def configure_surface_nodes(material, principled, surface, asset_directory=None)
         relief.inputs["Strength"].default_value = surface["normal"]["strength"] * 0.65
         relief.inputs["Distance"].default_value = pattern["aggregateScaleMeters"] * 0.08
         links.new(pattern_factor, relief.inputs["Height"])
+        pattern_normal = relief.outputs["Normal"]
+    elif pattern["kind"] == "granular-aggregate":
+        aggregate_scale = pattern["aggregateScaleMeters"]
+        fines_scale = pattern["finesScaleMeters"]
+        contrast = pattern["aggregateContrast"]
+        pore_amount = pattern["poreAmount"]
+        compaction = pattern["compaction"]
+        embedded_dirt = pattern["embeddedDirtAmount"]
+
+        aggregate_mapping = nodes.new("ShaderNodeMapping")
+        aggregate_mapping.name = "videoer-granular-aggregate-mapping"
+        aggregate_mapping.inputs["Scale"].default_value = (1.0 / aggregate_scale,) * 3
+        links.new(mapping.outputs["Vector"], aggregate_mapping.inputs["Vector"])
+        aggregate_cells = nodes.new("ShaderNodeTexVoronoi")
+        aggregate_cells.name = "videoer-granular-aggregate-cells"
+        aggregate_cells.distance = "EUCLIDEAN"
+        aggregate_cells.feature = "DISTANCE_TO_EDGE"
+        links.new(aggregate_mapping.outputs["Vector"], aggregate_cells.inputs["Vector"])
+
+        # Distance-to-edge produces real aggregate boundaries rather than a
+        # cloudy single-frequency noise. Compaction widens the dense aggregate
+        # bodies while leaving a bounded fraction of narrow pore seams.
+        aggregate_profile = nodes.new("ShaderNodeMapRange")
+        aggregate_profile.name = "videoer-granular-aggregate-profile"
+        aggregate_profile.clamp = True
+        aggregate_profile.inputs["From Min"].default_value = 0.008
+        aggregate_profile.inputs["From Max"].default_value = 0.12 + compaction * 0.14
+        links.new(aggregate_cells.outputs["Distance"], aggregate_profile.inputs["Value"])
+
+        fines_mapping = nodes.new("ShaderNodeMapping")
+        fines_mapping.name = "videoer-granular-fines-mapping"
+        fines_mapping.inputs["Scale"].default_value = (1.0 / fines_scale,) * 3
+        links.new(mapping.outputs["Vector"], fines_mapping.inputs["Vector"])
+        fines = nodes.new("ShaderNodeTexNoise")
+        fines.name = "videoer-granular-fines"
+        fines.noise_dimensions = "3D"
+        fines.inputs["Scale"].default_value = 1.0
+        fines.inputs["Detail"].default_value = 3.5
+        fines.inputs["Roughness"].default_value = 0.68
+        links.new(fines_mapping.outputs["Vector"], fines.inputs["Vector"])
+
+        grain_factor = nodes.new("ShaderNodeMixRGB")
+        grain_factor.name = "videoer-granular-aggregate-fines-mix"
+        grain_factor.blend_type = "MIX"
+        grain_factor.inputs["Fac"].default_value = contrast
+        links.new(fines.outputs["Fac"], grain_factor.inputs[1])
+        links.new(aggregate_profile.outputs["Result"], grain_factor.inputs[2])
+        pattern_factor = grain_factor.outputs["Color"]
+
+        palette = nodes.new("ShaderNodeValToRGB")
+        palette.name = "videoer-granular-palette"
+        elements = palette.color_ramp.elements
+        elements[0].position = 0.0
+        elements[0].color = darkened(colors[0], wetness)
+        elements[1].position = 1.0
+        elements[1].color = darkened(colors[-1], wetness)
+        for index, color in enumerate(colors[1:-1], start=1):
+            element = elements.new(index / (len(colors) - 1))
+            element.color = darkened(color, wetness)
+        links.new(pattern_factor, palette.inputs["Fac"])
+
+        pore_mask = nodes.new("ShaderNodeMath")
+        pore_mask.name = "videoer-granular-pore-mask"
+        pore_mask.operation = "SUBTRACT"
+        pore_mask.inputs[0].default_value = 1.0
+        links.new(aggregate_profile.outputs["Result"], pore_mask.inputs[1])
+        pore_strength = nodes.new("ShaderNodeMath")
+        pore_strength.name = "videoer-granular-pore-strength"
+        pore_strength.operation = "MULTIPLY"
+        pore_strength.inputs[1].default_value = pore_amount * (1.0 - compaction * 0.45)
+        links.new(pore_mask.outputs[0], pore_strength.inputs[0])
+        pore_darkening = nodes.new("ShaderNodeMixRGB")
+        pore_darkening.name = "videoer-granular-pore-darkening"
+        pore_darkening.blend_type = "MULTIPLY"
+        pore_darkening.inputs[2].default_value = (0.16, 0.14, 0.12, 1)
+        links.new(pore_strength.outputs[0], pore_darkening.inputs["Fac"])
+        links.new(palette.outputs["Color"], pore_darkening.inputs[1])
+
+        dirt_mapping = nodes.new("ShaderNodeMapping")
+        dirt_mapping.name = "videoer-granular-embedded-dirt-mapping"
+        dirt_scale = max(aggregate_scale * 12.0, 0.08)
+        dirt_mapping.inputs["Scale"].default_value = (1.0 / dirt_scale,) * 3
+        links.new(mapping.outputs["Vector"], dirt_mapping.inputs["Vector"])
+        dirt_noise = nodes.new("ShaderNodeTexNoise")
+        dirt_noise.name = "videoer-granular-embedded-dirt"
+        dirt_noise.inputs["Scale"].default_value = 1.0
+        dirt_noise.inputs["Detail"].default_value = 2.5
+        dirt_noise.inputs["Roughness"].default_value = 0.7
+        links.new(dirt_mapping.outputs["Vector"], dirt_noise.inputs["Vector"])
+        dirt_mask = nodes.new("ShaderNodeMath")
+        dirt_mask.name = "videoer-granular-embedded-dirt-amount"
+        dirt_mask.operation = "MULTIPLY"
+        dirt_mask.inputs[1].default_value = embedded_dirt
+        links.new(dirt_noise.outputs["Fac"], dirt_mask.inputs[0])
+        dirt_color = nodes.new("ShaderNodeMixRGB")
+        dirt_color.name = "videoer-granular-embedded-dirt-darkening"
+        dirt_color.blend_type = "MULTIPLY"
+        dirt_color.inputs[2].default_value = (0.34, 0.29, 0.23, 1)
+        links.new(dirt_mask.outputs[0], dirt_color.inputs["Fac"])
+        links.new(pore_darkening.outputs["Color"], dirt_color.inputs[1])
+        links.new(dirt_color.outputs["Color"], principled.inputs["Base Color"])
+
+        roughness_factor = nodes.new("ShaderNodeMixRGB")
+        roughness_factor.name = "videoer-granular-roughness-factor"
+        roughness_factor.blend_type = "MIX"
+        roughness_factor.inputs["Fac"].default_value = 1.0 - compaction * 0.55
+        links.new(fines.outputs["Fac"], roughness_factor.inputs[1])
+        links.new(pore_strength.outputs[0], roughness_factor.inputs[2])
+        roughness_ramp = nodes.new("ShaderNodeValToRGB")
+        roughness_ramp.name = "videoer-granular-roughness"
+        roughness_ramp.color_ramp.elements[0].color = (
+            surface["roughness"]["minimum"],
+        ) * 3 + (1,)
+        roughness_ramp.color_ramp.elements[1].color = (
+            surface["roughness"]["maximum"],
+        ) * 3 + (1,)
+        links.new(roughness_factor.outputs["Color"], roughness_ramp.inputs["Fac"])
+        pattern_roughness = roughness_ramp.outputs["Color"]
+
+        relief_height = nodes.new("ShaderNodeMixRGB")
+        relief_height.name = "videoer-granular-relief-height"
+        relief_height.blend_type = "ADD"
+        relief_height.inputs["Fac"].default_value = 0.22 + pore_amount * 0.28
+        links.new(aggregate_profile.outputs["Result"], relief_height.inputs[1])
+        links.new(fines.outputs["Fac"], relief_height.inputs[2])
+        relief = nodes.new("ShaderNodeBump")
+        relief.name = "videoer-granular-relief"
+        relief.inputs["Strength"].default_value = (
+            surface["normal"]["strength"]
+            * (0.58 + pore_amount * 0.34)
+            * (1.0 - compaction * 0.42)
+        )
+        relief.inputs["Distance"].default_value = aggregate_scale * (
+            0.045 + (1.0 - compaction) * 0.065
+        )
+        links.new(relief_height.outputs["Color"], relief.inputs["Height"])
         pattern_normal = relief.outputs["Normal"]
     elif pattern["kind"] == "cut-stone":
         axes = [axis for axis in ("x", "y", "z") if axis != pattern["beddingAxis"]]
@@ -1109,18 +1246,25 @@ def configure_surface_nodes(material, principled, surface, asset_directory=None)
                 links.new(base_source, weather_mix.inputs[1])
                 links.new(weather_mix.outputs["Color"], base_input)
 
-    roughness_noise = nodes.new("ShaderNodeTexNoise")
-    roughness_noise.inputs["Scale"].default_value = (
-        1.0 / surface["roughness"]["variationScaleMeters"]
-    )
-    roughness_noise.inputs["Detail"].default_value = 2.0
-    roughness_noise.inputs["Roughness"].default_value = 0.62
-    links.new(mapping.outputs["Vector"], roughness_noise.inputs["Vector"])
-    roughness = nodes.new("ShaderNodeValToRGB")
-    roughness.color_ramp.elements[0].color = (surface["roughness"]["minimum"],) * 3 + (1,)
-    roughness.color_ramp.elements[1].color = (surface["roughness"]["maximum"],) * 3 + (1,)
-    links.new(roughness_noise.outputs["Fac"], roughness.inputs["Fac"])
-    links.new(roughness.outputs["Color"], principled.inputs["Roughness"])
+    if pattern_roughness:
+        links.new(pattern_roughness, principled.inputs["Roughness"])
+    else:
+        roughness_noise = nodes.new("ShaderNodeTexNoise")
+        roughness_noise.inputs["Scale"].default_value = (
+            1.0 / surface["roughness"]["variationScaleMeters"]
+        )
+        roughness_noise.inputs["Detail"].default_value = 2.0
+        roughness_noise.inputs["Roughness"].default_value = 0.62
+        links.new(mapping.outputs["Vector"], roughness_noise.inputs["Vector"])
+        roughness = nodes.new("ShaderNodeValToRGB")
+        roughness.color_ramp.elements[0].color = (
+            surface["roughness"]["minimum"],
+        ) * 3 + (1,)
+        roughness.color_ramp.elements[1].color = (
+            surface["roughness"]["maximum"],
+        ) * 3 + (1,)
+        links.new(roughness_noise.outputs["Fac"], roughness.inputs["Fac"])
+        links.new(roughness.outputs["Color"], principled.inputs["Roughness"])
 
     coat_weight = principled.inputs.get("Coat Weight")
     coat_roughness = principled.inputs.get("Coat Roughness")

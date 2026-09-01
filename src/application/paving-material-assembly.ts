@@ -1,14 +1,20 @@
-import { mkdir, writeFile } from 'node:fs/promises';
+import { randomUUID } from 'node:crypto';
+import { mkdir, rename, rm, writeFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { sha256File } from '../assets/library.js';
 import { pavingSurfaceMaterialTargetsSchema } from '../environments/irregular-paving.js';
-import { loadGeometry } from '../geometry/io.js';
+import { loadGeometry, saveGeometry } from '../geometry/io.js';
 import { loadSurfaceMaterial } from '../materials/io.js';
+import { bindSurfaceMaterial } from '../materials/adaptation.js';
 import {
   textureMaterialApplicationSchema,
+  type SurfaceMaterial,
   type TextureMaterialApplication,
 } from '../materials/model.js';
-import { bindStagedSurfaceMaterialValue } from '../materials/texture-maps.js';
+import {
+  bindStagedSurfaceMaterialValue,
+  restageGeometryTextureDependencies,
+} from '../materials/texture-maps.js';
 
 export interface BindPavingUnitMaterialOptions {
   pavingGeometryPath: string;
@@ -16,6 +22,136 @@ export interface BindPavingUnitMaterialOptions {
   unitApplication: TextureMaterialApplication;
   outputGeometryPath: string;
   reportPath?: string;
+}
+
+export interface BindPavingConstructionMaterialsOptions {
+  pavingGeometryPath: string;
+  jointMaterialPath: string;
+  substrateMaterialPath: string;
+  outputGeometryPath: string;
+  jointApplication?: TextureMaterialApplication;
+  substrateApplication?: TextureMaterialApplication;
+}
+
+function assertGranularConstructionMaterial(
+  material: SurfaceMaterial,
+  role: 'joint' | 'substrate',
+) {
+  if (material.metadata.constructionDomain !== 'paving-joint-substrate')
+    throw new Error(
+      `Paving ${role} material '${material.id}' has wrong construction domain; expected paving-joint-substrate`,
+    );
+  if (material.pattern.kind !== 'granular-aggregate')
+    throw new Error(
+      `Paving ${role} material '${material.id}' has wrong pattern kind; expected granular-aggregate`,
+    );
+  const granularKind = material.metadata.granularKind;
+  if (role === 'joint' && granularKind !== 'natural-grit' && granularKind !== 'polymeric-sand')
+    throw new Error(
+      `Paving joint material '${material.id}' has wrong granular kind '${String(granularKind)}'`,
+    );
+  if (role === 'substrate' && granularKind !== 'compacted-base')
+    throw new Error(
+      `Paving substrate material '${material.id}' has wrong granular kind '${String(granularKind)}'`,
+    );
+}
+
+function assertLiveConstructionTarget(
+  geometry: Awaited<ReturnType<typeof loadGeometry>>,
+  materialId: string,
+  role: 'continuousJoint' | 'continuousSubstrate',
+) {
+  if (!geometry.materials.some((material) => material.id === materialId))
+    throw new Error(
+      `Paving ${role} target '${materialId}' is absent from geometry '${geometry.id}'`,
+    );
+  if (!geometry.materialGroups.some((group) => group.materialId === materialId))
+    throw new Error(
+      `Paving ${role} target '${materialId}' has no triangle group in geometry '${geometry.id}'`,
+    );
+}
+
+/**
+ * Binds granular joint and substrate surfaces only through the disjoint construction targets
+ * authored by the paving generator. The final geometry file appears atomically after both roles
+ * and every texture dependency have passed validation.
+ */
+export async function bindPavingConstructionMaterials(
+  options: BindPavingConstructionMaterialsOptions,
+) {
+  const sourceGeometryPath = resolve(options.pavingGeometryPath);
+  const outputGeometryPath = resolve(options.outputGeometryPath);
+  const jointMaterialPath = resolve(options.jointMaterialPath);
+  const substrateMaterialPath = resolve(options.substrateMaterialPath);
+  const geometry = await loadGeometry(sourceGeometryPath);
+  const targets = pavingSurfaceMaterialTargetsSchema.parse(
+    geometry.metadata.surfaceMaterialTargets,
+  );
+  assertLiveConstructionTarget(geometry, targets.continuousJoint, 'continuousJoint');
+  assertLiveConstructionTarget(geometry, targets.continuousSubstrate, 'continuousSubstrate');
+
+  const joint = await loadSurfaceMaterial(jointMaterialPath);
+  const substrate = await loadSurfaceMaterial(substrateMaterialPath);
+  assertGranularConstructionMaterial(joint, 'joint');
+  assertGranularConstructionMaterial(substrate, 'substrate');
+
+  await mkdir(dirname(outputGeometryPath), { recursive: true });
+  const temporaryPath = `${outputGeometryPath}.incoming-${process.pid}-${randomUUID()}`;
+  let bound = await restageGeometryTextureDependencies({
+    geometry,
+    sourceGeometryPath,
+    outputGeometryPath,
+  });
+  try {
+    if (joint.textureMaps) {
+      if (!options.jointApplication)
+        throw new Error(
+          `Texture-backed paving joint material '${joint.id}' requires an application`,
+        );
+      bound = (
+        await bindStagedSurfaceMaterialValue({
+          geometry: bound,
+          targetMaterialId: targets.continuousJoint,
+          surface: joint,
+          sourceTextureDirectory: dirname(jointMaterialPath),
+          outputGeometryPath: temporaryPath,
+          application: options.jointApplication,
+        })
+      ).geometry;
+    } else bound = bindSurfaceMaterial(bound, targets.continuousJoint, joint);
+
+    if (substrate.textureMaps) {
+      if (!options.substrateApplication)
+        throw new Error(
+          `Texture-backed paving substrate material '${substrate.id}' requires an application`,
+        );
+      bound = (
+        await bindStagedSurfaceMaterialValue({
+          geometry: bound,
+          targetMaterialId: targets.continuousSubstrate,
+          surface: substrate,
+          sourceTextureDirectory: dirname(substrateMaterialPath),
+          outputGeometryPath: temporaryPath,
+          application: options.substrateApplication,
+        })
+      ).geometry;
+    } else bound = bindSurfaceMaterial(bound, targets.continuousSubstrate, substrate);
+
+    await saveGeometry(temporaryPath, bound);
+    await rename(temporaryPath, outputGeometryPath);
+  } catch (error) {
+    await rm(temporaryPath, { force: true });
+    throw error;
+  }
+  return {
+    geometry: bound,
+    path: outputGeometryPath,
+    targets: {
+      joint: targets.continuousJoint,
+      substrate: targets.continuousSubstrate,
+    },
+    materials: { joint: joint.id, substrate: substrate.id },
+  };
 }
 
 /**
@@ -35,8 +171,7 @@ export async function bindPavingUnitMaterial(options: BindPavingUnitMaterialOpti
     geometry.metadata.surfaceMaterialTargets,
   );
   const definition = geometry.metadata.definition as
-    | { surfaceSampling?: { kind?: unknown } }
-    | undefined;
+    { surfaceSampling?: { kind?: unknown } } | undefined;
   if (definition?.surfaceSampling?.kind !== 'deterministic-unit-local-uv-meters')
     throw new Error(
       `Paving geometry '${geometry.id}' does not declare deterministic unit-local metre sampling`,

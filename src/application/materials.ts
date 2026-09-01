@@ -12,6 +12,11 @@ import {
   type OldCitySurfacePreset,
 } from '../materials/old-city.js';
 import { createWetCobbleSurfaceMaterial, createWetCobbleSwatch } from '../materials/wet-cobble.js';
+import {
+  createPavingGranularSurfaceMaterial,
+  createPavingGranularSwatch,
+  type PavingGranularKind,
+} from '../materials/paving-joint.js';
 
 interface SurfaceAssetDefinition {
   material: SurfaceMaterial;
@@ -139,6 +144,26 @@ export async function createWetCobbleMaterialAsset(outputDirectory: string) {
     description:
       'Renderer-independent wet cobble with metre-scaled palette variation, micro-normal relief, independent roughness breakup, and a physically layered rain coat.',
     tags: ['stone', 'cobble', 'wet', 'old-city'],
+  });
+}
+
+export async function createPavingGranularMaterialAsset(
+  kind: PavingGranularKind,
+  outputDirectory: string,
+) {
+  const material = createPavingGranularSurfaceMaterial(kind);
+  const isSubstrate = kind === 'compacted-base';
+  return createSurfaceMaterialAsset(outputDirectory, {
+    material,
+    swatch: createPavingGranularSwatch(kind),
+    version: '0.1.0',
+    title: isSubstrate
+      ? 'Procedural compacted paving substrate'
+      : `Procedural ${kind} paving joint`,
+    description: isSubstrate
+      ? 'Renderer-independent compacted granular base with physical aggregate and fines scales, pore relief, embedded dirt, and explicit surface-water absorption.'
+      : 'Renderer-independent paving joint fill with physical aggregate and fines scales, compaction, pore relief, embedded dirt, and explicit surface-water response.',
+    tags: ['paving', isSubstrate ? 'substrate' : 'joint', 'granular', 'construction'],
   });
 }
 
