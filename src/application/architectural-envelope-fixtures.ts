@@ -281,17 +281,18 @@ export async function createArchitecturalEnvelopeTransferFixtures(
       ];
       const dressingAssets: PlacedAsset[] = inhabited.flatMap((placement, index) => {
         const near = attachment(envelope.geometry, `interior-depth-near-${placement.openingId}`);
+        const narrowWindow = placement.kind === 'window';
         return [
           {
             id: `${placement.openingId}-chair`,
             path: portablePath(chairFile),
-            position: [near[0] - 0.55, near[1], near[2] + 0.35],
+            position: [near[0] + (narrowWindow ? 0 : -0.55), near[1], near[2] + (narrowWindow ? 0.08 : 0.35)],
             rotation: [0, index % 2 === 0 ? 0.18 : -0.22, 0],
           },
           {
             id: `${placement.openingId}-table`,
             path: portablePath(tableFile),
-            position: [near[0] + 0.65, near[1], near[2] + 0.22],
+            position: [near[0] + (narrowWindow ? 0.42 : 0.65), near[1], near[2] + (narrowWindow ? 0.52 : 0.22)],
           },
         ];
       });

@@ -1,6 +1,8 @@
+import { execFile } from 'node:child_process';
 import { mkdtemp, mkdir, rm, unlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { join, relative } from 'node:path';
+import { join, relative, resolve } from 'node:path';
+import { promisify } from 'node:util';
 import { afterEach, describe, expect, it } from 'vitest';
 import { canonicalSha256, sha256Bytes } from '../src/assets/sources/cache.js';
 import {
@@ -11,12 +13,20 @@ import { fingerprintCinematicScene } from '../src/cinematic/fingerprint.js';
 import { cinematicSceneSchema } from '../src/cinematic/model.js';
 import { verifyCinematicScene } from '../src/cinematic/verification.js';
 import { boxPart, mergeMeshParts } from '../src/geometry/primitives.js';
-import { surfaceMaterialSchema } from '../src/materials/model.js';
 import {
+  surfaceMaterialSchema,
+  textureMaterialApplicationSchema,
+  type TextureMaterialApplication,
+} from '../src/materials/model.js';
+import {
+  assessTextureMaterialSuitability,
   bindStagedSurfaceMaterial,
   deriveTextureSurfaceMaterial,
 } from '../src/materials/texture-maps.js';
 import { createWetCobbleSurfaceMaterial } from '../src/materials/wet-cobble.js';
+import { saveSurfaceMaterial } from '../src/materials/io.js';
+
+const exec = promisify(execFile);
 
 let directory = '';
 afterEach(async () => {
@@ -134,6 +144,39 @@ async function sourcePackage(options: { unknownScale?: boolean } = {}) {
   return { root, manifest, manifestPath };
 }
 
+const flatGroundSuitability = {
+  composition: 'continuous-layout-scan' as const,
+  intendedConstructionDomains: ['flat-ground-surface' as const],
+  rationale: 'The source records a complete paving layout intended for a flat ground host.',
+};
+
+const flatGroundApplication: TextureMaterialApplication = {
+  constructionDomain: 'flat-ground-surface',
+  placement: {
+    scalePolicy: 'preserve-source-physical-scale',
+    orientation: 'world-horizontal',
+    offsetMeters: [0.17, -0.31],
+    rotationDegrees: 90,
+    appearance: {
+      exposureStops: -0.15,
+      saturationScale: 0.9,
+      hueShiftDegrees: 0,
+      roughnessScale: 1.05,
+      roughnessOffset: 0.02,
+      weatheringAmount: 0.25,
+    },
+    macroVariation: {
+      seed: 1847,
+      scaleMeters: 4,
+      valueAmplitude: 0.12,
+      saturationAmplitude: 0.08,
+      hueAmplitudeDegrees: 2,
+      roughnessAmplitude: 0.1,
+      weatheringAmplitude: 0.25,
+    },
+  },
+};
+
 function fixtureGeometry() {
   const geometry = mergeMeshParts(
     'environment.texture-material-fixture',
@@ -155,6 +198,112 @@ function fixtureGeometry() {
 }
 
 describe('hash-bound texture surface materials', () => {
+  it('rejects double-pattern and facade-host mismatches while accepting a homogeneous unit source', async () => {
+    const source = await sourcePackage();
+    const materialPath = join(directory, 'suitability/material.json');
+    const derived = await deriveTextureSurfaceMaterial({
+      base: createWetCobbleSurfaceMaterial(),
+      assetId: 'material.suitability-fixture',
+      sourceManifestPath: source.manifestPath,
+      outputMaterialPath: materialPath,
+      suitability: {
+        composition: 'continuous-layout-scan',
+        intendedConstructionDomains: [
+          'flat-ground-surface',
+          'modeled-paving-unit',
+          'flat-facade-surface',
+        ],
+        rationale:
+          'Fixture intentionally declares broad domains so structural rejection is tested.',
+      },
+    });
+    const modeledSetts = structuredClone(flatGroundApplication);
+    modeledSetts.constructionDomain = 'modeled-paving-unit';
+    expect(assessTextureMaterialSuitability(derived.material, modeledSetts)).toMatchObject({
+      accepted: false,
+      reasons: [expect.objectContaining({ code: 'layout-scan-on-modeled-units' })],
+    });
+
+    const facadePattern = structuredClone(derived.material);
+    facadePattern.textureMaps!.suitability.composition = 'facade-course-pattern';
+    expect(assessTextureMaterialSuitability(facadePattern, flatGroundApplication)).toMatchObject({
+      accepted: false,
+      reasons: [expect.objectContaining({ code: 'facade-pattern-on-non-facade' })],
+    });
+
+    const homogeneous = structuredClone(derived.material);
+    homogeneous.textureMaps!.suitability.composition = 'homogeneous-unit-material';
+    expect(assessTextureMaterialSuitability(homogeneous, modeledSetts)).toMatchObject({
+      accepted: true,
+      reasons: [],
+    });
+
+    expect(() =>
+      textureMaterialApplicationSchema.parse({
+        ...flatGroundApplication,
+        placement: {
+          ...flatGroundApplication.placement,
+          appearance: { ...flatGroundApplication.placement.appearance, exposureStops: 1.1 },
+        },
+      }),
+    ).toThrow();
+    const tileScaleVariation = structuredClone(flatGroundApplication);
+    tileScaleVariation.placement.macroVariation.scaleMeters = 1.5;
+    expect(assessTextureMaterialSuitability(derived.material, tileScaleVariation)).toMatchObject({
+      accepted: false,
+      reasons: [expect.objectContaining({ code: 'macro-variation-scale-too-small' })],
+    });
+  });
+
+  it('exposes derivation and suitability assessment through stable provider-free CLI JSON', async () => {
+    const source = await sourcePackage();
+    const basePath = join(directory, 'operator/base.json');
+    const suitabilityPath = join(directory, 'operator/suitability.json');
+    const applicationPath = join(directory, 'operator/application.json');
+    const outputPath = join(directory, 'operator/derived/material.json');
+    await saveSurfaceMaterial(basePath, createWetCobbleSurfaceMaterial());
+    await writeFile(suitabilityPath, `${JSON.stringify(flatGroundSuitability, null, 2)}\n`);
+    await writeFile(applicationPath, `${JSON.stringify(flatGroundApplication, null, 2)}\n`);
+    const derived = await exec(process.execPath, [
+      '--import',
+      'tsx',
+      resolve('src/cli.ts'),
+      '--json',
+      'material',
+      'derive-texture',
+      basePath,
+      source.manifestPath,
+      outputPath,
+      '--id',
+      'material.operator-texture-fixture',
+      '--suitability',
+      suitabilityPath,
+    ]);
+    expect(JSON.parse(derived.stdout)).toMatchObject({
+      version: 1,
+      ok: true,
+      command: 'material.derive-texture',
+      data: { material: { id: 'material.operator-texture-fixture' } },
+    });
+    const assessed = await exec(process.execPath, [
+      '--import',
+      'tsx',
+      resolve('src/cli.ts'),
+      '--json',
+      'material',
+      'assess-texture-suitability',
+      outputPath,
+      '--application',
+      applicationPath,
+    ]);
+    expect(JSON.parse(assessed.stdout)).toMatchObject({
+      version: 1,
+      ok: true,
+      command: 'material.assess-texture-suitability',
+      data: { accepted: true, reasons: [] },
+    });
+  }, 15_000);
+
   it('derives and stages every supported channel with explicit scale, colorspace, and portable paths', async () => {
     const source = await sourcePackage();
     const materialPath = join(directory, 'derived/material.json');
@@ -163,6 +312,7 @@ describe('hash-bound texture surface materials', () => {
       assetId: 'material.paving-stones-036',
       sourceManifestPath: source.manifestPath,
       outputMaterialPath: materialPath,
+      suitability: flatGroundSuitability,
     });
     expect(derived.material.textureMaps).toMatchObject({
       kind: 'hash-bound',
@@ -204,6 +354,7 @@ describe('hash-bound texture surface materials', () => {
         assetId: 'material.paving-stones-036',
         sourceManifestPath: source.manifestPath,
         outputMaterialPath: materialPath,
+        suitability: flatGroundSuitability,
       }),
     ).rejects.toThrow(/staging target already contains different bytes/);
   });
@@ -216,6 +367,7 @@ describe('hash-bound texture surface materials', () => {
       assetId: 'material.paving-stones-036',
       sourceManifestPath: source.manifestPath,
       outputMaterialPath: materialPath,
+      suitability: flatGroundSuitability,
     });
     const sceneDirectory = join(directory, 'scene');
     const geometryPath = join(sceneDirectory, 'ground.json');
@@ -224,6 +376,7 @@ describe('hash-bound texture surface materials', () => {
       targetMaterialId: 'ground',
       surfaceMaterialPath: materialPath,
       outputGeometryPath: geometryPath,
+      application: flatGroundApplication,
     });
     const channels = bound.geometry.materials[0]!.surface!.textureMaps!.channels;
     expect(channels.every((channel) => channel.path.startsWith('textures/'))).toBe(true);
@@ -263,13 +416,19 @@ describe('hash-bound texture surface materials', () => {
     const scenePath = join(sceneDirectory, 'scene.json');
     await writeFile(scenePath, `${JSON.stringify(scene, null, 2)}\n`);
     const fingerprint = await fingerprintCinematicScene(scenePath);
-    expect(fingerprint.artifacts.filter((artifact) => artifact.role.startsWith('texture:'))).toHaveLength(
-      7,
-    );
+    expect(
+      fingerprint.artifacts.filter((artifact) => artifact.role.startsWith('texture:')),
+    ).toHaveLength(7);
     expect(await verifyCinematicScene(scene, scenePath)).toMatchObject({
       status: 'pass',
       checks: [expect.objectContaining({ id: 'ground.texture-dependencies', status: 'pass' })],
     });
+
+    const rotatedGeometry = structuredClone(bound.geometry);
+    rotatedGeometry.materials[0]!.surface!.textureMaps!.application!.placement.rotationDegrees = 45;
+    await writeFile(geometryPath, `${JSON.stringify(rotatedGeometry, null, 2)}\n`);
+    const rotatedFingerprint = await fingerprintCinematicScene(scenePath);
+    expect(rotatedFingerprint.renderSha256).not.toBe(fingerprint.renderSha256);
 
     const baseColor = channels.find((channel) => channel.semantic === 'base-color')!;
     await writeFile(join(sceneDirectory, baseColor.path), 'tampered texture bytes');
@@ -293,6 +452,7 @@ describe('hash-bound texture surface materials', () => {
         assetId: 'material.forged-identity',
         sourceManifestPath: forgedIdentity.manifestPath,
         outputMaterialPath: join(directory, 'forged/material.json'),
+        suitability: flatGroundSuitability,
       }),
     ).rejects.toThrow(/source identity mismatch/);
 
@@ -304,6 +464,7 @@ describe('hash-bound texture surface materials', () => {
         assetId: 'material.missing-map',
         sourceManifestPath: missing.manifestPath,
         outputMaterialPath: join(directory, 'missing/material.json'),
+        suitability: flatGroundSuitability,
       }),
     ).rejects.toThrow(/missing/);
 
@@ -320,6 +481,7 @@ describe('hash-bound texture surface materials', () => {
             licenceSpdx: 'CC0-1.0',
           },
           physicalScale: { widthMeters: 1, heightMeters: 1 },
+          suitability: flatGroundSuitability,
           channels: ['base-color', 'normal', 'roughness'].map((semantic) => ({
             semantic,
             providerName: semantic,
@@ -328,9 +490,7 @@ describe('hash-bound texture surface materials', () => {
             sha256: '2'.repeat(64),
             sizeBytes: 10,
             colorSpace: semantic === 'base-color' ? 'srgb-texture' : 'non-color',
-            ...(semantic === 'normal'
-              ? { normalConvention: 'opengl-positive-green' }
-              : {}),
+            ...(semantic === 'normal' ? { normalConvention: 'opengl-positive-green' } : {}),
           })),
         },
       }),
@@ -343,6 +503,7 @@ describe('hash-bound texture surface materials', () => {
         assetId: 'material.unknown-scale',
         sourceManifestPath: unknown.manifestPath,
         outputMaterialPath: join(directory, 'unknown/material.json'),
+        suitability: flatGroundSuitability,
       }),
     ).rejects.toThrow(/unknown physical scale/);
   });

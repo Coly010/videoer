@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
+import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import YAML from 'yaml';
 import {
@@ -64,6 +65,15 @@ import {
 } from './application/materials.js';
 import { createEnvironmentalSurfaceGallery } from './application/material-gallery.js';
 import { acceptEnvironmentalSurfaceSuite } from './application/environmental-material-acceptance.js';
+import { loadSurfaceMaterial } from './materials/io.js';
+import {
+  textureMaterialApplicationSchema,
+  textureMaterialSuitabilitySchema,
+} from './materials/model.js';
+import {
+  assessTextureMaterialSuitability,
+  deriveTextureSurfaceMaterial,
+} from './materials/texture-maps.js';
 import { createDarkDressAsset } from './application/clothing.js';
 import {
   createAtmosphericGroundResponseProbe,
@@ -1421,6 +1431,61 @@ cinematic
 const surfaceMaterial = program
   .command('material')
   .description('renderer-independent reusable surface-material factories');
+surfaceMaterial
+  .command('derive-texture')
+  .argument('<base-material>')
+  .argument('<source-manifest>')
+  .argument('<output-material>')
+  .requiredOption('--id <asset-id>', 'stable derived surface-material identity')
+  .requiredOption(
+    '--suitability <json-file>',
+    'composition, intended construction domains, and rationale JSON',
+  )
+  .description('derive a provenance-bound texture material without rendering or rescaling it')
+  .action(async function (
+    baseMaterial: string,
+    sourceManifest: string,
+    outputMaterial: string,
+    options: { id: string; suitability: string },
+  ) {
+    const suitability = textureMaterialSuitabilitySchema.parse(
+      JSON.parse(await readFile(resolve(options.suitability), 'utf8')),
+    );
+    const data = await deriveTextureSurfaceMaterial({
+      base: await loadSurfaceMaterial(baseMaterial),
+      assetId: options.id,
+      sourceManifestPath: sourceManifest,
+      outputMaterialPath: outputMaterial,
+      suitability,
+    });
+    output(
+      this,
+      'material.derive-texture',
+      data,
+      (result) =>
+        `✓ ${result.material.id} ${result.material.textureMaps!.suitability.composition} → ${result.path}`,
+    );
+  });
+surfaceMaterial
+  .command('assess-texture-suitability')
+  .argument('<material>')
+  .requiredOption(
+    '--application <json-file>',
+    'construction domain and deterministic placement/adaptation JSON',
+  )
+  .description('evaluate a texture material against one host without rendering or mutating it')
+  .action(async function (material: string, options: { application: string }) {
+    const application = textureMaterialApplicationSchema.parse(
+      JSON.parse(await readFile(resolve(options.application), 'utf8')),
+    );
+    const data = assessTextureMaterialSuitability(await loadSurfaceMaterial(material), application);
+    output(this, 'material.assess-texture-suitability', data, (result) =>
+      result.accepted
+        ? `✓ ${result.materialId} is suitable for ${result.application.constructionDomain}`
+        : `✗ ${result.materialId}: ${result.reasons.map((reason) => reason.message).join('; ')}`,
+    );
+    if (!data.accepted) process.exitCode = 2;
+  });
 surfaceMaterial
   .command('create-wet-cobble')
   .argument('<output-directory>')

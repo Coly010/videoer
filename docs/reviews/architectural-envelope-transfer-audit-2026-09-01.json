@@ -8,11 +8,15 @@
     "historic-masonry-shopfront/verification/neutral-textured/contact-sheet.png",
     "historic-masonry-shopfront/verification/neutral-surface-suite/contact-sheet.png",
     "historic-masonry-shopfront/verification/wet-night/contact-sheet.png",
+    "historic-masonry-shopfront/verification/neutral-material-v2/contact-sheet.png",
+    "historic-masonry-shopfront/verification/wet-material-v2/contact-sheet.png",
     "contemporary-plaster-mixed-use/verification/neutral-diagnostic/contact-sheet.png",
     "contemporary-plaster-mixed-use/verification/neutral-textured/contact-sheet.png",
     "contemporary-plaster-mixed-use/verification/neutral-surface-suite/contact-sheet.png",
     "contemporary-plaster-mixed-use/verification/neutral-surface-suite-grey/contact-sheet.png",
-    "contemporary-plaster-mixed-use/verification/wet-night/contact-sheet.png"
+    "contemporary-plaster-mixed-use/verification/wet-night/contact-sheet.png",
+    "contemporary-plaster-mixed-use/verification/neutral-material-v2/contact-sheet.png",
+    "contemporary-plaster-mixed-use/verification/wet-material-v2/contact-sheet.png"
   ],
   "acceptedStructuralEvidence": [
     "real facade apertures expose non-zero room depth",
@@ -22,9 +26,16 @@
     "inhabited rooms expose deterministic near/far depth anchors and reuse existing chair and table assets",
     "ground-level inhabited rooms visibly expose furniture depth through clear glazing without visible light-source artifacts",
     "historic timber and contemporary metal shopfront variants provide host-appropriate construction language",
+    "historic quoins, string course and opening heads create real construction shadows rather than shader-only edge cues",
+    "contemporary parapet/elevation bands, corner edges and opening reveal bands break the pristine rectangular shell",
+    "deterministic lower-damp, opening-runoff, corner-weathering and parapet-runoff receiver zones are persisted for later material application",
+    "narrow upper-window dressing is repositioned onto the actual sightline and reads in the close construction probe",
     "real hash-bound CC0 base-color, roughness, OpenGL-normal, AO and displacement channels pass portable staging, transitive fingerprint and live Blender byte/decode verification",
     "aspect-correct metre-space triplanar projection preserves non-square source dimensions on horizontal and vertical construction surfaces",
     "the contemporary facade responds visibly to a physically scaled image-channel finish instead of only flat procedural colour",
+    "surface suitability now rejects layout scans on already modelled units, incompatible construction domains, orientation mismatches and implausibly small macro variation before rendering",
+    "texture placement now preserves declared physical scale, surface orientation, bounded adaptation and deterministic large-scale variation through the renderer boundary",
+    "the wet-material probes prove a renderer-wide water-film response with darker base response, reduced roughness and a physically bounded clear coat rather than scene-specific gloss tuning",
     "physical paving units expose deterministic relief and joints",
     "the canonical inset-window asset transfers without scaling into exact-contract openings in both host classes",
     "historic gable and contemporary parapet establish distinct roof massing",
@@ -38,20 +49,26 @@
     "Concrete040 is visibly too brown for the contemporary host and Concrete046 is chalky and overbright; neither candidate is accepted",
     "Bricks094 appears only on the historic host surfaces assigned to the masonry domain and does not by itself resolve the flat primary facade",
     "Concrete034 gives the contemporary render real fine surface response but remains too uniform and clean for production acceptance",
+    "the material-v2 neutral probes remain synthetic: the historic ground still shows repeated/doubled stone structure and the contemporary ground still exposes oversized units, broad bright joints and weak per-unit differentiation",
     "upper-storey inhabited-room dressing remains too weak through canonical window glazing for a reliable visual depth claim",
     "interiors remain sparse witness rooms rather than production-dressed spaces",
     "facade materials and edges remain pristine, flat and blockout-quality",
+    "historic quoins are still too mechanically regular without chipped edges or material variation",
+    "contemporary reveal strips protrude too uniformly and need construction-profile refinement",
     "wet paving reads plastic under broad orange light",
+    "the material-v2 wet response is technically legible but overstates a continuous glossy film on paving that lacks drainage, puddle topology, granular joints and local accumulation",
     "rain streaks and the black world void are visually detached from the architecture"
   ],
   "nextGenericDependencies": [
     "texture-backed construction materials with correct joint-bed response",
     "semantic source-selection and per-host material adaptation that preserve provenance while avoiding layout-on-geometry conflicts",
     "bounded per-instance texture orientation/offset and macro-colour variation over physically scaled microstructure",
+    "unit-aware paving materials that separate continuous substrate and joint beds from per-stone surface variation instead of projecting photographed layouts across modelled units",
+    "receiver-aware wetness with slope, drainage, shelter, edge accumulation and puddle masks rather than one uniform film amount",
     "texture-backed host-specific construction finishes for the assembled aperture modules",
     "stronger production interior dressing and upper-window depth readability",
     "construction-visible reveals, sills, lintels, trim and facade edge weathering",
     "environment-backed atmosphere and receiver-aware rain integration"
   ],
-  "notes": "Reusable structural-transfer evidence only; no benchmark-specific tuning and no library acceptance."
+  "notes": "Reusable structural-transfer evidence only; no benchmark-specific tuning and no library acceptance. This audit tranche is evidence-saturated: it established reusable suitability, placement/adaptation and wet-response contracts, and it localized the remaining failure to construction geometry, unit-aware substrates, weathering, interior density and atmosphere. Further tuning of these two scenes is not justified until one of those shared subsystems materially advances."
 }

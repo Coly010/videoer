@@ -872,9 +872,7 @@ describe('declarative cinematic campaigns', () => {
         sha256: sha256Bytes(bytes),
         sizeBytes: bytes.byteLength,
         colorSpace,
-        ...(semantic === 'normal'
-          ? { normalConvention: 'opengl-positive-green' as const }
-          : {}),
+        ...(semantic === 'normal' ? { normalConvention: 'opengl-positive-green' as const } : {}),
       });
     }
     const surface = surfaceMaterialSchema.parse({
@@ -889,6 +887,11 @@ describe('declarative cinematic campaigns', () => {
           licenceSpdx: 'CC0-1.0',
         },
         physicalScale: { widthMeters: 1.1, heightMeters: 1.1 },
+        suitability: {
+          composition: 'continuous-layout-scan',
+          intendedConstructionDomains: ['flat-ground-surface'],
+          rationale: 'Fixture is a complete photographed paving layout for a flat ground host.',
+        },
         channels,
       },
     });
@@ -899,7 +902,38 @@ describe('declarative cinematic campaigns', () => {
       materialSources: [{ id: 'texture-source', path: 'source-material/material.json' }],
     });
     Object.assign(fixture.geometry[0]!, {
-      materialBindings: [{ targetMaterialId: 'body', material: 'texture-source' }],
+      materialBindings: [
+        {
+          targetMaterialId: 'body',
+          material: 'texture-source',
+          application: {
+            constructionDomain: 'flat-ground-surface',
+            placement: {
+              scalePolicy: 'preserve-source-physical-scale',
+              orientation: 'world-horizontal',
+              offsetMeters: [0.1, 0.2],
+              rotationDegrees: 0,
+              appearance: {
+                exposureStops: -0.1,
+                saturationScale: 0.9,
+                hueShiftDegrees: 0,
+                roughnessScale: 1,
+                roughnessOffset: 0,
+                weatheringAmount: 0.2,
+              },
+              macroVariation: {
+                seed: 72,
+                scaleMeters: 4,
+                valueAmplitude: 0.1,
+                saturationAmplitude: 0.08,
+                hueAmplitudeDegrees: 2,
+                roughnessAmplitude: 0.1,
+                weatheringAmplitude: 0.2,
+              },
+            },
+          },
+        },
+      ],
     });
     const campaignFile = join(directory, 'campaign.json');
     await writeFile(campaignFile, JSON.stringify(fixture), 'utf8');
@@ -911,6 +945,18 @@ describe('declarative cinematic campaigns', () => {
       expect(sha256Bytes(await readFile(join(directory, 'work', channel.path)))).toBe(
         channel.sha256,
       );
+    const textureBinding = (
+      fixture.geometry[0]! as unknown as {
+        materialBindings: Array<{
+          application: { constructionDomain: string };
+        }>;
+      }
+    ).materialBindings[0]!;
+    textureBinding.application.constructionDomain = 'modeled-paving-unit';
+    await writeFile(campaignFile, JSON.stringify(fixture), 'utf8');
+    await expect(
+      buildDeclarativeCinematicCampaign(campaignFile, { render: false }),
+    ).rejects.toThrow(/layout-scan-on-modeled-units/);
   });
 
   it('fits verified clothing to a library character and composes it as a synchronised wardrobe entity', async () => {

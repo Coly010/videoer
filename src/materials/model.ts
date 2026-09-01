@@ -1,8 +1,5 @@
 import { z } from 'zod';
-import {
-  materialTextureChannelSchema,
-  sourceSha256Schema,
-} from '../assets/sources/model.js';
+import { materialTextureChannelSchema, sourceSha256Schema } from '../assets/sources/model.js';
 
 const colorSchema = z.tuple([
   z.number().min(0).max(1),
@@ -12,6 +9,88 @@ const colorSchema = z.tuple([
 ]);
 
 const surfaceAxisSchema = z.enum(['x', 'y', 'z']);
+
+export const textureSurfaceCompositionSchema = z.enum([
+  'continuous-layout-scan',
+  'homogeneous-unit-material',
+  'facade-course-pattern',
+]);
+
+export const constructionDomainSchema = z.enum([
+  'flat-ground-surface',
+  'modeled-paving-unit',
+  'flat-facade-surface',
+  'modeled-masonry-unit',
+  'monolithic-architectural-surface',
+  'natural-rock-surface',
+  'prop-surface',
+]);
+
+export const textureMaterialSuitabilitySchema = z
+  .object({
+    composition: textureSurfaceCompositionSchema,
+    intendedConstructionDomains: z.array(constructionDomainSchema).min(1),
+    rationale: z.string().min(1),
+  })
+  .superRefine((suitability, ctx) => {
+    if (
+      new Set(suitability.intendedConstructionDomains).size !==
+      suitability.intendedConstructionDomains.length
+    )
+      ctx.addIssue({
+        code: 'custom',
+        path: ['intendedConstructionDomains'],
+        message: 'intended construction domains must be unique',
+      });
+  });
+
+const boundedTextureAppearanceSchema = z.object({
+  exposureStops: z.number().min(-1).max(1),
+  saturationScale: z.number().min(0.65).max(1.35),
+  hueShiftDegrees: z.number().min(-12).max(12),
+  roughnessScale: z.number().min(0.7).max(1.3),
+  roughnessOffset: z.number().min(-0.2).max(0.2),
+  weatheringAmount: z.number().min(0).max(1),
+});
+
+const textureMacroVariationSchema = z
+  .object({
+    seed: z.number().int(),
+    scaleMeters: z.number().positive(),
+    valueAmplitude: z.number().min(0).max(0.25),
+    saturationAmplitude: z.number().min(0).max(0.25),
+    hueAmplitudeDegrees: z.number().min(0).max(12),
+    roughnessAmplitude: z.number().min(0).max(0.2),
+    weatheringAmplitude: z.number().min(0).max(0.75),
+  })
+  .superRefine((variation, ctx) => {
+    if (
+      variation.valueAmplitude === 0 &&
+      variation.saturationAmplitude === 0 &&
+      variation.hueAmplitudeDegrees === 0 &&
+      variation.roughnessAmplitude === 0 &&
+      variation.weatheringAmplitude === 0
+    )
+      ctx.addIssue({
+        code: 'custom',
+        path: [],
+        message: 'texture placement requires at least one bounded macro variation',
+      });
+  });
+
+export const textureMaterialPlacementSchema = z.object({
+  scalePolicy: z.literal('preserve-source-physical-scale'),
+  orientation: z.enum(['uv-authored', 'world-horizontal', 'world-vertical']),
+  offsetMeters: z.tuple([z.number().finite(), z.number().finite()]),
+  rotationDegrees: z.number().min(-180).max(180),
+  appearance: boundedTextureAppearanceSchema,
+  macroVariation: textureMacroVariationSchema,
+});
+
+export const textureMaterialApplicationSchema = z.object({
+  constructionDomain: constructionDomainSchema,
+  placement: textureMaterialPlacementSchema,
+});
 
 export const hashBoundTextureMapSetSchema = z
   .object({
@@ -26,6 +105,8 @@ export const hashBoundTextureMapSetSchema = z
       widthMeters: z.number().positive(),
       heightMeters: z.number().positive(),
     }),
+    suitability: textureMaterialSuitabilitySchema,
+    application: textureMaterialApplicationSchema.optional(),
     channels: z.array(materialTextureChannelSchema).min(3),
   })
   .superRefine((textureMaps, ctx) => {
@@ -44,18 +125,14 @@ export const hashBoundTextureMapSetSchema = z
           message: `texture-map set requires ${required}`,
         });
     for (const [index, channel] of textureMaps.channels.entries()) {
-      const expectedColorSpace =
-        channel.semantic === 'base-color' ? 'srgb-texture' : 'non-color';
+      const expectedColorSpace = channel.semantic === 'base-color' ? 'srgb-texture' : 'non-color';
       if (channel.colorSpace !== expectedColorSpace)
         ctx.addIssue({
           code: 'custom',
           path: ['channels', index, 'colorSpace'],
           message: `${channel.semantic} texture must use ${expectedColorSpace}`,
         });
-      if (
-        channel.semantic === 'normal' &&
-        channel.normalConvention !== 'opengl-positive-green'
-      )
+      if (channel.semantic === 'normal' && channel.normalConvention !== 'opengl-positive-green')
         ctx.addIssue({
           code: 'custom',
           path: ['channels', index, 'normalConvention'],
@@ -207,3 +284,6 @@ export const surfaceMaterialSchema = z
 
 export type SurfaceMaterial = z.infer<typeof surfaceMaterialSchema>;
 export type HashBoundTextureMapSet = z.infer<typeof hashBoundTextureMapSetSchema>;
+export type ConstructionDomain = z.infer<typeof constructionDomainSchema>;
+export type TextureMaterialSuitability = z.infer<typeof textureMaterialSuitabilitySchema>;
+export type TextureMaterialApplication = z.infer<typeof textureMaterialApplicationSchema>;

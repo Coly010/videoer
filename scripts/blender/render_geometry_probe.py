@@ -115,17 +115,116 @@ def verified_texture_path(asset_directory, channel):
     return path
 
 
+def validated_texture_application(texture_maps):
+    application = texture_maps.get("application")
+    if not isinstance(application, dict):
+        raise RuntimeError("Texture-backed material requires a construction application")
+    domains = {
+        "flat-ground-surface", "modeled-paving-unit", "flat-facade-surface",
+        "modeled-masonry-unit", "monolithic-architectural-surface",
+        "natural-rock-surface", "prop-surface",
+    }
+    domain = application.get("constructionDomain")
+    if domain not in domains:
+        raise RuntimeError(f"Texture application has invalid construction domain: {domain}")
+    placement = application.get("placement")
+    if not isinstance(placement, dict):
+        raise RuntimeError("Texture application requires placement settings")
+    if placement.get("scalePolicy") != "preserve-source-physical-scale":
+        raise RuntimeError("Texture application must preserve source physical scale")
+    orientation = placement.get("orientation")
+    if orientation not in {"uv-authored", "world-horizontal", "world-vertical"}:
+        raise RuntimeError(f"Texture application has invalid orientation: {orientation}")
+    horizontal_domain = domain in {"flat-ground-surface", "modeled-paving-unit"}
+    vertical_domain = domain in {"flat-facade-surface", "modeled-masonry-unit"}
+    if (horizontal_domain and orientation == "world-vertical") or (
+        vertical_domain and orientation == "world-horizontal"
+    ):
+        raise RuntimeError(
+            f"Texture orientation '{orientation}' is incompatible with '{domain}'"
+        )
+
+    def number(value, label, minimum=None, maximum=None):
+        if (
+            isinstance(value, bool)
+            or not isinstance(value, (int, float))
+            or not math.isfinite(value)
+            or (minimum is not None and value < minimum)
+            or (maximum is not None and value > maximum)
+        ):
+            raise RuntimeError(f"Texture application {label} is outside its bounded range")
+        return value
+
+    offset = placement.get("offsetMeters")
+    if not isinstance(offset, list) or len(offset) != 2:
+        raise RuntimeError("Texture application offsetMeters must contain two finite values")
+    number(offset[0], "offsetMeters[0]")
+    number(offset[1], "offsetMeters[1]")
+    number(placement.get("rotationDegrees"), "rotationDegrees", -180, 180)
+    appearance = placement.get("appearance")
+    macro = placement.get("macroVariation")
+    if not isinstance(appearance, dict) or not isinstance(macro, dict):
+        raise RuntimeError("Texture application requires appearance and macro variation")
+    for field, minimum, maximum in (
+        ("exposureStops", -1, 1), ("saturationScale", 0.65, 1.35),
+        ("hueShiftDegrees", -12, 12), ("roughnessScale", 0.7, 1.3),
+        ("roughnessOffset", -0.2, 0.2), ("weatheringAmount", 0, 1),
+    ):
+        number(appearance.get(field), f"appearance.{field}", minimum, maximum)
+    seed = macro.get("seed")
+    if isinstance(seed, bool) or not isinstance(seed, int):
+        raise RuntimeError("Texture application macroVariation.seed must be an integer")
+    number(macro.get("scaleMeters"), "macroVariation.scaleMeters", 1e-12)
+    amplitudes = []
+    for field, maximum in (
+        ("valueAmplitude", 0.25), ("saturationAmplitude", 0.25),
+        ("hueAmplitudeDegrees", 12), ("roughnessAmplitude", 0.2),
+        ("weatheringAmplitude", 0.75),
+    ):
+        amplitudes.append(number(macro.get(field), f"macroVariation.{field}", 0, maximum))
+    if not any(amplitudes):
+        raise RuntimeError("Texture application requires at least one macro variation amplitude")
+    return application
+
+
 def configure_texture_map_nodes(material, principled, surface, asset_directory):
     texture_maps = surface.get("textureMaps")
     if not texture_maps:
         return None
     if texture_maps.get("kind") != "hash-bound":
         raise RuntimeError("Blender only consumes hash-bound texture-map sets")
+    application = validated_texture_application(texture_maps)
+    placement = application["placement"]
+    appearance = placement["appearance"]
+    macro = placement["macroVariation"]
     physical_scale = texture_maps.get("physicalScale", {})
     width = physical_scale.get("widthMeters")
     height = physical_scale.get("heightMeters")
     if not isinstance(width, (int, float)) or width <= 0 or not isinstance(height, (int, float)) or height <= 0:
         raise RuntimeError("Texture-map physical scale must contain positive metre dimensions")
+    suitability = texture_maps.get("suitability")
+    if not isinstance(suitability, dict):
+        raise RuntimeError("Texture-backed material requires construction suitability")
+    composition = suitability.get("composition")
+    intended_domains = suitability.get("intendedConstructionDomains")
+    domain = application["constructionDomain"]
+    if not isinstance(intended_domains, list) or domain not in intended_domains:
+        raise RuntimeError(f"Texture source does not declare construction domain '{domain}'")
+    if composition == "continuous-layout-scan" and domain in {
+        "modeled-paving-unit", "modeled-masonry-unit",
+    }:
+        raise RuntimeError("Continuous layout scans cannot be applied to modeled units")
+    if composition == "facade-course-pattern" and domain != "flat-facade-surface":
+        raise RuntimeError("Facade course patterns require a flat facade host")
+    if composition not in {
+        "continuous-layout-scan", "homogeneous-unit-material", "facade-course-pattern",
+    }:
+        raise RuntimeError(f"Texture source has invalid composition: {composition}")
+    minimum_macro_scale = max(width, height) * 2.0
+    if placement["macroVariation"]["scaleMeters"] < minimum_macro_scale:
+        raise RuntimeError(
+            f"Texture macro variation must be at least {minimum_macro_scale} metres"
+        )
     channels = texture_maps.get("channels", [])
     semantic_channels = {channel.get("semantic"): channel for channel in channels}
     if len(semantic_channels) != len(channels):
@@ -133,6 +232,15 @@ def configure_texture_map_nodes(material, principled, surface, asset_directory):
     for required in ("base-color", "normal", "roughness"):
         if required not in semantic_channels:
             raise RuntimeError(f"Texture-map set is missing required channel '{required}'")
+    wetness = surface.get("roughness", {}).get("wetness", 0)
+    if (
+        isinstance(wetness, bool)
+        or not isinstance(wetness, (int, float))
+        or not math.isfinite(wetness)
+        or wetness < 0
+        or wetness > 1
+    ):
+        raise RuntimeError("Texture-backed material wetness must be finite and within 0..1")
     nodes = material.node_tree.nodes
     links = material.node_tree.links
     coordinates = nodes.new("ShaderNodeTexCoord")
@@ -142,60 +250,123 @@ def configure_texture_map_nodes(material, principled, surface, asset_directory):
     object_axes.name = "videoer-object-metre-axes"
     links.new(coordinates.outputs["Object"], object_axes.inputs["Vector"])
 
-    def scaled_axis(axis, scale):
-        scaled = nodes.new("ShaderNodeMath")
-        scaled.operation = "MULTIPLY"
-        scaled.inputs[1].default_value = scale
-        links.new(object_axes.outputs[axis], scaled.inputs[0])
-        return scaled.outputs[0]
+    uv_axes = nodes.new("ShaderNodeSeparateXYZ")
+    uv_axes.name = "videoer-authored-uv-axes"
+    links.new(coordinates.outputs["UV"], uv_axes.inputs["Vector"])
 
-    # A rectangular 2-D texture cannot use one scaled 3-D BOX vector: there is
-    # no assignment of three vector components that gives all of XY, XZ and YZ
-    # both the declared width and height. Build one metre-space vector per
-    # projection instead, always assigning the first plane axis to texture width
-    # and the second to texture height.
-    plane_axes = {"xy": ("X", "Y"), "xz": ("X", "Z"), "yz": ("Y", "Z")}
-    plane_vectors = {}
-    for plane, (u_axis, v_axis) in plane_axes.items():
+    def math_node(operation, left, right, name=None):
+        node = nodes.new("ShaderNodeMath")
+        node.operation = operation
+        if name:
+            node.name = name
+        if hasattr(left, "is_output"):
+            links.new(left, node.inputs[0])
+        else:
+            node.inputs[0].default_value = left
+        if hasattr(right, "is_output"):
+            links.new(right, node.inputs[1])
+        else:
+            node.inputs[1].default_value = right
+        return node.outputs[0]
+
+    rotation = math.radians(placement["rotationDegrees"])
+    cosine = math.cos(rotation)
+    sine = math.sin(rotation)
+
+    def placement_vector(name, u_source, v_source, uv_normalized=False):
+        # Rotation and offset operate in metres before normalization by the
+        # immutable source physical dimensions. UV-authored coordinates are
+        # converted to source metres first, so metre offsets remain meaningful.
+        u_metres = math_node("MULTIPLY", u_source, width) if uv_normalized else u_source
+        v_metres = math_node("MULTIPLY", v_source, height) if uv_normalized else v_source
+        u_offset = math_node(
+            "ADD", u_metres, placement["offsetMeters"][0],
+            f"videoer-application-{name}-u-offset",
+        )
+        v_offset = math_node(
+            "ADD", v_metres, placement["offsetMeters"][1],
+            f"videoer-application-{name}-v-offset",
+        )
+        u_cos = math_node(
+            "MULTIPLY", u_offset, cosine, f"videoer-application-{name}-rotation-cosine"
+        )
+        v_sin = math_node(
+            "MULTIPLY", v_offset, sine, f"videoer-application-{name}-rotation-sine"
+        )
+        u_rotated = math_node("SUBTRACT", u_cos, v_sin)
+        u_sin = math_node("MULTIPLY", u_offset, sine)
+        v_cos = math_node("MULTIPLY", v_offset, cosine)
+        v_rotated = math_node("ADD", u_sin, v_cos)
         vector = nodes.new("ShaderNodeCombineXYZ")
-        vector.name = f"videoer-physical-{plane}-mapping"
-        links.new(scaled_axis(u_axis, 1.0 / width), vector.inputs["X"])
-        links.new(scaled_axis(v_axis, 1.0 / height), vector.inputs["Y"])
-        plane_vectors[plane] = vector.outputs["Vector"]
+        vector.name = f"videoer-physical-{name}-mapping"
+        links.new(
+            math_node("DIVIDE", u_rotated, width, f"videoer-application-{name}-u-source-scale"),
+            vector.inputs["X"],
+        )
+        links.new(
+            math_node("DIVIDE", v_rotated, height, f"videoer-application-{name}-v-source-scale"),
+            vector.inputs["Y"],
+        )
+        return vector.outputs["Vector"]
 
-    normal_axes = nodes.new("ShaderNodeSeparateXYZ")
-    normal_axes.name = "videoer-triplanar-normal-axes"
-    links.new(coordinates.outputs["Normal"], normal_axes.inputs["Vector"])
-    axis_weights = {}
-    for axis in ("X", "Y", "Z"):
-        absolute = nodes.new("ShaderNodeMath")
-        absolute.operation = "ABSOLUTE"
-        links.new(normal_axes.outputs[axis], absolute.inputs[0])
-        sharpened = nodes.new("ShaderNodeMath")
-        sharpened.operation = "POWER"
-        sharpened.inputs[1].default_value = 4.0
-        links.new(absolute.outputs[0], sharpened.inputs[0])
-        axis_weights[axis] = sharpened.outputs[0]
-    weight_xy_xz = nodes.new("ShaderNodeMath")
-    weight_xy_xz.operation = "ADD"
-    links.new(axis_weights["Z"], weight_xy_xz.inputs[0])
-    links.new(axis_weights["Y"], weight_xy_xz.inputs[1])
-    weight_total = nodes.new("ShaderNodeMath")
-    weight_total.operation = "ADD"
-    links.new(weight_xy_xz.outputs[0], weight_total.inputs[0])
-    links.new(axis_weights["X"], weight_total.inputs[1])
+    orientation = placement["orientation"]
+    if orientation == "uv-authored":
+        plane_axes = {"uv": ("U", "V")}
+        plane_vectors = {
+            "uv": placement_vector(
+                "uv", uv_axes.outputs["X"], uv_axes.outputs["Y"], uv_normalized=True
+            )
+        }
+    elif orientation == "world-horizontal":
+        plane_axes = {"xy": ("X", "Y")}
+        plane_vectors = {
+            "xy": placement_vector("xy", object_axes.outputs["X"], object_axes.outputs["Y"])
+        }
+    else:
+        plane_axes = {"xz": ("X", "Z"), "yz": ("Y", "Z")}
+        plane_vectors = {
+            "xz": placement_vector("xz", object_axes.outputs["X"], object_axes.outputs["Z"]),
+            "yz": placement_vector("yz", object_axes.outputs["Y"], object_axes.outputs["Z"]),
+        }
+
     plane_weights = {}
-    for plane, normal_axis in {"xy": "Z", "xz": "Y", "yz": "X"}.items():
-        normalized = nodes.new("ShaderNodeMath")
-        normalized.operation = "DIVIDE"
-        links.new(axis_weights[normal_axis], normalized.inputs[0])
-        links.new(weight_total.outputs[0], normalized.inputs[1])
-        normalized.name = f"videoer-triplanar-{plane}-weight"
-        plane_weights[plane] = normalized.outputs[0]
+    if len(plane_vectors) > 1:
+        normal_axes = nodes.new("ShaderNodeSeparateXYZ")
+        normal_axes.name = "videoer-triplanar-normal-axes"
+        links.new(coordinates.outputs["Normal"], normal_axes.inputs["Vector"])
+        horizontal_weights = {}
+        for plane, axis in (("xz", "Y"), ("yz", "X")):
+            absolute = nodes.new("ShaderNodeMath")
+            absolute.operation = "ABSOLUTE"
+            links.new(normal_axes.outputs[axis], absolute.inputs[0])
+            sharpened = nodes.new("ShaderNodeMath")
+            sharpened.operation = "POWER"
+            sharpened.inputs[1].default_value = 4.0
+            links.new(absolute.outputs[0], sharpened.inputs[0])
+            horizontal_weights[plane] = sharpened.outputs[0]
+        total_weight = math_node(
+            "ADD", horizontal_weights["xz"], horizontal_weights["yz"],
+            "videoer-world-vertical-weight-total",
+        )
+        for plane in ("xz", "yz"):
+            normalized = nodes.new("ShaderNodeMath")
+            normalized.operation = "DIVIDE"
+            links.new(horizontal_weights[plane], normalized.inputs[0])
+            links.new(total_weight, normalized.inputs[1])
+            normalized.name = f"videoer-triplanar-{plane}-weight"
+            plane_weights[plane] = normalized.outputs[0]
 
     def weighted_plane_sum(outputs, semantic):
+        if len(outputs) == 1:
+            plane = next(iter(outputs))
+            passthrough = nodes.new("ShaderNodeVectorMath")
+            passthrough.operation = "SCALE"
+            passthrough.inputs["Scale"].default_value = 1.0
+            passthrough.name = f"videoer-texture-{semantic}"
+            links.new(outputs[plane], passthrough.inputs[0])
+            return passthrough.outputs["Vector"]
         weighted = []
-        for plane in ("xy", "xz", "yz"):
+        for plane in outputs:
             scale = nodes.new("ShaderNodeVectorMath")
             scale.operation = "SCALE"
             links.new(outputs[plane], scale.inputs[0])
@@ -205,12 +376,8 @@ def configure_texture_map_nodes(material, principled, surface, asset_directory):
         first_sum.operation = "ADD"
         links.new(weighted[0], first_sum.inputs[0])
         links.new(weighted[1], first_sum.inputs[1])
-        total = nodes.new("ShaderNodeVectorMath")
-        total.operation = "ADD"
-        total.name = f"videoer-texture-{semantic}"
-        links.new(first_sum.outputs["Vector"], total.inputs[0])
-        links.new(weighted[2], total.inputs[1])
-        return total.outputs["Vector"]
+        first_sum.name = f"videoer-texture-{semantic}"
+        return first_sum.outputs["Vector"]
 
     image_nodes = {}
     report_channels = []
@@ -233,7 +400,7 @@ def configure_texture_map_nodes(material, principled, surface, asset_directory):
             ) from error
         image.colorspace_settings.name = "sRGB" if semantic == "base-color" else "Non-Color"
         projected_outputs = {}
-        for plane in ("xy", "xz", "yz"):
+        for plane in plane_vectors:
             texture = nodes.new("ShaderNodeTexImage")
             texture.name = f"videoer-texture-{semantic}-{plane}"
             texture.label = f"{semantic} {plane.upper()}"
@@ -252,6 +419,28 @@ def configure_texture_map_nodes(material, principled, surface, asset_directory):
             }
         )
 
+    macro_mapping = nodes.new("ShaderNodeMapping")
+    macro_mapping.name = "videoer-application-macro-mapping"
+    seed = macro["seed"]
+    seed_offset = (
+        ((seed * 0.754877666) % 1.0) * 97.0,
+        ((seed * 0.569840296) % 1.0) * 89.0,
+        ((seed * 0.438579021) % 1.0) * 83.0,
+    )
+    macro_mapping.inputs["Location"].default_value = seed_offset
+    links.new(coordinates.outputs["Object"], macro_mapping.inputs["Vector"])
+    macro_noise = nodes.new("ShaderNodeTexNoise")
+    macro_noise.name = "videoer-application-macro-noise"
+    macro_noise.noise_dimensions = "3D"
+    macro_noise.inputs["Scale"].default_value = 1.0 / macro["scaleMeters"]
+    macro_noise.inputs["Detail"].default_value = 2.0
+    macro_noise.inputs["Roughness"].default_value = 0.55
+    links.new(macro_mapping.outputs["Vector"], macro_noise.inputs["Vector"])
+    doubled_noise = math_node("MULTIPLY", macro_noise.outputs["Fac"], 2.0)
+    signed_macro = math_node(
+        "SUBTRACT", doubled_noise, 1.0, "videoer-application-macro-signed"
+    )
+
     base_color_output = image_nodes["base-color"]
     if "ambient-occlusion" in image_nodes:
         ao_multiply = nodes.new("ShaderNodeMixRGB")
@@ -261,8 +450,142 @@ def configure_texture_map_nodes(material, principled, surface, asset_directory):
         links.new(base_color_output, ao_multiply.inputs[1])
         links.new(image_nodes["ambient-occlusion"], ao_multiply.inputs[2])
         base_color_output = ao_multiply.outputs["Color"]
+
+    hue = math_node(
+        "MULTIPLY", signed_macro, macro["hueAmplitudeDegrees"] / 360.0,
+        "videoer-application-macro-hue-amplitude",
+    )
+    hue = math_node(
+        "ADD", hue, 0.5 + appearance["hueShiftDegrees"] / 360.0,
+        "videoer-application-hue",
+    )
+    saturation = math_node(
+        "MULTIPLY", signed_macro, macro["saturationAmplitude"],
+        "videoer-application-macro-saturation-amplitude",
+    )
+    saturation = math_node(
+        "ADD", saturation, appearance["saturationScale"],
+        "videoer-application-saturation",
+    )
+    macro_value = math_node(
+        "MULTIPLY", signed_macro, macro["valueAmplitude"],
+        "videoer-application-macro-value-amplitude",
+    )
+    macro_value = math_node("ADD", macro_value, 1.0)
+    value = math_node(
+        "MULTIPLY", macro_value, 2.0 ** appearance["exposureStops"],
+        "videoer-application-value",
+    )
+    appearance_hsv = nodes.new("ShaderNodeHueSaturation")
+    appearance_hsv.name = "videoer-application-hsv"
+    links.new(hue, appearance_hsv.inputs["Hue"])
+    links.new(saturation, appearance_hsv.inputs["Saturation"])
+    links.new(value, appearance_hsv.inputs["Value"])
+    links.new(base_color_output, appearance_hsv.inputs["Color"])
+    base_color_output = appearance_hsv.outputs["Color"]
+
+    weather_macro = math_node(
+        "MULTIPLY", macro_noise.outputs["Fac"], macro["weatheringAmplitude"],
+        "videoer-application-macro-weathering-amplitude",
+    )
+    weather_amount = math_node(
+        "ADD", weather_macro, appearance["weatheringAmount"],
+        "videoer-application-weathering-amount",
+    )
+    weather_clamp = nodes.new("ShaderNodeClamp")
+    weather_clamp.name = "videoer-application-weathering"
+    weather_clamp.inputs["Min"].default_value = 0.0
+    weather_clamp.inputs["Max"].default_value = 1.0
+    links.new(weather_amount, weather_clamp.inputs["Value"])
+    weather_darkening = math_node("MULTIPLY", weather_clamp.outputs["Result"], -0.12)
+    weather_darkening = math_node("ADD", weather_darkening, 1.0)
+    weather_color = nodes.new("ShaderNodeMixRGB")
+    weather_color.name = "videoer-application-weathering-darkening"
+    weather_color.blend_type = "MULTIPLY"
+    weather_color.inputs[0].default_value = 1.0
+    links.new(base_color_output, weather_color.inputs[1])
+    links.new(weather_darkening, weather_color.inputs[2])
+    base_color_output = weather_color.outputs["Color"]
+
+    roughness_scale = math_node(
+        "MULTIPLY", image_nodes["roughness"], appearance["roughnessScale"],
+        "videoer-application-roughness-scale",
+    )
+    roughness_offset = math_node(
+        "ADD", roughness_scale, appearance["roughnessOffset"],
+        "videoer-application-roughness-offset",
+    )
+    macro_roughness = math_node(
+        "MULTIPLY", signed_macro, macro["roughnessAmplitude"],
+        "videoer-application-macro-roughness-amplitude",
+    )
+    roughness_modulated = math_node("ADD", roughness_offset, macro_roughness)
+    weather_roughness = math_node("MULTIPLY", weather_clamp.outputs["Result"], 0.12)
+    roughness_modulated = math_node("ADD", roughness_modulated, weather_roughness)
+    roughness_clamp = nodes.new("ShaderNodeClamp")
+    roughness_clamp.name = "videoer-application-roughness-clamp"
+    roughness_clamp.inputs["Min"].default_value = 0.0
+    roughness_clamp.inputs["Max"].default_value = 1.0
+    links.new(roughness_modulated, roughness_clamp.inputs["Value"])
+    application_roughness = roughness_clamp.outputs["Result"]
+    wet_response = {
+        "wetness": wetness,
+        "baseColorDarkening": 0.0,
+        "roughnessMultiplier": 1.0,
+        "roughnessFloor": 0.0,
+        "coatWeight": 0.0,
+        "coatRoughness": None,
+        "coatIor": None,
+    }
+    if wetness > 0:
+        # A water film darkens porous diffuse substrates through increased
+        # internal absorption while smoothing the exposed microfacet response.
+        # Keep both effects bounded: wet stone should not become black or a
+        # mathematically perfect mirror. The dry branch below remains an exact
+        # pass-through of the verified source maps.
+        darkening = 0.18 * wetness
+        wet_darkening = nodes.new("ShaderNodeMixRGB")
+        wet_darkening.name = "videoer-wet-base-color-darkening"
+        wet_darkening.blend_type = "MULTIPLY"
+        wet_darkening.inputs[0].default_value = 1.0
+        wet_darkening.inputs[2].default_value = (1.0 - darkening,) * 3 + (1.0,)
+        links.new(base_color_output, wet_darkening.inputs[1])
+        base_color_output = wet_darkening.outputs["Color"]
+
+        roughness_multiplier = 1.0 - 0.65 * wetness
+        wet_roughness_scale = nodes.new("ShaderNodeMath")
+        wet_roughness_scale.name = "videoer-wet-roughness-compression"
+        wet_roughness_scale.operation = "MULTIPLY"
+        wet_roughness_scale.inputs[1].default_value = roughness_multiplier
+        links.new(application_roughness, wet_roughness_scale.inputs[0])
+        wet_roughness_floor = nodes.new("ShaderNodeMath")
+        wet_roughness_floor.name = "videoer-wet-roughness-floor"
+        wet_roughness_floor.operation = "MAXIMUM"
+        wet_roughness_floor.inputs[1].default_value = 0.04
+        links.new(wet_roughness_scale.outputs[0], wet_roughness_floor.inputs[0])
+        roughness_output = wet_roughness_floor.outputs[0]
+
+        coat_weight = principled.inputs.get("Coat Weight")
+        coat_roughness = principled.inputs.get("Coat Roughness")
+        coat_ior = principled.inputs.get("Coat IOR")
+        if not coat_weight or not coat_roughness or not coat_ior:
+            raise RuntimeError("Blender Principled BSDF lacks required wet-film coat inputs")
+        coat_weight.default_value = wetness
+        coat_roughness.default_value = 0.03 + (1.0 - wetness) * 0.09
+        coat_ior.default_value = 1.333
+        wet_response = {
+            "wetness": wetness,
+            "baseColorDarkening": darkening,
+            "roughnessMultiplier": roughness_multiplier,
+            "roughnessFloor": 0.04,
+            "coatWeight": coat_weight.default_value,
+            "coatRoughness": coat_roughness.default_value,
+            "coatIor": coat_ior.default_value,
+        }
+    else:
+        roughness_output = application_roughness
     links.new(base_color_output, principled.inputs["Base Color"])
-    links.new(image_nodes["roughness"], principled.inputs["Roughness"])
+    links.new(roughness_output, principled.inputs["Roughness"])
     if "metallic" in image_nodes:
         links.new(image_nodes["metallic"], principled.inputs["Metallic"])
 
@@ -292,7 +615,14 @@ def configure_texture_map_nodes(material, principled, surface, asset_directory):
         "kind": "hash-bound-pbr-textures-v1",
         "physicalScale": {"widthMeters": width, "heightMeters": height},
         "mapping": {
-            "kind": "aspect-correct-metre-triplanar",
+            "kind": {
+                "uv-authored": "authored-uv-physical",
+                "world-horizontal": "world-horizontal-physical",
+                "world-vertical": "world-vertical-triplanar",
+            }[orientation],
+            "orientation": orientation,
+            "offsetMeters": list(placement["offsetMeters"]),
+            "rotationDegrees": placement["rotationDegrees"],
             "blendSharpness": 4.0,
             "planes": {
                 plane: {
@@ -302,6 +632,13 @@ def configure_texture_map_nodes(material, principled, surface, asset_directory):
                 for plane, axes in plane_axes.items()
             },
         },
+        "application": {
+            "constructionDomain": application["constructionDomain"],
+            "appearance": dict(appearance),
+            "macroVariation": dict(macro),
+            "macroSeedOffset": list(seed_offset),
+        },
+        "wetSurfaceResponse": wet_response,
         "channels": report_channels,
     }
     material["videoer_texture_report"] = json.dumps(report, sort_keys=True)
@@ -862,6 +1199,17 @@ def create_mesh(asset, armature=None, asset_directory=None, vertex_converter=to_
                 [vertex_converter(normal) for normal in source_normals]
             )
     source_uvs = asset.get("uvs", [])
+    for material_definition in asset.get("materials", []):
+        texture_maps = material_definition.get("surface", {}).get("textureMaps")
+        if (
+            texture_maps
+            and texture_maps.get("application", {}).get("placement", {}).get("orientation")
+            == "uv-authored"
+            and len(source_uvs) != len(vertices)
+        ):
+            raise RuntimeError(
+                f"UV-authored texture material '{material_definition['id']}' requires one UV per vertex"
+            )
     if source_uvs:
         uv_layer = data.uv_layers.new(name="UVMap")
         for loop in data.loops:

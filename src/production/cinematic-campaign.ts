@@ -15,6 +15,7 @@ import {
 } from '../cinematic/model.js';
 import { geometryMaterialSchema } from '../geometry/model.js';
 import { sceneTransformSchema } from '../interactions/model.js';
+import { textureMaterialApplicationSchema } from '../materials/model.js';
 import { assetKindSchema, assetReferenceSchema } from './model.js';
 
 const localIdSchema = z.string().regex(/^[a-z][a-z0-9-]*$/);
@@ -540,6 +541,7 @@ const geometrySourceSchema = z
         z.object({
           targetMaterialId: localIdSchema,
           material: localIdSchema,
+          application: textureMaterialApplicationSchema.optional(),
         }),
       )
       .default([]),

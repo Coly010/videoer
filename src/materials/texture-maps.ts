@@ -10,7 +10,14 @@ import { loadGeometry, saveGeometry } from '../geometry/io.js';
 import type { GeometryAsset } from '../geometry/model.js';
 import { bindSurfaceMaterial } from './adaptation.js';
 import { loadSurfaceMaterial } from './io.js';
-import { surfaceMaterialSchema, type SurfaceMaterial } from './model.js';
+import {
+  surfaceMaterialSchema,
+  textureMaterialApplicationSchema,
+  textureMaterialSuitabilitySchema,
+  type SurfaceMaterial,
+  type TextureMaterialApplication,
+  type TextureMaterialSuitability,
+} from './model.js';
 
 function containedPath(root: string, portablePath: string) {
   const base = resolve(root);
@@ -111,6 +118,7 @@ export interface DeriveTextureSurfaceMaterialOptions {
   assetId: string;
   sourceManifestPath: string;
   outputMaterialPath: string;
+  suitability: TextureMaterialSuitability;
 }
 
 /**
@@ -118,9 +126,7 @@ export interface DeriveTextureSurfaceMaterialOptions {
  * Existing procedural values remain the explicit fallback; no colour, scale, or PBR value is
  * guessed from filenames or provider defaults.
  */
-export async function deriveTextureSurfaceMaterial(
-  options: DeriveTextureSurfaceMaterialOptions,
-) {
+export async function deriveTextureSurfaceMaterial(options: DeriveTextureSurfaceMaterialOptions) {
   const manifestPath = resolve(options.sourceManifestPath);
   const manifestBytes = await readFile(manifestPath);
   const manifest = openMaterialSourceManifestSchema.parse(
@@ -162,6 +168,7 @@ export async function deriveTextureSurfaceMaterial(
         widthMeters: manifest.physicalScale.widthMeters,
         heightMeters: manifest.physicalScale.heightMeters,
       },
+      suitability: textureMaterialSuitabilitySchema.parse(options.suitability),
       channels: stagedChannels,
     },
     metadata: {
@@ -183,6 +190,81 @@ export interface TextureDependency {
   sizeBytes: number;
 }
 
+export interface TextureMaterialRejectionReason {
+  code:
+    | 'not-texture-backed'
+    | 'construction-domain-not-declared'
+    | 'layout-scan-on-modeled-units'
+    | 'facade-pattern-on-non-facade'
+    | 'orientation-incompatible'
+    | 'macro-variation-scale-too-small';
+  message: string;
+}
+
+export function assessTextureMaterialSuitability(
+  surface: SurfaceMaterial,
+  application: TextureMaterialApplication,
+) {
+  const parsed = surfaceMaterialSchema.parse(surface);
+  const applied = textureMaterialApplicationSchema.parse(application);
+  const textureMaps = parsed.textureMaps;
+  const reasons: TextureMaterialRejectionReason[] = [];
+  if (!textureMaps) {
+    reasons.push({
+      code: 'not-texture-backed',
+      message: `Surface material '${parsed.id}' has no hash-bound texture source to assess`,
+    });
+    return { accepted: false as const, reasons, materialId: parsed.id, application: applied };
+  }
+  const domain = applied.constructionDomain;
+  if (!textureMaps.suitability.intendedConstructionDomains.includes(domain))
+    reasons.push({
+      code: 'construction-domain-not-declared',
+      message: `Material '${parsed.id}' does not declare '${domain}' as an intended construction domain`,
+    });
+  if (
+    textureMaps.suitability.composition === 'continuous-layout-scan' &&
+    (domain === 'modeled-paving-unit' || domain === 'modeled-masonry-unit')
+  )
+    reasons.push({
+      code: 'layout-scan-on-modeled-units',
+      message:
+        'A continuous photographed layout cannot be applied to individually modeled construction units',
+    });
+  if (
+    textureMaps.suitability.composition === 'facade-course-pattern' &&
+    domain !== 'flat-facade-surface'
+  )
+    reasons.push({
+      code: 'facade-pattern-on-non-facade',
+      message: 'A photographed facade course/pattern requires a flat facade host',
+    });
+  const horizontalDomain = domain === 'flat-ground-surface' || domain === 'modeled-paving-unit';
+  const verticalDomain = domain === 'flat-facade-surface' || domain === 'modeled-masonry-unit';
+  if (
+    (horizontalDomain && applied.placement.orientation === 'world-vertical') ||
+    (verticalDomain && applied.placement.orientation === 'world-horizontal')
+  )
+    reasons.push({
+      code: 'orientation-incompatible',
+      message: `Placement orientation '${applied.placement.orientation}' is incompatible with '${domain}'`,
+    });
+  const minimumMacroScale =
+    Math.max(textureMaps.physicalScale.widthMeters, textureMaps.physicalScale.heightMeters) * 2;
+  if (applied.placement.macroVariation.scaleMeters < minimumMacroScale)
+    reasons.push({
+      code: 'macro-variation-scale-too-small',
+      message: `Macro variation scale must be at least ${minimumMacroScale}m to remain larger than the source tile`,
+    });
+  return {
+    accepted: reasons.length === 0,
+    reasons,
+    materialId: parsed.id,
+    composition: textureMaps.suitability.composition,
+    application: applied,
+  };
+}
+
 export async function geometryTextureDependencies(geometryPath: string) {
   const source = resolve(geometryPath);
   const geometry = await loadGeometry(source);
@@ -194,6 +276,20 @@ export async function geometryTextureDependencies(geometryPath: string) {
     sizeBytes: number;
   }> = [];
   for (const material of geometry.materials) {
+    if (material.surface?.textureMaps) {
+      if (!material.surface.textureMaps.application)
+        throw new Error(
+          `Bound texture material '${material.surface.id}' is missing its construction application`,
+        );
+      const assessment = assessTextureMaterialSuitability(
+        material.surface,
+        material.surface.textureMaps.application,
+      );
+      if (!assessment.accepted)
+        throw new Error(
+          `Bound texture material '${material.surface.id}' is unsuitable: ${assessment.reasons.map((reason) => `${reason.code}: ${reason.message}`).join('; ')}`,
+        );
+    }
     for (const channel of material.surface?.textureMaps?.channels ?? []) {
       const path = containedPath(dirname(source), channel.path);
       await readExact(path, channel.sha256, channel.sizeBytes);
@@ -208,7 +304,8 @@ export async function geometryTextureDependencies(geometryPath: string) {
   }
   dependencies.sort(
     (left, right) =>
-      left.materialId.localeCompare(right.materialId) || left.semantic.localeCompare(right.semantic),
+      left.materialId.localeCompare(right.materialId) ||
+      left.semantic.localeCompare(right.semantic),
   );
   return dependencies;
 }
@@ -218,6 +315,7 @@ export interface BindStagedSurfaceMaterialOptions {
   targetMaterialId: string;
   surfaceMaterialPath: string;
   outputGeometryPath: string;
+  application: TextureMaterialApplication;
 }
 
 export interface BindStagedSurfaceMaterialValueOptions {
@@ -226,6 +324,7 @@ export interface BindStagedSurfaceMaterialValueOptions {
   surface: SurfaceMaterial;
   sourceTextureDirectory: string;
   outputGeometryPath: string;
+  application: TextureMaterialApplication;
 }
 
 /** Copies every declared texture byte beside the bound geometry and rewrites only portable paths. */
@@ -236,6 +335,12 @@ export async function bindStagedSurfaceMaterialValue(
   const outputDirectory = dirname(outputPath);
   const staged = structuredClone(surfaceMaterialSchema.parse(options.surface));
   if (staged.textureMaps) {
+    const assessment = assessTextureMaterialSuitability(staged, options.application);
+    if (!assessment.accepted)
+      throw new Error(
+        `Texture material suitability rejected: ${assessment.reasons.map((reason) => `${reason.code}: ${reason.message}`).join('; ')}`,
+      );
+    staged.textureMaps.application = assessment.application;
     for (const channel of staged.textureMaps.channels) {
       const sourcePath = containedPath(options.sourceTextureDirectory, channel.path);
       const bytes = await readExact(sourcePath, channel.sha256, channel.sizeBytes);
@@ -262,5 +367,6 @@ export async function bindStagedSurfaceMaterial(options: BindStagedSurfaceMateri
     surface: await loadSurfaceMaterial(sourceMaterialPath),
     sourceTextureDirectory: dirname(sourceMaterialPath),
     outputGeometryPath: options.outputGeometryPath,
+    application: options.application,
   });
 }

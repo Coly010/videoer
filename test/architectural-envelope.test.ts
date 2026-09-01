@@ -36,6 +36,15 @@ describe('construction-aware architectural envelopes', () => {
     expect(contemporary.report.occupiedRoomCount).toBe(2);
     expect(historic.definition.roof.kind).toBe('gable');
     expect(contemporary.definition.roof.kind).toBe('flat-parapet');
+    expect(historic.report.constructionDetail.style).toBe('historic-masonry');
+    expect(historic.report.constructionDetail.openingHeadCount).toBe(6);
+    expect(contemporary.report.constructionDetail.style).toBe('contemporary-plaster');
+    expect(contemporary.report.constructionDetail.revealBandCount).toBe(15);
+    expect(
+      contemporary.report.constructionDetail.dirtReceiverZones.some(
+        (zone) => zone.role === 'parapet-runoff',
+      ),
+    ).toBe(true);
     expect(historic.definition.metadata.hostClass).not.toBe(
       contemporary.definition.metadata.hostClass,
     );

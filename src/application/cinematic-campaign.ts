@@ -419,6 +419,14 @@ export async function buildDeclarativeCinematicCampaign(
       path = resolve(root, source.path!);
       for (const binding of source.materialBindings) {
         const material = materials.get(binding.material)!;
+        if (material.asset.textureMaps && !binding.application)
+          throw new Error(
+            `Texture material binding '${source.id}.${binding.targetMaterialId}' requires an explicit construction application`,
+          );
+        if (!material.asset.textureMaps && binding.application)
+          throw new Error(
+            `Procedural material binding '${source.id}.${binding.targetMaterialId}' must not declare a texture application`,
+          );
         asset = material.asset.textureMaps
           ? (
               await bindStagedSurfaceMaterialValue({
@@ -427,6 +435,7 @@ export async function buildDeclarativeCinematicCampaign(
                 surface: material.asset,
                 sourceTextureDirectory: material.textureRoot,
                 outputGeometryPath: path,
+                application: binding.application!,
               })
             ).geometry
           : bindSurfaceMaterial(asset, binding.targetMaterialId, material.asset);
@@ -506,6 +515,14 @@ export async function buildDeclarativeCinematicCampaign(
         path = resolve(root, source.path!);
         for (const binding of source.materialBindings) {
           const material = materials.get(binding.material)!;
+          if (material.asset.textureMaps && !binding.application)
+            throw new Error(
+              `Texture material binding '${source.id}.${binding.targetMaterialId}' requires an explicit construction application`,
+            );
+          if (!material.asset.textureMaps && binding.application)
+            throw new Error(
+              `Procedural material binding '${source.id}.${binding.targetMaterialId}' must not declare a texture application`,
+            );
           asset = material.asset.textureMaps
             ? (
                 await bindStagedSurfaceMaterialValue({
@@ -514,6 +531,7 @@ export async function buildDeclarativeCinematicCampaign(
                   surface: material.asset,
                   sourceTextureDirectory: material.textureRoot,
                   outputGeometryPath: path,
+                  application: binding.application!,
                 })
               ).geometry
             : bindSurfaceMaterial(asset, binding.targetMaterialId, material.asset);
@@ -524,6 +542,7 @@ export async function buildDeclarativeCinematicCampaign(
             (binding) => ({
               targetMaterialId: binding.targetMaterialId,
               materialSource: binding.material,
+              ...(binding.application ? { application: binding.application } : {}),
             }),
           );
       } else if (source.recipe) await saveGeometry(path, asset);

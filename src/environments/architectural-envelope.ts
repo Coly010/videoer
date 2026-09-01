@@ -10,6 +10,10 @@ import {
   type MeshPart,
 } from '../geometry/primitives.js';
 import { wallWithRectangularOpeningsParts, type WallOpening } from './architectural-modules.js';
+import {
+  compileFacadeConstructionDetail,
+  type FacadeConstructionDetailReport,
+} from './facade-construction-detail.js';
 
 const identifier = z.string().regex(/^[a-z][a-z0-9-]*(?:\.[a-z0-9-]+)*$/);
 const localIdentifier = z.string().regex(/^[a-z][a-z0-9-]*$/);
@@ -273,6 +277,7 @@ export interface ArchitecturalEnvelopeReport {
   totalHeightMeters: number;
   openingCount: number;
   occupiedRoomCount: number;
+  constructionDetail: FacadeConstructionDetailReport;
   facadeLayerDepths: Array<{ id: string; frontZ: number; backZ: number }>;
   apertures: Array<{ id: string; centreRayClear: boolean; roomDepthMeters: number }>;
 }
@@ -530,6 +535,31 @@ export function compileArchitecturalEnvelope(input: ArchitecturalEnvelopeDefinit
     storeyMinimumY = storeyMaximumY;
   }
 
+  const facadeExteriorZ =
+    frontZ -
+    definition.shell.facadeLayers.reduce((sum, layer) => sum + layer.thicknessMeters, 0);
+  const constructionDetail = compileFacadeConstructionDetail({
+    schemaVersion: 1,
+    id: `${definition.id}.construction-detail`,
+    seed: definition.seed,
+    style: definition.roof.kind === 'gable' ? 'historic-masonry' : 'contemporary-plaster',
+    minimumX,
+    maximumX,
+    totalHeightMeters: totalHeight,
+    facadeExteriorZ,
+    openings: modulePlacements.map((placement) => ({
+      id: placement.openingId,
+      kind: placement.kind,
+      minimumX: placement.opening.minimumX,
+      maximumX: placement.opening.maximumX,
+      minimumY: placement.opening.minimumY,
+      maximumY: placement.opening.maximumY,
+    })),
+    trimMaterialId: definition.materials.trim,
+    wearReceiverMaterialId: definition.shell.facadeLayers[0]?.materialId ?? definition.materials.structure,
+  });
+  parts.push(...constructionDetail.parts);
+
   parts.push(
     boxPart(
       [minimumX, -definition.shell.foundationHeightMeters, frontZ],
@@ -593,12 +623,11 @@ export function compileArchitecturalEnvelope(input: ArchitecturalEnvelopeDefinit
     {
       generator: 'videoer.architectural-envelope.v1',
       definition,
-      facadeExteriorZ:
-        frontZ -
-        definition.shell.facadeLayers.reduce((sum, layer) => sum + layer.thicknessMeters, 0),
+      facadeExteriorZ,
       facadeInteriorZ: backZ,
       detailTier: definition.detailTier,
       modulePlacements,
+      constructionDetail: constructionDetail.report,
     },
   );
   const materialIds = new Set([
@@ -674,6 +703,7 @@ export function compileArchitecturalEnvelope(input: ArchitecturalEnvelopeDefinit
     occupiedRoomCount: definition.storeys
       .flatMap((storey) => storey.bays)
       .filter((bay) => bay.opening?.room.occupancy === 'inhabited').length,
+    constructionDetail: constructionDetail.report,
     facadeLayerDepths,
     apertures: allOpenings.map((opening) => ({
       id: opening.id,
