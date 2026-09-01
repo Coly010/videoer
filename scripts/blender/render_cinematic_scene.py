@@ -12,6 +12,9 @@ from mathutils import Matrix, Vector
 fixture_modulation_reports = []
 production_character_reports = []
 mpfb_module_name = None
+WORLD_OUTPUT_NODE = "videoer-world-output"
+WORLD_BACKGROUND_NODE = "videoer-world-background"
+WORLD_VOLUME_NODE = "videoer-world-volume"
 
 
 def load_module(filename, name):
@@ -550,17 +553,74 @@ def create_fixture_lights(definition, entity_id, asset, armature, mesh):
             })
 
 
+def configure_world(scene, color, strength=1.0):
+    if (
+        not isinstance(color, (list, tuple))
+        or len(color) != 3
+        or not all(isinstance(value, (int, float)) and math.isfinite(value) and value >= 0 for value in color)
+    ):
+        raise RuntimeError("Cinematic world color must contain three finite non-negative channels")
+    if not isinstance(strength, (int, float)) or not math.isfinite(strength) or strength < 0:
+        raise RuntimeError("Cinematic world strength must be finite and non-negative")
+    if scene.world is None:
+        scene.world = bpy.data.worlds.new("videoer-cinematic-world")
+    world = scene.world
+    world.color = color
+    world.use_nodes = True
+    nodes = world.node_tree.nodes
+    links = world.node_tree.links
+    nodes.clear()
+    output = nodes.new("ShaderNodeOutputWorld")
+    output.name = WORLD_OUTPUT_NODE
+    output.label = "Videoer world output"
+    background = nodes.new("ShaderNodeBackground")
+    background.name = WORLD_BACKGROUND_NODE
+    background.label = "Videoer declared atmosphere"
+    background.inputs["Color"].default_value = (*color, 1)
+    background.inputs["Strength"].default_value = strength
+    links.new(background.outputs["Background"], output.inputs["Surface"])
+    return {
+        "surfaceKind": "flat-color",
+        "color": list(color),
+        "strength": strength,
+        "surfaceLinked": True,
+        "volumeLinked": False,
+    }
+
+
 def create_fog(scene, density, color=(0.16, 0.2, 0.28)):
+    world = scene.world
+    if world is None or not world.use_nodes:
+        raise RuntimeError("Cinematic fog requires the explicit Videoer world-node surface")
+    nodes = world.node_tree.nodes
+    links = world.node_tree.links
+    output = nodes.get(WORLD_OUTPUT_NODE)
+    background = nodes.get(WORLD_BACKGROUND_NODE)
+    if (
+        output is None
+        or output.type != "OUTPUT_WORLD"
+        or background is None
+        or background.type != "BACKGROUND"
+        or not any(
+            link.from_node == background
+            and link.to_node == output
+            and link.to_socket == output.inputs["Surface"]
+            for link in links
+        )
+    ):
+        raise RuntimeError("Cinematic fog found an invalid or replaced Videoer world surface")
+    existing = nodes.get(WORLD_VOLUME_NODE)
+    if existing is not None:
+        nodes.remove(existing)
     if density <= 0:
-        return
-    scene.world.use_nodes = True
-    nodes = scene.world.node_tree.nodes
-    links = scene.world.node_tree.links
-    output = next(node for node in nodes if node.type == "OUTPUT_WORLD")
+        return {"enabled": False, "density": density, "surfacePreserved": True}
     volume = nodes.new("ShaderNodeVolumePrincipled")
+    volume.name = WORLD_VOLUME_NODE
+    volume.label = "Videoer declared atmosphere fog"
     volume.inputs["Density"].default_value = density
     volume.inputs["Color"].default_value = (*color, 1)
     links.new(volume.outputs["Volume"], output.inputs["Volume"])
+    return {"enabled": True, "density": density, "surfacePreserved": True}
 
 
 def create_translucent_vfx_material(name, color, opacity, roughness, emission_strength=0.0):
@@ -1487,7 +1547,7 @@ def configure_scene(manifest):
     scene.render.fps = manifest["fps"]
     scene.frame_start = 1
     scene.frame_end = round(manifest["durationSeconds"] * manifest["fps"])
-    scene.world.color = manifest["atmosphere"]["worldColor"]
+    configure_world(scene, manifest["atmosphere"]["worldColor"])
     scene.render.image_settings.file_format = "PNG"
     scene.render.image_settings.color_mode = "RGB"
     scene.render.image_settings.color_depth = "8"
