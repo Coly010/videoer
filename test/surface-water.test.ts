@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { boxPart, mergeMeshParts } from '../src/geometry/primitives.js';
 import { canonicalSha256 } from '../src/assets/sources/cache.js';
 import type { GeometryAsset } from '../src/geometry/model.js';
+import { createPavingUnitSurfaceMaterial } from '../src/materials/paving-unit.js';
 import {
   compileStaticSurfaceWater,
   verifyStaticSurfaceWaterField,
@@ -26,6 +27,12 @@ function receiver() {
       emissionStrength: 0,
     },
   ];
+  return geometry;
+}
+
+function receiverWithSurface() {
+  const geometry = receiver();
+  geometry.materials[0]!.surface = createPavingUnitSurfaceMaterial('contemporary-concrete-paver');
   return geometry;
 }
 
@@ -249,6 +256,39 @@ describe('receiver-aware static surface-water fields', () => {
     const unresolved = input();
     unresolved.materialResponses = {};
     expect(() => compileStaticSurfaceWater(unresolved)).toThrow(/missing for 'stone'/u);
+  });
+
+  it('fails closed when water dry roughness disagrees with a bound surface material', () => {
+    const value = input();
+    value.receiver.geometry = receiverWithSurface();
+    value.receiver.geometrySha256 = canonicalSha256(value.receiver.geometry);
+    const surface = createPavingUnitSurfaceMaterial('contemporary-concrete-paver');
+    const midpoint = (surface.roughness.minimum + surface.roughness.maximum) / 2;
+    value.materialResponses.stone!.wetRoughness.dry = midpoint + 1e-6;
+
+    expect(() => compileStaticSurfaceWater(value)).toThrow(
+      /dry roughness for 'stone' must equal its bound surface-material midpoint/u,
+    );
+    expect(() => compileStaticSurfaceWater(value, { schemaVersion: 2 })).toThrow(
+      /dry roughness for 'stone' must equal its bound surface-material midpoint/u,
+    );
+  });
+
+  it('accepts strict midpoint provenance and preserves deterministic verification', () => {
+    const value = input();
+    value.receiver.geometry = receiverWithSurface();
+    value.receiver.geometrySha256 = canonicalSha256(value.receiver.geometry);
+    const surface = createPavingUnitSurfaceMaterial('contemporary-concrete-paver');
+    const midpoint = (surface.roughness.minimum + surface.roughness.maximum) / 2;
+    value.materialResponses.stone!.wetRoughness.dry = midpoint + 1e-13;
+
+    const first = compileStaticSurfaceWater(value);
+    const second = compileStaticSurfaceWater(value);
+    const v2 = compileStaticSurfaceWater(value, { schemaVersion: 2 });
+
+    expect(second).toEqual(first);
+    expect(verifyStaticSurfaceWaterField(first)).toMatchObject({ valid: true });
+    expect(verifyStaticSurfaceWaterFieldV2(v2)).toMatchObject({ valid: true });
   });
 
   it('persists an exact hashed priority-flood parent tree in schema v2', () => {

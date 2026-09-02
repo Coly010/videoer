@@ -118,6 +118,18 @@ function assertGranularConstructionMaterial(
     throw new Error(
       `Paving substrate material '${material.id}' has wrong granular kind '${String(granularKind)}'`,
     );
+  const requiredResponse =
+    granularKind === 'natural-grit'
+      ? 'natural-joint'
+      : granularKind === 'polymeric-sand'
+        ? 'polymeric-joint'
+        : granularKind === 'compacted-base'
+          ? 'exposed-substrate'
+          : undefined;
+  if (!requiredResponse || material.constructionSurfaceResponse?.kind !== requiredResponse)
+    throw new Error(
+      `Paving ${role} material '${material.id}' requires ${String(requiredResponse)} construction response`,
+    );
 }
 
 function assertPavingBorderMaterial(
@@ -131,6 +143,10 @@ function assertPavingBorderMaterial(
     );
   if (!material.pavingBorder)
     throw new Error(`Paving border material '${material.id}' has no typed border compatibility`);
+  if (material.constructionSurfaceResponse?.kind !== 'paving-border')
+    throw new Error(
+      `Paving border material '${material.id}' requires paving-border construction response`,
+    );
   const incompatible = expectedKinds.filter(
     (kind) => !material.pavingBorder!.compatibleKinds.includes(kind),
   );

@@ -1947,6 +1947,11 @@ def create_surface_history(definition, receiver_asset, receiver_mesh):
     optical_materials = []
     transport_only_materials = []
     if schema_version == 3:
+        target_classes_by_material = {}
+        for cell in field["cells"]:
+            target_classes_by_material.setdefault(cell["materialId"], set()).add(
+                cell["targetClass"]
+            )
         for material_id in sorted(active_material_ids):
             material_definition = definitions_by_id.get(material_id)
             if material_definition is None:
@@ -1972,6 +1977,25 @@ def create_surface_history(definition, receiver_asset, receiver_mesh):
                 raise RuntimeError(
                     f"Entity '{definition['id']}' active v3 material '{material_id}' has invalid or incomplete surface-history participation"
                 )
+            response_kind = (surface.get("constructionSurfaceResponse") or {}).get("kind")
+            for target_class in sorted(target_classes_by_material[material_id]):
+                matched = (
+                    target_class == "modeled-unit"
+                    or (
+                        target_class == "joint"
+                        and response_kind in ("natural-joint", "polymeric-joint")
+                    )
+                    or (
+                        target_class == "substrate"
+                        and response_kind == "exposed-substrate"
+                    )
+                    or (target_class == "border" and response_kind == "paving-border")
+                )
+                if not matched:
+                    raise RuntimeError(
+                        f"Entity '{definition['id']}' active v3 material '{material_id}' target class "
+                        f"'{target_class}' is incompatible with construction response '{response_kind}'"
+                    )
     response_materials = []
     dirt_response_materials = []
     unmapped_materials = []
@@ -2149,6 +2173,13 @@ def create_surface_history(definition, receiver_asset, receiver_mesh):
             {
                 "opticalResponseMaterialIds": sorted(optical_materials),
                 "transportOnlyMaterialIds": sorted(transport_only_materials),
+                "constructionResponseMaterialIds": sorted(
+                    material_id
+                    for material_id in active_material_ids
+                    if (definitions_by_id[material_id].get("surface") or {}).get(
+                        "constructionSurfaceResponse"
+                    )
+                ),
             }
             if schema_version == 3
             else {}

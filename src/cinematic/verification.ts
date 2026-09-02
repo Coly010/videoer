@@ -304,6 +304,34 @@ export async function verifyCinematicScene(scene: CinematicScene, sceneFile: str
                   ];
             })
           : [];
+      const v3ConstructionResponseIssues =
+        historyVerification.field.schemaVersion === 3
+          ? [...activeMaterialIds].flatMap((materialId) => {
+              const targetClasses = [
+                ...new Set(
+                  historyVerification.field.cells
+                    .filter((cell) => cell.materialId === materialId)
+                    .map((cell) => cell.targetClass),
+                ),
+              ].sort();
+              const responseKind =
+                geometryMaterialsById.get(materialId)?.surface?.constructionSurfaceResponse?.kind;
+              const issues: string[] = [];
+              for (const targetClass of targetClasses) {
+                const matched =
+                  targetClass === 'modeled-unit' ||
+                  (targetClass === 'joint' &&
+                    (responseKind === 'natural-joint' || responseKind === 'polymeric-joint')) ||
+                  (targetClass === 'substrate' && responseKind === 'exposed-substrate') ||
+                  (targetClass === 'border' && responseKind === 'paving-border');
+                if (!matched)
+                  issues.push(
+                    `${materialId}: target class ${targetClass} is incompatible with construction response ${String(responseKind)}`,
+                  );
+              }
+              return issues;
+            })
+          : [];
       const v3ParticipationByTargetClass =
         historyVerification.field.schemaVersion === 3
           ? Object.fromEntries(
@@ -340,7 +368,8 @@ export async function verifyCinematicScene(scene: CinematicScene, sceneFile: str
         historyVerification.valid &&
         receiverMatched &&
         missingMaterialIds.length === 0 &&
-        v3MaterialPolicyIssues.length === 0;
+        v3MaterialPolicyIssues.length === 0 &&
+        v3ConstructionResponseIssues.length === 0;
       checks.push({
         id: `${entity.id}.surface-history-field`,
         status: valid ? 'pass' : 'fail',
@@ -367,6 +396,7 @@ export async function verifyCinematicScene(scene: CinematicScene, sceneFile: str
           v3TransportOnlyMaterialIds,
           v3ParticipationByTargetClass,
           v3MaterialPolicyIssues,
+          v3ConstructionResponseIssues,
           issues: [...waterVerification.issues, ...historyVerification.issues],
         },
       });

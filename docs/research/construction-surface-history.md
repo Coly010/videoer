@@ -68,3 +68,14 @@ Required probes are: identical fields through natural-versus-stabilized joints; 
 - [Poly Haven Pavement 05](https://polyhaven.com/a/pavement_05) and [ambientCG](https://ambientcg.com/) provide CC0 PBR baselines. Persist exact asset identity and hashes. Use them as neutral optical references, never as causal history masks.
 
 Do not adopt manufacturer colour claims, forum anecdotes, facade black-crust chemistry, proprietary standards tables or copied commercial material graphs as calibration. Do not encode uniform traffic polishing, uniform gutter darkening or invisible substrate weathering merely to increase visual contrast.
+
+## Homogeneous CC0 base-material candidates
+
+The wet-roughness provenance audit separated a real response-contract defect from the still-missing base-material quality. The correct reusable stack is modeled unit and joint geometry plus one homogeneous, physically scaled PBR source, deterministic per-unit variation, causal history and transient wet response. Scanned layouts with baked pavers, joints or kerbs are comparison/calibration evidence only; binding one to already modeled units creates stones painted on stones.
+
+- Poly Haven [Rough Concrete](https://polyhaven.com/a/rough_concrete) is a CC0, scale-declared concrete candidate (provider page: 1.2 m, maps up to 8K) for the unrelated contemporary host.
+- Poly Haven [Rock 01](https://polyhaven.com/a/rock_01) is a CC0, scale-declared generic mineral candidate (provider page: 1.5 m, maps up to 8K) for the unrelated historic host. It must be described as rock/mineral response, not falsely relabelled granite.
+- Poly Haven [Pavement 05](https://polyhaven.com/a/pavement_05), Concrete Pavers and Concrete Pavement remain layout references because their baked construction pattern conflicts with modeled unit topology.
+- ambientCG [Concrete034](https://ambientcg.com/view?id=Concrete034) remains available through the existing provenance-complete CC0 adapter, but prior probes show that its smooth/plaster-like source character is not a convincing production paving base.
+
+Any Poly Haven ingestion must reuse the normalized open-source-material boundary rather than bypassing it. Persist provider asset identity, retrieval date, raw licence evidence, exact files and hashes, physical dimensions, channel semantics, colour spaces, normal convention and rendered scale probes. Current Poly Haven asset files are CC0, but the conflicting current API-service terms already recorded in `open-production-ecosystem.md` mean automated live API acquisition must continue to fail closed until the provider reconciles those primary sources. A manual or explicitly supplied official asset package can enter through the same offline provenance adapter; it must not be scraped or silently fetched through disputed API terms.

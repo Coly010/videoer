@@ -302,6 +302,35 @@ def main():
         raise RuntimeError("surface history v3 did not report exposure-weathering cells")
     if report_v3["rainExposedCellCount"] != 64 or report_v3["shelterProtectedCellCount"] != 64:
         raise RuntimeError("surface history v3 lost exposure/shelter diagnostics")
+    invalid_construction_target = json.loads(json.dumps(history_v3))
+    for cell in invalid_construction_target["cells"]:
+        cell["targetClass"] = "joint"
+    invalid_construction_water = json.loads(json.dumps(water))
+    for cell in invalid_construction_water["cells"]:
+        cell["targetClass"] = "joint"
+    invalid_construction_water_path = os.path.join(output, "water-invalid-construction.json")
+    invalid_construction_path = os.path.join(output, "history-v3-invalid-construction.json")
+    write_json(invalid_construction_water_path, invalid_construction_water)
+    write_json(invalid_construction_path, invalid_construction_target)
+    invalid_construction_definition = {
+        **definition_v3,
+        "surfaceWaterFieldPath": invalid_construction_water_path,
+        "surfaceHistoryFieldPath": invalid_construction_path,
+        "surfaceHistoryVerification": render_preflight(
+            invalid_construction_path,
+            invalid_construction_water_path,
+            invalid_construction_target,
+            invalid_construction_water,
+        ),
+    }
+    try:
+        renderer.create_surface_history(
+            invalid_construction_definition, asset, mesh_v3
+        )
+        raise RuntimeError("surface history v3 accepted a mismatched construction response")
+    except RuntimeError as error:
+        if "target class 'joint' is incompatible with construction response" not in str(error):
+            raise
     v3_image = mesh_v3.data.materials[0].node_tree.nodes[
         "videoer-surface-history-field"
     ].image
@@ -568,6 +597,7 @@ def main():
         "transportOnlyMaterialIds": transport_report["transportOnlyMaterialIds"],
         "undeclaredParticipationRejected": True,
         "incompleteOpticalResponseRejected": True,
+        "mismatchedConstructionResponseRejected": True,
     }
     report["isolatedChannelEvidence"] = {
         "method": "fixed-state-packed-field-single-channel-v1",

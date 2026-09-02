@@ -107,6 +107,22 @@ export function createPavingBorderSurfaceMaterial(kind: PavingBorderMaterialKind
       },
     },
     surfaceHistoryV3Participation: { policy: 'optical-response' },
+    constructionSurfaceResponse: {
+      kind: 'paving-border',
+      geometryBasis: 'authored-border-profile',
+      historyFaces: gutter ? ['top'] : ['top', 'paving-facing'],
+      faceTransitionCosine: gutter ? 0.72 : 0.64,
+      ...(gutter
+        ? {
+            gutterZones: {
+              coreWidthFraction: 0.46,
+              transitionWidthFraction: 0.12,
+              coreThroughflowCleaning: historic ? 0.78 : 0.7,
+              marginRetainedDeposition: historic ? 1.25 : 1.12,
+            },
+          }
+        : {}),
+    },
     pavingBorder: {
       compatibleKinds: gutter ? ['gutter'] : concrete ? ['kerb', 'soldier-course'] : ['kerb'],
     },

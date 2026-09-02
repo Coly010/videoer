@@ -476,6 +476,23 @@ describe('unit-aware paving material assembly', () => {
       }),
     ).rejects.toThrow(/incompatible with target 'granite-kerb'/u);
     expect(sha256Bytes(await readFile(outputPath))).toBe(originalOutputSha256);
+
+    const incompleteGutter = createPavingBorderSurfaceMaterial('historic-dark-stone-gutter');
+    if (incompleteGutter.constructionSurfaceResponse?.kind !== 'paving-border')
+      throw new Error('Gutter fixture lacks paving-border response');
+    incompleteGutter.constructionSurfaceResponse.gutterZones = undefined;
+    const incompleteGutterPath = join(directory, 'materials/incomplete-gutter.json');
+    await writeFile(incompleteGutterPath, `${JSON.stringify(incompleteGutter, null, 2)}\n`, 'utf8');
+    await expect(
+      bindPavingConstructionMaterials({
+        ...common,
+        borderMaterialPaths: {
+          'granite-kerb': kerbPath,
+          'dark-stone-gutter': incompleteGutterPath,
+        },
+      }),
+    ).rejects.toThrow(/gutter-compatible material requires gutter zones/u);
+    expect(sha256Bytes(await readFile(outputPath))).toBe(originalOutputSha256);
   });
 
   it('cross-validates explicit surface-history v3 optical and transport-only policies', () => {
@@ -542,10 +559,8 @@ describe('unit-aware paving material assembly', () => {
 
     const wrongDomain = structuredClone(validJoint);
     wrongDomain.metadata.constructionDomain = 'flat-ground-surface';
-    const wrongDomainPath = await saveSurfaceMaterial(
-      join(directory, 'materials/wrong-domain.json'),
-      wrongDomain,
-    );
+    const wrongDomainPath = join(directory, 'materials/wrong-domain.json');
+    await writeFile(wrongDomainPath, `${JSON.stringify(wrongDomain, null, 2)}\n`, 'utf8');
     await expect(
       bindPavingConstructionMaterials({
         pavingGeometryPath: geometryPath,
@@ -553,7 +568,7 @@ describe('unit-aware paving material assembly', () => {
         substrateMaterialPath: substratePath,
         outputGeometryPath: join(directory, 'wrong-domain/paving.json'),
       }),
-    ).rejects.toThrow(/wrong construction domain/u);
+    ).rejects.toThrow(/requires paving-joint-substrate material metadata/u);
 
     const wrongPattern = structuredClone(validJoint);
     wrongPattern.pattern = { kind: 'isotropic' };
@@ -569,6 +584,19 @@ describe('unit-aware paving material assembly', () => {
         outputGeometryPath: join(directory, 'wrong-pattern/paving.json'),
       }),
     ).rejects.toThrow(/wrong pattern kind/u);
+
+    const missingResponse = structuredClone(validJoint);
+    missingResponse.constructionSurfaceResponse = undefined;
+    const missingResponsePath = join(directory, 'materials/missing-response.json');
+    await writeFile(missingResponsePath, `${JSON.stringify(missingResponse, null, 2)}\n`, 'utf8');
+    await expect(
+      bindPavingConstructionMaterials({
+        pavingGeometryPath: geometryPath,
+        jointMaterialPath: missingResponsePath,
+        substrateMaterialPath: substratePath,
+        outputGeometryPath: join(directory, 'missing-response/paving.json'),
+      }),
+    ).rejects.toThrow(/requires natural-joint construction response/u);
   });
 
   it('rejects missing or overlapping construction targets without replacing prior output', async () => {

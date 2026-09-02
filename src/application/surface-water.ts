@@ -105,6 +105,14 @@ function expectedTargetClass(
   return undefined;
 }
 
+function boundSurfaceDryRoughness(
+  geometry: Awaited<ReturnType<typeof loadGeometry>>,
+  materialId: string,
+) {
+  const surface = geometry.materials.find((material) => material.id === materialId)?.surface;
+  return surface ? (surface.roughness.minimum + surface.roughness.maximum) / 2 : undefined;
+}
+
 type CreatePavingSurfaceWaterFieldOptions = {
   pavingGeometryPath: string;
   atmosphericVfxPath: string;
@@ -153,6 +161,7 @@ export async function createPavingSurfaceWaterField(
     geometry.metadata.surfaceMaterialTargets,
   );
   const liveMaterials = new Set(geometry.materials.map((material) => material.id));
+  const materialDryRoughnessSources: Record<string, 'bound-surface' | 'profile'> = {};
   for (const [materialId, response] of Object.entries(profile.materialResponses)) {
     if (!liveMaterials.has(materialId))
       throw new Error(`surface-water profile references absent material '${materialId}'`);
@@ -163,6 +172,14 @@ export async function createPavingSurfaceWaterField(
       throw new Error(
         `surface-water material '${materialId}' declares ${response.targetClass}, expected ${expected}`,
       );
+    const boundDry = boundSurfaceDryRoughness(geometry, materialId);
+    if (boundDry !== undefined) {
+      if (Math.abs(response.wetRoughness.dry - boundDry) > 1e-12)
+        throw new Error(
+          `surface-water material '${materialId}' dry roughness ${response.wetRoughness.dry} is stale; bound surface requires ${boundDry}`,
+        );
+      materialDryRoughnessSources[materialId] = 'bound-surface';
+    } else materialDryRoughnessSources[materialId] = 'profile';
   }
   const materialResponses = { ...profile.materialResponses };
   const embeddedResponseMaterialIds: string[] = [];
@@ -188,6 +205,7 @@ export async function createPavingSurfaceWaterField(
       splash: response.splash,
     });
     embeddedResponseMaterialIds.push(materialId);
+    materialDryRoughnessSources[materialId] = 'bound-surface';
   }
 
   const shelterDirectory = resolve(options.profileDirectory);
@@ -267,6 +285,11 @@ export async function createPavingSurfaceWaterField(
     materialResponseSources: {
       profile: Object.keys(profile.materialResponses).sort(),
       embedded: embeddedResponseMaterialIds.sort(),
+      dryRoughness: Object.fromEntries(
+        Object.entries(materialDryRoughnessSources).sort(([left], [right]) =>
+          left.localeCompare(right),
+        ),
+      ),
     },
     visualAcceptance: 'not-assessed',
   };
@@ -300,6 +323,23 @@ export async function rebindSurfaceWaterAssemblyProfile(options: {
     geometry.metadata.surfaceMaterialTargets,
   );
   const liveMaterials = new Map(geometry.materials.map((material) => [material.id, material]));
+  const materialResponses = Object.fromEntries(
+    Object.entries(sourceProfile.materialResponses).map(([materialId, response]) => {
+      const surface = liveMaterials.get(materialId)?.surface;
+      return [
+        materialId,
+        surface
+          ? {
+              ...response,
+              wetRoughness: {
+                ...response.wetRoughness,
+                dry: (surface.roughness.minimum + surface.roughness.maximum) / 2,
+              },
+            }
+          : response,
+      ];
+    }),
+  );
   for (const [materialId, response] of Object.entries(sourceProfile.materialResponses)) {
     if (!liveMaterials.has(materialId))
       throw new Error(`surface-water profile references absent material '${materialId}'`);
@@ -336,6 +376,7 @@ export async function rebindSurfaceWaterAssemblyProfile(options: {
     ...sourceProfile,
     ...(options.profileId ? { id: options.profileId } : {}),
     receiverSha256,
+    materialResponses,
     shelters,
   });
   const path = await writeJsonAtomically(outputProfilePath, profile);

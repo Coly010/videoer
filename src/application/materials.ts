@@ -161,7 +161,7 @@ export async function createPavingGranularMaterialAsset(
   return createSurfaceMaterialAsset(outputDirectory, {
     material,
     swatch: createPavingGranularSwatch(kind),
-    version: '0.2.0',
+    version: '0.3.0',
     title: isSubstrate
       ? 'Procedural compacted paving substrate'
       : `Procedural ${kind} paving joint`,
@@ -180,7 +180,7 @@ export async function createPavingBorderMaterialAsset(
   return createSurfaceMaterialAsset(outputDirectory, {
     material,
     swatch: createPavingBorderSwatch(kind),
-    version: '0.1.0',
+    version: '0.2.0',
     title: `Procedural ${kind.replaceAll('-', ' ')} paving border`,
     description:
       'Renderer-independent paving border material with typed kerb, gutter, or soldier-course compatibility and explicit water, construction-history, and dirt response.',

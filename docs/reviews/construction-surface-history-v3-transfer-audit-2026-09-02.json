@@ -8,12 +8,15 @@
     "exposureSeparation": "pass",
     "splitRunoffResponse": "pass",
     "dirtMassEquivalence": "pass",
+    "boundDryRoughnessProvenance": "pass",
+    "constructionResponsePreflight": "pass",
     "nativeBlenderConsumption": "pass",
     "productionEnvironmentVisualAcceptance": "reject"
   },
   "historic": {
     "activeCellCount": 3157,
-    "fieldSha256": "23beba233c4b9475a404299b6c0ce59927bc1f278a4fecbe61e920438eb88f0f",
+    "fieldSha256": "b1c40f9dd0444fad4c6f70c1ef2ee2b14e2ebda934762f7d3e5ecb66e7408080",
+    "waterFieldSha256": "91020253da4585ab2e2030968f37f020c30e3181923a40f84b40cff8ff7e8941",
     "routingSha256": "b2af20a4abf2817b81d08ef5e3350daab13dfbc0a20ef8b9f5266fcc0acbd12d",
     "trafficAffectedCellCount": 1163,
     "trafficMaximum": 0.823767799998457,
@@ -24,6 +27,10 @@
     "dirtCellsByteEqualToV2": true,
     "v2V3ContactSheetPsnrDecibels": 40.192199,
     "prePolicyToCompleteParticipationPsnrDecibels": 44.696447,
+    "preCorrectionMedianEffectiveRoughness": 0.0714,
+    "correctedMedianEffectiveRoughness": 0.2074,
+    "correctedMeanEffectiveRoughness": 0.2431978,
+    "preCorrectionToCorrectedContactSheetPsnrDecibels": 42.508392,
     "activeMaterialParticipation": {
       "activeMaterialCount": 8,
       "opticalResponseMaterialCount": 8,
@@ -37,7 +44,8 @@
   },
   "contemporary": {
     "activeCellCount": 3654,
-    "fieldSha256": "acc4f8eef6c4df55249fbff3a35d5d48dcc3a9d7969509603021a758d3a40d71",
+    "fieldSha256": "eedd582e736b3219a80ae6821fb25ebbedab8e386a44f7e86c55fe14de5b31f1",
+    "waterFieldSha256": "7cd0bab99adb0c6762a814340669ad77167e1ada2b9d69f64d83b3f9064c6ff2",
     "routingSha256": "9def850e6419ebf1a7f355ffcfeacf32d5bf1cc7b533fa37d924f397e5486795",
     "trafficAffectedCellCount": 1462,
     "trafficMaximum": 0.6987819004296458,
@@ -48,6 +56,10 @@
     "dirtCellsByteEqualToV2": true,
     "v2V3ContactSheetPsnrDecibels": 42.650325,
     "prePolicyToCompleteParticipationPsnrDecibels": 36.395257,
+    "preCorrectionMedianEffectiveRoughness": 0.0612,
+    "correctedMedianEffectiveRoughness": 0.2006,
+    "correctedMeanEffectiveRoughness": 0.2093373,
+    "preCorrectionToCorrectedContactSheetPsnrDecibels": 42.835584,
     "activeMaterialParticipation": {
       "activeMaterialCount": 8,
       "opticalResponseMaterialCount": 8,
@@ -72,17 +84,19 @@
     "the initial dirt-only v3 probes were invalidated; both host geometry/water/history/optical chains were rebuilt and each final render reports five genuine v3 response materials",
     "the follow-up optical-completeness audit rebuilds both chains with eight of eight active materials responding: five modeled-unit materials, one joint material and two border materials; inactive compacted substrate is excluded by live-cell evidence",
     "the existing atomic paving-construction binder now validates exact kerb, gutter and soldier-course target compatibility; missing, extra and wrong-kind bindings preserve prior output",
+    "surface-water dry roughness is now provenance-bound to the live surface-material midpoint; direct assembly rejects stale profiles and rebinding derives corrected values without altering water or dirt conservation",
+    "TypeScript scene verification and canonical Blender independently reject active joint, substrate or border cells whose material lacks the target-class-compatible typed construction response",
     "both authoritative-profile three-landmark host probes completed with canonical Blender and host Metal access"
   ],
   "blockingFindings": [
     "historic paving remains overly orderly, uniform and mineral-poor",
-    "contemporary paving remains pale, glossy and ceramic-like",
+    "the contradictory near-mirror wet roughness is corrected, but contemporary paving remains pale, overly smooth at mesoscales and visually dominated by broad optical water",
     "repair and causal route history are still too subtle to identify confidently in assembled beauty views",
     "all active construction materials now consume the field, but current joint and border response is limited to bounded color and roughness; fill recession, coherent polymeric failure, kerb-face isolation, gutter flow-core cleaning versus margin deposition and exposed-substrate normal or geometry response remain future reusable material work",
     "facades, glazing, inhabited interiors and precipitation remain below photographic acceptance",
     "the profiles are deterministic cinematic heuristics rather than surveyed or calibrated site histories"
   ],
-  "nextGenericChange": "Target richer base mineral/concrete sources and construction-domain normal or geometry response on unrelated hosts; do not amplify v3 channels or tune the benchmark.",
+  "nextGenericChange": "Add provenance-complete homogeneous CC0 mineral/concrete bases behind the existing material contract, then consume the typed construction responses as joint, border and active-substrate normal or geometry behavior on unrelated hosts; do not amplify v3 channels or tune the benchmark.",
   "queuedReusableWork": {
     "productionClothing": "Queued behind current higher-priority reusable environment/material work: garment panels and pattern construction, seams, hems, thickness, shoulder and armhole quality, base weights and correctives, folds and wrinkles, cloth materials, selective simulation, and temporal verification. This is reusable-system work, not benchmark-specific polishing."
   }

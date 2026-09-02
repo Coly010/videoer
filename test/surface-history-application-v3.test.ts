@@ -84,6 +84,7 @@ describe('surface-history v3 application assembly', () => {
 
   async function fixture(
     participation: 'optical-response' | 'missing' | 'transport-only' = 'optical-response',
+    targetClass: 'modeled-unit' | 'joint' = 'modeled-unit',
   ) {
     directory = await mkdtemp(join(tmpdir(), 'videoer-surface-history-v3-'));
     const surface = structuredClone(createPavingUnitSurfaceMaterial('historic-cut-granite'));
@@ -134,14 +135,14 @@ describe('surface-history v3 application assembly', () => {
       },
       materialResponses: {
         stone: {
-          targetClass: 'modeled-unit',
+          targetClass,
           absorption: { capacityMeters: 0, rateMetersPerSecond: 0, initialSaturation: 0 },
           retention: {
             filmCapacityMeters: 0.0005,
             edgeCapacityMeters: 0.001,
             maximumPuddleDepthMeters: 0.04,
           },
-          wetRoughness: { dry: 0.7, multiplier: 0.5, floor: 0.1 },
+          wetRoughness: { dry: 0.61, multiplier: 0.5, floor: 0.1 },
           splash: { minimumFreeWaterDepthMeters: 0.0001, maximumSlopeDegrees: 15 },
         },
       },
@@ -157,8 +158,9 @@ describe('surface-history v3 application assembly', () => {
 
   async function verifyParticipation(
     participation: 'optical-response' | 'missing' | 'transport-only',
+    targetClass: 'modeled-unit' | 'joint' = 'modeled-unit',
   ) {
-    const { geometryPath, waterPath } = await fixture(participation);
+    const { geometryPath, waterPath } = await fixture(participation, targetClass);
     const historyPath = join(directory!, `history-${participation}.json`);
     await createPavingSurfaceHistoryV3Field({
       pavingGeometryPath: geometryPath,
@@ -411,12 +413,33 @@ describe('surface-history v3 application assembly', () => {
             v3OpticalMaterialIds: [],
             v3TransportOnlyMaterialIds: ['stone'],
             v3MaterialPolicyIssues: [],
+            v3ConstructionResponseIssues: [],
             v3ParticipationByTargetClass: expect.objectContaining({
               'modeled-unit': expect.objectContaining({
                 opticalResponseMaterialIds: [],
                 transportOnlyMaterialIds: ['stone'],
               }),
             }),
+          }),
+        }),
+      ]),
+    });
+  });
+
+  it('fails closed when an active construction target lacks its matching response', async () => {
+    expect(await verifyParticipation('optical-response', 'joint')).toMatchObject({
+      status: 'fail',
+      checks: expect.arrayContaining([
+        expect.objectContaining({
+          id: 'receiver.surface-history-field',
+          status: 'fail',
+          measurements: expect.objectContaining({
+            v3MaterialPolicyIssues: [],
+            v3ConstructionResponseIssues: [
+              expect.stringContaining(
+                'stone: target class joint is incompatible with construction response undefined',
+              ),
+            ],
           }),
         }),
       ]),

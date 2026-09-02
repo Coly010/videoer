@@ -14,6 +14,7 @@ import {
   createPavingGranularSurfaceMaterial,
   createPavingGranularSwatch,
 } from '../src/materials/paving-joint.js';
+import { createPavingBorderSurfaceMaterial } from '../src/materials/paving-border.js';
 
 describe('renderer-independent reusable materials', () => {
   it('separates texture-placement variation from construction-semantic surface masks', () => {
@@ -201,6 +202,19 @@ describe('renderer-independent reusable materials', () => {
     expect(substrate.surfaceWaterResponse!.absorption.capacityMeters).toBeGreaterThan(
       grit.surfaceWaterResponse!.absorption.capacityMeters,
     );
+    expect(grit.constructionSurfaceResponse).toMatchObject({
+      kind: 'natural-joint',
+      geometryBasis: 'authored-joint-recession',
+      clogging: { driver: 'dirt-coverage', maximumFillFractionOfRecession: 0.72 },
+    });
+    expect(polymeric.constructionSurfaceResponse).toMatchObject({
+      kind: 'polymeric-joint',
+      coherentFailure: { onset: 0.58, coherenceScaleMeters: 0.18 },
+    });
+    expect(substrate.constructionSurfaceResponse).toMatchObject({
+      kind: 'exposed-substrate',
+      activation: 'active-history-cells-only',
+    });
     for (const kind of ['natural-grit', 'polymeric-sand', 'compacted-base'] as const)
       expect(validateGeometry(createPavingGranularSwatch(kind)).valid).toBe(true);
   });
@@ -213,5 +227,79 @@ describe('renderer-independent reusable materials', () => {
         pattern: { ...material.pattern, finesScaleMeters: 0.007 },
       }),
     ).toThrow(/fines must be smaller/);
+  });
+
+  it('bounds and cross-validates construction-domain surface response', () => {
+    const natural = createPavingGranularSurfaceMaterial('natural-grit');
+    const polymeric = createPavingGranularSurfaceMaterial('polymeric-sand');
+    const naturalResponse = natural.constructionSurfaceResponse;
+    const polymericResponse = polymeric.constructionSurfaceResponse;
+    if (naturalResponse?.kind !== 'natural-joint' || polymericResponse?.kind !== 'polymeric-joint')
+      throw new Error('Construction response fixture kinds are invalid');
+
+    expect(() =>
+      surfaceMaterialSchema.parse({
+        ...natural,
+        constructionSurfaceResponse: {
+          ...naturalResponse,
+          clogging: {
+            ...naturalResponse.clogging,
+            looseWeight: 0,
+            persistentWeight: 0,
+          },
+        },
+      }),
+    ).toThrow(/positive dirt weight/u);
+    expect(() =>
+      surfaceMaterialSchema.parse({
+        ...polymeric,
+        constructionSurfaceResponse: {
+          ...polymericResponse,
+          coherentFailure: {
+            ...polymericResponse.coherentFailure,
+            saturation: polymericResponse.coherentFailure.onset,
+          },
+        },
+      }),
+    ).toThrow(/saturation must exceed onset/u);
+    expect(() =>
+      surfaceMaterialSchema.parse({
+        ...natural,
+        constructionSurfaceResponse: polymericResponse,
+      }),
+    ).toThrow(/requires natural-joint/u);
+    expect(() =>
+      surfaceMaterialSchema.parse({
+        ...natural,
+        metadata: { ...natural.metadata, constructionDomain: 'flat-ground-surface' },
+      }),
+    ).toThrow(/requires paving-joint-substrate material metadata/u);
+
+    const gutter = createPavingBorderSurfaceMaterial('historic-dark-stone-gutter');
+    const gutterResponse = gutter.constructionSurfaceResponse;
+    if (gutterResponse?.kind !== 'paving-border' || !gutterResponse.gutterZones)
+      throw new Error('Gutter response fixture is invalid');
+    expect(gutterResponse.historyFaces).toEqual(['top']);
+    expect(() =>
+      surfaceMaterialSchema.parse({
+        ...gutter,
+        constructionSurfaceResponse: { ...gutterResponse, gutterZones: undefined },
+      }),
+    ).toThrow(/gutter-compatible material requires gutter zones/u);
+
+    const kerb = createPavingBorderSurfaceMaterial('historic-granite-kerb');
+    expect(kerb.constructionSurfaceResponse).toMatchObject({
+      kind: 'paving-border',
+      historyFaces: ['top', 'paving-facing'],
+    });
+    expect(() =>
+      surfaceMaterialSchema.parse({
+        ...kerb,
+        constructionSurfaceResponse: {
+          ...kerb.constructionSurfaceResponse,
+          gutterZones: gutterResponse.gutterZones,
+        },
+      }),
+    ).toThrow(/non-gutter material must not declare gutter zones/u);
   });
 });

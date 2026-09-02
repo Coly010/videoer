@@ -114,6 +114,43 @@ export function createPavingGranularSurfaceMaterial(kind: PavingGranularKind): S
             loose: { colorMultiplier: 0.55, roughnessOffset: 0.18 },
             persistent: { colorMultiplier: 0.65, roughnessOffset: 0.12 },
           };
+  const constructionSurfaceResponse =
+    kind === 'natural-grit'
+      ? {
+          kind: 'natural-joint' as const,
+          geometryBasis: 'authored-joint-recession' as const,
+          clogging: {
+            driver: 'dirt-coverage' as const,
+            looseWeight: 0.65,
+            persistentWeight: 1,
+            onsetCoverage: 0.15,
+            saturationCoverage: 0.85,
+            maximumFillFractionOfRecession: 0.72,
+          },
+          normal: { intactStrengthScale: 1, changedStrengthScale: 0.45 },
+        }
+      : kind === 'polymeric-sand'
+        ? {
+            kind: 'polymeric-joint' as const,
+            geometryBasis: 'authored-joint-recession' as const,
+            coherentFailure: {
+              driver: 'traffic-and-throughflow' as const,
+              trafficWeight: 0.68,
+              throughflowWeight: 0.82,
+              onset: 0.58,
+              saturation: 0.86,
+              coherenceScaleMeters: 0.18,
+              seed: 90_217,
+              maximumAdditionalRecessionFraction: 0.55,
+            },
+            normal: { intactStrengthScale: 0.75, changedStrengthScale: 1.4 },
+          }
+        : {
+            kind: 'exposed-substrate' as const,
+            activation: 'active-history-cells-only' as const,
+            normal: { strengthScale: 1.1 },
+            dirtDepositionScale: 1.25,
+          };
   return surfaceMaterialSchema.parse({
     schemaVersion: 1,
     id: definition.id,
@@ -169,6 +206,7 @@ export function createPavingGranularSurfaceMaterial(kind: PavingGranularKind): S
     historyResponseV3,
     dirtMassResponse,
     surfaceHistoryV3Participation: { policy: 'optical-response' },
+    constructionSurfaceResponse,
     metallic: 0,
     metadata: {
       generator: 'videoer.paving-joint-material.v1',

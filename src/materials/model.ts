@@ -36,6 +36,106 @@ export const surfaceHistoryV3ParticipationSchema = z.discriminatedUnion('policy'
   }),
 ]);
 
+const constructionNormalResponseSchema = z.object({
+  intactStrengthScale: z.number().min(0).max(2),
+  changedStrengthScale: z.number().min(0).max(2),
+});
+
+export const constructionSurfaceResponseSchema = z
+  .discriminatedUnion('kind', [
+    z.object({
+      kind: z.literal('natural-joint'),
+      geometryBasis: z.literal('authored-joint-recession'),
+      clogging: z.object({
+        driver: z.literal('dirt-coverage'),
+        looseWeight: z.number().min(0).max(4),
+        persistentWeight: z.number().min(0).max(4),
+        onsetCoverage: z.number().min(0).max(1),
+        saturationCoverage: z.number().min(0).max(1),
+        maximumFillFractionOfRecession: z.number().min(0).max(1),
+      }),
+      normal: constructionNormalResponseSchema,
+    }),
+    z.object({
+      kind: z.literal('polymeric-joint'),
+      geometryBasis: z.literal('authored-joint-recession'),
+      coherentFailure: z.object({
+        driver: z.literal('traffic-and-throughflow'),
+        trafficWeight: z.number().min(0).max(4),
+        throughflowWeight: z.number().min(0).max(4),
+        onset: z.number().min(0).max(1),
+        saturation: z.number().min(0).max(1),
+        coherenceScaleMeters: z.number().positive().max(20),
+        seed: z.number().int(),
+        maximumAdditionalRecessionFraction: z.number().min(0).max(1),
+      }),
+      normal: constructionNormalResponseSchema,
+    }),
+    z.object({
+      kind: z.literal('paving-border'),
+      geometryBasis: z.literal('authored-border-profile'),
+      historyFaces: z
+        .array(z.enum(['top', 'paving-facing', 'outer-facing']))
+        .min(1)
+        .refine((faces) => new Set(faces).size === faces.length, 'history faces must be unique'),
+      faceTransitionCosine: z.number().min(0).max(1),
+      gutterZones: z
+        .object({
+          coreWidthFraction: z.number().positive().max(1),
+          transitionWidthFraction: z.number().nonnegative().max(0.5),
+          coreThroughflowCleaning: z.number().min(0).max(1),
+          marginRetainedDeposition: z.number().min(0).max(2),
+        })
+        .optional(),
+    }),
+    z.object({
+      kind: z.literal('exposed-substrate'),
+      activation: z.literal('active-history-cells-only'),
+      normal: z.object({ strengthScale: z.number().min(0).max(2) }),
+      dirtDepositionScale: z.number().min(0).max(2),
+    }),
+  ])
+  .superRefine((response, context) => {
+    if (response.kind === 'natural-joint') {
+      if (response.clogging.looseWeight + response.clogging.persistentWeight <= 0)
+        context.addIssue({
+          code: 'custom',
+          path: ['clogging'],
+          message: 'natural-joint clogging requires at least one positive dirt weight',
+        });
+      if (response.clogging.saturationCoverage <= response.clogging.onsetCoverage)
+        context.addIssue({
+          code: 'custom',
+          path: ['clogging', 'saturationCoverage'],
+          message: 'natural-joint clogging saturation must exceed onset',
+        });
+    }
+    if (response.kind === 'polymeric-joint') {
+      if (response.coherentFailure.trafficWeight + response.coherentFailure.throughflowWeight <= 0)
+        context.addIssue({
+          code: 'custom',
+          path: ['coherentFailure'],
+          message: 'polymeric-joint failure requires at least one positive causal weight',
+        });
+      if (response.coherentFailure.saturation <= response.coherentFailure.onset)
+        context.addIssue({
+          code: 'custom',
+          path: ['coherentFailure', 'saturation'],
+          message: 'polymeric-joint failure saturation must exceed onset',
+        });
+    }
+    if (
+      response.kind === 'paving-border' &&
+      response.gutterZones &&
+      response.gutterZones.coreWidthFraction + response.gutterZones.transitionWidthFraction * 2 > 1
+    )
+      context.addIssue({
+        code: 'custom',
+        path: ['gutterZones', 'transitionWidthFraction'],
+        message: 'gutter core and both transition margins must fit within the border width',
+      });
+  });
+
 export const textureMaterialSuitabilitySchema = z
   .object({
     composition: textureSurfaceCompositionSchema,
@@ -408,6 +508,7 @@ export const surfaceMaterialSchema = z
       })
       .optional(),
     surfaceHistoryV3Participation: surfaceHistoryV3ParticipationSchema.optional(),
+    constructionSurfaceResponse: constructionSurfaceResponseSchema.optional(),
     pavingBorder: z
       .object({
         compatibleKinds: z
@@ -487,6 +588,80 @@ export const surfaceMaterialSchema = z
         code: 'custom',
         path: ['pavingBorder'],
         message: 'paving-border compatibility requires paving-border construction metadata',
+      });
+    if (
+      material.constructionSurfaceResponse &&
+      material.surfaceHistoryV3Participation?.policy !== 'optical-response'
+    )
+      ctx.addIssue({
+        code: 'custom',
+        path: ['constructionSurfaceResponse'],
+        message: 'construction-surface response requires optical surface-history participation',
+      });
+    const granularKind = material.metadata.granularKind;
+    const requiredGranularResponse =
+      granularKind === 'natural-grit'
+        ? 'natural-joint'
+        : granularKind === 'polymeric-sand'
+          ? 'polymeric-joint'
+          : granularKind === 'compacted-base'
+            ? 'exposed-substrate'
+            : undefined;
+    if (
+      material.metadata.constructionDomain === 'paving-joint-substrate' &&
+      requiredGranularResponse &&
+      material.constructionSurfaceResponse?.kind !== requiredGranularResponse
+    )
+      ctx.addIssue({
+        code: 'custom',
+        path: ['constructionSurfaceResponse'],
+        message: `granular kind '${granularKind}' requires ${requiredGranularResponse} construction response`,
+      });
+    if (material.metadata.constructionDomain === 'paving-border') {
+      if (!material.pavingBorder)
+        ctx.addIssue({
+          code: 'custom',
+          path: ['pavingBorder'],
+          message: 'paving-border material requires typed border compatibility',
+        });
+      if (material.constructionSurfaceResponse?.kind !== 'paving-border')
+        ctx.addIssue({
+          code: 'custom',
+          path: ['constructionSurfaceResponse'],
+          message: 'paving-border material requires paving-border construction response',
+        });
+      else if (material.pavingBorder) {
+        const gutterCompatible = material.pavingBorder.compatibleKinds.includes('gutter');
+        if (gutterCompatible !== Boolean(material.constructionSurfaceResponse.gutterZones))
+          ctx.addIssue({
+            code: 'custom',
+            path: ['constructionSurfaceResponse', 'gutterZones'],
+            message: gutterCompatible
+              ? 'gutter-compatible material requires gutter zones'
+              : 'non-gutter material must not declare gutter zones',
+          });
+      }
+    }
+    if (
+      material.constructionSurfaceResponse?.kind === 'paving-border' &&
+      material.metadata.constructionDomain !== 'paving-border'
+    )
+      ctx.addIssue({
+        code: 'custom',
+        path: ['constructionSurfaceResponse'],
+        message: 'paving-border construction response requires paving-border material metadata',
+      });
+    if (
+      material.constructionSurfaceResponse &&
+      ['natural-joint', 'polymeric-joint', 'exposed-substrate'].includes(
+        material.constructionSurfaceResponse.kind,
+      ) &&
+      material.metadata.constructionDomain !== 'paving-joint-substrate'
+    )
+      ctx.addIssue({
+        code: 'custom',
+        path: ['constructionSurfaceResponse'],
+        message: `${material.constructionSurfaceResponse.kind} construction response requires paving-joint-substrate material metadata`,
       });
   });
 

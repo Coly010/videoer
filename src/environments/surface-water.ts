@@ -8,6 +8,7 @@ const localIdentifier = z.string().regex(/^[a-z][a-z0-9-]*$/);
 const vec2 = z.tuple([z.number().finite(), z.number().finite()]);
 const vec3 = z.tuple([z.number().finite(), z.number().finite(), z.number().finite()]);
 const sha256 = z.string().regex(/^[a-f0-9]{64}$/u);
+const SURFACE_ROUGHNESS_PROVENANCE_TOLERANCE = 1e-12;
 
 export const surfaceWaterMaterialResponseSchema = z.object({
   targetClass: z.enum(['modeled-unit', 'joint', 'substrate', 'border']),
@@ -104,6 +105,23 @@ export const surfaceWaterFieldInputSchema = z
         path: ['shelters'],
         message: 'shelter ids must be unique',
       });
+    const receiverMaterials = new Map(
+      input.receiver.geometry.materials.map((material) => [material.id, material]),
+    );
+    for (const [materialId, response] of Object.entries(input.materialResponses)) {
+      const surface = receiverMaterials.get(materialId)?.surface;
+      if (!surface) continue;
+      const expectedDryRoughness = (surface.roughness.minimum + surface.roughness.maximum) / 2;
+      if (
+        Math.abs(response.wetRoughness.dry - expectedDryRoughness) >
+        SURFACE_ROUGHNESS_PROVENANCE_TOLERANCE
+      )
+        context.addIssue({
+          code: 'custom',
+          path: ['materialResponses', materialId, 'wetRoughness', 'dry'],
+          message: `surface-water dry roughness for '${materialId}' must equal its bound surface-material midpoint ${expectedDryRoughness}`,
+        });
+    }
   });
 
 export type SurfaceWaterFieldInput = z.input<typeof surfaceWaterFieldInputSchema>;

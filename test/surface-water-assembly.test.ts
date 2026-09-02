@@ -110,6 +110,41 @@ describe('paving surface-water assembly', () => {
       },
     });
     expect(rebound.sourceProfileSha256).toBe(await sha256File(sourceProfilePath));
+    const staleDryProfile = surfaceWaterAssemblyProfileSchema.parse({
+      ...profile,
+      materialResponses: {
+        ...profile.materialResponses,
+        [targets.continuousJoint]: {
+          targetClass: 'joint',
+          absorption: jointMaterial.surface.surfaceWaterResponse!.absorption,
+          retention: jointMaterial.surface.surfaceWaterResponse!.retention,
+          wetRoughness: {
+            dry: 0.18,
+            ...jointMaterial.surface.surfaceWaterResponse!.wetRoughness,
+          },
+          splash: jointMaterial.surface.surfaceWaterResponse!.splash,
+        },
+      },
+    });
+    const staleDryProfilePath = join(directory, 'stale-dry-profile.json');
+    await writeFile(staleDryProfilePath, `${JSON.stringify(staleDryProfile, null, 2)}\n`, 'utf8');
+    const correctedDry = await rebindSurfaceWaterAssemblyProfile({
+      sourceProfilePath: staleDryProfilePath,
+      pavingGeometryPath: geometryPath,
+      outputProfilePath: join(directory, 'corrected-dry-profile.json'),
+    });
+    expect(correctedDry.profile.materialResponses[targets.continuousJoint]!.wetRoughness.dry).toBe(
+      (jointMaterial.surface.roughness.minimum + jointMaterial.surface.roughness.maximum) / 2,
+    );
+    await expect(
+      createPavingSurfaceWaterField({
+        pavingGeometryPath: geometryPath,
+        atmosphericVfxPath: vfxPath,
+        profile: staleDryProfile,
+        profileDirectory: directory,
+        outputPath: join(directory, 'stale-dry-field.json'),
+      }),
+    ).rejects.toThrow(/dry roughness .* is stale/u);
     const outputPath = join(directory, 'surface-water-field.json');
     const result = await createPavingSurfaceWaterField({
       pavingGeometryPath: geometryPath,
@@ -125,7 +160,10 @@ describe('paving surface-water assembly', () => {
     expect(result.report).toMatchObject({
       result: 'structural-pass',
       visualAcceptance: 'not-assessed',
-      materialResponseSources: { embedded: [targets.continuousJoint] },
+      materialResponseSources: {
+        embedded: [targets.continuousJoint],
+        dryRoughness: { [targets.continuousJoint]: 'bound-surface' },
+      },
     });
     expect(await sha256File(result.path)).toMatch(/^[a-f0-9]{64}$/u);
     const routed = await createPavingSurfaceWaterField({
