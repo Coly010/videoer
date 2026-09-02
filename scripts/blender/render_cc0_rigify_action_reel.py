@@ -98,6 +98,11 @@ def bake_action(source, target, source_action, target_name):
         raise RuntimeError(f"Incomplete full-joint source adapter: source={missing_source}, target={missing_target}")
     source.animation_data_create()
     source.animation_data.action = source_action
+    # Blender 4.5 imports each FBX take into a slotted action.  Selecting only
+    # the action evaluates the armature's rest pose; selecting its object slot
+    # is required before sampling any source transform.
+    if source_action.slots:
+        source.animation_data.action_slot = source_action.slots[0]
     target.animation_data_clear()
     target.animation_data_create()
     action = bpy.data.actions.new(target_name)
