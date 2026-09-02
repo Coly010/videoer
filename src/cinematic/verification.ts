@@ -241,11 +241,21 @@ export async function verifyCinematicScene(scene: CinematicScene, sceneFile: str
       );
       const geometry = await loadGeometry(geometryPath);
       const geometrySha256 = await sha256File(geometryPath);
-      const expectedOptical = reconstructSurfaceWaterOpticalSurface(fieldVerification.field, {
-        schemaVersion: 1,
-        id: opticalVerification.surface.id,
-        ...opticalVerification.surface.options,
-      });
+      const expectedOptical = reconstructSurfaceWaterOpticalSurface(
+        fieldVerification.field,
+        opticalVerification.surface.schemaVersion === 1
+          ? {
+              schemaVersion: 1,
+              id: opticalVerification.surface.id,
+              ...opticalVerification.surface.options,
+            }
+          : {
+              schemaVersion: 2,
+              id: opticalVerification.surface.id,
+              ...opticalVerification.surface.options,
+              appearance: opticalVerification.surface.appearance,
+            },
+      );
       const sourceFieldMatched =
         opticalVerification.surface.sourceFieldId === fieldVerification.field.id &&
         opticalVerification.surface.sourceFieldSha256 === fieldVerification.field.fieldSha256;
@@ -282,6 +292,17 @@ export async function verifyCinematicScene(scene: CinematicScene, sceneFile: str
           opticalIssues: opticalVerification.issues,
           fieldIssues: fieldVerification.issues,
           triangleCount: opticalVerification.surface.report.triangleCount,
+          schemaVersion: opticalVerification.surface.schemaVersion,
+          ...(opticalVerification.surface.schemaVersion === 2
+            ? {
+                appearance: opticalVerification.surface.appearance,
+                boundaryPerimeterMeters: opticalVerification.surface.report.boundaryPerimeterMeters,
+                axisAlignedBoundaryLengthRatio:
+                  opticalVerification.surface.report.axisAlignedBoundaryLengthRatio,
+                maximumAxisAlignedBoundaryRunMeters:
+                  opticalVerification.surface.report.maximumAxisAlignedBoundaryRunMeters,
+              }
+            : {}),
           reconstructedVolumeCubicMeters:
             opticalVerification.surface.report.reconstructedVolumeCubicMeters,
         },

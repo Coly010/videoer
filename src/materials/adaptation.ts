@@ -119,10 +119,25 @@ export function bindSurfaceMaterial(
   targetMaterialId: string,
   surface: SurfaceMaterial,
 ): GeometryAsset {
-  if (!geometry.materials.some((material) => material.id === targetMaterialId))
-    throw new Error(
-      `Geometry '${geometry.id}' has no material '${targetMaterialId}' for surface binding`,
-    );
+  return bindSurfaceMaterialTargets(geometry, [targetMaterialId], surface);
+}
+
+/** Binds one surface to multiple live material slots with one clone and validation pass. */
+export function bindSurfaceMaterialTargets(
+  geometry: GeometryAsset,
+  targetMaterialIds: string[],
+  surface: SurfaceMaterial,
+): GeometryAsset {
+  if (targetMaterialIds.length === 0)
+    throw new Error('Surface binding requires at least one target material');
+  const targets = new Set(targetMaterialIds);
+  if (targets.size !== targetMaterialIds.length)
+    throw new Error('Surface binding target materials must be unique');
+  for (const targetMaterialId of targets)
+    if (!geometry.materials.some((material) => material.id === targetMaterialId))
+      throw new Error(
+        `Geometry '${geometry.id}' has no material '${targetMaterialId}' for surface binding`,
+      );
   const colors = surface.baseColor.colors;
   const averageColor = colors
     .reduce(
@@ -134,7 +149,7 @@ export function bindSurfaceMaterial(
   const output = {
     ...structuredClone(geometry),
     materials: geometry.materials.map((material) =>
-      material.id === targetMaterialId
+      targets.has(material.id)
         ? {
             ...material,
             baseColor: averageColor,
@@ -148,7 +163,10 @@ export function bindSurfaceMaterial(
       ...geometry.metadata,
       surfaceBindings: [
         ...((geometry.metadata.surfaceBindings as unknown[]) ?? []),
-        { targetMaterialId, surfaceMaterial: surface.id },
+        ...targetMaterialIds.map((targetMaterialId) => ({
+          targetMaterialId,
+          surfaceMaterial: surface.id,
+        })),
       ],
     },
   };

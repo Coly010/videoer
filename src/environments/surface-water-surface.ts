@@ -10,7 +10,7 @@ const identifier = z.string().regex(/^[a-z][a-z0-9-]*(?:\.[a-z0-9-]+)*$/);
 const vec3 = z.tuple([z.number().finite(), z.number().finite(), z.number().finite()]);
 const sha256 = z.string().regex(/^[a-f0-9]{64}$/u);
 
-export const surfaceWaterOpticalSurfaceOptionsSchema = z.object({
+const surfaceWaterOpticalSurfaceOptionsV1Schema = z.object({
   schemaVersion: z.literal(1),
   id: identifier,
   contourDepthMeters: z.number().nonnegative().max(0.02).default(0.000_01),
@@ -18,11 +18,42 @@ export const surfaceWaterOpticalSurfaceOptionsSchema = z.object({
   maximumVolumeCorrectionFactor: z.number().min(1).max(100).default(20),
 });
 
+export const thinDielectricWaterAppearanceSchema = z.object({
+  model: z.literal('thin-dielectric-water-v1'),
+  ior: z.number().min(1.3).max(1.36).default(1.333),
+  roughness: z.number().min(0.005).max(0.2).default(0.035),
+  absorptionColorLinear: z
+    .tuple([z.number().min(0).max(1), z.number().min(0).max(1), z.number().min(0).max(1)])
+    .default([0.72, 0.9, 0.95]),
+  absorptionDistanceMeters: z.number().min(0.05).max(100).default(4),
+});
+
+const surfaceWaterOpticalSurfaceOptionsV2Schema = z.object({
+  schemaVersion: z.literal(2),
+  id: identifier,
+  contourDepthMeters: z.number().nonnegative().max(0.02).default(0.000_01),
+  opticalOffsetMeters: z.number().nonnegative().max(0.02).default(0.000_2),
+  maximumVolumeCorrectionFactor: z.number().min(1).max(100).default(20),
+  subcellDivisions: z.number().int().min(2).max(8).default(4),
+  appearance: thinDielectricWaterAppearanceSchema.default({
+    model: 'thin-dielectric-water-v1',
+    ior: 1.333,
+    roughness: 0.035,
+    absorptionColorLinear: [0.72, 0.9, 0.95],
+    absorptionDistanceMeters: 4,
+  }),
+});
+
+export const surfaceWaterOpticalSurfaceOptionsSchema = z.discriminatedUnion('schemaVersion', [
+  surfaceWaterOpticalSurfaceOptionsV1Schema,
+  surfaceWaterOpticalSurfaceOptionsV2Schema,
+]);
+
 export type SurfaceWaterOpticalSurfaceOptions = z.input<
   typeof surfaceWaterOpticalSurfaceOptionsSchema
 >;
 
-const reconstructionReportSchema = z.object({
+const reconstructionReportV1Schema = z.object({
   sourceWetCellCount: z.number().int().nonnegative(),
   vertexCount: z.number().int().nonnegative(),
   triangleCount: z.number().int().nonnegative(),
@@ -37,22 +68,63 @@ const reconstructionReportSchema = z.object({
   maximumReconstructedDepthMeters: z.number().nonnegative(),
 });
 
-export const surfaceWaterOpticalSurfaceSchema = z.object({
+const reconstructionReportV2Schema = reconstructionReportV1Schema.extend({
+  boundaryEdgeCount: z.number().int().nonnegative(),
+  boundaryPerimeterMeters: z.number().nonnegative(),
+  axisAlignedBoundaryLengthRatio: z.number().min(0).max(1),
+  maximumAxisAlignedBoundaryRunMeters: z.number().nonnegative(),
+  refinedCellSizeMeters: z.number().positive(),
+});
+
+const surfaceWaterOpticalSurfaceV1Schema = z.object({
   schemaVersion: z.literal(1),
   id: identifier,
   generator: z.literal('videoer.surface-water-optical-surface.v1'),
   sourceFieldId: identifier,
   sourceFieldSha256: sha256,
   reconstructionSha256: sha256,
-  options: surfaceWaterOpticalSurfaceOptionsSchema.omit({ schemaVersion: true, id: true }),
+  options: surfaceWaterOpticalSurfaceOptionsV1Schema.omit({ schemaVersion: true, id: true }),
   positions: z.array(vec3),
   groundHeightsMeters: z.array(z.number().finite()),
   depthsMeters: z.array(z.number().nonnegative()),
   indices: z.array(z.number().int().nonnegative()),
-  report: reconstructionReportSchema,
+  report: reconstructionReportV1Schema,
 });
 
+const surfaceWaterOpticalSurfaceV2Schema = z.object({
+  schemaVersion: z.literal(2),
+  id: identifier,
+  generator: z.literal('videoer.surface-water-optical-surface.v2'),
+  sourceFieldId: identifier,
+  sourceFieldSha256: sha256,
+  reconstructionSha256: sha256,
+  options: surfaceWaterOpticalSurfaceOptionsV2Schema.omit({
+    schemaVersion: true,
+    id: true,
+    appearance: true,
+  }),
+  appearance: thinDielectricWaterAppearanceSchema,
+  positions: z.array(vec3),
+  groundHeightsMeters: z.array(z.number().finite()),
+  depthsMeters: z.array(z.number().nonnegative()),
+  indices: z.array(z.number().int().nonnegative()),
+  report: reconstructionReportV2Schema,
+});
+
+export const surfaceWaterOpticalSurfaceSchema = z.discriminatedUnion('schemaVersion', [
+  surfaceWaterOpticalSurfaceV1Schema,
+  surfaceWaterOpticalSurfaceV2Schema,
+]);
+
 export type SurfaceWaterOpticalSurface = z.infer<typeof surfaceWaterOpticalSurfaceSchema>;
+type SurfaceWaterOpticalSurfaceV1 = z.infer<typeof surfaceWaterOpticalSurfaceV1Schema>;
+type SurfaceWaterOpticalSurfaceV2 = z.infer<typeof surfaceWaterOpticalSurfaceV2Schema>;
+type SurfaceWaterOpticalSurfaceOptionsV1 = z.input<
+  typeof surfaceWaterOpticalSurfaceOptionsV1Schema
+>;
+type SurfaceWaterOpticalSurfaceOptionsV2 = z.input<
+  typeof surfaceWaterOpticalSurfaceOptionsV2Schema
+>;
 
 interface ScalarVertex {
   key: string;
@@ -83,20 +155,16 @@ function reconstructedVolume(
   for (let offset = 0; offset < indices.length; offset += 3) {
     const area = projectedTriangleArea(positions, indices, offset);
     volume +=
-      area *
-      (depths[indices[offset]!]! +
-        depths[indices[offset + 1]!]! +
-        depths[indices[offset + 2]!]!) /
+      (area *
+        (depths[indices[offset]!]! +
+          depths[indices[offset + 1]!]! +
+          depths[indices[offset + 2]!]!)) /
       3;
   }
   return volume;
 }
 
-function edgeVertex(
-  first: ScalarVertex,
-  second: ScalarVertex,
-  contourDepth: number,
-): ScalarVertex {
+function edgeVertex(first: ScalarVertex, second: ScalarVertex, contourDepth: number): ScalarVertex {
   const denominator = second.sourceDepth - first.sourceDepth;
   const amount = denominator === 0 ? 0.5 : (contourDepth - first.sourceDepth) / denominator;
   const [left, right] = first.key < second.key ? [first.key, second.key] : [second.key, first.key];
@@ -117,8 +185,7 @@ function clipTriangle(vertices: ScalarVertex[], contourDepth: number) {
     const next = vertices[(index + 1) % vertices.length]!;
     const currentInside = current.sourceDepth > contourDepth;
     const nextInside = next.sourceDepth > contourDepth;
-    if (currentInside)
-      output.push({ ...current, rawDepth: current.sourceDepth - contourDepth });
+    if (currentInside) output.push({ ...current, rawDepth: current.sourceDepth - contourDepth });
     if (currentInside !== nextInside) output.push(edgeVertex(current, next, contourDepth));
   }
   return output;
@@ -128,6 +195,89 @@ function gridAligned(value: number, origin: number, cellSize: number) {
   return Math.abs((value - origin) / cellSize - Math.round((value - origin) / cellSize)) < 1e-8;
 }
 
+interface BoundaryShapeMetrics {
+  boundaryEdgeCount: number;
+  boundaryPerimeterMeters: number;
+  axisAlignedBoundaryLengthRatio: number;
+  maximumAxisAlignedBoundaryRunMeters: number;
+}
+
+function boundaryShapeMetrics(
+  positions: Array<[number, number, number]>,
+  indices: number[],
+): BoundaryShapeMetrics {
+  const edges = new Map<string, { first: number; second: number; count: number }>();
+  for (let offset = 0; offset < indices.length; offset += 3) {
+    const triangle = [indices[offset]!, indices[offset + 1]!, indices[offset + 2]!];
+    for (let edge = 0; edge < 3; edge++) {
+      const first = triangle[edge]!;
+      const second = triangle[(edge + 1) % 3]!;
+      const key = first < second ? `${first}:${second}` : `${second}:${first}`;
+      const existing = edges.get(key);
+      if (existing) existing.count += 1;
+      else edges.set(key, { first, second, count: 1 });
+    }
+  }
+  const boundaryEdges = [...edges.values()].filter((edge) => edge.count === 1);
+  let perimeter = 0;
+  let axisAlignedLength = 0;
+  const horizontalIntervals = new Map<string, Array<[number, number]>>();
+  const verticalIntervals = new Map<string, Array<[number, number]>>();
+  for (const edge of boundaryEdges) {
+    const first = positions[edge.first]!;
+    const second = positions[edge.second]!;
+    const dx = second[0] - first[0];
+    const dz = second[2] - first[2];
+    const length = Math.hypot(dx, dz);
+    perimeter += length;
+    if (Math.abs(dz) <= 1e-9) {
+      axisAlignedLength += length;
+      const key = ((first[2] + second[2]) * 0.5).toFixed(9);
+      const intervals = horizontalIntervals.get(key) ?? [];
+      intervals.push([Math.min(first[0], second[0]), Math.max(first[0], second[0])]);
+      horizontalIntervals.set(key, intervals);
+    } else if (Math.abs(dx) <= 1e-9) {
+      axisAlignedLength += length;
+      const key = ((first[0] + second[0]) * 0.5).toFixed(9);
+      const intervals = verticalIntervals.get(key) ?? [];
+      intervals.push([Math.min(first[2], second[2]), Math.max(first[2], second[2])]);
+      verticalIntervals.set(key, intervals);
+    }
+  }
+  let maximumRun = 0;
+  for (const intervals of [...horizontalIntervals.values(), ...verticalIntervals.values()]) {
+    intervals.sort((left, right) => left[0] - right[0]);
+    let start = intervals[0]?.[0] ?? 0;
+    let end = intervals[0]?.[1] ?? 0;
+    for (const interval of intervals.slice(1)) {
+      if (interval[0] <= end + 1e-9) end = Math.max(end, interval[1]);
+      else {
+        maximumRun = Math.max(maximumRun, end - start);
+        [start, end] = interval;
+      }
+    }
+    maximumRun = Math.max(maximumRun, end - start);
+  }
+  return {
+    boundaryEdgeCount: boundaryEdges.length,
+    boundaryPerimeterMeters: perimeter,
+    axisAlignedBoundaryLengthRatio: perimeter > 0 ? axisAlignedLength / perimeter : 0,
+    maximumAxisAlignedBoundaryRunMeters: maximumRun,
+  };
+}
+
+export function reconstructSurfaceWaterOpticalSurface(
+  fieldValue: SurfaceWaterField,
+  optionsValue: SurfaceWaterOpticalSurfaceOptionsV1,
+): SurfaceWaterOpticalSurfaceV1;
+export function reconstructSurfaceWaterOpticalSurface(
+  fieldValue: SurfaceWaterField,
+  optionsValue: SurfaceWaterOpticalSurfaceOptionsV2,
+): SurfaceWaterOpticalSurfaceV2;
+export function reconstructSurfaceWaterOpticalSurface(
+  fieldValue: SurfaceWaterField,
+  optionsValue: SurfaceWaterOpticalSurfaceOptions,
+): SurfaceWaterOpticalSurface;
 export function reconstructSurfaceWaterOpticalSurface(
   fieldValue: SurfaceWaterField,
   optionsValue: SurfaceWaterOpticalSurfaceOptions,
@@ -135,7 +285,9 @@ export function reconstructSurfaceWaterOpticalSurface(
   const field = surfaceWaterFieldSchema.parse(fieldValue);
   const fieldVerification = verifyStaticSurfaceWaterField(field);
   if (!fieldVerification.valid)
-    throw new Error(`cannot reconstruct invalid surface-water field: ${fieldVerification.issues.join('; ')}`);
+    throw new Error(
+      `cannot reconstruct invalid surface-water field: ${fieldVerification.issues.join('; ')}`,
+    );
   const options = surfaceWaterOpticalSurfaceOptionsSchema.parse(optionsValue);
   const sourceVolume = field.massBalance.puddleCubicMeters;
   const sourceWetCells = field.cells.filter((cell) => cell.puddleDepthMeters > 0);
@@ -176,6 +328,40 @@ export function reconstructSurfaceWaterOpticalSurface(
     lattice.set(key, vertex);
     return vertex;
   };
+  const subcellDivisions = options.schemaVersion === 2 ? options.subcellDivisions : 1;
+  const refinedLattice = new Map<string, ScalarVertex>();
+  const refinedAt = (refinedColumn: number, refinedRow: number) => {
+    if (subcellDivisions === 1) return at(refinedColumn, refinedRow);
+    const key = `${refinedColumn}:${refinedRow}`;
+    const existing = refinedLattice.get(key);
+    if (existing) return existing;
+    const gridColumn = refinedColumn / subcellDivisions;
+    const gridRow = refinedRow / subcellDivisions;
+    const column = Math.min(columns - 1, Math.floor(gridColumn));
+    const row = Math.min(rows - 1, Math.floor(gridRow));
+    const amountX = gridColumn - column;
+    const amountZ = gridRow - row;
+    const topLeft = at(column, row);
+    const topRight = at(column + 1, row);
+    const bottomLeft = at(column, row + 1);
+    const bottomRight = at(column + 1, row + 1);
+    const bilinear = (property: 'groundY' | 'sourceDepth') =>
+      topLeft[property] * (1 - amountX) * (1 - amountZ) +
+      topRight[property] * amountX * (1 - amountZ) +
+      bottomLeft[property] * (1 - amountX) * amountZ +
+      bottomRight[property] * amountX * amountZ;
+    const sourceDepth = bilinear('sourceDepth');
+    const vertex: ScalarVertex = {
+      key: `refined:${key}`,
+      x: worldOriginXZ[0] + gridColumn * cellSizeMeters,
+      z: worldOriginXZ[1] + gridRow * cellSizeMeters,
+      groundY: bilinear('groundY'),
+      sourceDepth,
+      rawDepth: Math.max(0, sourceDepth - options.contourDepthMeters),
+    };
+    refinedLattice.set(key, vertex);
+    return vertex;
+  };
 
   const vertexByKey = new Map<string, number>();
   const scalarVertices: ScalarVertex[] = [];
@@ -202,12 +388,12 @@ export function reconstructSurfaceWaterOpticalSurface(
       if (twiceArea > 1e-12) indices.push(first, second, third);
     }
   };
-  for (let row = 0; row < rows; row++)
-    for (let column = 0; column < columns; column++) {
-      const topLeft = at(column, row);
-      const topRight = at(column + 1, row);
-      const bottomLeft = at(column, row + 1);
-      const bottomRight = at(column + 1, row + 1);
+  for (let row = 0; row < rows * subcellDivisions; row++)
+    for (let column = 0; column < columns * subcellDivisions; column++) {
+      const topLeft = refinedAt(column, row);
+      const topRight = refinedAt(column + 1, row);
+      const bottomLeft = refinedAt(column, row + 1);
+      const bottomRight = refinedAt(column + 1, row + 1);
       if (row % 2 === column % 2) {
         emit([topLeft, bottomLeft, bottomRight]);
         emit([topLeft, bottomRight, topRight]);
@@ -237,11 +423,11 @@ export function reconstructSurfaceWaterOpticalSurface(
   const groundHeightsMeters = scalarVertices.map((vertex) => vertex.groundY);
   const positions = scalarVertices.map(
     (vertex, index) =>
-      [
-        vertex.x,
-        vertex.groundY + options.opticalOffsetMeters + depthsMeters[index]!,
-        vertex.z,
-      ] as [number, number, number],
+      [vertex.x, vertex.groundY + options.opticalOffsetMeters + depthsMeters[index]!, vertex.z] as [
+        number,
+        number,
+        number,
+      ],
   );
   const reconstructedVolumeCubicMeters = reconstructedVolume(positions, depthsMeters, indices);
   const volumeErrorCubicMeters = sourceVolume - reconstructedVolumeCubicMeters;
@@ -251,39 +437,65 @@ export function reconstructSurfaceWaterOpticalSurface(
       !gridAligned(vertex.x, worldOriginXZ[0], cellSizeMeters) ||
       !gridAligned(vertex.z, worldOriginXZ[1], cellSizeMeters),
   ).length;
-  const withoutHash = {
-    schemaVersion: 1 as const,
-    id: options.id,
-    generator: 'videoer.surface-water-optical-surface.v1' as const,
-    sourceFieldId: field.id,
-    sourceFieldSha256: field.fieldSha256,
-    options: {
-      contourDepthMeters: options.contourDepthMeters,
-      opticalOffsetMeters: options.opticalOffsetMeters,
-      maximumVolumeCorrectionFactor: options.maximumVolumeCorrectionFactor,
-    },
-    positions,
-    groundHeightsMeters,
-    depthsMeters,
-    indices,
-    report: {
-      sourceWetCellCount: sourceWetCells.length,
-      vertexCount: positions.length,
-      triangleCount: indices.length / 3,
-      boundaryVertexCount: boundaryVertices.length,
-      nonGridAlignedBoundaryVertexCount,
-      sourcePuddleVolumeCubicMeters: sourceVolume,
-      rawReconstructedVolumeCubicMeters: rawVolume,
-      reconstructedVolumeCubicMeters,
-      volumeCorrectionFactor: correctionFactor,
-      volumeErrorCubicMeters,
-      maximumSourcePuddleDepthMeters: Math.max(
-        0,
-        ...field.cells.map((cell) => cell.puddleDepthMeters),
-      ),
-      maximumReconstructedDepthMeters: Math.max(0, ...depthsMeters),
-    },
+  const commonReport = {
+    sourceWetCellCount: sourceWetCells.length,
+    vertexCount: positions.length,
+    triangleCount: indices.length / 3,
+    boundaryVertexCount: boundaryVertices.length,
+    nonGridAlignedBoundaryVertexCount,
+    sourcePuddleVolumeCubicMeters: sourceVolume,
+    rawReconstructedVolumeCubicMeters: rawVolume,
+    reconstructedVolumeCubicMeters,
+    volumeCorrectionFactor: correctionFactor,
+    volumeErrorCubicMeters,
+    maximumSourcePuddleDepthMeters: Math.max(
+      0,
+      ...field.cells.map((cell) => cell.puddleDepthMeters),
+    ),
+    maximumReconstructedDepthMeters: Math.max(0, ...depthsMeters),
   };
+  const withoutHash =
+    options.schemaVersion === 1
+      ? {
+          schemaVersion: 1 as const,
+          id: options.id,
+          generator: 'videoer.surface-water-optical-surface.v1' as const,
+          sourceFieldId: field.id,
+          sourceFieldSha256: field.fieldSha256,
+          options: {
+            contourDepthMeters: options.contourDepthMeters,
+            opticalOffsetMeters: options.opticalOffsetMeters,
+            maximumVolumeCorrectionFactor: options.maximumVolumeCorrectionFactor,
+          },
+          positions,
+          groundHeightsMeters,
+          depthsMeters,
+          indices,
+          report: commonReport,
+        }
+      : {
+          schemaVersion: 2 as const,
+          id: options.id,
+          generator: 'videoer.surface-water-optical-surface.v2' as const,
+          sourceFieldId: field.id,
+          sourceFieldSha256: field.fieldSha256,
+          options: {
+            contourDepthMeters: options.contourDepthMeters,
+            opticalOffsetMeters: options.opticalOffsetMeters,
+            maximumVolumeCorrectionFactor: options.maximumVolumeCorrectionFactor,
+            subcellDivisions: options.subcellDivisions,
+          },
+          appearance: options.appearance,
+          positions,
+          groundHeightsMeters,
+          depthsMeters,
+          indices,
+          report: {
+            ...commonReport,
+            ...boundaryShapeMetrics(positions, indices),
+            refinedCellSizeMeters: cellSizeMeters / options.subcellDivisions,
+          },
+        };
   return surfaceWaterOpticalSurfaceSchema.parse({
     ...withoutHash,
     reconstructionSha256: canonicalSha256(withoutHash),
@@ -318,6 +530,32 @@ export function verifySurfaceWaterOpticalSurface(value: unknown) {
     surface.depthsMeters.filter((depth) => depth === 0).length
   )
     issues.push('surface-water optical boundary count differs from zero-depth vertices');
+  if (surface.schemaVersion === 2) {
+    const measured = boundaryShapeMetrics(surface.positions, surface.indices);
+    const tolerance = 1e-9;
+    if (surface.report.boundaryEdgeCount !== measured.boundaryEdgeCount)
+      issues.push('surface-water optical boundary edge count differs from the mesh');
+    if (
+      Math.abs(surface.report.boundaryPerimeterMeters - measured.boundaryPerimeterMeters) >
+      tolerance
+    )
+      issues.push('surface-water optical boundary perimeter differs from the mesh');
+    if (
+      Math.abs(
+        surface.report.axisAlignedBoundaryLengthRatio - measured.axisAlignedBoundaryLengthRatio,
+      ) > tolerance
+    )
+      issues.push('surface-water optical axis-aligned boundary ratio differs from the mesh');
+    if (
+      Math.abs(
+        surface.report.maximumAxisAlignedBoundaryRunMeters -
+          measured.maximumAxisAlignedBoundaryRunMeters,
+      ) > tolerance
+    )
+      issues.push('surface-water optical maximum axis-aligned boundary run differs from the mesh');
+    if (surface.report.refinedCellSizeMeters <= 0)
+      issues.push('surface-water optical refined cell size is not positive');
+  }
   for (const [index, position] of surface.positions.entries()) {
     const expectedY =
       surface.groundHeightsMeters[index]! +
@@ -338,5 +576,12 @@ export function verifySurfaceWaterOpticalSurface(value: unknown) {
     Math.abs(volume - surface.report.sourcePuddleVolumeCubicMeters) > tolerance
   )
     issues.push('surface-water optical reconstruction does not conserve puddle volume');
+  if (
+    surface.report.volumeCorrectionFactor > surface.options.maximumVolumeCorrectionFactor ||
+    surface.report.volumeCorrectionFactor < 1 / surface.options.maximumVolumeCorrectionFactor
+  )
+    issues.push(
+      'surface-water optical reconstruction exceeds its declared volume-correction bound',
+    );
   return { valid: issues.length === 0, issues, surface, expectedSha256 };
 }

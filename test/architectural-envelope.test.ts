@@ -119,6 +119,24 @@ describe('irregular paving grammar', () => {
     expect(first.report.minimumObservedUnitClearanceMeters).toBeGreaterThanOrEqual(
       first.definition.joints.minimumUnitClearanceMeters,
     );
+    expect(first.report.physicalConstruction).toMatchObject({
+      specificationId: 'historic-natural-granite-setts',
+      class: 'natural-stone-sett',
+      passed: true,
+    });
+    expect(first.report.physicalConstruction.referenceBasis.adoption).toBe(
+      'factual-reference-only-no-code-adoption',
+    );
+    expect(first.report.physicalConstruction.assessedWholeUnitCount).toBeGreaterThan(0);
+    expect(first.report.physicalConstruction.excludedBoundaryCutCount).toBeGreaterThan(0);
+    expect(first.report.physicalConstruction.nominal).toMatchObject({
+      unitLengthMeters: 0.2,
+      unitWidthMeters: 0.1,
+      unitHeightMeters: 0.075,
+      jointWidthMeters: 0.01,
+      jointRecessMeters: 0.004,
+      aspectRatio: 2,
+    });
     expect(
       first.report.stones.every((stone) => stone.surfaceFrame.kind === 'unit-local-uv-meters'),
     ).toBe(true);
@@ -182,6 +200,17 @@ describe('irregular paving grammar', () => {
     expect(contemporary.definition.courses.directionDegrees).toBe(90);
     expect(historic.definition.units.profile).toBe('irregular-sett');
     expect(contemporary.definition.units.profile).toBe('irregular-paver');
+    expect(contemporary.definition.units.nominalLengthMeters).toBe(0.2);
+    expect(contemporary.definition.courses.nominalWidthMeters).toBe(0.1);
+    expect(contemporary.definition.units.heightMeters).toBe(0.05);
+    expect(contemporary.definition.joints.widthMeters).toBe(0.004);
+    expect(contemporary.definition.joints.depthMeters).toBe(0.003);
+    expect(contemporary.report.physicalConstruction).toMatchObject({
+      specificationId: 'contemporary-standard-concrete-block-pavers',
+      class: 'precast-concrete-block-paver',
+      passed: true,
+      nominal: { aspectRatio: 2 },
+    });
     expect(historic.report.deterministicSha256).not.toBe(contemporary.report.deterministicSha256);
     expect(contemporary.report.repairPatchStoneCounts['utility-reinstatement']).toBeGreaterThan(0);
     expect(contemporary.report.unitPlanCoverageRatio).toBeGreaterThanOrEqual(
@@ -229,7 +258,22 @@ describe('irregular paving grammar', () => {
 
     const hiddenRepairUnits = structuredClone(createContemporaryPaverDefinition());
     hiddenRepairUnits.repairPatches[0]!.settlementBiasMeters = -0.02;
+    hiddenRepairUnits.physicalConstruction.bounds.nominal.maximumExposedReliefMeters.maximum = 0.03;
+    hiddenRepairUnits.physicalConstruction.bounds.nominal.maximumAbsoluteSettlementMeters.maximum = 0.03;
+    hiddenRepairUnits.physicalConstruction.bounds.actual.maximumExposedReliefMeters.maximum = 0.03;
+    hiddenRepairUnits.physicalConstruction.bounds.actual.maximumAbsoluteSettlementMeters.maximum = 0.03;
     expect(() => compileIrregularPaving(hiddenRepairUnits)).toThrow(/clearance/u);
+
+    const unsupportedSlabScale = structuredClone(createContemporaryPaverDefinition());
+    unsupportedSlabScale.units.nominalLengthMeters = 0.42;
+    unsupportedSlabScale.courses.nominalWidthMeters = 0.3;
+    expect(irregularPavingDefinitionSchema.safeParse(unsupportedSlabScale).success).toBe(false);
+
+    const falseActualEnvelope = structuredClone(createHistoricSettPavingDefinition());
+    falseActualEnvelope.physicalConstruction.bounds.actual.unitLengthMeters.maximum = 0.19;
+    expect(() => compileIrregularPaving(falseActualEnvelope)).toThrow(
+      /actual unitLengthMeters range/u,
+    );
 
     const overlappingSurfaceTarget = structuredClone(createHistoricSettPavingDefinition());
     overlappingSurfaceTarget.materials.substrateId =

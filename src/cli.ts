@@ -71,6 +71,7 @@ import {
   createSurfaceWaterOpticalSurface,
   loadSurfaceWaterAssemblyProfile,
   rebindCinematicSurfaceWaterReceiver,
+  rebindSurfaceWaterAssemblyProfile,
 } from './application/surface-water.js';
 import {
   createOldCitySurfaceMaterialAssets,
@@ -1230,6 +1231,35 @@ environment
     );
   });
 environment
+  .command('rebind-surface-water-profile')
+  .argument('<source-profile>')
+  .argument('<paving-geometry>')
+  .argument('<output-profile>')
+  .option('--id <profile-id>', 'stable identity for the derived assembly profile')
+  .description(
+    'derive an exact paving-bound surface-water profile while preserving validated rain, material and shelter evidence',
+  )
+  .action(async function (
+    sourceProfile: string,
+    pavingGeometry: string,
+    outputProfile: string,
+    options: { id?: string },
+  ) {
+    const data = await rebindSurfaceWaterAssemblyProfile({
+      sourceProfilePath: sourceProfile,
+      pavingGeometryPath: pavingGeometry,
+      outputProfilePath: outputProfile,
+      ...(options.id ? { profileId: options.id } : {}),
+    });
+    output(
+      this,
+      'environment.rebind-surface-water-profile',
+      data,
+      (result) =>
+        `✓ exact receiver ${result.receiverSha256} bound with ${result.shelterCount} validated shelters → ${result.path}`,
+    );
+  });
+environment
   .command('rebind-surface-water-receiver')
   .argument('<source-scene>')
   .argument('<receiver-entity-id>')
@@ -1302,6 +1332,12 @@ environment
   .argument('<output-surface>')
   .requiredOption('--id <surface-id>', 'stable optical surface identity')
   .option(
+    '--schema-version <version>',
+    'optical surface schema (1 legacy, 2 refined)',
+    (value) => Number.parseInt(value, 10),
+    1,
+  )
+  .option(
     '--contour-depth <meters>',
     'dry-boundary contour depth in metres',
     Number.parseFloat,
@@ -1319,6 +1355,30 @@ environment
     Number.parseFloat,
     20,
   )
+  .option(
+    '--subcell-divisions <count>',
+    'bounded v2 contour subdivisions per solver cell',
+    (value) => Number.parseInt(value, 10),
+    4,
+  )
+  .option('--water-ior <ior>', 'v2 thin-dielectric index of refraction', Number.parseFloat, 1.333)
+  .option(
+    '--water-roughness <roughness>',
+    'v2 thin-dielectric surface roughness',
+    Number.parseFloat,
+    0.035,
+  )
+  .option(
+    '--water-absorption-color <linear-rgb>',
+    'v2 linear RGB transmittance color, comma-separated',
+    '0.72,0.9,0.95',
+  )
+  .option(
+    '--water-absorption-distance <meters>',
+    'v2 distance in metres at which the absorption color is reached',
+    Number.parseFloat,
+    4,
+  )
   .description('derive a verified, mass-conserving optical surface from an exact water field')
   .action(async function (
     surfaceWaterField: string,
@@ -1328,18 +1388,53 @@ environment
       contourDepth: number;
       opticalOffset: number;
       maximumVolumeCorrection: number;
+      schemaVersion: number;
+      subcellDivisions: number;
+      waterIor: number;
+      waterRoughness: number;
+      waterAbsorptionColor: string;
+      waterAbsorptionDistance: number;
     },
   ) {
+    if (options.schemaVersion !== 1 && options.schemaVersion !== 2)
+      throw new Error(`unsupported optical surface schema version ${options.schemaVersion}`);
+    const absorptionColor = options.waterAbsorptionColor
+      .split(',')
+      .map((component) => Number.parseFloat(component.trim()));
+    if (
+      absorptionColor.length !== 3 ||
+      absorptionColor.some((component) => !Number.isFinite(component))
+    )
+      throw new Error(
+        '--water-absorption-color must contain exactly three finite comma-separated values',
+      );
     const data = await createSurfaceWaterOpticalSurface({
       surfaceWaterFieldPath: surfaceWaterField,
       outputPath: outputSurface,
-      surface: {
-        schemaVersion: 1,
-        id: options.id,
-        contourDepthMeters: options.contourDepth,
-        opticalOffsetMeters: options.opticalOffset,
-        maximumVolumeCorrectionFactor: options.maximumVolumeCorrection,
-      },
+      surface:
+        options.schemaVersion === 1
+          ? {
+              schemaVersion: 1,
+              id: options.id,
+              contourDepthMeters: options.contourDepth,
+              opticalOffsetMeters: options.opticalOffset,
+              maximumVolumeCorrectionFactor: options.maximumVolumeCorrection,
+            }
+          : {
+              schemaVersion: 2,
+              id: options.id,
+              contourDepthMeters: options.contourDepth,
+              opticalOffsetMeters: options.opticalOffset,
+              maximumVolumeCorrectionFactor: options.maximumVolumeCorrection,
+              subcellDivisions: options.subcellDivisions,
+              appearance: {
+                model: 'thin-dielectric-water-v1',
+                ior: options.waterIor,
+                roughness: options.waterRoughness,
+                absorptionColorLinear: absorptionColor as [number, number, number],
+                absorptionDistanceMeters: options.waterAbsorptionDistance,
+              },
+            },
     });
     output(
       this,

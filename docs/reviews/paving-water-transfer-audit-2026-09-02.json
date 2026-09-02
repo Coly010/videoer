@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "status": "rejected",
+  "publicationAllowed": false,
+  "scope": "reusable physical paving construction and refined optical-water transfer across unrelated historic and contemporary hosts",
+  "targetedSubsystemVerdict": {
+    "physicalPavingConstruction": "pass",
+    "massConservingWaterField": "pass",
+    "refinedOpticalWaterBoundary": "pass",
+    "thinDielectricRendererTransfer": "pass",
+    "productionEnvironmentVisualAcceptance": "reject"
+  },
+  "reviewedArtifacts": [
+    "work/environments/architectural-envelope-transfer-physical-water-v2/historic-masonry-shopfront/verification/environment-hdri-water-v2/contact-sheet.png",
+    "work/environments/architectural-envelope-transfer-physical-water-v2/historic-masonry-shopfront/verification/environment-hdri-water-v2/probe-frames/050-paving-relief.png",
+    "work/environments/architectural-envelope-transfer-physical-water-v2/historic-masonry-shopfront/verification/environment-hdri-water-v2/scene-probe.json",
+    "work/environments/architectural-envelope-transfer-physical-water-v2/historic-masonry-shopfront/verification/environment-hdri-water-v2/surface-water-report.json",
+    "work/environments/architectural-envelope-transfer-physical-water-v2/contemporary-plaster-mixed-use/verification/environment-hdri-water-v2/contact-sheet.png",
+    "work/environments/architectural-envelope-transfer-physical-water-v2/contemporary-plaster-mixed-use/verification/environment-hdri-water-v2/probe-frames/050-paving-relief.png",
+    "work/environments/architectural-envelope-transfer-physical-water-v2/contemporary-plaster-mixed-use/verification/environment-hdri-water-v2/scene-probe.json",
+    "work/environments/architectural-envelope-transfer-physical-water-v2/contemporary-plaster-mixed-use/verification/environment-hdri-water-v2/surface-water-report.json"
+  ],
+  "acceptedSystemEvidence": [
+    "the paving compiler enforces factual-reference-backed nominal and actual unit dimensions, joint width and recess, maximum exposed relief, settlement and aspect ratio while excluding legitimate boundary cuts from whole-unit measurement",
+    "historic setts use 200 by 100 by 75 millimetre nominal units with 10 millimetre joints and contemporary blocks use 200 by 100 by 50 millimetre nominal units with 4 millimetre joints",
+    "terminal courses produce bounded cut units rather than stretching one paver to fill a remainder",
+    "surface-water profiles are derived through a live hash-bound receiver rebind that validates every material target, embedded water response and shelter artifact instead of hand-editing JSON",
+    "historic and contemporary fields solve 3157 and 3654 active cells with mass-balance errors of 4.829470157119431e-15 and 7.244205235679146e-15 cubic metres",
+    "four-times subcell refinement produces 32648 and 38780 joined optical triangles at 0.03 metre refined cell size while preserving exact source puddle volumes",
+    "the v2 optical surface carries explicit 1.333 IOR, 0.035 roughness and depth-derived Beer-Lambert transmittance into the Cycles thin-dielectric renderer path",
+    "both authoritative-profile probes pass all structural, hash, reconstruction, render, lighting, finite-fog and camera checks",
+    "side-by-side visual inspection confirms that the previous large black missing-paver and hole-like silhouettes are absent on both hosts and that paving relief and unit scale are materially more plausible"
+  ],
+  "blockingVisualDefects": [
+    "neither assembled host reaches production photorealism and neither environment or material asset is publishable from this evidence",
+    "historic unit response remains excessively noisy, contrasty and repetitive, with insufficient coherent dirt, wear and ageing across courses",
+    "contemporary concrete remains chalky and repetitive, while broad wet reflections do not yet contain enough small-scale roughness and drainage variation",
+    "facade shells, glazing, inhabited interiors and architectural joins remain sparse, clean and visibly blockout-like",
+    "rain still lacks integrated receiver splash, runoff, mist and convincing depth-dependent density",
+    "the one shared evening HDRI is valid transfer evidence but is not a sufficient environment family for varied production worlds"
+  ],
+  "nextGenericDependencies": [
+    "semantically selected source materials and multi-scale per-unit colour, roughness, dirt, wear and edge variation without photographed-layout duplication",
+    "layered facade construction materials, believable bevel frequency, staining, runoff and repair history",
+    "denser portable inhabited-interior kits with glazing, furnishing and practical-light variation",
+    "receiver-aware splash, runoff, mist and depth-layered precipitation integration",
+    "additional provenance-bound environment illumination families selected by host, weather and time-of-day semantics"
+  ],
+  "queuedReusableWork": {
+    "productionClothing": "Remains queued behind the current higher-priority environment/material work exactly as recorded in docs/progress/cinematic-system.md; this audit does not reprioritise it or convert it into benchmark-specific polishing."
+  },
+  "notes": "The benchmark was not rerendered. These unrelated architectural hosts were used as a reusable-system transfer audit. Passing the targeted paving/water defect does not override the assembled production-environment rejection."
+}

@@ -8,7 +8,7 @@ import {
 } from '../assets/sources/model.js';
 import { loadGeometry, saveGeometry } from '../geometry/io.js';
 import type { GeometryAsset } from '../geometry/model.js';
-import { bindSurfaceMaterial } from './adaptation.js';
+import { bindSurfaceMaterialTargets } from './adaptation.js';
 import { loadSurfaceMaterial } from './io.js';
 import {
   surfaceMaterialSchema,
@@ -400,9 +400,26 @@ export interface BindStagedSurfaceMaterialValueOptions {
   application: TextureMaterialApplication;
 }
 
+export interface BindStagedSurfaceMaterialValueToTargetsOptions extends Omit<
+  BindStagedSurfaceMaterialValueOptions,
+  'targetMaterialId'
+> {
+  targetMaterialIds: string[];
+}
+
 /** Copies every declared texture byte beside the bound geometry and rewrites only portable paths. */
 export async function bindStagedSurfaceMaterialValue(
   options: BindStagedSurfaceMaterialValueOptions,
+) {
+  return bindStagedSurfaceMaterialValueToTargets({
+    ...options,
+    targetMaterialIds: [options.targetMaterialId],
+  });
+}
+
+/** Stages one immutable texture package and binds it to multiple slots in one geometry pass. */
+export async function bindStagedSurfaceMaterialValueToTargets(
+  options: BindStagedSurfaceMaterialValueToTargetsOptions,
 ) {
   const outputPath = resolve(options.outputGeometryPath);
   const outputDirectory = dirname(outputPath);
@@ -426,7 +443,7 @@ export async function bindStagedSurfaceMaterialValue(
       channel.path = portablePath(outputDirectory, target);
     }
   }
-  const bound = bindSurfaceMaterial(options.geometry, options.targetMaterialId, staged);
+  const bound = bindSurfaceMaterialTargets(options.geometry, options.targetMaterialIds, staged);
   await saveGeometry(outputPath, bound);
   await geometryTextureDependencies(outputPath);
   return { geometry: bound, path: outputPath };

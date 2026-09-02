@@ -13,6 +13,7 @@ import {
 } from '../materials/model.js';
 import {
   bindStagedSurfaceMaterialValue,
+  bindStagedSurfaceMaterialValueToTargets,
   restageGeometryTextureDependencies,
 } from '../materials/texture-maps.js';
 
@@ -195,18 +196,16 @@ export async function bindPavingUnitMaterial(options: BindPavingUnitMaterialOpti
       'Paving unit binding requires modeled-paving-unit with unit-local-uv-meters placement',
     );
   const surface = await loadSurfaceMaterial(sourceMaterialPath);
-  let bound = geometry;
-  for (const targetMaterialId of targets.modeledUnits)
-    bound = (
-      await bindStagedSurfaceMaterialValue({
-        geometry: bound,
-        targetMaterialId,
-        surface,
-        sourceTextureDirectory: dirname(sourceMaterialPath),
-        outputGeometryPath,
-        application,
-      })
-    ).geometry;
+  const bound = (
+    await bindStagedSurfaceMaterialValueToTargets({
+      geometry,
+      targetMaterialIds: targets.modeledUnits,
+      surface,
+      sourceTextureDirectory: dirname(sourceMaterialPath),
+      outputGeometryPath,
+      application,
+    })
+  ).geometry;
 
   const report = {
     schemaVersion: 1,

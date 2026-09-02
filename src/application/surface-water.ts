@@ -1,5 +1,5 @@
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
-import { dirname, resolve } from 'node:path';
+import { dirname, relative, resolve } from 'node:path';
 import { z } from 'zod';
 import { sha256File } from '../assets/library.js';
 import {
@@ -247,6 +247,78 @@ export async function createPavingSurfaceWaterField(options: {
 
 export async function loadSurfaceWaterAssemblyProfile(path: string) {
   return surfaceWaterAssemblyProfileSchema.parse(JSON.parse(await readFile(resolve(path), 'utf8')));
+}
+
+export async function rebindSurfaceWaterAssemblyProfile(options: {
+  sourceProfilePath: string;
+  pavingGeometryPath: string;
+  outputProfilePath: string;
+  profileId?: string;
+}) {
+  const sourceProfilePath = resolve(options.sourceProfilePath);
+  const pavingGeometryPath = resolve(options.pavingGeometryPath);
+  const outputProfilePath = resolve(options.outputProfilePath);
+  const sourceProfileDirectory = dirname(sourceProfilePath);
+  const outputProfileDirectory = dirname(outputProfilePath);
+  const [sourceProfile, sourceProfileSha256, geometry, receiverSha256] = await Promise.all([
+    loadSurfaceWaterAssemblyProfile(sourceProfilePath),
+    sha256File(sourceProfilePath),
+    loadGeometry(pavingGeometryPath),
+    sha256File(pavingGeometryPath),
+  ]);
+  const definition = irregularPavingDefinitionSchema.parse(geometry.metadata.definition);
+  const targets = pavingSurfaceMaterialTargetsSchema.parse(
+    geometry.metadata.surfaceMaterialTargets,
+  );
+  const liveMaterials = new Map(geometry.materials.map((material) => [material.id, material]));
+  for (const [materialId, response] of Object.entries(sourceProfile.materialResponses)) {
+    if (!liveMaterials.has(materialId))
+      throw new Error(`surface-water profile references absent material '${materialId}'`);
+    const expected = expectedTargetClass(materialId, targets);
+    if (!expected)
+      throw new Error(`surface-water material '${materialId}' has no paving target class`);
+    if (response.targetClass !== expected)
+      throw new Error(
+        `surface-water material '${materialId}' declares ${response.targetClass}, expected ${expected}`,
+      );
+  }
+  for (const materialId of definition.drainage.wetReceiverMaterialIds) {
+    if (sourceProfile.materialResponses[materialId]) continue;
+    if (!liveMaterials.get(materialId)?.surface?.surfaceWaterResponse)
+      throw new Error(
+        `surface-water wet receiver '${materialId}' has neither a profile response nor an embedded material response`,
+      );
+  }
+  const shelters = await Promise.all(
+    sourceProfile.shelters.map(async (shelter) => {
+      const shelterPath = resolve(sourceProfileDirectory, shelter.geometryPath);
+      const actualSha256 = await sha256File(shelterPath);
+      if (actualSha256 !== shelter.geometrySha256)
+        throw new Error(
+          `surface-water shelter '${shelter.id}' hash mismatch: expected ${shelter.geometrySha256}, got ${actualSha256}`,
+        );
+      return {
+        ...shelter,
+        geometryPath: relative(outputProfileDirectory, shelterPath),
+      };
+    }),
+  );
+  const profile = surfaceWaterAssemblyProfileSchema.parse({
+    ...sourceProfile,
+    ...(options.profileId ? { id: options.profileId } : {}),
+    receiverSha256,
+    shelters,
+  });
+  const path = await writeJsonAtomically(outputProfilePath, profile);
+  return {
+    profile,
+    path,
+    sourceProfilePath,
+    sourceProfileSha256,
+    pavingGeometryPath,
+    receiverSha256,
+    shelterCount: shelters.length,
+  };
 }
 
 export async function createSurfaceWaterOpticalSurface(options: {

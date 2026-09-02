@@ -198,7 +198,10 @@ export function verifyStaticSurfaceWaterField(value: unknown) {
     field.massBalance.dischargedCubicMeters;
   const error = field.massBalance.incidentCubicMeters - accounted;
   const tolerance = Math.max(1e-12, field.massBalance.incidentCubicMeters * 1e-10);
-  if (Math.abs(error) > tolerance || Math.abs(error - field.massBalance.errorCubicMeters) > tolerance)
+  if (
+    Math.abs(error) > tolerance ||
+    Math.abs(error - field.massBalance.errorCubicMeters) > tolerance
+  )
     issues.push(`surface-water mass balance is invalid by ${error} cubic metres`);
   return { valid: issues.length === 0, issues, field, expectedFieldSha256 };
 }
@@ -275,10 +278,8 @@ function highestHit(surface: Triangle[], x: number, z: number): Hit | undefined 
     const { a, b, c } = triangle;
     const denominator = (b[2] - c[2]) * (a[0] - c[0]) + (c[0] - b[0]) * (a[2] - c[2]);
     if (Math.abs(denominator) < 1e-12) continue;
-    const first =
-      ((b[2] - c[2]) * (x - c[0]) + (c[0] - b[0]) * (z - c[2])) / denominator;
-    const second =
-      ((c[2] - a[2]) * (x - c[0]) + (a[0] - c[0]) * (z - c[2])) / denominator;
+    const first = ((b[2] - c[2]) * (x - c[0]) + (c[0] - b[0]) * (z - c[2])) / denominator;
+    const second = ((c[2] - a[2]) * (x - c[0]) + (a[0] - c[0]) * (z - c[2])) / denominator;
     const third = 1 - first - second;
     if (first < -1e-8 || second < -1e-8 || third < -1e-8) continue;
     const y = a[1] * first + b[1] * second + c[1] * third;
@@ -321,7 +322,9 @@ function isSheltered(
     hit.position[1] + directionToSky[1] * 1e-5,
     hit.position[2] + directionToSky[2] * 1e-5,
   ];
-  return shelterTriangles.some((triangle) => rayTriangle(origin, directionToSky, triangle, maximum));
+  return shelterTriangles.some((triangle) =>
+    rayTriangle(origin, directionToSky, triangle, maximum),
+  );
 }
 
 class MinimumHeap {
@@ -366,7 +369,9 @@ class MinimumHeap {
 }
 
 function sortedRecord<T>(record: Record<string, T>) {
-  return Object.fromEntries(Object.entries(record).sort(([left], [right]) => left.localeCompare(right)));
+  return Object.fromEntries(
+    Object.entries(record).sort(([left], [right]) => left.localeCompare(right)),
+  );
 }
 
 function transformedDrainageDirection(input: ParsedInput): [number, number] {
@@ -380,10 +385,11 @@ function transformedDrainageDirection(input: ParsedInput): [number, number] {
 
 function sampleOffsets(count: 1 | 4 | 9) {
   const width = Math.sqrt(count);
-  return Array.from({ length: count }, (_, index) => [
-    ((index % width) + 0.5) / width,
-    (Math.floor(index / width) + 0.5) / width,
-  ] as const);
+  return Array.from(
+    { length: count },
+    (_, index) =>
+      [((index % width) + 0.5) / width, (Math.floor(index / width) + 0.5) / width] as const,
+  );
 }
 
 export function compileStaticSurfaceWater(inputValue: SurfaceWaterFieldInput): SurfaceWaterField {
@@ -410,11 +416,19 @@ export function compileStaticSurfaceWater(inputValue: SurfaceWaterFieldInput): S
     shelters: [...input.shelters].sort((left, right) => left.id.localeCompare(right.id)),
   };
   const inputSha256 = canonicalSha256(canonicalInput);
-  const allPoints = receiverTriangles.flatMap((triangle) => [triangle.a, triangle.b, triangle.c]);
-  const minimumX = Math.min(...allPoints.map((point) => point[0]));
-  const maximumX = Math.max(...allPoints.map((point) => point[0]));
-  const minimumZ = Math.min(...allPoints.map((point) => point[2]));
-  const maximumZ = Math.max(...allPoints.map((point) => point[2]));
+  let minimumX = Number.POSITIVE_INFINITY;
+  let maximumX = Number.NEGATIVE_INFINITY;
+  let minimumZ = Number.POSITIVE_INFINITY;
+  let maximumZ = Number.NEGATIVE_INFINITY;
+  for (const triangle of receiverTriangles)
+    for (const point of [triangle.a, triangle.b, triangle.c]) {
+      minimumX = Math.min(minimumX, point[0]);
+      maximumX = Math.max(maximumX, point[0]);
+      minimumZ = Math.min(minimumZ, point[2]);
+      maximumZ = Math.max(maximumZ, point[2]);
+    }
+  if (![minimumX, maximumX, minimumZ, maximumZ].every(Number.isFinite))
+    throw new Error('surface-water receiver has no finite triangle bounds');
   const columns = Math.max(1, Math.ceil((maximumX - minimumX) / input.grid.cellSizeMeters));
   const rows = Math.max(1, Math.ceil((maximumZ - minimumZ) / input.grid.cellSizeMeters));
   if (columns * rows > input.solver.maximumCellCount)
@@ -477,12 +491,7 @@ export function compileStaticSurfaceWater(inputValue: SurfaceWaterFieldInput): S
       if (!response) throw new Error(`surface-water response is missing for '${materialId}'`);
       const exposedHits = hits.filter(
         (hit) =>
-          !isSheltered(
-            hit,
-            directionToSky,
-            shelterTriangles,
-            input.grid.shelterRayMaximumMeters,
-          ),
+          !isSheltered(hit, directionToSky, shelterTriangles, input.grid.shelterRayMaximumMeters),
       ).length;
       const coverage = hits.length / offsets.length;
       const exposure = exposedHits / hits.length;
@@ -549,13 +558,12 @@ export function compileStaticSurfaceWater(inputValue: SurfaceWaterFieldInput): S
       byGridIndex.set(gridIndex, index);
     }
 
-  const neighbourIndices = (cell: z.infer<typeof surfaceWaterCellSchema>) =>
-    [
-      cell.column > 0 ? cell.index - 1 : -1,
-      cell.column + 1 < columns ? cell.index + 1 : -1,
-      cell.row > 0 ? cell.index - columns : -1,
-      cell.row + 1 < rows ? cell.index + columns : -1,
-    ];
+  const neighbourIndices = (cell: z.infer<typeof surfaceWaterCellSchema>) => [
+    cell.column > 0 ? cell.index - 1 : -1,
+    cell.column + 1 < columns ? cell.index + 1 : -1,
+    cell.row > 0 ? cell.index - columns : -1,
+    cell.row + 1 < rows ? cell.index + columns : -1,
+  ];
   for (const item of working) {
     const edgeCount = neighbourIndices(item.cell).filter((gridIndex) => {
       const neighbour = byGridIndex.get(gridIndex);
@@ -661,11 +669,15 @@ export function compileStaticSurfaceWater(inputValue: SurfaceWaterFieldInput): S
       item.response.wetRoughness.dry * item.response.wetRoughness.multiplier,
     );
     item.cell.effectiveRoughness =
-      item.response.wetRoughness.dry +
-      (wetTarget - item.response.wetRoughness.dry) * wetFraction;
+      item.response.wetRoughness.dry + (wetTarget - item.response.wetRoughness.dry) * wetFraction;
   }
-  const volumeFor = (field: 'absorbedDepthMeters' | 'filmDepthMeters' | 'edgeAccumulationDepthMeters' | 'puddleDepthMeters') =>
-    working.reduce((sum, item) => sum + item.cell[field] * item.area, 0);
+  const volumeFor = (
+    field:
+      | 'absorbedDepthMeters'
+      | 'filmDepthMeters'
+      | 'edgeAccumulationDepthMeters'
+      | 'puddleDepthMeters',
+  ) => working.reduce((sum, item) => sum + item.cell[field] * item.area, 0);
   const absorbedCubicMeters = volumeFor('absorbedDepthMeters');
   const filmCubicMeters = volumeFor('filmDepthMeters');
   const edgeCubicMeters = volumeFor('edgeAccumulationDepthMeters');
@@ -708,12 +720,19 @@ export function compileStaticSurfaceWater(inputValue: SurfaceWaterFieldInput): S
       gradientMetersPerMeter: input.drainage.gradientMetersPerMeter,
       outletIds: input.drainage.outlets.map((outlet) => outlet.id).sort(),
     },
-    shelters: shelterEvidence.map(({ id, geometrySha256: geometryHash, geometrySemanticSha256, transformSha256: transformHash }) => ({
-      id,
-      geometrySha256: geometryHash,
-      geometrySemanticSha256,
-      transformSha256: transformHash,
-    })),
+    shelters: shelterEvidence.map(
+      ({
+        id,
+        geometrySha256: geometryHash,
+        geometrySemanticSha256,
+        transformSha256: transformHash,
+      }) => ({
+        id,
+        geometrySha256: geometryHash,
+        geometrySemanticSha256,
+        transformSha256: transformHash,
+      }),
+    ),
     materialResponsesSha256,
     cells: working.map((item) => item.cell),
     massBalance: {

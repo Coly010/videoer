@@ -9,6 +9,97 @@ const identifier = z.string().regex(/^[a-z][a-z0-9-]*(?:\.[a-z0-9-]+)*$/);
 const localIdentifier = z.string().regex(/^[a-z][a-z0-9-]*$/);
 const vec2 = z.tuple([z.number().finite(), z.number().finite()]);
 
+const constructionMetricRangeSchema = z
+  .object({ minimum: z.number().nonnegative(), maximum: z.number().positive() })
+  .refine((range) => range.maximum >= range.minimum, {
+    message: 'construction measurement maximum must be greater than or equal to minimum',
+  });
+
+const constructionMeasurementBoundsSchema = z.object({
+  unitLengthMeters: constructionMetricRangeSchema,
+  unitWidthMeters: constructionMetricRangeSchema,
+  unitHeightMeters: constructionMetricRangeSchema,
+  jointWidthMeters: constructionMetricRangeSchema,
+  jointRecessMeters: constructionMetricRangeSchema,
+  aspectRatio: constructionMetricRangeSchema,
+  maximumExposedReliefMeters: constructionMetricRangeSchema,
+  maximumAbsoluteSettlementMeters: constructionMetricRangeSchema,
+});
+
+export const pavingPhysicalConstructionSchema = z.object({
+  id: localIdentifier,
+  class: z.enum(['natural-stone-sett', 'precast-concrete-block-paver']),
+  referenceBasis: z.object({
+    adoption: z.literal('factual-reference-only-no-code-adoption'),
+    reviewedOn: z.string().regex(/^\d{4}-\d{2}-\d{2}$/u),
+    sources: z
+      .array(
+        z.object({
+          publisher: z.string().min(1),
+          title: z.string().min(1),
+          url: z.string().url(),
+          claims: z.array(z.string().min(1)).min(1),
+        }),
+      )
+      .min(1),
+  }),
+  bounds: z.object({
+    nominal: constructionMeasurementBoundsSchema,
+    actual: constructionMeasurementBoundsSchema,
+  }),
+});
+
+type ConstructionMeasurementName = keyof z.infer<typeof constructionMeasurementBoundsSchema>;
+type ConstructionMetricRange = z.infer<typeof constructionMetricRangeSchema>;
+type ConstructionMeasurements = Record<ConstructionMeasurementName, number>;
+
+export type PavingPhysicalConstruction = z.infer<typeof pavingPhysicalConstructionSchema>;
+
+const constructionMeasurementNames: ConstructionMeasurementName[] = [
+  'unitLengthMeters',
+  'unitWidthMeters',
+  'unitHeightMeters',
+  'jointWidthMeters',
+  'jointRecessMeters',
+  'aspectRatio',
+  'maximumExposedReliefMeters',
+  'maximumAbsoluteSettlementMeters',
+];
+
+function nominalConstructionMeasurements(definition: {
+  courses: { nominalWidthMeters: number };
+  units: {
+    nominalLengthMeters: number;
+    heightMeters: number;
+    settlementMeters: number;
+    tiltDegrees: number;
+  };
+  joints: { widthMeters: number; depthMeters: number };
+  repairPatches: Array<{ settlementBiasMeters: number }>;
+}): ConstructionMeasurements {
+  const maximumSettlement =
+    definition.units.settlementMeters +
+    Math.max(0, ...definition.repairPatches.map((patch) => Math.abs(patch.settlementBiasMeters)));
+  const halfDiagonal =
+    Math.hypot(definition.units.nominalLengthMeters, definition.courses.nominalWidthMeters) * 0.5;
+  const maximumTiltRelief = Math.tan((definition.units.tiltDegrees * Math.PI) / 180) * halfDiagonal;
+  return {
+    unitLengthMeters: definition.units.nominalLengthMeters,
+    unitWidthMeters: definition.courses.nominalWidthMeters,
+    unitHeightMeters: definition.units.heightMeters,
+    jointWidthMeters: definition.joints.widthMeters,
+    jointRecessMeters: definition.joints.depthMeters,
+    aspectRatio: definition.units.nominalLengthMeters / definition.courses.nominalWidthMeters,
+    maximumExposedReliefMeters:
+      definition.joints.depthMeters + maximumSettlement + maximumTiltRelief,
+    maximumAbsoluteSettlementMeters: maximumSettlement,
+  };
+}
+
+function withinConstructionRange(value: number, range: ConstructionMetricRange) {
+  return value >= range.minimum - 1e-12 && value <= range.maximum + 1e-12;
+}
+
 export const irregularPavingDefinitionSchema = z
   .object({
     schemaVersion: z.literal(1),
@@ -21,6 +112,7 @@ export const irregularPavingDefinitionSchema = z
       maximum: vec2,
     }),
     baseY: z.number().finite(),
+    physicalConstruction: pavingPhysicalConstructionSchema,
     courses: z.object({
       directionDegrees: z.union([z.literal(0), z.literal(90)]),
       nominalWidthMeters: z.number().positive(),
@@ -141,6 +233,19 @@ export const irregularPavingDefinitionSchema = z
         path: ['units', 'maximumChipDepthMeters'],
         message: 'chip depth must not exceed the chamfer',
       });
+    const nominalMeasurements = nominalConstructionMeasurements(definition);
+    for (const name of constructionMeasurementNames)
+      if (
+        !withinConstructionRange(
+          nominalMeasurements[name],
+          definition.physicalConstruction.bounds.nominal[name],
+        )
+      )
+        context.addIssue({
+          code: 'custom',
+          path: ['physicalConstruction', 'bounds', 'nominal', name],
+          message: `nominal ${name} ${nominalMeasurements[name]} is outside its factual construction bounds`,
+        });
     for (const axis of [0, 1] as const)
       if (
         definition.surfaceSampling.unitJitterMeters[axis] * 2 >=
@@ -286,7 +391,20 @@ interface StoneEvidence {
   chipped: boolean;
   planAreaSquareMeters: number;
   minimumTopY: number;
+  maximumTopY: number;
+  boundaryCut: boolean;
   surfaceFrame: UnitSurfaceFrame;
+}
+
+export interface PavingConstructionCompliance {
+  specificationId: string;
+  class: z.infer<typeof pavingPhysicalConstructionSchema>['class'];
+  referenceBasis: z.infer<typeof pavingPhysicalConstructionSchema>['referenceBasis'];
+  nominal: ConstructionMeasurements;
+  actual: Record<ConstructionMeasurementName, ConstructionMetricRange>;
+  assessedWholeUnitCount: number;
+  excludedBoundaryCutCount: number;
+  passed: true;
 }
 
 export interface IrregularPavingReport {
@@ -309,6 +427,7 @@ export interface IrregularPavingReport {
   supportQueryCoverage: { samples: number; hits: number };
   wetReceiverMaterialIds: string[];
   surfaceMaterialTargets: PavingSurfaceMaterialTargets;
+  physicalConstruction: PavingConstructionCompliance;
   stones: StoneEvidence[];
 }
 
@@ -329,16 +448,14 @@ function surfaceFrameForUnit(
     createHash('sha256')
       .update(`${definition.surfaceSampling.seed}:${label}`)
       .digest()
-      .readUInt32BE(0) /
-    0x1_0000_0000;
+      .readUInt32BE(0) / 0x1_0000_0000;
   const correlation = definition.surfaceSampling.correlationLengthMeters;
   const gridX = Math.floor(centre.x / correlation);
   const gridZ = Math.floor(centre.z / correlation);
   const smooth = (value: number) => value * value * (3 - 2 * value);
   const tx = smooth(centre.x / correlation - gridX);
   const tz = smooth(centre.z / correlation - gridZ);
-  const mix = (left: number, right: number, amount: number) =>
-    left + (right - left) * amount;
+  const mix = (left: number, right: number, amount: number) => left + (right - left) * amount;
   const correlatedSample = (channel: number) => {
     const lower = mix(
       sample(`batch:${channel}:${gridX}:${gridZ}`),
@@ -361,14 +478,12 @@ function surfaceFrameForUnit(
     offsetMeters: [
       wrap(
         correlatedSample(0) * definition.surfaceSampling.offsetPeriodMeters[0] +
-          (sample(`unit:${unitId}:u`) * 2 - 1) *
-            definition.surfaceSampling.unitJitterMeters[0],
+          (sample(`unit:${unitId}:u`) * 2 - 1) * definition.surfaceSampling.unitJitterMeters[0],
         definition.surfaceSampling.offsetPeriodMeters[0],
       ),
       wrap(
         correlatedSample(1) * definition.surfaceSampling.offsetPeriodMeters[1] +
-          (sample(`unit:${unitId}:v`) * 2 - 1) *
-            definition.surfaceSampling.unitJitterMeters[1],
+          (sample(`unit:${unitId}:v`) * 2 - 1) * definition.surfaceSampling.unitJitterMeters[1],
         definition.surfaceSampling.offsetPeriodMeters[1],
       ),
     ],
@@ -538,8 +653,7 @@ function pavingStonePart(options: {
     [topPlan[2]!.x, topAt(topPlan[2]!), topPlan[2]!.z],
   );
   const topStart = positions.length;
-  for (const point of topPlan)
-    vertex([point.x, topAt(point), point.z], topNormal, planUv(point));
+  for (const point of topPlan) vertex([point.x, topAt(point), point.z], topNormal, planUv(point));
   for (let index = 1; index < topPlan.length - 1; index++)
     indices.push(topStart, topStart + index, topStart + index + 1);
   const bottomStart = positions.length;
@@ -689,11 +803,11 @@ export function compileIrregularPaving(input: IrregularPavingDefinitionInput): {
     const proposedCourseMaximumV = cursorV + variedCourseWidth;
     const remainingCourseWidth = maximumV - proposedCourseMaximumV;
     const minimumPartialCourseWidth = definition.courses.nominalWidthMeters * 0.25;
+    const splitFinalCourse =
+      remainingCourseWidth > 0 && remainingCourseWidth < minimumPartialCourseWidth;
     const courseMaximumV = Math.min(
       maximumV,
-      remainingCourseWidth > 0 && remainingCourseWidth < minimumPartialCourseWidth
-        ? maximumV
-        : proposedCourseMaximumV,
+      splitFinalCourse ? cursorV + (maximumV - cursorV) * 0.5 : proposedCourseMaximumV,
     );
     const cellWidth = courseMaximumV - cursorV;
     const stagger =
@@ -707,30 +821,29 @@ export function compileIrregularPaving(input: IrregularPavingDefinitionInput): {
         definition.units.nominalLengthMeters *
         (1 + (random() * 2 - 1) * definition.units.lengthVariation);
       const minimumPartialLength = definition.units.nominalLengthMeters * 0.25;
-      if (
-        cursorU < minimumU &&
-        cursorU + cellLength - minimumU < minimumPartialLength
-      )
+      if (cursorU < minimumU && cursorU + cellLength - minimumU < minimumPartialLength)
         cursorU = minimumU;
       const cellMinimumU = Math.max(minimumU, cursorU);
       const proposedCellMaximumU = cursorU + cellLength;
       const remainingCellLength = maximumU - proposedCellMaximumU;
+      const splitFinalCell = remainingCellLength > 0 && remainingCellLength < minimumPartialLength;
       const cellMaximumU = Math.min(
         maximumU,
-        remainingCellLength > 0 && remainingCellLength < minimumPartialLength
-          ? maximumU
-          : proposedCellMaximumU,
+        splitFinalCell ? cursorU + (maximumU - cursorU) * 0.5 : proposedCellMaximumU,
       );
+      const boundaryCut =
+        splitFinalCell ||
+        splitFinalCourse ||
+        cursorU < minimumU - 1e-9 ||
+        proposedCellMaximumU > maximumU + 1e-9 ||
+        proposedCourseMaximumV > maximumV + 1e-9;
       const availableLength = cellMaximumU - cellMinimumU - definition.joints.widthMeters;
       const availableWidth = cellWidth - definition.joints.widthMeters;
       // Boundary-clipped courses may legitimately expose a narrow cut unit. Rejecting them with
       // the interior-unit threshold left long open strips at staggered field edges. Interior cells
       // remain full-sized by construction; this lower bound exists only to avoid degenerate cuts.
       const minimumCutDimension = Math.min(definition.joints.widthMeters * 0.5, 0.004);
-      if (
-        availableLength > minimumCutDimension &&
-        availableWidth > minimumCutDimension
-      ) {
+      if (availableLength > minimumCutDimension && availableWidth > minimumCutDimension) {
         const centreU = (cellMinimumU + cellMaximumU) * 0.5;
         const centreV = (cursorV + courseMaximumV) * 0.5;
         const centre: Point2 = alongX ? { x: centreU, z: centreV } : { x: centreV, z: centreU };
@@ -779,13 +892,20 @@ export function compileIrregularPaving(input: IrregularPavingDefinitionInput): {
             chipDepth,
           random,
         );
-        const stoneTopY =
-          definition.baseY + settlement + (repairPatch?.settlementBiasMeters ?? 0);
+        const stoneTopY = definition.baseY + settlement + (repairPatch?.settlementBiasMeters ?? 0);
         const tiltRadians: [number, number] = [
           (tiltDegrees[0] * Math.PI) / 180,
           (tiltDegrees[1] * Math.PI) / 180,
         ];
         const minimumTopY = Math.min(
+          ...plan.map(
+            (point) =>
+              stoneTopY +
+              Math.tan(tiltRadians[0]) * (point.x - centre.x) +
+              Math.tan(tiltRadians[1]) * (point.z - centre.z),
+          ),
+        );
+        const maximumTopY = Math.max(
           ...plan.map(
             (point) =>
               stoneTopY +
@@ -820,12 +940,14 @@ export function compileIrregularPaving(input: IrregularPavingDefinitionInput): {
           chipped,
           planAreaSquareMeters: planAreaSquareMeters(plan),
           minimumTopY,
+          maximumTopY,
+          boundaryCut,
           surfaceFrame,
         });
       } else {
         skippedCellSpans.push(Math.max(0, cellMaximumU - cellMinimumU));
       }
-      cursorU += cellLength;
+      cursorU = cellMaximumU;
       unit += 1;
     }
     cursorV = courseMaximumV;
@@ -923,8 +1045,7 @@ export function compileIrregularPaving(input: IrregularPavingDefinitionInput): {
   );
   const boundaryAreaSquareMeters = (maximumX - minimumX) * (maximumZ - minimumZ);
   const unitPlanCoverageRatio =
-    stones.reduce((sum, stone) => sum + stone.planAreaSquareMeters, 0) /
-    boundaryAreaSquareMeters;
+    stones.reduce((sum, stone) => sum + stone.planAreaSquareMeters, 0) / boundaryAreaSquareMeters;
   if (unitPlanCoverageRatio < definition.joints.minimumUnitCoverageRatio)
     throw new Error(
       `Paving unit coverage ${unitPlanCoverageRatio.toFixed(4)} is below the declared minimum ${definition.joints.minimumUnitCoverageRatio.toFixed(4)}`,
@@ -942,6 +1063,53 @@ export function compileIrregularPaving(input: IrregularPavingDefinitionInput): {
     throw new Error(
       `Paving unit clearance ${minimumObservedUnitClearanceMeters.toFixed(4)}m is below the declared joint-surface minimum ${definition.joints.minimumUnitClearanceMeters.toFixed(4)}m`,
     );
+  const wholeUnits = stones.filter((stone) => !stone.boundaryCut);
+  if (wholeUnits.length === 0)
+    throw new Error('Paving physical construction verification requires at least one whole unit');
+  const observedRange = (values: number[]): ConstructionMetricRange => ({
+    minimum: Math.min(...values),
+    maximum: Math.max(...values),
+  });
+  const maximumExposedReliefMeters = Math.max(
+    ...wholeUnits.map((stone) => stone.maximumTopY - jointSurfaceY),
+  );
+  const maximumAbsoluteSettlementMeters = Math.max(
+    ...wholeUnits.map((stone) => Math.abs(stone.settlementMeters)),
+  );
+  const actualConstructionMeasurements: Record<
+    ConstructionMeasurementName,
+    ConstructionMetricRange
+  > = {
+    unitLengthMeters: observedRange(wholeUnits.map((stone) => stone.lengthMeters)),
+    unitWidthMeters: observedRange(wholeUnits.map((stone) => stone.widthMeters)),
+    unitHeightMeters: observedRange(wholeUnits.map(() => definition.units.heightMeters)),
+    jointWidthMeters: observedRange([definition.joints.widthMeters]),
+    jointRecessMeters: observedRange([definition.joints.depthMeters]),
+    aspectRatio: observedRange(wholeUnits.map((stone) => stone.lengthMeters / stone.widthMeters)),
+    maximumExposedReliefMeters: observedRange([maximumExposedReliefMeters]),
+    maximumAbsoluteSettlementMeters: observedRange([maximumAbsoluteSettlementMeters]),
+  };
+  for (const name of constructionMeasurementNames) {
+    const observed = actualConstructionMeasurements[name];
+    const allowed = definition.physicalConstruction.bounds.actual[name];
+    if (
+      !withinConstructionRange(observed.minimum, allowed) ||
+      !withinConstructionRange(observed.maximum, allowed)
+    )
+      throw new Error(
+        `Paving actual ${name} range ${observed.minimum.toFixed(6)}..${observed.maximum.toFixed(6)} is outside declared construction bounds ${allowed.minimum.toFixed(6)}..${allowed.maximum.toFixed(6)}`,
+      );
+  }
+  const physicalConstruction: PavingConstructionCompliance = {
+    specificationId: definition.physicalConstruction.id,
+    class: definition.physicalConstruction.class,
+    referenceBasis: definition.physicalConstruction.referenceBasis,
+    nominal: nominalConstructionMeasurements(definition),
+    actual: actualConstructionMeasurements,
+    assessedWholeUnitCount: wholeUnits.length,
+    excludedBoundaryCutCount: stones.length - wholeUnits.length,
+    passed: true,
+  };
   const digestInput = JSON.stringify({ definition, geometry, supportGeometry });
   const report: IrregularPavingReport = {
     definitionId: definition.id,
@@ -968,6 +1136,7 @@ export function compileIrregularPaving(input: IrregularPavingDefinitionInput): {
     supportQueryCoverage: { samples: supportSamples, hits: supportHits },
     wetReceiverMaterialIds: definition.drainage.wetReceiverMaterialIds,
     surfaceMaterialTargets: materialTargets,
+    physicalConstruction,
     stones,
   };
   return { definition, geometry, supportGeometry, report };
@@ -981,26 +1150,77 @@ export function createHistoricSettPavingDefinition(): IrregularPavingDefinition 
     detailTier: 'medium',
     boundary: { kind: 'rectangle', minimum: [-4.6, -4.8], maximum: [4.6, -0.45] },
     baseY: 0,
+    physicalConstruction: {
+      id: 'historic-natural-granite-setts',
+      class: 'natural-stone-sett',
+      referenceBasis: {
+        adoption: 'factual-reference-only-no-code-adoption',
+        reviewedOn: '2026-09-02',
+        sources: [
+          {
+            publisher: 'Aggregate Industries / Charcon',
+            title: 'Commercial landscaping portfolio: Natural Granite Setts product data',
+            url: 'https://cms.esi.info/Media/documents/77639_1443535270289.pdf',
+            claims: [
+              'Natural granite sett nominal plans include 100 x 100 mm and 100 x 200 mm.',
+              'The same product data also lists 100 mm wide setts in random 250/300 mm lengths.',
+              'Published nominal thicknesses include 50, 60, 75 and 100 mm.',
+            ],
+          },
+          {
+            publisher: 'Granite Setts Direct',
+            title: 'Black Natural Split Granite Setts',
+            url: 'https://www.granitesettsdirect.co.uk/shop/natural-split-granite-setts/black-natural-split-granite-setts/',
+            claims: [
+              'Natural split granite products include 200 x 100 x 50 mm and 100 x 100 x 50 mm units.',
+              'Published coverage estimates assume a 10 to 12 mm mortar joint.',
+            ],
+          },
+        ],
+      },
+      bounds: {
+        nominal: {
+          unitLengthMeters: { minimum: 0.1, maximum: 0.2 },
+          unitWidthMeters: { minimum: 0.1, maximum: 0.1 },
+          unitHeightMeters: { minimum: 0.05, maximum: 0.1 },
+          jointWidthMeters: { minimum: 0.01, maximum: 0.012 },
+          jointRecessMeters: { minimum: 0.003, maximum: 0.006 },
+          aspectRatio: { minimum: 1, maximum: 2 },
+          maximumExposedReliefMeters: { minimum: 0.003, maximum: 0.012 },
+          maximumAbsoluteSettlementMeters: { minimum: 0, maximum: 0.004 },
+        },
+        actual: {
+          unitLengthMeters: { minimum: 0.15, maximum: 0.25 },
+          unitWidthMeters: { minimum: 0.075, maximum: 0.115 },
+          unitHeightMeters: { minimum: 0.05, maximum: 0.1 },
+          jointWidthMeters: { minimum: 0.01, maximum: 0.012 },
+          jointRecessMeters: { minimum: 0.003, maximum: 0.006 },
+          aspectRatio: { minimum: 1.3, maximum: 3 },
+          maximumExposedReliefMeters: { minimum: 0.003, maximum: 0.012 },
+          maximumAbsoluteSettlementMeters: { minimum: 0, maximum: 0.004 },
+        },
+      },
+    },
     courses: {
       directionDegrees: 0,
-      nominalWidthMeters: 0.2,
-      widthVariation: 0.14,
+      nominalWidthMeters: 0.1,
+      widthVariation: 0.08,
       staggerFraction: 0.48,
-      edgeJitterMeters: 0.007,
+      edgeJitterMeters: 0.003,
     },
     units: {
       profile: 'irregular-sett',
-      nominalLengthMeters: 0.25,
-      lengthVariation: 0.18,
-      widthVariation: 0.12,
-      cornerJitterMeters: 0.009,
-      yawVariationDegrees: 2.2,
-      settlementMeters: 0.004,
-      tiltDegrees: 0.55,
+      nominalLengthMeters: 0.2,
+      lengthVariation: 0.12,
+      widthVariation: 0.08,
+      cornerJitterMeters: 0.004,
+      yawVariationDegrees: 1.2,
+      settlementMeters: 0.001,
+      tiltDegrees: 0.2,
       heightMeters: 0.075,
-      chamferMeters: 0.006,
-      chipProbability: 0.22,
-      maximumChipDepthMeters: 0.004,
+      chamferMeters: 0.003,
+      chipProbability: 0.14,
+      maximumChipDepthMeters: 0.003,
     },
     surfaceSampling: {
       kind: 'deterministic-unit-local-uv-meters',
@@ -1012,8 +1232,8 @@ export function createHistoricSettPavingDefinition(): IrregularPavingDefinition 
     },
     joints: {
       widthMeters: 0.01,
-      depthMeters: 0.009,
-      minimumUnitCoverageRatio: 0.86,
+      depthMeters: 0.004,
+      minimumUnitCoverageRatio: 0.8,
       maximumUnfilledSpanMeters: 0.02,
       minimumUnitClearanceMeters: 0.001,
       materialId: 'dark-grit-joint',
@@ -1043,7 +1263,7 @@ export function createHistoricSettPavingDefinition(): IrregularPavingDefinition 
         id: 'older-repair',
         minimum: [-2.8, -3.55],
         maximum: [-0.45, -2.05],
-        settlementBiasMeters: -0.002,
+        settlementBiasMeters: -0.001,
         materialIds: ['warm-repair-stone', 'dark-repair-stone'],
       },
     ],
@@ -1081,26 +1301,76 @@ export function createContemporaryPaverDefinition(): IrregularPavingDefinition {
     detailTier: 'medium',
     boundary: { kind: 'rectangle', minimum: [-5.2, -5.1], maximum: [5.2, -0.55] },
     baseY: 0,
+    physicalConstruction: {
+      id: 'contemporary-standard-concrete-block-pavers',
+      class: 'precast-concrete-block-paver',
+      referenceBasis: {
+        adoption: 'factual-reference-only-no-code-adoption',
+        reviewedOn: '2026-09-02',
+        sources: [
+          {
+            publisher: 'Marshalls',
+            title: 'Standard Block Paving 200 x 100 x 50mm datasheet',
+            url: 'https://media.marshalls.co.uk/image/upload/standard_block_paving_200x100x50mm_datasheet.pdf',
+            claims: [
+              'The product nominal dimensions are 200 x 100 x 50 mm.',
+              'The product work dimensions are 198 x 98 x 50 mm.',
+            ],
+          },
+          {
+            publisher: 'Marshalls',
+            title: 'Installation details for standard concrete block paving',
+            url: 'https://media.marshalls.co.uk/image/upload/v1580297534/standard-concrete-block-paving-january-2020.pdf',
+            claims: [
+              'Cut blocks should maintain a joint width within 2 to 5 mm.',
+              'Cut blocks should be no smaller than one quarter of the original block.',
+            ],
+          },
+        ],
+      },
+      bounds: {
+        nominal: {
+          unitLengthMeters: { minimum: 0.198, maximum: 0.2 },
+          unitWidthMeters: { minimum: 0.098, maximum: 0.1 },
+          unitHeightMeters: { minimum: 0.05, maximum: 0.05 },
+          jointWidthMeters: { minimum: 0.002, maximum: 0.005 },
+          jointRecessMeters: { minimum: 0.002, maximum: 0.004 },
+          aspectRatio: { minimum: 1.98, maximum: 2.02 },
+          maximumExposedReliefMeters: { minimum: 0.002, maximum: 0.007 },
+          maximumAbsoluteSettlementMeters: { minimum: 0, maximum: 0.002 },
+        },
+        actual: {
+          unitLengthMeters: { minimum: 0.185, maximum: 0.21 },
+          unitWidthMeters: { minimum: 0.09, maximum: 0.105 },
+          unitHeightMeters: { minimum: 0.05, maximum: 0.05 },
+          jointWidthMeters: { minimum: 0.002, maximum: 0.005 },
+          jointRecessMeters: { minimum: 0.002, maximum: 0.004 },
+          aspectRatio: { minimum: 1.75, maximum: 2.3 },
+          maximumExposedReliefMeters: { minimum: 0.002, maximum: 0.007 },
+          maximumAbsoluteSettlementMeters: { minimum: 0, maximum: 0.002 },
+        },
+      },
+    },
     courses: {
       directionDegrees: 90,
-      nominalWidthMeters: 0.3,
-      widthVariation: 0.1,
+      nominalWidthMeters: 0.1,
+      widthVariation: 0.02,
       staggerFraction: 0.34,
-      edgeJitterMeters: 0.004,
+      edgeJitterMeters: 0.001,
     },
     units: {
       profile: 'irregular-paver',
-      nominalLengthMeters: 0.42,
-      lengthVariation: 0.1,
-      widthVariation: 0.07,
-      cornerJitterMeters: 0.005,
-      yawVariationDegrees: 0.8,
-      settlementMeters: 0.0025,
-      tiltDegrees: 0.3,
-      heightMeters: 0.065,
-      chamferMeters: 0.004,
-      chipProbability: 0.08,
-      maximumChipDepthMeters: 0.003,
+      nominalLengthMeters: 0.2,
+      lengthVariation: 0.03,
+      widthVariation: 0.025,
+      cornerJitterMeters: 0.0015,
+      yawVariationDegrees: 0.3,
+      settlementMeters: 0.0008,
+      tiltDegrees: 0.15,
+      heightMeters: 0.05,
+      chamferMeters: 0.002,
+      chipProbability: 0.04,
+      maximumChipDepthMeters: 0.0015,
     },
     surfaceSampling: {
       kind: 'deterministic-unit-local-uv-meters',
@@ -1111,8 +1381,8 @@ export function createContemporaryPaverDefinition(): IrregularPavingDefinition {
       rotationChoicesDegrees: [0, 180],
     },
     joints: {
-      widthMeters: 0.008,
-      depthMeters: 0.006,
+      widthMeters: 0.004,
+      depthMeters: 0.003,
       minimumUnitCoverageRatio: 0.91,
       maximumUnfilledSpanMeters: 0.018,
       minimumUnitClearanceMeters: 0.001,
@@ -1143,7 +1413,7 @@ export function createContemporaryPaverDefinition(): IrregularPavingDefinition {
         id: 'utility-reinstatement',
         minimum: [1.15, -4.45],
         maximum: [3.65, -2.4],
-        settlementBiasMeters: -0.001,
+        settlementBiasMeters: -0.0005,
         materialIds: ['reinstatement-paver-a', 'reinstatement-paver-b'],
       },
     ],

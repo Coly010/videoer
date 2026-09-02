@@ -1208,9 +1208,11 @@ def create_surface_water_optical_surface(definition, field_report):
     """Create the conserved optical top surface; the receiver wet-film remains separate."""
     surface = load_json(definition["surfaceWaterOpticalSurfacePath"])
     entity_id = definition["id"]
-    if surface.get("schemaVersion") != 1:
+    schema_version = surface.get("schemaVersion")
+    if schema_version not in (1, 2):
         raise RuntimeError(f"Entity '{entity_id}' optical water surface schema is unsupported")
-    if surface.get("generator") != "videoer.surface-water-optical-surface.v1":
+    expected_generator = f"videoer.surface-water-optical-surface.v{schema_version}"
+    if surface.get("generator") != expected_generator:
         raise RuntimeError(
             f"Entity '{entity_id}' optical water surface has an unsupported generator"
         )
@@ -1253,6 +1255,44 @@ def create_surface_water_optical_surface(definition, field_report):
     optical_offset = options.get("opticalOffsetMeters")
     if not isinstance(optical_offset, (int, float)) or not math.isfinite(optical_offset):
         raise RuntimeError(f"Entity '{entity_id}' optical water surface offset is invalid")
+
+    if schema_version == 2:
+        appearance = surface.get("appearance")
+        if not isinstance(appearance, dict) or appearance.get("model") != "thin-dielectric-water-v1":
+            raise RuntimeError(f"Entity '{entity_id}' optical water appearance is unsupported")
+        ior = appearance.get("ior")
+        roughness = appearance.get("roughness")
+        absorption_color = appearance.get("absorptionColorLinear")
+        absorption_distance = appearance.get("absorptionDistanceMeters")
+        if (
+            not isinstance(ior, (int, float))
+            or not math.isfinite(ior)
+            or ior < 1.3
+            or ior > 1.36
+            or not isinstance(roughness, (int, float))
+            or not math.isfinite(roughness)
+            or roughness < 0.005
+            or roughness > 0.2
+            or not isinstance(absorption_color, list)
+            or len(absorption_color) != 3
+            or not all(
+                isinstance(value, (int, float)) and math.isfinite(value) and 0 <= value <= 1
+                for value in absorption_color
+            )
+            or not isinstance(absorption_distance, (int, float))
+            or not math.isfinite(absorption_distance)
+            or absorption_distance < 0.05
+            or absorption_distance > 100
+        ):
+            raise RuntimeError(f"Entity '{entity_id}' optical water appearance is invalid")
+    else:
+        # Schema v1 predated a renderer-independent appearance declaration. Preserve its
+        # established clean-water constants for compatibility, but identify the legacy
+        # adaptation explicitly in the report below.
+        ior = 1.333
+        roughness = 0.045
+        absorption_color = [1.0, 1.0, 1.0]
+        absorption_distance = 1.0
 
     vertices = []
     for vertex_index, (position, ground_height, depth) in enumerate(
@@ -1327,37 +1367,67 @@ def create_surface_water_optical_surface(definition, field_report):
     mesh_data = bpy.data.meshes.new(f"{entity_id}-optical-water-surface")
     mesh_data.from_pydata(vertices, [], faces)
     mesh_data.update(calc_edges=True)
+    depth_attribute = mesh_data.attributes.new(
+        name="videoer_water_depth_meters", type="FLOAT", domain="POINT"
+    )
+    transmittance_attribute = mesh_data.attributes.new(
+        name="videoer_water_transmittance_linear", type="FLOAT_COLOR", domain="POINT"
+    )
+    for vertex_index, depth in enumerate(depths):
+        depth_attribute.data[vertex_index].value = depth
+        # The declared absorption colour is transmittance over the declared distance.
+        # Applying Beer-Lambert per vertex keeps the receiver view nearly colourless for
+        # millimetre puddles and avoids an arbitrary dark shader base.
+        transmittance = [
+            max(0.0, min(1.0, channel ** (depth / absorption_distance)))
+            for channel in absorption_color
+        ]
+        transmittance_attribute.data[vertex_index].color = (*transmittance, 1.0)
     water = bpy.data.objects.new(f"{entity_id}-optical-water-surface", mesh_data)
     bpy.context.collection.objects.link(water)
     for polygon in mesh_data.polygons:
         polygon.use_smooth = True
 
     material = bpy.data.materials.new(f"{entity_id}-optical-water")
-    material.diffuse_color = (0.025, 0.035, 0.045, 0.28)
+    material.diffuse_color = (1.0, 1.0, 1.0, 0.08)
     material.use_nodes = True
-    principled = material.node_tree.nodes.get("Principled BSDF")
-    if principled is None:
-        raise RuntimeError(f"Entity '{entity_id}' optical water material lacks Principled BSDF")
-    principled.label = "Conserved shallow-water dielectric"
-    # Shallow clean water is nearly colourless; darkening belongs to the wet receiver below.
-    principled.inputs["Base Color"].default_value = (0.055, 0.07, 0.08, 1)
-    principled.inputs["Metallic"].default_value = 0.0
-    principled.inputs["Roughness"].default_value = 0.045
-    if principled.inputs.get("IOR"):
-        principled.inputs["IOR"].default_value = 1.333
-    transmission = principled.inputs.get("Transmission Weight")
-    alpha = principled.inputs.get("Alpha")
+    nodes = material.node_tree.nodes
+    links = material.node_tree.links
+    nodes.clear()
+    output = nodes.new("ShaderNodeOutputMaterial")
+    output.name = "videoer-water-output"
+    output.label = "Thin dielectric output"
+    transparent = nodes.new("ShaderNodeBsdfTransparent")
+    transparent.name = "videoer-water-receiver-view"
+    transparent.label = "Depth-attenuated receiver view"
+    transmittance = nodes.new("ShaderNodeAttribute")
+    transmittance.name = "videoer-water-transmittance"
+    transmittance.label = "Declared Beer-Lambert transmittance"
+    transmittance.attribute_name = "videoer_water_transmittance_linear"
+    reflection = nodes.new("ShaderNodeBsdfAnisotropic")
+    reflection.name = "videoer-water-fresnel-reflection"
+    reflection.label = "Neutral dielectric reflection"
+    reflection.inputs["Color"].default_value = (1.0, 1.0, 1.0, 1.0)
+    reflection.inputs["Roughness"].default_value = roughness
+    if reflection.inputs.get("Anisotropy"):
+        reflection.inputs["Anisotropy"].default_value = 0.0
+    fresnel = nodes.new("ShaderNodeFresnel")
+    fresnel.name = "videoer-water-fresnel"
+    fresnel.label = "Declared water IOR"
+    fresnel.inputs["IOR"].default_value = ior
+    mix = nodes.new("ShaderNodeMixShader")
+    mix.name = "videoer-water-interface"
+    mix.label = "Transparent receiver plus Fresnel reflection"
+    links.new(transmittance.outputs["Color"], transparent.inputs["Color"])
+    links.new(fresnel.outputs["Fac"], mix.inputs[0])
+    links.new(transparent.outputs[0], mix.inputs[1])
+    links.new(reflection.outputs[0], mix.inputs[2])
+    links.new(mix.outputs[0], output.inputs["Surface"])
     cycles = bpy.context.scene.render.engine == "CYCLES"
-    if transmission:
-        transmission.default_value = 0.94 if cycles else 0.0
-    if alpha:
-        alpha.default_value = 1.0 if cycles else 0.28
     if not cycles and hasattr(material, "surface_render_method"):
+        # Eevee cannot trace the receiver through a dielectric volume. Its explicit
+        # approximation uses the same thin Fresnel interface with dithered transparency.
         material.surface_render_method = "DITHERED"
-    if principled.inputs.get("Coat Weight"):
-        principled.inputs["Coat Weight"].default_value = 0.18 if cycles else 1.0
-    if principled.inputs.get("Coat Roughness"):
-        principled.inputs["Coat Roughness"].default_value = 0.025
     mesh_data.materials.append(material)
     water.hide_render = not definition.get("visible", True)
     return {
@@ -1370,10 +1440,15 @@ def create_surface_water_optical_surface(definition, field_report):
         "reconstructedVolumeCubicMeters": reconstructed_volume,
         "sourcePuddleVolumeCubicMeters": source_volume,
         "materialModel": (
-            "shallow-water-dielectric-cycles-v1"
+            "thin-dielectric-interface-cycles-v2"
             if cycles
-            else "thin-reflective-water-film-eevee-v1"
+            else "thin-fresnel-transparent-eevee-approximation-v2"
         ),
+        "appearanceSource": "surface-v2" if schema_version == 2 else "legacy-v1-adaptation",
+        "ior": ior,
+        "roughness": roughness,
+        "depthAttribute": "videoer_water_depth_meters",
+        "transmittanceAttribute": "videoer_water_transmittance_linear",
         "separateContinuousReceiverFilmPreserved": True,
     }
 

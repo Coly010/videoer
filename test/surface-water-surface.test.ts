@@ -98,6 +98,22 @@ const options = {
   maximumVolumeCorrectionFactor: 30,
 };
 
+const refinedOptions = {
+  schemaVersion: 2 as const,
+  id: 'environment.optical-water-surface-refined',
+  contourDepthMeters: 0.000_01,
+  opticalOffsetMeters: 0.000_2,
+  maximumVolumeCorrectionFactor: 30,
+  subcellDivisions: 4,
+  appearance: {
+    model: 'thin-dielectric-water-v1' as const,
+    ior: 1.333,
+    roughness: 0.035,
+    absorptionColorLinear: [0.72, 0.9, 0.95] as [number, number, number],
+    absorptionDistanceMeters: 4,
+  },
+};
+
 describe('smooth surface-water optical reconstruction', () => {
   it('creates deterministic shared triangulation with interpolated non-cell boundary vertices', () => {
     const field = puddleField();
@@ -105,7 +121,10 @@ describe('smooth surface-water optical reconstruction', () => {
     const second = reconstructSurfaceWaterOpticalSurface(field, options);
 
     expect(first).toEqual(second);
-    expect(first.reconstructionSha256).toMatch(/^[a-f0-9]{64}$/u);
+    // Locks the original v1 content identity while v2 evolves independently.
+    expect(first.reconstructionSha256).toBe(
+      '60ab2ae604cc8fdbbbc45002d006dbc86eac01a334bd894bd0ba66970a6f9592',
+    );
     expect(first.indices.length).toBeGreaterThan(0);
     expect(first.positions.length).toBeLessThan(first.indices.length);
     expect(first.report.boundaryVertexCount).toBeGreaterThan(0);
@@ -160,5 +179,67 @@ describe('smooth surface-water optical reconstruction', () => {
     expect(() => reconstructSurfaceWaterOpticalSurface(invalidField, options)).toThrow(
       /invalid surface-water field/u,
     );
+  });
+
+  it('deterministically refines contours below solver-cell scale with bounded mass correction', () => {
+    const field = puddleField();
+    const coarse = reconstructSurfaceWaterOpticalSurface(field, {
+      ...refinedOptions,
+      subcellDivisions: 2,
+    });
+    const refined = reconstructSurfaceWaterOpticalSurface(field, {
+      ...refinedOptions,
+      subcellDivisions: 8,
+    });
+    const repeated = reconstructSurfaceWaterOpticalSurface(field, {
+      ...refinedOptions,
+      subcellDivisions: 8,
+    });
+
+    expect(refined).toEqual(repeated);
+    expect(refined.report.refinedCellSizeMeters).toBeCloseTo(field.grid.cellSizeMeters / 8, 12);
+    expect(refined.report.triangleCount).toBeGreaterThan(coarse.report.triangleCount);
+    expect(refined.report.boundaryEdgeCount).toBeGreaterThan(coarse.report.boundaryEdgeCount);
+    expect(refined.report.maximumAxisAlignedBoundaryRunMeters).toBeLessThanOrEqual(
+      coarse.report.maximumAxisAlignedBoundaryRunMeters,
+    );
+    expect(refined.report.axisAlignedBoundaryLengthRatio).toBeLessThan(
+      coarse.report.axisAlignedBoundaryLengthRatio,
+    );
+    expect(refined.report.volumeCorrectionFactor).toBeLessThanOrEqual(
+      refined.options.maximumVolumeCorrectionFactor,
+    );
+    expect(refined.report.reconstructedVolumeCubicMeters).toBeCloseTo(
+      refined.report.sourcePuddleVolumeCubicMeters,
+      12,
+    );
+    expect(verifySurfaceWaterOpticalSurface(refined)).toMatchObject({ valid: true, issues: [] });
+  });
+
+  it('binds thin-dielectric appearance and rejects forged appearance and boundary evidence', () => {
+    const surface = reconstructSurfaceWaterOpticalSurface(puddleField(), refinedOptions);
+
+    expect(surface).toMatchObject({
+      schemaVersion: 2,
+      generator: 'videoer.surface-water-optical-surface.v2',
+      appearance: refinedOptions.appearance,
+    });
+    const forgedAppearance = structuredClone(surface);
+    forgedAppearance.appearance.ior = 1.34;
+    expect(verifySurfaceWaterOpticalSurface(forgedAppearance).valid).toBe(false);
+
+    const forgedBoundary = structuredClone(surface);
+    forgedBoundary.report.axisAlignedBoundaryLengthRatio = 0;
+    const { reconstructionSha256: _discarded, ...forgedBoundaryWithoutHash } = forgedBoundary;
+    void _discarded;
+    forgedBoundary.reconstructionSha256 = canonicalSha256(forgedBoundaryWithoutHash);
+    expect(verifySurfaceWaterOpticalSurface(forgedBoundary).valid).toBe(false);
+
+    expect(() =>
+      reconstructSurfaceWaterOpticalSurface(puddleField(), {
+        ...refinedOptions,
+        appearance: { ...refinedOptions.appearance, ior: 1.5 },
+      }),
+    ).toThrow();
   });
 });

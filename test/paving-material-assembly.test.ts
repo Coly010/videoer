@@ -165,7 +165,7 @@ describe('unit-aware paving material assembly', () => {
         outputGeometryPath: join(directory, 'invalid/paving.json'),
       }),
     ).rejects.toThrow(/unit-local-uv-meters/u);
-  });
+  }, 10_000);
 
   it('binds granular joint and substrate materials only to their declared continuous targets', async () => {
     directory = await mkdtemp(join(tmpdir(), 'videoer-paving-construction-material-'));

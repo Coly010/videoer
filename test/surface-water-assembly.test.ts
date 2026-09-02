@@ -8,6 +8,7 @@ import { sha256File } from '../src/assets/library.js';
 import {
   createPavingSurfaceWaterField,
   createSurfaceWaterOpticalSurface,
+  rebindSurfaceWaterAssemblyProfile,
   surfaceWaterAssemblyProfileSchema,
 } from '../src/application/surface-water.js';
 import { canonicalSha256 } from '../src/assets/sources/cache.js';
@@ -81,6 +82,27 @@ describe('paving surface-water assembly', () => {
       grid: { cellSizeMeters: 0.24, supersample: 4, shelterRayMaximumMeters: 30 },
       solver: { edgeHeightThresholdMeters: 0.0025, maximumCellCount: 10_000 },
     });
+    const sourceProfilePath = join(directory, 'source-profile.json');
+    await writeFile(sourceProfilePath, `${JSON.stringify(profile, null, 2)}\n`, 'utf8');
+    const reboundProfilePath = join(directory, 'derived', 'profile.json');
+    const rebound = await rebindSurfaceWaterAssemblyProfile({
+      sourceProfilePath,
+      pavingGeometryPath: geometryPath,
+      outputProfilePath: reboundProfilePath,
+      profileId: 'environment.contemporary-paver-water-field-rebound',
+    });
+    expect(rebound).toMatchObject({
+      path: reboundProfilePath,
+      receiverSha256: profile.receiverSha256,
+      shelterCount: 0,
+      profile: {
+        id: 'environment.contemporary-paver-water-field-rebound',
+        receiverSha256: profile.receiverSha256,
+        atmosphericVfxSha256: profile.atmosphericVfxSha256,
+        materialResponses: profile.materialResponses,
+      },
+    });
+    expect(rebound.sourceProfileSha256).toBe(await sha256File(sourceProfilePath));
     const outputPath = join(directory, 'surface-water-field.json');
     const result = await createPavingSurfaceWaterField({
       pavingGeometryPath: geometryPath,
@@ -140,6 +162,46 @@ describe('paving surface-water assembly', () => {
       },
     });
 
+    const cliRefinedPath = join(directory, 'cli-surface-water-optical-v2.json');
+    const cliRefinedResult = await exec(
+      process.execPath,
+      [
+        '--import',
+        'tsx',
+        resolve('src/cli.ts'),
+        '--json',
+        'environment',
+        'create-surface-water-optical-surface',
+        result.path,
+        cliRefinedPath,
+        '--id',
+        'environment.contemporary-paver-cli-optical-water-v2',
+        '--schema-version',
+        '2',
+        '--subcell-divisions',
+        '4',
+      ],
+      { maxBuffer: 64 * 1024 * 1024 },
+    );
+    expect(JSON.parse(cliRefinedResult.stdout)).toMatchObject({
+      ok: true,
+      data: {
+        surface: {
+          schemaVersion: 2,
+          sourceFieldSha256: result.field.fieldSha256,
+          appearance: {
+            model: 'thin-dielectric-water-v1',
+            ior: 1.333,
+            roughness: 0.035,
+            absorptionColorLinear: [0.72, 0.9, 0.95],
+            absorptionDistanceMeters: 4,
+          },
+          report: { refinedCellSizeMeters: result.field.grid.cellSizeMeters / 4 },
+        },
+        path: cliRefinedPath,
+      },
+    });
+
     const scene = cinematicSceneSchema.parse({
       schemaVersion: 1,
       id: 'scene.surface-water-binding',
@@ -152,7 +214,7 @@ describe('paving surface-water assembly', () => {
           role: 'environment',
           geometryPath: relative(directory, geometryPath),
           surfaceWaterFieldPath: relative(directory, result.path),
-          surfaceWaterOpticalSurfacePath: relative(directory, optical.path),
+          surfaceWaterOpticalSurfacePath: relative(directory, cliRefinedPath),
           transform: profile.receiverTransform,
         },
       ],
@@ -210,17 +272,17 @@ describe('paving surface-water assembly', () => {
         }),
         expect.objectContaining({
           role: 'surface-water-optical:receiver',
-          path: 'surface-water-optical.json',
+          path: 'cli-surface-water-optical-v2.json',
         }),
       ]),
     );
 
-    const opticalBytes = await readFile(optical.path, 'utf8');
+    const opticalBytes = await readFile(cliRefinedPath, 'utf8');
     const forgedOptical = JSON.parse(opticalBytes);
     forgedOptical.sourceFieldSha256 = '0'.repeat(64);
     delete forgedOptical.reconstructionSha256;
     forgedOptical.reconstructionSha256 = canonicalSha256(forgedOptical);
-    await writeFile(optical.path, `${JSON.stringify(forgedOptical, null, 2)}\n`, 'utf8');
+    await writeFile(cliRefinedPath, `${JSON.stringify(forgedOptical, null, 2)}\n`, 'utf8');
     expect(await verifyCinematicScene(scene, scenePath)).toMatchObject({
       status: 'fail',
       checks: expect.arrayContaining([
@@ -234,7 +296,7 @@ describe('paving surface-water assembly', () => {
     expect((await fingerprintCinematicScene(scenePath)).renderSha256).not.toBe(
       initialFingerprint.renderSha256,
     );
-    await writeFile(optical.path, opticalBytes, 'utf8');
+    await writeFile(cliRefinedPath, opticalBytes, 'utf8');
 
     const movedScene = structuredClone(scene);
     movedScene.entities[0]!.transform.position[0] += 0.1;
@@ -287,5 +349,5 @@ describe('paving surface-water assembly', () => {
         outputPath: join(directory, 'wrong-target.json'),
       }),
     ).rejects.toThrow(/expected joint/u);
-  });
+  }, 15_000);
 });
