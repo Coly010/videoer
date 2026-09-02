@@ -35,7 +35,12 @@ describe('paving surface-water assembly', () => {
   it('loads exact hash-bound inputs, derives target classes, and persists structural evidence', async () => {
     const directory = await mkdtemp(join(tmpdir(), 'videoer-surface-water-'));
     temporaryDirectories.push(directory);
-    const generated = compileIrregularPaving(createContemporaryPaverDefinition());
+    // This fixture exercises every contemporary target class, including the
+    // utility repair and both borders, without compiling the full transfer-host
+    // acreage in a contract test that also launches two independent CLI runs.
+    const definition = createContemporaryPaverDefinition();
+    definition.boundary = { kind: 'rectangle', minimum: [-3, -4.8], maximum: [4, -1] };
+    const generated = compileIrregularPaving(definition);
     const targets = generated.report.surfaceMaterialTargets;
     const jointMaterial = generated.geometry.materials.find(
       (material) => material.id === targets.continuousJoint,

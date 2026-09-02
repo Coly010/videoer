@@ -64,6 +64,7 @@ import { acceptProjectingSupportedCanopy } from './application/projecting-canopy
 import { createArchitecturalEnvelopeTransferFixtures } from './application/architectural-envelope-fixtures.js';
 import {
   bindPavingConstructionMaterials,
+  bindProceduralPavingUnitMaterial,
   bindPavingUnitMaterial,
 } from './application/paving-material-assembly.js';
 import {
@@ -81,7 +82,11 @@ import {
 } from './application/materials.js';
 import { createEnvironmentalSurfaceGallery } from './application/material-gallery.js';
 import { acceptEnvironmentalSurfaceSuite } from './application/environmental-material-acceptance.js';
-import { loadSurfaceMaterial } from './materials/io.js';
+import { loadSurfaceMaterial, saveSurfaceMaterial } from './materials/io.js';
+import {
+  createPavingUnitSurfaceMaterial,
+  type PavingUnitMaterialKind,
+} from './materials/paving-unit.js';
 import {
   textureMaterialApplicationSchema,
   textureMaterialSuitabilitySchema,
@@ -1199,6 +1204,26 @@ environment
     );
   });
 environment
+  .command('bind-procedural-paving-unit-material')
+  .argument('<paving-geometry>')
+  .argument('<unit-material>')
+  .argument('<output-geometry>')
+  .description('bind one project-owned procedural material to every modeled paving unit')
+  .action(async function (pavingGeometry: string, unitMaterial: string, outputGeometry: string) {
+    const data = await bindProceduralPavingUnitMaterial({
+      pavingGeometryPath: pavingGeometry,
+      unitMaterialPath: unitMaterial,
+      outputGeometryPath: outputGeometry,
+    });
+    output(
+      this,
+      'environment.bind-procedural-paving-unit-material',
+      data,
+      (result) =>
+        `✓ ${result.materialId} bound to ${result.modeledUnitTargets.length} modeled paving targets → ${result.path}`,
+    );
+  });
+environment
   .command('bind-paving-unit-material')
   .argument('<paving-geometry>')
   .argument('<unit-material>')
@@ -1851,6 +1876,23 @@ surfaceMaterial
         : `✗ ${result.materialId}: ${result.reasons.map((reason) => reason.message).join('; ')}`,
     );
     if (!data.accepted) process.exitCode = 2;
+  });
+surfaceMaterial
+  .command('create-paving-unit')
+  .argument('<kind>')
+  .argument('<output-material>')
+  .description('create a project-owned metre-scaled procedural paving-unit material')
+  .action(async function (kind: string, outputMaterial: string) {
+    if (!['historic-cut-granite', 'contemporary-concrete-paver'].includes(kind))
+      throw new Error("kind must be 'historic-cut-granite' or 'contemporary-concrete-paver'");
+    const material = createPavingUnitSurfaceMaterial(kind as PavingUnitMaterialKind);
+    const path = await saveSurfaceMaterial(outputMaterial, material);
+    output(
+      this,
+      'material.create-paving-unit',
+      { material, path },
+      (result) => `✓ project-owned ${result.material.id} → ${result.path}`,
+    );
   });
 surfaceMaterial
   .command('create-paving-granular')

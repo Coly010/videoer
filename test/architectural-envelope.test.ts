@@ -111,6 +111,8 @@ describe('irregular paving grammar', () => {
       first.report.stoneCount * 0.95,
     );
     expect(Object.keys(first.geometry.attributes ?? {}).sort()).toEqual([
+      'videoer_paving_dirt_accumulation',
+      'videoer_paving_edge_wear',
       'videoer_unit_roughness_variation',
       'videoer_unit_value_variation',
       'videoer_unit_weathering_variation',

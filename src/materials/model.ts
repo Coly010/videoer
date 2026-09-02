@@ -79,7 +79,7 @@ const textureMacroVariationSchema = z
       });
   });
 
-export const textureUnitVariationSchema = z.object({
+const coreUnitVariationShape = {
   kind: z.literal('vertex-scalar-attributes-v1'),
   valueAttribute: z.literal('videoer_unit_value_variation'),
   roughnessAttribute: z.literal('videoer_unit_roughness_variation'),
@@ -87,7 +87,34 @@ export const textureUnitVariationSchema = z.object({
   valueAmplitude: z.number().min(0).max(0.25),
   roughnessAmplitude: z.number().min(0).max(0.2),
   weatheringAmplitude: z.number().min(0).max(0.75),
-});
+} as const;
+
+// Texture placement currently consumes only renderer-neutral per-unit variation.
+// Construction-semantic masks live at surface level so no accepted field can be
+// silently ignored by a texture backend.
+export const textureUnitVariationSchema = z.object(coreUnitVariationShape).strict();
+
+export const surfaceUnitVariationSchema = z
+  .object({
+    ...coreUnitVariationShape,
+    edgeWearAttribute: z.literal('videoer_paving_edge_wear').optional(),
+    dirtAccumulationAttribute: z.literal('videoer_paving_dirt_accumulation').optional(),
+    edgeWearAmount: z.number().min(0).max(1).optional(),
+    dirtAccumulationAmount: z.number().min(0).max(1).optional(),
+  })
+  .strict()
+  .superRefine((variation, context) => {
+    for (const [attribute, amount] of [
+      ['edgeWearAttribute', 'edgeWearAmount'],
+      ['dirtAccumulationAttribute', 'dirtAccumulationAmount'],
+    ] as const)
+      if ((variation[attribute] === undefined) !== (variation[amount] === undefined))
+        context.addIssue({
+          code: 'custom',
+          path: [attribute],
+          message: `${attribute} and ${amount} must be declared together`,
+        });
+  });
 
 export const textureMaterialPlacementSchema = z.object({
   scalePolicy: z.literal('preserve-source-physical-scale'),
@@ -320,6 +347,7 @@ export const surfaceMaterialSchema = z
       })
       .optional(),
     metallic: z.number().min(0).max(1).default(0),
+    unitVariation: surfaceUnitVariationSchema.optional(),
     textureMaps: hashBoundTextureMapSetSchema.optional(),
     metadata: z.record(z.string(), z.unknown()).default({}),
   })
@@ -329,6 +357,13 @@ export const surfaceMaterialSchema = z
         code: 'custom',
         path: ['roughness'],
         message: 'roughness minimum must not exceed maximum',
+      });
+    if (material.unitVariation && material.textureMaps?.application?.placement.unitVariation)
+      ctx.addIssue({
+        code: 'custom',
+        path: ['unitVariation'],
+        message:
+          'surface and texture-placement unit variation cannot be declared together because that would apply the same signal twice',
       });
     if (
       material.pattern.kind === 'masonry-bond' &&

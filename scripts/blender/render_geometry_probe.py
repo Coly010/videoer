@@ -208,6 +208,18 @@ def validated_texture_application(texture_maps):
             "roughnessAttribute": "videoer_unit_roughness_variation",
             "weatheringAttribute": "videoer_unit_weathering_variation",
         }
+        allowed_fields = {
+            "kind",
+            *expected_attributes.keys(),
+            "valueAmplitude",
+            "roughnessAmplitude",
+            "weatheringAmplitude",
+        }
+        unexpected = set(unit) - allowed_fields
+        if unexpected:
+            raise RuntimeError(
+                f"Texture unit variation contains unsupported fields: {sorted(unexpected)}"
+            )
         for field, expected in expected_attributes.items():
             if unit.get(field) != expected:
                 raise RuntimeError(f"Texture unit variation {field} must be '{expected}'")
@@ -218,6 +230,92 @@ def validated_texture_application(texture_maps):
         ):
             number(unit.get(field), f"unitVariation.{field}", 0, maximum)
     return application
+
+
+def validated_surface_unit_variation(surface):
+    unit = surface.get("unitVariation")
+    if unit is None:
+        return None
+    texture_unit = (
+        surface.get("textureMaps", {})
+        .get("application", {})
+        .get("placement", {})
+        .get("unitVariation")
+    )
+    if texture_unit is not None:
+        raise RuntimeError(
+            "Surface and texture-placement unit variation cannot be declared together"
+        )
+    if not isinstance(unit, dict) or unit.get("kind") != "vertex-scalar-attributes-v1":
+        raise RuntimeError("Surface unit variation has an unsupported contract")
+
+    def number(field, maximum):
+        value = unit.get(field)
+        if (
+            isinstance(value, bool)
+            or not isinstance(value, (int, float))
+            or not math.isfinite(value)
+            or value < 0
+            or value > maximum
+        ):
+            raise RuntimeError(
+                f"Surface unit variation {field} is outside its bounded range"
+            )
+        return value
+
+    expected_attributes = {
+        "valueAttribute": "videoer_unit_value_variation",
+        "roughnessAttribute": "videoer_unit_roughness_variation",
+        "weatheringAttribute": "videoer_unit_weathering_variation",
+    }
+    for field, expected in expected_attributes.items():
+        if unit.get(field) != expected:
+            raise RuntimeError(f"Surface unit variation {field} must be '{expected}'")
+    for field, maximum in (
+        ("valueAmplitude", 0.25),
+        ("roughnessAmplitude", 0.2),
+        ("weatheringAmplitude", 0.75),
+    ):
+        number(field, maximum)
+    optional_pairs = (
+        (
+            "edgeWearAttribute",
+            "videoer_paving_edge_wear",
+            "edgeWearAmount",
+        ),
+        (
+            "dirtAccumulationAttribute",
+            "videoer_paving_dirt_accumulation",
+            "dirtAccumulationAmount",
+        ),
+    )
+    for attribute_field, expected, amount_field in optional_pairs:
+        has_attribute = attribute_field in unit
+        has_amount = amount_field in unit
+        if has_attribute != has_amount:
+            raise RuntimeError(
+                f"Surface unit variation {attribute_field} and {amount_field} must be declared together"
+            )
+        if has_attribute:
+            if unit[attribute_field] != expected:
+                raise RuntimeError(
+                    f"Surface unit variation {attribute_field} must be '{expected}'"
+                )
+            number(amount_field, 1)
+    allowed_fields = {
+        "kind",
+        *expected_attributes.keys(),
+        "valueAmplitude",
+        "roughnessAmplitude",
+        "weatheringAmplitude",
+        *(field for pair in optional_pairs for field in (pair[0], pair[2])),
+    }
+    unexpected = set(unit) - allowed_fields
+    if unexpected:
+        raise RuntimeError(
+            f"Surface unit variation contains unsupported fields: {sorted(unexpected)}"
+        )
+    return unit
 
 
 def configure_texture_map_nodes(material, principled, surface, asset_directory):
@@ -1338,6 +1436,126 @@ def configure_surface_nodes(material, principled, surface, asset_directory=None)
     elif pattern_normal:
         links.new(pattern_normal, principled.inputs["Normal"])
     configure_texture_map_nodes(material, principled, surface, asset_directory)
+    unit = validated_surface_unit_variation(surface)
+    if unit:
+        unit_outputs = {}
+        def unit_math(operation, left, right):
+            node = nodes.new("ShaderNodeMath")
+            node.operation = operation
+            links.new(left, node.inputs[0])
+            links.new(right, node.inputs[1])
+            return node
+        for semantic, field, expected in (
+            ("value", "valueAttribute", "videoer_unit_value_variation"),
+            ("roughness", "roughnessAttribute", "videoer_unit_roughness_variation"),
+            ("weathering", "weatheringAttribute", "videoer_unit_weathering_variation"),
+        ):
+            if unit.get(field) != expected:
+                raise RuntimeError(f"Surface unit variation {field} must be '{expected}'")
+            attribute = nodes.new("ShaderNodeAttribute")
+            attribute.name = f"videoer-surface-unit-{semantic}-attribute"
+            attribute.attribute_name = expected
+            unit_outputs[semantic] = attribute.outputs["Fac"]
+        for semantic, field, expected in (
+            ("edge-wear", "edgeWearAttribute", "videoer_paving_edge_wear"),
+            (
+                "dirt-accumulation",
+                "dirtAccumulationAttribute",
+                "videoer_paving_dirt_accumulation",
+            ),
+        ):
+            if field not in unit:
+                continue
+            if unit[field] != expected:
+                raise RuntimeError(f"Surface unit variation {field} must be '{expected}'")
+            attribute = nodes.new("ShaderNodeAttribute")
+            attribute.name = f"videoer-surface-{semantic}-attribute"
+            attribute.attribute_name = expected
+            unit_outputs[semantic] = attribute.outputs["Fac"]
+
+        base_input = principled.inputs["Base Color"]
+        base_link = next(iter(base_input.links), None)
+        if not base_link:
+            raise RuntimeError("Surface unit variation requires a connected base color")
+        base_source = base_link.from_socket
+        links.remove(base_link)
+        value_scale = nodes.new("ShaderNodeMath")
+        value_scale.operation = "MULTIPLY"
+        value_scale.inputs[1].default_value = unit["valueAmplitude"]
+        links.new(unit_outputs["value"], value_scale.inputs[0])
+        weather_scale = nodes.new("ShaderNodeMath")
+        weather_scale.operation = "MULTIPLY"
+        weather_scale.inputs[1].default_value = -0.12 * unit["weatheringAmplitude"]
+        links.new(unit_outputs["weathering"], weather_scale.inputs[0])
+        total_value = nodes.new("ShaderNodeMath")
+        total_value.operation = "ADD"
+        links.new(value_scale.outputs[0], total_value.inputs[0])
+        links.new(weather_scale.outputs[0], total_value.inputs[1])
+        if "edge-wear" in unit_outputs:
+            edge_value = nodes.new("ShaderNodeMath")
+            edge_value.name = "videoer-surface-edge-wear-value"
+            edge_value.operation = "MULTIPLY"
+            edge_value.inputs[1].default_value = 0.08 * unit["edgeWearAmount"]
+            links.new(unit_outputs["edge-wear"], edge_value.inputs[0])
+            total_value = unit_math("ADD", total_value.outputs[0], edge_value.outputs[0])
+        if "dirt-accumulation" in unit_outputs:
+            dirt_value = nodes.new("ShaderNodeMath")
+            dirt_value.name = "videoer-surface-dirt-accumulation-value"
+            dirt_value.operation = "MULTIPLY"
+            dirt_value.inputs[1].default_value = -0.22 * unit["dirtAccumulationAmount"]
+            links.new(unit_outputs["dirt-accumulation"], dirt_value.inputs[0])
+            total_value = unit_math("ADD", total_value.outputs[0], dirt_value.outputs[0])
+        value_factor = nodes.new("ShaderNodeMath")
+        value_factor.operation = "ADD"
+        value_factor.inputs[1].default_value = 1.0
+        links.new(total_value.outputs[0], value_factor.inputs[0])
+        color_mix = nodes.new("ShaderNodeMixRGB")
+        color_mix.name = "videoer-surface-unit-value-weathering"
+        color_mix.blend_type = "MULTIPLY"
+        color_mix.inputs[0].default_value = 1.0
+        links.new(base_source, color_mix.inputs[1])
+        links.new(value_factor.outputs[0], color_mix.inputs[2])
+        links.new(color_mix.outputs["Color"], base_input)
+
+        roughness_input = principled.inputs["Roughness"]
+        roughness_link = next(iter(roughness_input.links), None)
+        if not roughness_link:
+            raise RuntimeError("Surface unit variation requires connected roughness")
+        roughness_source = roughness_link.from_socket
+        links.remove(roughness_link)
+        roughness_scale = nodes.new("ShaderNodeMath")
+        roughness_scale.operation = "MULTIPLY"
+        roughness_scale.inputs[1].default_value = unit["roughnessAmplitude"]
+        links.new(unit_outputs["roughness"], roughness_scale.inputs[0])
+        roughness_variation = roughness_scale.outputs[0]
+        if "edge-wear" in unit_outputs:
+            edge_roughness = nodes.new("ShaderNodeMath")
+            edge_roughness.name = "videoer-surface-edge-wear-roughness"
+            edge_roughness.operation = "MULTIPLY"
+            edge_roughness.inputs[1].default_value = -0.1 * unit["edgeWearAmount"]
+            links.new(unit_outputs["edge-wear"], edge_roughness.inputs[0])
+            roughness_variation = unit_math(
+                "ADD", roughness_variation, edge_roughness.outputs[0]
+            ).outputs[0]
+        if "dirt-accumulation" in unit_outputs:
+            dirt_roughness = nodes.new("ShaderNodeMath")
+            dirt_roughness.name = "videoer-surface-dirt-accumulation-roughness"
+            dirt_roughness.operation = "MULTIPLY"
+            dirt_roughness.inputs[1].default_value = 0.15 * unit["dirtAccumulationAmount"]
+            links.new(unit_outputs["dirt-accumulation"], dirt_roughness.inputs[0])
+            roughness_variation = unit_math(
+                "ADD", roughness_variation, dirt_roughness.outputs[0]
+            ).outputs[0]
+        roughness_add = nodes.new("ShaderNodeMath")
+        roughness_add.operation = "ADD"
+        links.new(roughness_source, roughness_add.inputs[0])
+        links.new(roughness_variation, roughness_add.inputs[1])
+        roughness_clamp = nodes.new("ShaderNodeClamp")
+        roughness_clamp.name = "videoer-surface-unit-roughness"
+        roughness_clamp.inputs["Min"].default_value = 0.0
+        roughness_clamp.inputs["Max"].default_value = 1.0
+        links.new(roughness_add.outputs[0], roughness_clamp.inputs["Value"])
+        links.new(roughness_clamp.outputs["Result"], roughness_input)
 
 
 def create_material(material_definition, asset_directory=None):
@@ -1450,16 +1668,40 @@ def create_mesh(asset, armature=None, asset_directory=None, vertex_converter=to_
                 f"Texture orientation '{orientation}' on material "
                 f"'{material_definition['id']}' requires one UV per vertex"
             )
-        unit_variation = texture_maps.get("application", {}).get("placement", {}).get(
-            "unitVariation"
-        ) if texture_maps else None
-        if unit_variation:
-            for field in ("valueAttribute", "roughnessAttribute", "weatheringAttribute"):
+        unit_variations = []
+        if texture_maps:
+            unit_variations.append(
+                texture_maps.get("application", {}).get("placement", {}).get("unitVariation")
+            )
+        unit_variations.append(material_definition.get("surface", {}).get("unitVariation"))
+        for unit_variation in filter(None, unit_variations):
+            for field, minimum, maximum in (
+                ("valueAttribute", -1, 1),
+                ("roughnessAttribute", -1, 1),
+                ("weatheringAttribute", -1, 1),
+                ("edgeWearAttribute", 0, 1),
+                ("dirtAccumulationAttribute", 0, 1),
+            ):
+                if field not in unit_variation:
+                    continue
                 name = unit_variation[field]
                 definition = asset.get("attributes", {}).get(name)
                 if not definition or definition.get("dataType") != "float":
                     raise RuntimeError(
-                        f"Texture unit variation requires float vertex attribute '{name}'"
+                        f"Unit variation requires float vertex attribute '{name}'"
+                    )
+                invalid = next(
+                    (
+                        value
+                        for value in definition.get("values", [])
+                        if value < minimum or value > maximum
+                    ),
+                    None,
+                )
+                if invalid is not None:
+                    raise RuntimeError(
+                        f"Unit variation attribute '{name}' must remain within "
+                        f"[{minimum}, {maximum}]; received {invalid}"
                     )
     if source_uvs:
         uv_layer = data.uv_layers.new(name="UVMap")

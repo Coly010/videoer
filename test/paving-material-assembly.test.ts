@@ -4,16 +4,19 @@ import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import {
   bindPavingConstructionMaterials,
+  bindProceduralPavingUnitMaterial,
   bindPavingUnitMaterial,
 } from '../src/application/paving-material-assembly.js';
 import { sha256Bytes } from '../src/assets/sources/cache.js';
 import {
   compileIrregularPaving,
   createHistoricSettPavingDefinition,
+  pavingUnitAppearanceAttributeNames,
 } from '../src/environments/irregular-paving.js';
 import { loadGeometry, saveGeometry } from '../src/geometry/io.js';
 import { saveSurfaceMaterial } from '../src/materials/io.js';
 import { createPavingGranularSurfaceMaterial } from '../src/materials/paving-joint.js';
+import { createPavingUnitSurfaceMaterial } from '../src/materials/paving-unit.js';
 import { surfaceMaterialSchema, textureMaterialApplicationSchema } from '../src/materials/model.js';
 import { createWetCobbleSurfaceMaterial } from '../src/materials/wet-cobble.js';
 
@@ -24,6 +27,59 @@ afterEach(async () => {
 });
 
 describe('unit-aware paving material assembly', () => {
+  it('binds project-owned procedural mineral response through the same typed unit attributes', async () => {
+    directory = await mkdtemp(join(tmpdir(), 'videoer-procedural-paving-material-'));
+    const source = compileIrregularPaving(createHistoricSettPavingDefinition());
+    const geometryPath = await saveGeometry(join(directory, 'source/paving.json'), source.geometry);
+    const material = createPavingUnitSurfaceMaterial('historic-cut-granite');
+    const materialPath = await saveSurfaceMaterial(join(directory, 'material.json'), material);
+    const outputPath = join(directory, 'bound/paving.json');
+    const result = await bindProceduralPavingUnitMaterial({
+      pavingGeometryPath: geometryPath,
+      unitMaterialPath: materialPath,
+      outputGeometryPath: outputPath,
+    });
+    const bound = await loadGeometry(outputPath);
+    expect(result.modeledUnitTargets).toEqual(source.report.surfaceMaterialTargets.modeledUnits);
+    expect(
+      result.modeledUnitTargets.every(
+        (id) =>
+          bound.materials.find((candidate) => candidate.id === id)?.surface?.id === material.id,
+      ),
+    ).toBe(true);
+    expect(bound.attributes).toEqual(source.geometry.attributes);
+    expect(Object.keys(bound.attributes ?? {}).sort()).toEqual(
+      Object.values(pavingUnitAppearanceAttributeNames).sort(),
+    );
+    const edgeWear = bound.attributes?.[pavingUnitAppearanceAttributeNames.edgeWear];
+    const dirt = bound.attributes?.[pavingUnitAppearanceAttributeNames.dirtAccumulation];
+    expect(edgeWear?.dataType).toBe('float');
+    expect(dirt?.dataType).toBe('float');
+    if (edgeWear?.dataType === 'float' && dirt?.dataType === 'float') {
+      expect(new Set(edgeWear.values)).toEqual(new Set([0, 0.08, 0.18, 0.52, 1]));
+      expect(new Set(dirt.values)).toEqual(new Set([0, 0.08, 0.28, 0.58, 0.72, 1]));
+      for (let index = 0; index < bound.positions.length; index++) {
+        const pair = [edgeWear.values[index], dirt.values[index]];
+        const normalY = bound.normals?.[index]?.[1];
+        if (pair[0] === 0 && pair[1] === 0) continue; // non-unit border geometry
+        if (pair[0] === 0 && pair[1] === 1) expect(normalY).toBeLessThan(-0.99);
+        else if ((pair[0] === 0.08 && pair[1] === 0.08) || (pair[0] === 0.52 && pair[1] === 0.58))
+          expect(normalY).toBeGreaterThan(0.99);
+        else if (pair[0] === 1 && pair[1] === 0.28) {
+          expect(normalY).toBeGreaterThan(0);
+          expect(normalY).toBeLessThan(0.99);
+        } else if (pair[0] === 0.18 && pair[1] === 0.72)
+          expect(Math.abs(normalY ?? 1)).toBeLessThan(0.01);
+        else throw new Error(`Unexpected paving semantic pair ${pair.join('/')}`);
+      }
+    }
+    expect(material.pattern).toMatchObject({ kind: 'cut-stone', grainScaleMeters: 0.006 });
+    expect(material.metadata).toMatchObject({
+      constructionDomain: 'modeled-paving-unit',
+      provenance: 'project-owned-procedural-definition',
+    });
+  }, 10_000);
+
   it('binds one homogeneous source to every modeled unit while preserving joint domains', async () => {
     directory = await mkdtemp(join(tmpdir(), 'videoer-paving-material-'));
     const source = compileIrregularPaving(createHistoricSettPavingDefinition());
@@ -110,6 +166,13 @@ describe('unit-aware paving material assembly', () => {
         },
       },
     });
+    expect(() =>
+      surfaceMaterialSchema.parse({
+        ...material,
+        unitVariation: createPavingUnitSurfaceMaterial('historic-cut-granite').unitVariation,
+        textureMaps: { ...material.textureMaps!, application },
+      }),
+    ).toThrow(/cannot be declared together/u);
     const output = join(directory, 'bound/paving.json');
     const result = await bindPavingUnitMaterial({
       pavingGeometryPath: geometryPath,
@@ -141,6 +204,8 @@ describe('unit-aware paving material assembly', () => {
     );
     expect(result.report.pavingGeometry.outputSha256).toMatch(/^[a-f0-9]{64}$/u);
     expect(Object.keys(bound.attributes ?? {}).sort()).toEqual([
+      'videoer_paving_dirt_accumulation',
+      'videoer_paving_edge_wear',
       'videoer_unit_roughness_variation',
       'videoer_unit_value_variation',
       'videoer_unit_weathering_variation',
@@ -186,6 +251,50 @@ describe('unit-aware paving material assembly', () => {
         outputGeometryPath: join(directory, 'invalid/paving.json'),
       }),
     ).rejects.toThrow(/unit-local-uv-meters/u);
+  }, 10_000);
+
+  it('rejects out-of-range semantic masks and stale construction targets atomically', async () => {
+    directory = await mkdtemp(join(tmpdir(), 'videoer-procedural-paving-fail-closed-'));
+    const source = compileIrregularPaving(createHistoricSettPavingDefinition());
+    const materialPath = await saveSurfaceMaterial(
+      join(directory, 'material.json'),
+      createPavingUnitSurfaceMaterial('historic-cut-granite'),
+    );
+    const outputPath = join(directory, 'bound/paving.json');
+    await mkdir(join(directory, 'bound'), { recursive: true });
+    await writeFile(outputPath, 'preserve-existing-output\n');
+
+    const invalidRange = structuredClone(source.geometry);
+    const edge = invalidRange.attributes![pavingUnitAppearanceAttributeNames.edgeWear]!;
+    if (edge.dataType !== 'float') throw new Error('Fixture edge-wear attribute must be scalar');
+    edge.values[0] = 1.2;
+    const invalidRangePath = await saveGeometry(
+      join(directory, 'invalid-range.json'),
+      invalidRange,
+    );
+    await expect(
+      bindProceduralPavingUnitMaterial({
+        pavingGeometryPath: invalidRangePath,
+        unitMaterialPath: materialPath,
+        outputGeometryPath: outputPath,
+      }),
+    ).rejects.toThrow(/must remain within \[0, 1\]/u);
+    expect(await readFile(outputPath, 'utf8')).toBe('preserve-existing-output\n');
+
+    const staleTargets = structuredClone(source.geometry);
+    const targetMetadata = staleTargets.metadata.surfaceMaterialTargets as {
+      continuousJoint: string;
+    };
+    targetMetadata.continuousJoint = 'missing-continuous-joint';
+    const stalePath = await saveGeometry(join(directory, 'stale-target.json'), staleTargets);
+    await expect(
+      bindProceduralPavingUnitMaterial({
+        pavingGeometryPath: stalePath,
+        unitMaterialPath: materialPath,
+        outputGeometryPath: outputPath,
+      }),
+    ).rejects.toThrow(/is absent/u);
+    expect(await readFile(outputPath, 'utf8')).toBe('preserve-existing-output\n');
   }, 10_000);
 
   it('binds granular joint and substrate materials only to their declared continuous targets', async () => {

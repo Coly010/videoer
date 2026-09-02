@@ -482,6 +482,143 @@ def main():
         rejected_missing_unit_attribute = True
     if not rejected_missing_unit_attribute:
         raise RuntimeError("Blender accepted a missing declared unit variation attribute")
+
+    procedural_definition = copy.deepcopy(unit_definition)
+    procedural_definition["id"] = "probe-material-procedural-paving-unit"
+    procedural_surface = procedural_definition["surface"]
+    del procedural_surface["textureMaps"]
+    procedural_surface["pattern"] = {
+        "kind": "granular-aggregate",
+        "aggregateScaleMeters": 0.006,
+        "finesScaleMeters": 0.0012,
+        "aggregateContrast": 0.38,
+        "poreAmount": 0.13,
+        "compaction": 0.82,
+        "embeddedDirtAmount": 0.12,
+    }
+    procedural_surface["unitVariation"] = copy.deepcopy(
+        unit_application["placement"]["unitVariation"]
+    )
+    procedural_surface["unitVariation"].update(
+        {
+            "edgeWearAttribute": "videoer_paving_edge_wear",
+            "dirtAccumulationAttribute": "videoer_paving_dirt_accumulation",
+            "edgeWearAmount": 0.55,
+            "dirtAccumulationAmount": 0.32,
+        }
+    )
+    procedural_asset = copy.deepcopy(unit_asset)
+    procedural_asset["id"] = "geometry.procedural-paving-unit-witness"
+    procedural_asset["materials"] = [procedural_definition]
+    procedural_asset["materialGroups"][0]["materialId"] = procedural_definition["id"]
+    procedural_asset["attributes"]["videoer_paving_edge_wear"] = {
+        "dataType": "float",
+        "interpolation": "vertex",
+        "values": [1.0, 1.0, 0.15, 0.15, 0.65, 0.65, 0.05, 0.05],
+    }
+    procedural_asset["attributes"]["videoer_paving_dirt_accumulation"] = {
+        "dataType": "float",
+        "interpolation": "vertex",
+        "values": [0.05, 0.05, 0.72, 0.72, 0.18, 0.18, 0.9, 0.9],
+    }
+    procedural_mesh = geometry_probe.create_mesh(procedural_asset, None, output)
+    procedural_material = procedural_mesh.data.materials[0]
+    for node_name in (
+        "videoer-granular-aggregate-cells",
+        "videoer-surface-unit-value-attribute",
+        "videoer-surface-unit-roughness-attribute",
+        "videoer-surface-unit-weathering-attribute",
+        "videoer-surface-edge-wear-attribute",
+        "videoer-surface-dirt-accumulation-attribute",
+        "videoer-surface-edge-wear-value",
+        "videoer-surface-dirt-accumulation-value",
+        "videoer-surface-edge-wear-roughness",
+        "videoer-surface-dirt-accumulation-roughness",
+        "videoer-surface-unit-value-weathering",
+        "videoer-surface-unit-roughness",
+    ):
+        if node_name not in procedural_material.node_tree.nodes:
+            raise RuntimeError(f"Procedural unit material lacks required node '{node_name}'")
+    expected_semantic_coefficients = {
+        "videoer-surface-edge-wear-value": 0.08 * 0.55,
+        "videoer-surface-dirt-accumulation-value": -0.22 * 0.32,
+        "videoer-surface-edge-wear-roughness": -0.1 * 0.55,
+        "videoer-surface-dirt-accumulation-roughness": 0.15 * 0.32,
+    }
+    for node_name, expected in expected_semantic_coefficients.items():
+        actual = procedural_material.node_tree.nodes[node_name].inputs[1].default_value
+        if abs(actual - expected) > 1e-7:
+            raise RuntimeError(
+                f"Procedural semantic coefficient {node_name} changed: {actual} != {expected}"
+            )
+    missing_edge_asset = copy.deepcopy(procedural_asset)
+    missing_edge_asset["id"] = "geometry.procedural-paving-missing-edge-wear"
+    del missing_edge_asset["attributes"]["videoer_paving_edge_wear"]
+    try:
+        geometry_probe.create_mesh(missing_edge_asset, None, output)
+    except RuntimeError:
+        pass
+    else:
+        raise RuntimeError("Blender accepted missing declared paving edge-wear data")
+    invalid_surface_pair = copy.deepcopy(procedural_asset)
+    invalid_surface_pair["id"] = "geometry.procedural-paving-unpaired-edge-wear"
+    del invalid_surface_pair["materials"][0]["surface"]["unitVariation"][
+        "edgeWearAmount"
+    ]
+    try:
+        geometry_probe.create_mesh(invalid_surface_pair, None, output)
+    except RuntimeError:
+        pass
+    else:
+        raise RuntimeError("Blender accepted an unpaired surface edge-wear declaration")
+    invalid_surface_amount = copy.deepcopy(procedural_asset)
+    invalid_surface_amount["id"] = "geometry.procedural-paving-excessive-edge-wear"
+    invalid_surface_amount["materials"][0]["surface"]["unitVariation"][
+        "edgeWearAmount"
+    ] = 1.2
+    try:
+        geometry_probe.create_mesh(invalid_surface_amount, None, output)
+    except RuntimeError:
+        pass
+    else:
+        raise RuntimeError("Blender accepted an excessive surface edge-wear amount")
+    invalid_surface_range = copy.deepcopy(procedural_asset)
+    invalid_surface_range["id"] = "geometry.procedural-paving-invalid-dirt-mask"
+    invalid_surface_range["attributes"]["videoer_paving_dirt_accumulation"][
+        "values"
+    ][0] = -0.1
+    try:
+        geometry_probe.create_mesh(invalid_surface_range, None, output)
+    except RuntimeError:
+        pass
+    else:
+        raise RuntimeError("Blender accepted an out-of-range paving dirt mask")
+    invalid_texture_semantic = copy.deepcopy(unit_definition)
+    invalid_texture_semantic["id"] = "probe-material-texture-edge-wear-unsupported"
+    invalid_texture_semantic["surface"]["textureMaps"]["application"]["placement"][
+        "unitVariation"
+    ].update(
+        {
+            "edgeWearAttribute": "videoer_paving_edge_wear",
+            "edgeWearAmount": 0.5,
+        }
+    )
+    try:
+        geometry_probe.create_material(invalid_texture_semantic, output)
+    except RuntimeError:
+        pass
+    else:
+        raise RuntimeError("Blender accepted unsupported texture-placement edge wear")
+    invalid_dual_variation = copy.deepcopy(procedural_definition)
+    invalid_dual_variation["id"] = "probe-material-dual-unit-variation"
+    invalid_dual_variation["surface"]["textureMaps"] = copy.deepcopy(unit_maps)
+    try:
+        geometry_probe.create_material(invalid_dual_variation, output)
+    except RuntimeError:
+        pass
+    else:
+        raise RuntimeError("Blender accepted duplicate surface and texture unit variation")
+    procedural_mesh.location.y = 1.1
     unit_nodes = unit_material.node_tree.nodes
     synchronized_sources = {
         unit_nodes[f"videoer-texture-{semantic}-uv"].inputs["Vector"].links[0].from_node.name
@@ -725,6 +862,58 @@ def main():
     render_path = os.path.join(output, "texture-material-probe.png")
     scene.render.filepath = render_path
     bpy.ops.render.render(write_still=True)
+
+    # Render the procedural witness twice from the same camera/light state,
+    # changing only the construction-semantic masks. This proves the new
+    # channels affect evaluated pixels rather than merely existing as nodes.
+    for scene_object in scene.objects:
+        if scene_object.type == "MESH":
+            scene_object.hide_render = (
+                scene_object != procedural_mesh and scene_object != ground
+            )
+    procedural_mesh.hide_render = False
+    procedural_mesh.location.y = 0
+    camera.location = (0, -0.64, 2.8)
+    camera.rotation_euler = (
+        Vector((0, -0.64, 0)) - camera.location
+    ).to_track_quat("-Z", "Y").to_euler()
+    camera.data.lens = 58
+    key.location = (-0.8, -1.3, 3.5)
+    key.data.energy = 1100
+    key.rotation_euler = (
+        Vector((0, -0.64, 0)) - key.location
+    ).to_track_quat("-Z", "Y").to_euler()
+    rim.data.energy = 0
+    scene.render.resolution_x = 640
+    scene.render.resolution_y = 320
+    semantic_render_path = os.path.join(output, "procedural-unit-semantic-probe.png")
+    scene.render.filepath = semantic_render_path
+    bpy.ops.render.render(write_still=True)
+    semantic_image = bpy.data.images.load(semantic_render_path, check_existing=False)
+    semantic_pixels = list(semantic_image.pixels[:])
+    for attribute_name in (
+        "videoer_paving_edge_wear",
+        "videoer_paving_dirt_accumulation",
+    ):
+        for value in procedural_mesh.data.attributes[attribute_name].data:
+            value.value = 0
+    control_render_path = os.path.join(output, "procedural-unit-semantic-control.png")
+    scene.render.filepath = control_render_path
+    bpy.ops.render.render(write_still=True)
+    control_image = bpy.data.images.load(control_render_path, check_existing=False)
+    control_pixels = list(control_image.pixels[:])
+    if not semantic_pixels or len(semantic_pixels) != len(control_pixels):
+        raise RuntimeError("Procedural semantic comparison renders could not be decoded equally")
+    semantic_pixel_mean_absolute_difference = sum(
+        abs(semantic_pixels[index] - control_pixels[index])
+        for index in range(0, len(semantic_pixels))
+        if index % 4 != 3
+    ) / (len(semantic_pixels) * 0.75)
+    if semantic_pixel_mean_absolute_difference < 0.0001:
+        raise RuntimeError(
+            "Construction-semantic paving masks did not materially affect rendered pixels: "
+            f"{semantic_pixel_mean_absolute_difference}"
+        )
     with open(os.path.join(output, "texture-material-report.json"), "w", encoding="utf-8") as handle:
         json.dump(
             {
@@ -769,6 +958,9 @@ def main():
                     "livePlacement": live_placement_values,
                 },
                 "render": os.path.basename(render_path),
+                "proceduralSemanticRender": os.path.basename(semantic_render_path),
+                "proceduralSemanticControl": os.path.basename(control_render_path),
+                "proceduralSemanticPixelMeanAbsoluteDifference": semantic_pixel_mean_absolute_difference,
             },
             handle,
             indent=2,

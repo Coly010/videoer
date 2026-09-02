@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { validateGeometry } from '../src/geometry/model.js';
-import { surfaceMaterialSchema } from '../src/materials/model.js';
+import {
+  surfaceMaterialSchema,
+  surfaceUnitVariationSchema,
+  textureUnitVariationSchema,
+} from '../src/materials/model.js';
 import {
   createWetCobbleSurfaceMaterial,
   createWetCobbleSwatch,
@@ -12,6 +16,32 @@ import {
 } from '../src/materials/paving-joint.js';
 
 describe('renderer-independent reusable materials', () => {
+  it('separates texture-placement variation from construction-semantic surface masks', () => {
+    const core = {
+      kind: 'vertex-scalar-attributes-v1' as const,
+      valueAttribute: 'videoer_unit_value_variation' as const,
+      roughnessAttribute: 'videoer_unit_roughness_variation' as const,
+      weatheringAttribute: 'videoer_unit_weathering_variation' as const,
+      valueAmplitude: 0.08,
+      roughnessAmplitude: 0.06,
+      weatheringAmplitude: 0.2,
+    };
+    expect(textureUnitVariationSchema.parse(core)).toEqual(core);
+    expect(() =>
+      textureUnitVariationSchema.parse({
+        ...core,
+        edgeWearAttribute: 'videoer_paving_edge_wear',
+        edgeWearAmount: 0.5,
+      }),
+    ).toThrow();
+    expect(() =>
+      surfaceUnitVariationSchema.parse({
+        ...core,
+        edgeWearAttribute: 'videoer_paving_edge_wear',
+      }),
+    ).toThrow(/must be declared together/u);
+  });
+
   it('defines wet cobble with procedural albedo, normal relief, and varied roughness', () => {
     const material = createWetCobbleSurfaceMaterial();
     expect(material).toMatchObject({

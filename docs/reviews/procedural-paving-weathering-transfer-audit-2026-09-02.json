@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "status": "rejected",
+  "publicationAllowed": false,
+  "scope": "project-owned procedural paving response and construction-semantic edge-wear/dirt transfer across unrelated historic and contemporary hosts",
+  "targetedSubsystemVerdict": {
+    "outwardPavingTopology": "pass",
+    "typedPerUnitVariation": "pass",
+    "constructionSemanticMasks": "pass",
+    "proceduralMaterialRendererTransfer": "pass",
+    "productionEnvironmentVisualAcceptance": "reject"
+  },
+  "reviewedArtifacts": [
+    "work/environments/architectural-envelope-transfer-procedural-paving-v4/historic-masonry-shopfront/verification/environment-hdri-procedural-paving-v4/contact-sheet.png",
+    "work/environments/architectural-envelope-transfer-procedural-paving-v4/historic-masonry-shopfront/verification/environment-hdri-procedural-paving-v4/050-paving-relief.png",
+    "work/environments/architectural-envelope-transfer-procedural-paving-v4/historic-masonry-shopfront/verification/environment-hdri-procedural-paving-v4/scene-render.json",
+    "work/environments/architectural-envelope-transfer-procedural-paving-v4/contemporary-plaster-mixed-use/verification/environment-hdri-procedural-paving-v4/contact-sheet.png",
+    "work/environments/architectural-envelope-transfer-procedural-paving-v4/contemporary-plaster-mixed-use/verification/environment-hdri-procedural-paving-v4/050-paving-relief.png",
+    "work/environments/architectural-envelope-transfer-procedural-paving-v4/contemporary-plaster-mixed-use/verification/environment-hdri-procedural-paving-v4/scene-render.json",
+    "work/materials/unit-aware-paving/blender-contract-geometry-weathering-v1/procedural-unit-semantic-probe.png",
+    "work/materials/unit-aware-paving/blender-contract-geometry-weathering-v1/procedural-unit-semantic-control.png",
+    "work/materials/unit-aware-paving/blender-contract-geometry-weathering-v1/texture-material-report.json"
+  ],
+  "acceptedSystemEvidence": [
+    "the paving compiler normalizes X/Z loops to outward winding; top and inset-band normals face upward, bevel and side normals face outward, and bottom normals face downward",
+    "historic and contemporary paving carry five typed vertex attributes: signed value, roughness and weathering plus bounded edge-wear and dirt-accumulation masks",
+    "each visible unit top contains an explicit inset construction band that interpolates joint-adjacent dirt and edge exposure into a cleaner interior instead of placing dirt only on hidden sides",
+    "surface-level construction semantics are schema-separated from texture-placement variation, and duplicate declarations fail closed rather than applying the same signal twice",
+    "procedural paving binding validates every modeled-unit, joint, substrate and border target, semantic range and interpolation contract before atomically replacing output",
+    "native Blender 4.5.13 rejects unsupported texture semantics, duplicate variation declarations, unpaired fields, excessive amounts, missing attributes and out-of-range masks",
+    "the native semantic/control render pair changes only the edge-wear and dirt masks and measures a decoded-pixel mean absolute difference above the regression threshold",
+    "historic and contemporary assembled scenes both pass all eight structural/render gates and retain exact mass-conserving fields with errors of 4.829470157119431e-15 and 7.244205235679146e-15 cubic metres",
+    "the two hosts independently carry 180888 and 216616 paving vertices, 123320 and 147680 triangles, and the same five-attribute contract without duplicate per-material geometry; indexed top rings avoid duplicated coplanar vertices"
+  ],
+  "blockingVisualDefects": [
+    "neither assembled host reaches production photorealism and neither procedural paving material or environment is publishable from this evidence",
+    "historic paving remains too regular in silhouette, course rhythm and mineral response; the dirt band reads as restrained edge darkening rather than accumulated age, traffic and repair history",
+    "contemporary paving remains pale and chalky, with broad bright wet reflection and insufficient aggregate, staining, abrasion and drainage variation",
+    "both surfaces lack longer-range traffic paths, shelter/runoff history, local repairs, chipped silhouettes and coherent multi-scale colour/roughness evolution",
+    "facade shells, glazing, interiors and precipitation remain simplified production candidates and prevent the scene from reading as a photographic world"
+  ],
+  "nextGenericDependencies": [
+    "a renderer-independent surface-history field combining traffic, shelter, drainage, repair age and exposure at centimetre-to-metre scales",
+    "richer project-owned mineral/concrete response or semantically suitable homogeneous permissive sources with calibrated albedo, roughness, normal and displacement evidence",
+    "bounded chipped/broken unit silhouette families and course-level construction irregularity that preserve walkability and physical dimensions",
+    "layered facade construction materials, glazing/interior density and receiver-aware precipitation integration"
+  ],
+  "queuedReusableWork": {
+    "productionClothing": "Remains queued behind the current higher-priority environment/material work, including panels/patterns, seams, hems, thickness, shoulder/armholes, reusable weights/correctives, folds/wrinkles, cloth materials, selective simulation and temporal verification."
+  },
+  "notes": "The benchmark was not rerendered. These unrelated hosts are reusable-system transfer fixtures. The targeted contract passes, while visual publication remains explicitly rejected."
+}

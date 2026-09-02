@@ -2,13 +2,10 @@ import { randomUUID } from 'node:crypto';
 import { mkdir, rename, rm, writeFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { sha256File } from '../assets/library.js';
-import {
-  pavingSurfaceMaterialTargetsSchema,
-  pavingUnitAppearanceAttributeNames,
-} from '../environments/irregular-paving.js';
+import { pavingSurfaceMaterialTargetsSchema } from '../environments/irregular-paving.js';
 import { loadGeometry, saveGeometry } from '../geometry/io.js';
 import { loadSurfaceMaterial } from '../materials/io.js';
-import { bindSurfaceMaterial } from '../materials/adaptation.js';
+import { bindSurfaceMaterial, bindSurfaceMaterialTargets } from '../materials/adaptation.js';
 import {
   textureMaterialApplicationSchema,
   type SurfaceMaterial,
@@ -35,6 +32,64 @@ export interface BindPavingConstructionMaterialsOptions {
   outputGeometryPath: string;
   jointApplication?: TextureMaterialApplication;
   substrateApplication?: TextureMaterialApplication;
+}
+
+export interface BindProceduralPavingUnitMaterialOptions {
+  pavingGeometryPath: string;
+  unitMaterialPath: string;
+  outputGeometryPath: string;
+}
+
+type UnitVariationDeclaration = {
+  valueAttribute: string;
+  roughnessAttribute: string;
+  weatheringAttribute: string;
+  edgeWearAttribute?: string | undefined;
+  dirtAccumulationAttribute?: string | undefined;
+};
+
+function assertUnitVariationAttributes(
+  geometry: Awaited<ReturnType<typeof loadGeometry>>,
+  variation: UnitVariationDeclaration,
+) {
+  const expectedRanges = [
+    [variation.valueAttribute, -1, 1],
+    [variation.roughnessAttribute, -1, 1],
+    [variation.weatheringAttribute, -1, 1],
+    ...(variation.edgeWearAttribute ? [[variation.edgeWearAttribute, 0, 1]] : []),
+    ...(variation.dirtAccumulationAttribute ? [[variation.dirtAccumulationAttribute, 0, 1]] : []),
+  ] as Array<[string, number, number]>;
+  for (const [name, minimum, maximum] of expectedRanges) {
+    const attribute = geometry.attributes?.[name];
+    if (!attribute || attribute.dataType !== 'float' || attribute.interpolation !== 'vertex')
+      throw new Error(`Paving unit variation requires float vertex attribute '${name}'`);
+    const invalid = attribute.values.find((value) => value < minimum || value > maximum);
+    if (invalid !== undefined)
+      throw new Error(
+        `Paving unit variation attribute '${name}' must remain within [${minimum}, ${maximum}]; received ${invalid}`,
+      );
+  }
+}
+
+function assertPavingTargetsLive(
+  geometry: Awaited<ReturnType<typeof loadGeometry>>,
+  targets: ReturnType<typeof pavingSurfaceMaterialTargetsSchema.parse>,
+) {
+  const materialIds = new Set(geometry.materials.map((material) => material.id));
+  const groupedIds = new Set(geometry.materialGroups.map((group) => group.materialId));
+  for (const target of [
+    ...targets.modeledUnits,
+    targets.continuousJoint,
+    targets.continuousSubstrate,
+    ...targets.borders,
+  ]) {
+    if (!materialIds.has(target))
+      throw new Error(`Paving surface target '${target}' is absent from '${geometry.id}'`);
+    if (!groupedIds.has(target))
+      throw new Error(
+        `Paving surface target '${target}' has no triangle group in '${geometry.id}'`,
+      );
+  }
 }
 
 function assertGranularConstructionMaterial(
@@ -174,22 +229,13 @@ export async function bindPavingUnitMaterial(options: BindPavingUnitMaterialOpti
   const targets = pavingSurfaceMaterialTargetsSchema.parse(
     geometry.metadata.surfaceMaterialTargets,
   );
+  assertPavingTargetsLive(geometry, targets);
   const definition = geometry.metadata.definition as
     { surfaceSampling?: { kind?: unknown } } | undefined;
   if (definition?.surfaceSampling?.kind !== 'deterministic-unit-local-uv-meters')
     throw new Error(
       `Paving geometry '${geometry.id}' does not declare deterministic unit-local metre sampling`,
     );
-  const liveMaterialIds = new Set(geometry.materials.map((material) => material.id));
-  for (const target of [
-    ...targets.modeledUnits,
-    targets.continuousJoint,
-    targets.continuousSubstrate,
-    ...targets.borders,
-  ])
-    if (!liveMaterialIds.has(target))
-      throw new Error(`Paving surface target '${target}' is absent from '${geometry.id}'`);
-
   const application = textureMaterialApplicationSchema.parse(options.unitApplication);
   if (
     application.constructionDomain !== 'modeled-paving-unit' ||
@@ -199,11 +245,7 @@ export async function bindPavingUnitMaterial(options: BindPavingUnitMaterialOpti
       'Paving unit binding requires modeled-paving-unit with unit-local-uv-meters placement',
     );
   if (application.placement.unitVariation)
-    for (const name of Object.values(pavingUnitAppearanceAttributeNames)) {
-      const attribute = geometry.attributes?.[name];
-      if (!attribute || attribute.dataType !== 'float' || attribute.interpolation !== 'vertex')
-        throw new Error(`Paving unit variation requires float vertex attribute '${name}'`);
-    }
+    assertUnitVariationAttributes(geometry, application.placement.unitVariation);
   const surface = await loadSurfaceMaterial(sourceMaterialPath);
   const bound = (
     await bindStagedSurfaceMaterialValueToTargets({
@@ -242,4 +284,40 @@ export async function bindPavingUnitMaterial(options: BindPavingUnitMaterialOpti
   await mkdir(dirname(reportPath), { recursive: true });
   await writeFile(reportPath, `${JSON.stringify(report, null, 2)}\n`, 'utf8');
   return { geometry: bound, path: outputGeometryPath, report, reportPath };
+}
+
+export async function bindProceduralPavingUnitMaterial(
+  options: BindProceduralPavingUnitMaterialOptions,
+) {
+  const sourceGeometryPath = resolve(options.pavingGeometryPath);
+  const outputGeometryPath = resolve(options.outputGeometryPath);
+  const geometry = await loadGeometry(sourceGeometryPath);
+  const targets = pavingSurfaceMaterialTargetsSchema.parse(
+    geometry.metadata.surfaceMaterialTargets,
+  );
+  assertPavingTargetsLive(geometry, targets);
+  const surface = await loadSurfaceMaterial(options.unitMaterialPath);
+  if (surface.textureMaps)
+    throw new Error('Procedural paving unit binding does not accept texture-backed materials');
+  if (surface.metadata.constructionDomain !== 'modeled-paving-unit' || !surface.unitVariation)
+    throw new Error(
+      `Procedural paving material '${surface.id}' requires modeled-paving-unit metadata and unit variation`,
+    );
+  assertUnitVariationAttributes(geometry, surface.unitVariation);
+  const bound = bindSurfaceMaterialTargets(geometry, targets.modeledUnits, surface);
+  await mkdir(dirname(outputGeometryPath), { recursive: true });
+  const temporaryPath = `${outputGeometryPath}.incoming-${process.pid}-${randomUUID()}`;
+  try {
+    await saveGeometry(temporaryPath, bound);
+    await rename(temporaryPath, outputGeometryPath);
+  } catch (error) {
+    await rm(temporaryPath, { force: true });
+    throw error;
+  }
+  return {
+    geometry: bound,
+    path: outputGeometryPath,
+    materialId: surface.id,
+    modeledUnitTargets: targets.modeledUnits,
+  };
 }

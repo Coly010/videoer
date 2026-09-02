@@ -361,6 +361,8 @@ export const pavingUnitAppearanceAttributeNames = {
   value: 'videoer_unit_value_variation',
   roughness: 'videoer_unit_roughness_variation',
   weathering: 'videoer_unit_weathering_variation',
+  edgeWear: 'videoer_paving_edge_wear',
+  dirtAccumulation: 'videoer_paving_dirt_accumulation',
 } as const;
 
 export const pavingSurfaceMaterialTargetsSchema = z
@@ -566,7 +568,7 @@ function pavingStonePart(options: {
   surfaceFrame: UnitSurfaceFrame;
 }): MeshPart {
   const {
-    plan,
+    plan: authoredPlan,
     centre,
     bottomY,
     topY,
@@ -576,6 +578,14 @@ function pavingStonePart(options: {
     geometryYawRadians,
     surfaceFrame,
   } = options;
+  // In the X/Z ground plane a counter-clockwise loop produces a -Y top
+  // normal. Normalize to clockwise so tops face upward, sides face outward,
+  // and the reversed bottom loop faces downward.
+  const signedPlanArea = authoredPlan.reduce((sum, point, index) => {
+    const next = authoredPlan[(index + 1) % authoredPlan.length]!;
+    return sum + point.x * next.z - next.x * point.z;
+  }, 0);
+  const plan = signedPlanArea > 0 ? [...authoredPlan].reverse() : authoredPlan;
   const averageRadius =
     plan.reduce((sum, point) => sum + Math.hypot(point.x - centre.x, point.z - centre.z), 0) /
     plan.length;
@@ -594,6 +604,8 @@ function pavingStonePart(options: {
   const indices: number[] = [];
   const skinIndices: Vec4[] = [];
   const skinWeights: Vec4[] = [];
+  const edgeWearValues: number[] = [];
+  const dirtAccumulationValues: number[] = [];
   const surfaceUv = (uMeters: number, vMeters: number): [number, number] => {
     const rotation = (surfaceFrame.rotationDegrees * Math.PI) / 180;
     const cosine = Math.cos(rotation);
@@ -611,12 +623,20 @@ function pavingStonePart(options: {
       -x * Math.sin(geometryYawRadians) + z * Math.cos(geometryYawRadians),
     );
   };
-  const vertex = (position: Vec3, faceNormal: Vec3, uv: [number, number]) => {
+  const vertex = (
+    position: Vec3,
+    faceNormal: Vec3,
+    uv: [number, number],
+    edgeWear = 0,
+    dirtAccumulation = 0,
+  ) => {
     positions.push(position);
     normals.push(faceNormal);
     uvs.push(uv);
     skinIndices.push([0, 0, 0, 0]);
     skinWeights.push([1, 0, 0, 0]);
+    edgeWearValues.push(edgeWear);
+    dirtAccumulationValues.push(dirtAccumulation);
     return positions.length - 1;
   };
   const quad = (
@@ -625,13 +645,18 @@ function pavingStonePart(options: {
     c: Vec3,
     d: Vec3,
     faceUvs: [[number, number], [number, number], [number, number], [number, number]],
+    edgeWear: number | [number, number, number, number],
+    dirtAccumulation: number | [number, number, number, number],
   ) => {
     const faceNormal = normal(a, b, c);
     const start = positions.length;
-    vertex(a, faceNormal, faceUvs[0]);
-    vertex(b, faceNormal, faceUvs[1]);
-    vertex(c, faceNormal, faceUvs[2]);
-    vertex(d, faceNormal, faceUvs[3]);
+    const edge = (index: number) => (typeof edgeWear === 'number' ? edgeWear : edgeWear[index]!);
+    const dirt = (index: number) =>
+      typeof dirtAccumulation === 'number' ? dirtAccumulation : dirtAccumulation[index]!;
+    vertex(a, faceNormal, faceUvs[0], edge(0), dirt(0));
+    vertex(b, faceNormal, faceUvs[1], edge(1), dirt(1));
+    vertex(c, faceNormal, faceUvs[2], edge(2), dirt(2));
+    vertex(d, faceNormal, faceUvs[3], edge(3), dirt(3));
     indices.push(start, start + 1, start + 2, start, start + 2, start + 3);
   };
   let perimeterMeters = 0;
@@ -654,6 +679,8 @@ function pavingStonePart(options: {
         surfaceUv(nextPerimeterMeters, bt - chamferMeters - bottomY),
         surfaceUv(perimeterMeters, at - chamferMeters - bottomY),
       ],
+      0.18,
+      0.72,
     );
     const ta = topPlan[index]!;
     const tb = topPlan[next]!;
@@ -668,21 +695,47 @@ function pavingStonePart(options: {
         surfaceUv(nextPerimeterMeters, topAt(tb) - bottomY),
         surfaceUv(perimeterMeters, topAt(ta) - bottomY),
       ],
+      1,
+      0.28,
     );
     perimeterMeters = nextPerimeterMeters;
   }
+  const topRadius =
+    topPlan.reduce((sum, point) => sum + Math.hypot(point.x - centre.x, point.z - centre.z), 0) /
+    topPlan.length;
+  const weatheringBandMeters = Math.min(topRadius * 0.22, Math.max(chamferMeters * 2, 0.012));
+  const interiorScale = Math.max(0.55, 1 - weatheringBandMeters / topRadius);
+  const interiorPlan = topPlan.map((point) => ({
+    x: centre.x + (point.x - centre.x) * interiorScale,
+    z: centre.z + (point.z - centre.z) * interiorScale,
+  }));
   const topNormal = normal(
-    [topPlan[0]!.x, topAt(topPlan[0]!), topPlan[0]!.z],
-    [topPlan[1]!.x, topAt(topPlan[1]!), topPlan[1]!.z],
-    [topPlan[2]!.x, topAt(topPlan[2]!), topPlan[2]!.z],
+    [interiorPlan[0]!.x, topAt(interiorPlan[0]!), interiorPlan[0]!.z],
+    [interiorPlan[1]!.x, topAt(interiorPlan[1]!), interiorPlan[1]!.z],
+    [interiorPlan[2]!.x, topAt(interiorPlan[2]!), interiorPlan[2]!.z],
   );
-  const topStart = positions.length;
-  for (const point of topPlan) vertex([point.x, topAt(point), point.z], topNormal, planUv(point));
-  for (let index = 1; index < topPlan.length - 1; index++)
-    indices.push(topStart, topStart + index, topStart + index + 1);
+  const topOuterStart = positions.length;
+  for (const point of topPlan)
+    vertex([point.x, topAt(point), point.z], topNormal, planUv(point), 0.52, 0.58);
+  const topInteriorStart = positions.length;
+  for (const point of interiorPlan)
+    vertex([point.x, topAt(point), point.z], topNormal, planUv(point), 0.08, 0.08);
+  for (let index = 0; index < topPlan.length; index++) {
+    const next = (index + 1) % topPlan.length;
+    indices.push(
+      topOuterStart + index,
+      topOuterStart + next,
+      topInteriorStart + next,
+      topOuterStart + index,
+      topInteriorStart + next,
+      topInteriorStart + index,
+    );
+  }
+  for (let index = 1; index < interiorPlan.length - 1; index++)
+    indices.push(topInteriorStart, topInteriorStart + index, topInteriorStart + index + 1);
   const bottomStart = positions.length;
   for (const point of [...plan].reverse())
-    vertex([point.x, bottomY, point.z], [0, -1, 0], planUv(point));
+    vertex([point.x, bottomY, point.z], [0, -1, 0], planUv(point), 0, 1);
   for (let index = 1; index < plan.length - 1; index++)
     indices.push(bottomStart, bottomStart + index, bottomStart + index + 1);
   return {
@@ -698,12 +751,17 @@ function pavingStonePart(options: {
         {
           dataType: 'float' as const,
           interpolation: 'vertex' as const,
-          values: positions.map(
-            () =>
-              surfaceFrame.appearanceVariation[
-                semantic as keyof typeof surfaceFrame.appearanceVariation
-              ],
-          ),
+          values:
+            semantic === 'edgeWear'
+              ? edgeWearValues
+              : semantic === 'dirtAccumulation'
+                ? dirtAccumulationValues
+                : positions.map(
+                    () =>
+                      surfaceFrame.appearanceVariation[
+                        semantic as keyof typeof surfaceFrame.appearanceVariation
+                      ],
+                  ),
         },
       ]),
     ),
