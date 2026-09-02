@@ -1624,8 +1624,30 @@ def create_surface_water(definition, receiver_asset, receiver_mesh):
 def create_surface_history(definition, receiver_asset, receiver_mesh):
     field = load_json(definition["surfaceHistoryFieldPath"])
     water = load_json(definition["surfaceWaterFieldPath"])
+    preflight = definition.get("surfaceHistoryVerification")
+    if not isinstance(preflight, dict) or preflight.get("verifier") != "videoer.surface-history-render-preflight.v1":
+        raise RuntimeError(
+            f"Entity '{definition['id']}' surface-history field lacks a verified render preflight"
+        )
+    for path_key, expected_key in (
+        ("surfaceHistoryFieldPath", "fieldFileSha256"),
+        ("surfaceWaterFieldPath", "waterFileSha256"),
+    ):
+        with open(definition[path_key], "rb") as handle:
+            actual = hashlib.sha256(handle.read()).hexdigest()
+        if actual != preflight.get(expected_key):
+            raise RuntimeError(
+                f"Entity '{definition['id']}' surface-history render-preflight file hash is stale"
+            )
+    if (
+        field.get("fieldSha256") != preflight.get("fieldSha256")
+        or water.get("fieldSha256") != preflight.get("waterFieldSha256")
+    ):
+        raise RuntimeError(
+            f"Entity '{definition['id']}' surface-history render-preflight semantic identity is stale"
+        )
     schema_version = field.get("schemaVersion")
-    if field.get("generator") != f"videoer.construction-surface-history.v{schema_version}" or schema_version not in (1, 2):
+    if field.get("generator") != f"videoer.construction-surface-history.v{schema_version}" or schema_version not in (1, 2, 3):
         raise RuntimeError(
             f"Entity '{definition['id']}' surface-history field has an unsupported generator"
         )
@@ -1635,16 +1657,20 @@ def create_surface_history(definition, receiver_asset, receiver_mesh):
         raise RuntimeError(
             f"Entity '{definition['id']}' surface-history field does not bind its exact source water"
         )
-    if schema_version == 2:
+    if schema_version in (2, 3):
         if water.get("generator") != "videoer.static-surface-water.v2":
             raise RuntimeError(
-                f"Entity '{definition['id']}' surface-history v2 requires surface-water v2"
+                f"Entity '{definition['id']}' surface-history v{schema_version} requires surface-water v2"
             )
         if field.get("sourceWaterField", {}).get("routingSha256") != water.get(
             "routing", {}
         ).get("routingSha256"):
             raise RuntimeError(
                 f"Entity '{definition['id']}' surface-history routing identity is stale"
+            )
+        if water.get("routing", {}).get("routingSha256") != preflight.get("routingSha256"):
+            raise RuntimeError(
+                f"Entity '{definition['id']}' surface-history render-preflight routing identity is stale"
             )
     if field.get("receiver", {}).get("geometryId") != receiver_asset.get("id"):
         raise RuntimeError(
@@ -1683,19 +1709,55 @@ def create_surface_history(definition, receiver_asset, receiver_mesh):
             raise RuntimeError(
                 f"Entity '{definition['id']}' surface-history cell topology is stale"
             )
-        for channel in (
-            "trafficWear",
-            "longTermExposure",
-            "runoffStaining",
-            "repairInfluence",
-            "repairRelativeAge",
-        ):
+        history_channels = (
+            (
+                "trafficWear",
+                "rainExposureFraction",
+                "shelterProtection",
+                "exposureWeathering",
+                "runoffThroughflowStaining",
+                "retainedWaterStaining",
+                "runoffStaining",
+                "repairInfluence",
+                "repairRelativeAge",
+            )
+            if schema_version == 3
+            else (
+                "trafficWear",
+                "longTermExposure",
+                "runoffStaining",
+                "repairInfluence",
+                "repairRelativeAge",
+            )
+        )
+        for channel in history_channels:
             value = history_cell.get(channel)
             if not isinstance(value, (int, float)) or not math.isfinite(value) or value < 0 or value > 1:
                 raise RuntimeError(
                     f"Entity '{definition['id']}' surface-history channel '{channel}' is invalid"
                 )
-        if schema_version == 2:
+        if schema_version == 3:
+            if abs(
+                history_cell["rainExposureFraction"] - water_cell.get("exposure", -1)
+            ) > 1e-12:
+                raise RuntimeError(
+                    f"Entity '{definition['id']}' surface-history v3 exposure source is stale"
+                )
+            if abs(
+                history_cell["shelterProtection"]
+                - (1 - history_cell["rainExposureFraction"])
+            ) > 1e-12:
+                raise RuntimeError(
+                    f"Entity '{definition['id']}' surface-history v3 shelter complement is invalid"
+                )
+            combined_runoff = 1 - (
+                1 - history_cell["runoffThroughflowStaining"]
+            ) * (1 - history_cell["retainedWaterStaining"])
+            if abs(history_cell["runoffStaining"] - combined_runoff) > 1e-12:
+                raise RuntimeError(
+                    f"Entity '{definition['id']}' surface-history v3 runoff composition is invalid"
+                )
+        if schema_version in (2, 3):
             dirt = history_cell.get("dirt", {})
             for channel in (
                 "builtUpMassKilograms",
@@ -1758,7 +1820,7 @@ def create_surface_history(definition, receiver_asset, receiver_mesh):
             dirt_totals["depositedKilograms"] += dirt["depositedMassKilograms"]
             dirt_by_index[history_cell["index"]] = dirt
 
-    if schema_version == 2:
+    if schema_version in (2, 3):
         mass = field.get("dirtMassBalance", {})
         for channel in (
             "inputKilograms",
@@ -1793,6 +1855,19 @@ def create_surface_history(definition, receiver_asset, receiver_mesh):
             raise RuntimeError(
                 f"Entity '{definition['id']}' surface-history exported dirt differs from routing roots"
             )
+        expected_incoming = {cell["index"]: 0.0 for cell in field["cells"]}
+        for node in water["routing"]["nodes"]:
+            downstream_index = node.get("downstreamIndex")
+            if downstream_index is not None:
+                expected_incoming[downstream_index] += dirt_by_index[node["index"]][
+                    "suspendedOutflowMassKilograms"
+                ]
+        for index, expected in expected_incoming.items():
+            incoming = dirt_by_index[index]["incomingSuspendedMassKilograms"]
+            if abs(incoming - expected) > max(1e-12, max(incoming, expected) * 1e-10):
+                raise RuntimeError(
+                    f"Entity '{definition['id']}' surface-history dirt routing continuity is invalid at cell {index}"
+                )
         dirt_error = mass.get("inputKilograms", 0) - (
             mass.get("persistentKilograms", 0)
             + mass.get("looseKilograms", 0)
@@ -1811,11 +1886,12 @@ def create_surface_history(definition, receiver_asset, receiver_mesh):
     rows = field["grid"]["rows"]
     cell_size = field["grid"]["cellSizeMeters"]
     pixels = [0.0] * (columns * rows * 4)
+    exposure_channel = "exposureWeathering" if schema_version == 3 else "longTermExposure"
     for cell in field["cells"]:
         pixel = cell["index"] * 4
         pixels[pixel : pixel + 4] = [
             cell["trafficWear"] * cell["coverage"],
-            cell["longTermExposure"] * cell["coverage"],
+            cell[exposure_channel] * cell["coverage"],
             cell["runoffStaining"] * cell["coverage"],
             cell["repairInfluence"] * cell["coverage"],
         ]
@@ -1830,7 +1906,7 @@ def create_surface_history(definition, receiver_asset, receiver_mesh):
     image.pixels.foreach_set(pixels)
     image.pack()
     dirt_image = None
-    if schema_version == 2:
+    if schema_version in (2, 3):
         dirt_pixels = [0.0] * (columns * rows * 4)
         for cell in field["cells"]:
             pixel = cell["index"] * 4
@@ -1867,18 +1943,26 @@ def create_surface_history(definition, receiver_asset, receiver_mesh):
 
     definitions = receiver_asset.get("materials", [])
     response_materials = []
+    dirt_response_materials = []
+    unmapped_materials = []
     channel_outputs = ("Red", "Green", "Blue", "Alpha")
+    response_contract = "historyResponseV3" if schema_version == 3 else "historyResponse"
     response_names = (
-        "trafficWear",
-        "longTermExposure",
-        "runoffStaining",
-        "repairInfluence",
+        ("trafficWear", "exposureWeathering", "runoffStaining", "repairInfluence")
+        if schema_version == 3
+        else ("trafficWear", "longTermExposure", "runoffStaining", "repairInfluence")
     )
     for slot_index, original in enumerate(list(receiver_mesh.data.materials)):
         material_definition = definitions[slot_index] if slot_index < len(definitions) else None
-        response = (material_definition or {}).get("surface", {}).get("historyResponse")
+        response = (material_definition or {}).get("surface", {}).get(response_contract)
         dirt_response = (material_definition or {}).get("surface", {}).get("dirtMassResponse")
+        if schema_version == 3 and dirt_response and not response:
+            raise RuntimeError(
+                f"Entity '{definition['id']}' material '{material_definition['id']}' declares dirt response without historyResponseV3"
+            )
         if not response and not (dirt_image and dirt_response):
+            if material_definition:
+                unmapped_materials.append(material_definition["id"])
             continue
         material = original.copy()
         material.name = f"{original.name}-receiver-history"
@@ -2008,7 +2092,10 @@ def create_surface_history(definition, receiver_asset, receiver_mesh):
                 links.new(delta.outputs[0], add.inputs[1])
                 current_roughness = add.outputs[0]
             links.new(current_roughness, roughness)
-        response_materials.append(material_definition["id"])
+        if response:
+            response_materials.append(material_definition["id"])
+        if dirt_response:
+            dirt_response_materials.append(material_definition["id"])
     if not response_materials:
         raise RuntimeError(
             f"Entity '{definition['id']}' has a surface-history field but no material history responses"
@@ -2020,20 +2107,37 @@ def create_surface_history(definition, receiver_asset, receiver_mesh):
         "schemaVersion": schema_version,
         "sourceWaterFieldSha256": field["sourceWaterField"]["fieldSha256"],
         "activeCellCount": field["grid"]["activeCellCount"],
+        "historyResponseContract": response_contract,
         "responseMaterialIds": sorted(response_materials),
+        "unmappedMaterialIds": sorted(unmapped_materials),
         "trafficAffectedCellCount": sum(cell["trafficWear"] > 0 for cell in field["cells"]),
+        "exposureAffectedCellCount": sum(cell[exposure_channel] > 0 for cell in field["cells"]),
         "runoffAffectedCellCount": sum(cell["runoffStaining"] > 0 for cell in field["cells"]),
         "repairAffectedCellCount": sum(cell["repairInfluence"] > 0 for cell in field["cells"]),
         **(
             {
                 "dirtMassBalance": field["dirtMassBalance"],
-                "dirtResponseMaterialIds": sorted(
-                    material["id"]
-                    for material in definitions
-                    if material.get("surface", {}).get("dirtMassResponse")
+                "dirtResponseMaterialIds": sorted(dirt_response_materials),
+            }
+            if schema_version in (2, 3)
+            else {}
+        ),
+        **(
+            {
+                "rainExposedCellCount": sum(
+                    cell["rainExposureFraction"] > 0 for cell in field["cells"]
+                ),
+                "shelterProtectedCellCount": sum(
+                    cell["shelterProtection"] > 0 for cell in field["cells"]
+                ),
+                "runoffThroughflowAffectedCellCount": sum(
+                    cell["runoffThroughflowStaining"] > 0 for cell in field["cells"]
+                ),
+                "retainedWaterAffectedCellCount": sum(
+                    cell["retainedWaterStaining"] > 0 for cell in field["cells"]
                 ),
             }
-            if schema_version == 2
+            if schema_version == 3
             else {}
         ),
     }

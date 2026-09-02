@@ -366,6 +366,26 @@ export const surfaceMaterialSchema = z
         }),
       })
       .optional(),
+    historyResponseV3: z
+      .object({
+        trafficWear: z.object({
+          colorMultiplier: z.number().min(0.5).max(1.5),
+          roughnessOffset: z.number().min(-0.5).max(0.5),
+        }),
+        exposureWeathering: z.object({
+          colorMultiplier: z.number().min(0.5).max(1.5),
+          roughnessOffset: z.number().min(-0.5).max(0.5),
+        }),
+        runoffStaining: z.object({
+          colorMultiplier: z.number().min(0.5).max(1.5),
+          roughnessOffset: z.number().min(-0.5).max(0.5),
+        }),
+        repairInfluence: z.object({
+          colorMultiplier: z.number().min(0.5).max(1.5),
+          roughnessOffset: z.number().min(-0.5).max(0.5),
+        }),
+      })
+      .optional(),
     dirtMassResponse: z
       .object({
         loose: z.object({

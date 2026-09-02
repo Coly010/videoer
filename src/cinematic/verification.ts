@@ -19,6 +19,7 @@ import { verifyStaticSurfaceWaterFieldV2 } from '../environments/surface-water.j
 import {
   verifySurfaceHistoryField,
   verifySurfaceHistoryFieldV2,
+  verifySurfaceHistoryFieldV3,
 } from '../environments/surface-history.js';
 import {
   reconstructSurfaceWaterOpticalSurface,
@@ -245,15 +246,41 @@ export async function verifyCinematicScene(scene: CinematicScene, sceneFile: str
           ? verifyStaticSurfaceWaterFieldV2(rawWater)
           : verifyStaticSurfaceWaterField(rawWater);
       const historyVerification =
-        rawHistory.schemaVersion === 2 && waterVerification.field.schemaVersion === 2
-          ? verifySurfaceHistoryFieldV2(rawHistory, waterVerification.field)
-          : rawHistory.schemaVersion === 1 && waterVerification.field.schemaVersion === 1
-            ? verifySurfaceHistoryField(rawHistory, waterVerification.field)
-            : (() => {
-                throw new Error('surface-history and source-water schema versions must match');
-              })();
+        rawHistory.schemaVersion === 3 && waterVerification.field.schemaVersion === 2
+          ? verifySurfaceHistoryFieldV3(rawHistory, waterVerification.field)
+          : rawHistory.schemaVersion === 2 && waterVerification.field.schemaVersion === 2
+            ? verifySurfaceHistoryFieldV2(rawHistory, waterVerification.field)
+            : rawHistory.schemaVersion === 1 && waterVerification.field.schemaVersion === 1
+              ? verifySurfaceHistoryField(rawHistory, waterVerification.field)
+              : (() => {
+                  throw new Error(
+                    'surface-history v1 requires source-water v1; surface-history v2/v3 require source-water v2',
+                  );
+                })();
       const geometry = await loadGeometry(geometryPath);
       const geometrySha256 = await sha256File(geometryPath);
+      const activeMaterialIds = new Set(
+        historyVerification.field.cells.map((cell) => cell.materialId),
+      );
+      const geometryMaterialsById = new Map(
+        geometry.materials.map((material) => [material.id, material]),
+      );
+      const missingMaterialIds = [...activeMaterialIds].filter(
+        (materialId) => !geometryMaterialsById.has(materialId),
+      );
+      const v3DirtOnlyMaterialIds =
+        historyVerification.field.schemaVersion === 3
+          ? [...activeMaterialIds].filter((materialId) => {
+              const surface = geometryMaterialsById.get(materialId)?.surface;
+              return Boolean(surface?.dirtMassResponse && !surface.historyResponseV3);
+            })
+          : [];
+      const v3ResponseMaterialIds =
+        historyVerification.field.schemaVersion === 3
+          ? [...activeMaterialIds].filter((materialId) =>
+              Boolean(geometryMaterialsById.get(materialId)?.surface?.historyResponseV3),
+            )
+          : [];
       const receiverMatched =
         historyVerification.field.receiver.geometryId === geometry.id &&
         historyVerification.field.receiver.geometrySha256 === geometrySha256 &&
@@ -262,7 +289,10 @@ export async function verifyCinematicScene(scene: CinematicScene, sceneFile: str
         entity.role === 'environment' &&
         waterVerification.valid &&
         historyVerification.valid &&
-        receiverMatched;
+        receiverMatched &&
+        missingMaterialIds.length === 0 &&
+        v3DirtOnlyMaterialIds.length === 0 &&
+        (historyVerification.field.schemaVersion !== 3 || v3ResponseMaterialIds.length > 0);
       checks.push({
         id: `${entity.id}.surface-history-field`,
         status: valid ? 'pass' : 'fail',
@@ -271,6 +301,7 @@ export async function verifyCinematicScene(scene: CinematicScene, sceneFile: str
           : `Entity '${entity.id}' has invalid or mismatched construction-surface history`,
         measurements: {
           fieldId: historyVerification.field.id,
+          schemaVersion: historyVerification.field.schemaVersion,
           sourceWaterMatched:
             historyVerification.field.sourceWaterField.fieldSha256 ===
             waterVerification.field.fieldSha256,
@@ -282,6 +313,9 @@ export async function verifyCinematicScene(scene: CinematicScene, sceneFile: str
           repairAffectedCellCount: historyVerification.field.cells.filter(
             (cell) => cell.repairInfluence > 0,
           ).length,
+          missingMaterialIds,
+          v3ResponseMaterialIds,
+          v3DirtOnlyMaterialIds,
           issues: [...waterVerification.issues, ...historyVerification.issues],
         },
       });

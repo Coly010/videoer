@@ -22,6 +22,7 @@ import { verifyCinematicScene, type CinematicQualityCheck } from './verification
 import { loadLightingRig } from '../lighting/io.js';
 import { resolveFiniteFogDomain } from './fog.js';
 import { resolveRigBoundAtmosphere } from './lighting.js';
+import { sha256File } from '../assets/library.js';
 
 const exec = promisify(execFile);
 
@@ -82,6 +83,68 @@ async function prepareCinematicRender(sceneFile: string, outputDirectory: string
       : lightingRig?.environmentIllumination;
   const finiteFogDomain =
     scene.atmosphere.fogDensity > 0 ? await resolveFiniteFogDomain(scene, source) : undefined;
+  const resolvedEntities = await Promise.all(
+    scene.entities.map(async (entity) => {
+      const historyPath = entity.surfaceHistoryFieldPath
+        ? resolve(sourceDirectory, entity.surfaceHistoryFieldPath)
+        : undefined;
+      const waterPath = entity.surfaceWaterFieldPath
+        ? resolve(sourceDirectory, entity.surfaceWaterFieldPath)
+        : undefined;
+      const [historyField, waterField] =
+        historyPath && waterPath
+          ? await Promise.all([
+              readFile(historyPath, 'utf8').then((value) => JSON.parse(value)),
+              readFile(waterPath, 'utf8').then((value) => JSON.parse(value)),
+            ])
+          : [undefined, undefined];
+      return {
+        ...entity,
+        geometryPath: resolve(sourceDirectory, entity.geometryPath),
+        ...(entity.productionRigProfilePath
+          ? { productionRigProfilePath: resolve(sourceDirectory, entity.productionRigProfilePath) }
+          : {}),
+        ...(entity.productionCharacterBindingPath
+          ? {
+              productionCharacterBindingPath: resolve(
+                sourceDirectory,
+                entity.productionCharacterBindingPath,
+              ),
+            }
+          : {}),
+        ...(waterPath ? { surfaceWaterFieldPath: waterPath } : {}),
+        ...(historyPath
+          ? {
+              surfaceHistoryFieldPath: historyPath,
+              surfaceHistoryVerification: {
+                verifier: 'videoer.surface-history-render-preflight.v1',
+                fieldFileSha256: await sha256File(historyPath),
+                fieldSha256: historyField.fieldSha256,
+                waterFileSha256: await sha256File(waterPath!),
+                waterFieldSha256: waterField.fieldSha256,
+                ...(historyField.schemaVersion >= 2
+                  ? { routingSha256: waterField.routing.routingSha256 }
+                  : {}),
+              },
+            }
+          : {}),
+        ...(entity.surfaceWaterOpticalSurfacePath
+          ? {
+              surfaceWaterOpticalSurfacePath: resolve(
+                sourceDirectory,
+                entity.surfaceWaterOpticalSurfacePath,
+              ),
+            }
+          : {}),
+        ...(entity.fixturePath
+          ? { fixturePath: resolve(sourceDirectory, entity.fixturePath) }
+          : {}),
+        ...(entity.motion
+          ? { motion: { ...entity.motion, path: resolve(sourceDirectory, entity.motion.path) } }
+          : {}),
+      };
+    }),
+  );
   const resolved = {
     ...scene,
     atmosphere: resolveRigBoundAtmosphere(scene.atmosphere, lightingRig),
@@ -91,39 +154,7 @@ async function prepareCinematicRender(sceneFile: string, outputDirectory: string
       : {}),
     ...(lightingRig ? { exposure: lightingRig.exposure } : {}),
     ...(environmentIllumination ? { environmentIllumination } : {}),
-    entities: scene.entities.map((entity) => ({
-      ...entity,
-      geometryPath: resolve(sourceDirectory, entity.geometryPath),
-      ...(entity.productionRigProfilePath
-        ? { productionRigProfilePath: resolve(sourceDirectory, entity.productionRigProfilePath) }
-        : {}),
-      ...(entity.productionCharacterBindingPath
-        ? {
-            productionCharacterBindingPath: resolve(
-              sourceDirectory,
-              entity.productionCharacterBindingPath,
-            ),
-          }
-        : {}),
-      ...(entity.surfaceWaterFieldPath
-        ? { surfaceWaterFieldPath: resolve(sourceDirectory, entity.surfaceWaterFieldPath) }
-        : {}),
-      ...(entity.surfaceHistoryFieldPath
-        ? { surfaceHistoryFieldPath: resolve(sourceDirectory, entity.surfaceHistoryFieldPath) }
-        : {}),
-      ...(entity.surfaceWaterOpticalSurfacePath
-        ? {
-            surfaceWaterOpticalSurfacePath: resolve(
-              sourceDirectory,
-              entity.surfaceWaterOpticalSurfacePath,
-            ),
-          }
-        : {}),
-      ...(entity.fixturePath ? { fixturePath: resolve(sourceDirectory, entity.fixturePath) } : {}),
-      ...(entity.motion
-        ? { motion: { ...entity.motion, path: resolve(sourceDirectory, entity.motion.path) } }
-        : {}),
-    })),
+    entities: resolvedEntities,
     overlays: scene.overlays.map((overlay) => ({
       ...overlay,
       imagePath: resolve(sourceDirectory, overlay.imagePath),

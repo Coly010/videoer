@@ -87,6 +87,19 @@ export function createPavingUnitSurfaceMaterial(kind: PavingUnitMaterialKind): S
           runoffStaining: { colorMultiplier: 0.78, roughnessOffset: 0.1 },
           repairInfluence: { colorMultiplier: 1.07, roughnessOffset: -0.025 },
         },
+    historyResponseV3: historic
+      ? {
+          trafficWear: { colorMultiplier: 1.04, roughnessOffset: -0.16 },
+          exposureWeathering: { colorMultiplier: 1.025, roughnessOffset: 0.025 },
+          runoffStaining: { colorMultiplier: 0.72, roughnessOffset: 0.13 },
+          repairInfluence: { colorMultiplier: 1.1, roughnessOffset: -0.04 },
+        }
+      : {
+          trafficWear: { colorMultiplier: 1.025, roughnessOffset: -0.12 },
+          exposureWeathering: { colorMultiplier: 1.04, roughnessOffset: 0.04 },
+          runoffStaining: { colorMultiplier: 0.78, roughnessOffset: 0.1 },
+          repairInfluence: { colorMultiplier: 1.07, roughnessOffset: -0.025 },
+        },
     dirtMassResponse: historic
       ? {
           loose: { colorMultiplier: 0.72, roughnessOffset: 0.16 },

@@ -24,6 +24,22 @@ def write_json(path, value):
         handle.write("\n")
 
 
+def file_sha256(path):
+    with open(path, "rb") as handle:
+        return hashlib.sha256(handle.read()).hexdigest()
+
+
+def render_preflight(history_path, water_path, history, water):
+    return {
+        "verifier": "videoer.surface-history-render-preflight.v1",
+        "fieldFileSha256": file_sha256(history_path),
+        "fieldSha256": history["fieldSha256"],
+        "waterFileSha256": file_sha256(water_path),
+        "waterFieldSha256": water["fieldSha256"],
+        "routingSha256": water["routing"]["routingSha256"],
+    }
+
+
 def main():
     if "--" not in sys.argv or len(sys.argv[sys.argv.index("--") + 1 :]) != 1:
         raise RuntimeError("Usage: test_surface_history.py -- output-directory")
@@ -44,6 +60,12 @@ def main():
                         "longTermExposure": {"colorMultiplier": 0.8, "roughnessOffset": 0.15},
                         "runoffStaining": {"colorMultiplier": 0.55, "roughnessOffset": 0.2},
                         "repairInfluence": {"colorMultiplier": 1.35, "roughnessOffset": -0.15},
+                    },
+                    "historyResponseV3": {
+                        "trafficWear": {"colorMultiplier": 1.18, "roughnessOffset": -0.12},
+                        "exposureWeathering": {"colorMultiplier": 0.72, "roughnessOffset": 0.19},
+                        "runoffStaining": {"colorMultiplier": 0.6, "roughnessOffset": 0.17},
+                        "repairInfluence": {"colorMultiplier": 1.28, "roughnessOffset": -0.1},
                     },
                     "dirtMassResponse": {
                         "loose": {"colorMultiplier": 0.5, "roughnessOffset": 0.25},
@@ -134,17 +156,20 @@ def main():
         "grid": grid,
         "cells": [
             {
-                key: cell[key]
-                for key in (
-                    "index",
-                    "column",
-                    "row",
-                    "worldPosition",
-                    "triangleIndex",
-                    "materialId",
-                    "targetClass",
-                    "coverage",
-                )
+                **{
+                    key: cell[key]
+                    for key in (
+                        "index",
+                        "column",
+                        "row",
+                        "worldPosition",
+                        "triangleIndex",
+                        "materialId",
+                        "targetClass",
+                        "coverage",
+                    )
+                },
+                "exposure": 0.8 if cell["row"] in (6, 7) else 0.2,
             }
             for cell in cells
         ],
@@ -181,8 +206,13 @@ def main():
         "transform": transform,
         "surfaceWaterFieldPath": water_path,
         "surfaceHistoryFieldPath": history_path,
+        "surfaceHistoryVerification": render_preflight(
+            history_path, water_path, history, water
+        ),
     }
     report = renderer.create_surface_history(definition, asset, mesh)
+    if report["historyResponseContract"] != "historyResponse":
+        raise RuntimeError("surface history v2 did not preserve its legacy material response")
     if report["responseMaterialIds"] != ["stone"]:
         raise RuntimeError("surface history did not bind the declared material response")
     if report["trafficAffectedCellCount"] != 16 or report["runoffAffectedCellCount"] != 16:
@@ -203,6 +233,9 @@ def main():
     invalid = json.loads(json.dumps(history))
     invalid["cells"][0]["runoffStaining"] = 2
     write_json(history_path, invalid)
+    definition["surfaceHistoryVerification"] = render_preflight(
+        history_path, water_path, invalid, water
+    )
     try:
         renderer.create_surface_history(definition, asset, mesh)
         raise RuntimeError("surface history accepted an out-of-range causal channel")
@@ -212,6 +245,9 @@ def main():
     stale = json.loads(json.dumps(history))
     stale["cells"][0]["triangleIndex"] += 1
     write_json(history_path, stale)
+    definition["surfaceHistoryVerification"] = render_preflight(
+        history_path, water_path, stale, water
+    )
     try:
         renderer.create_surface_history(definition, asset, mesh)
         raise RuntimeError("surface history accepted stale source-water topology")
@@ -219,6 +255,95 @@ def main():
         if "cell topology is stale" not in str(error):
             raise
     write_json(history_path, history)
+    definition["surfaceHistoryVerification"] = render_preflight(
+        history_path, water_path, history, water
+    )
+
+    history_v3 = json.loads(json.dumps(history))
+    history_v3["schemaVersion"] = 3
+    history_v3["generator"] = "videoer.construction-surface-history.v3"
+    history_v3["id"] = "environment.surface-history-native-v3"
+    history_v3["fieldSha256"] = "3" * 64
+    for cell in history_v3["cells"]:
+        long_term_exposure = cell.pop("longTermExposure")
+        cell["rainExposureFraction"] = 0.8 if cell["row"] in (6, 7) else 0.2
+        cell["shelterProtection"] = 1 - cell["rainExposureFraction"]
+        cell["exposureWeathering"] = long_term_exposure
+        cell["runoffThroughflowStaining"] = cell["runoffStaining"]
+        cell["retainedWaterStaining"] = 0
+    history_v3_path = os.path.join(output, "history-v3.json")
+    write_json(history_v3_path, history_v3)
+    definition_v3 = {
+        **definition,
+        "id": "environment.surface-history-native-probe-v3",
+        "surfaceHistoryFieldPath": history_v3_path,
+        "surfaceHistoryVerification": render_preflight(
+            history_v3_path, water_path, history_v3, water
+        ),
+    }
+    mesh_v3_data = bpy.data.meshes.new("surface-history-probe-v3-mesh")
+    mesh_v3_data.from_pydata(
+        [renderer.geometry_probe.to_blender(point) for point in asset["positions"]],
+        [],
+        [(0, 1, 2), (0, 2, 3)],
+    )
+    mesh_v3 = bpy.data.objects.new("surface-history-probe-v3", mesh_v3_data)
+    bpy.context.collection.objects.link(mesh_v3)
+    material_v3 = bpy.data.materials.new("stone-v3")
+    material_v3.use_nodes = True
+    mesh_v3_data.materials.append(material_v3)
+    report_v3 = renderer.create_surface_history(definition_v3, asset, mesh_v3)
+    if report_v3["historyResponseContract"] != "historyResponseV3":
+        raise RuntimeError("surface history v3 did not select its distinct material response")
+    if report_v3["exposureAffectedCellCount"] != 16:
+        raise RuntimeError("surface history v3 did not report exposure-weathering cells")
+    if report_v3["rainExposedCellCount"] != 64 or report_v3["shelterProtectedCellCount"] != 64:
+        raise RuntimeError("surface history v3 lost exposure/shelter diagnostics")
+    v3_image = mesh_v3.data.materials[0].node_tree.nodes[
+        "videoer-surface-history-field"
+    ].image
+    exposed_cell_green = v3_image.pixels[(6 * 8) * 4 + 1]
+    if abs(exposed_cell_green - 0.75) > 1e-6:
+        raise RuntimeError("surface history v3 did not pack exposureWeathering into its response field")
+    stale_preflight_v3 = json.loads(json.dumps(history_v3))
+    stale_preflight_v3["cells"][0]["trafficWear"] = 0.25
+    write_json(history_v3_path, stale_preflight_v3)
+    try:
+        renderer.create_surface_history(definition_v3, asset, mesh_v3)
+        raise RuntimeError("surface history v3 accepted bytes changed after verified preflight")
+    except RuntimeError as error:
+        if "render-preflight file hash is stale" not in str(error):
+            raise
+    write_json(history_v3_path, history_v3)
+    definition_v3["surfaceHistoryVerification"] = render_preflight(
+        history_v3_path, water_path, history_v3, water
+    )
+    v3_response = asset["materials"][0]["surface"].pop("historyResponseV3")
+    try:
+        renderer.create_surface_history(definition_v3, asset, mesh_v3)
+        raise RuntimeError("surface history v3 accepted dirt-only material response")
+    except RuntimeError as error:
+        if "declares dirt response without historyResponseV3" not in str(error):
+            raise
+    asset["materials"][0]["surface"]["historyResponseV3"] = v3_response
+    invalid_v3 = json.loads(json.dumps(history_v3))
+    invalid_v3["cells"][0]["runoffStaining"] = 0.5
+    write_json(history_v3_path, invalid_v3)
+    definition_v3["surfaceHistoryVerification"] = render_preflight(
+        history_v3_path, water_path, invalid_v3, water
+    )
+    try:
+        renderer.create_surface_history(definition_v3, asset, mesh_v3)
+        raise RuntimeError("surface history v3 accepted invalid runoff composition")
+    except RuntimeError as error:
+        if "v3 runoff composition is invalid" not in str(error):
+            raise
+    write_json(history_v3_path, history_v3)
+    definition_v3["surfaceHistoryVerification"] = render_preflight(
+        history_v3_path, water_path, history_v3, water
+    )
+    mesh_v3.hide_render = True
+
     scene = bpy.context.scene
     scene.render.engine = "BLENDER_EEVEE_NEXT"
     scene.render.resolution_x = 192

@@ -11,7 +11,10 @@ import {
   type SurfaceWaterFieldInput,
   type SurfaceWaterFieldV2,
 } from '../environments/surface-water.js';
-import { verifySurfaceHistoryFieldV2 } from '../environments/surface-history.js';
+import {
+  verifySurfaceHistoryFieldV2,
+  verifySurfaceHistoryFieldV3,
+} from '../environments/surface-history.js';
 import {
   reconstructSurfaceWaterOpticalSurface,
   surfaceWaterOpticalSurfaceOptionsSchema,
@@ -421,15 +424,20 @@ export async function rebindCinematicSurfaceWaterReceiver(options: {
   entity.surfaceWaterFieldPath = fieldPath;
   if (options.surfaceHistoryFieldPath) {
     if (field.schemaVersion !== 2)
-      throw new Error('surface-history v2 binding requires a surface-water v2 field');
+      throw new Error('surface-history v2/v3 binding requires a surface-water v2 field');
     const historyPath = resolve(options.surfaceHistoryFieldPath);
-    const historyVerification = verifySurfaceHistoryFieldV2(
-      JSON.parse(await readFile(historyPath, 'utf8')),
-      field,
-    );
+    const rawHistory = JSON.parse(await readFile(historyPath, 'utf8'));
+    const historyVerification =
+      rawHistory.schemaVersion === 3
+        ? verifySurfaceHistoryFieldV3(rawHistory, field)
+        : rawHistory.schemaVersion === 2
+          ? verifySurfaceHistoryFieldV2(rawHistory, field)
+          : (() => {
+              throw new Error('surface-water v2 accepts only surface-history v2 or v3 fields');
+            })();
     if (!historyVerification.valid)
       throw new Error(
-        `surface-history v2 field is invalid: ${historyVerification.issues.join('; ')}`,
+        `surface-history v${rawHistory.schemaVersion} field is invalid: ${historyVerification.issues.join('; ')}`,
       );
     entity.surfaceHistoryFieldPath = historyPath;
   } else delete entity.surfaceHistoryFieldPath;

@@ -102,6 +102,8 @@ For future machines, record Blender version, OS/CPU, scene fingerprint, render p
 
 The 4.5.13 source path at `supports_barycentric_whitelist()` was inspected because the crash appeared to be an M5 detector defect. Testing the unchanged official binary with host Metal access proved the released code works on this host, while the official `bpy` module fails at the same native detector only inside the restricted environment. Consequently Videoer carries no private Blender fork or M5 source patch. Future installs must reproduce the host-access diagnostic before considering a source change; if a genuine outside-sandbox crash is later proven, document the exact upstream commit, patch, build flags, checksum, and removal condition here.
 
+This distinction was reconfirmed on 2026-09-02 during the surface-history-v3 transfer. Two concurrent restricted probes exited before Python in `_platform_strstr` from `supports_barycentric_whitelist()`. The same canonical `/Applications/Blender.app` binary then completed both authoritative Cycles probes and the focused native contract probe sequentially with host Metal access. A new-machine installer or doctor must therefore treat restricted Metal visibility and a genuine host crash as different diagnoses; it must not install `bpy`, lower render quality, or carry a source patch until the canonical host-access reproduction also fails.
+
 ## Manual verification
 
 ```bash

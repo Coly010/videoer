@@ -74,6 +74,12 @@ describe('unit-aware paving material assembly', () => {
       }
     }
     expect(material.pattern).toMatchObject({ kind: 'cut-stone', grainScaleMeters: 0.006 });
+    expect(material.historyResponse).toMatchObject({
+      longTermExposure: { colorMultiplier: 1.025, roughnessOffset: 0.025 },
+    });
+    expect(material.historyResponseV3).toMatchObject({
+      exposureWeathering: { colorMultiplier: 1.025, roughnessOffset: 0.025 },
+    });
     expect(material.metadata).toMatchObject({
       constructionDomain: 'modeled-paving-unit',
       provenance: 'project-owned-procedural-definition',

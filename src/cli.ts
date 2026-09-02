@@ -77,8 +77,10 @@ import {
 import {
   createPavingSurfaceHistoryField,
   createPavingSurfaceHistoryV2Field,
+  createPavingSurfaceHistoryV3Field,
   loadSurfaceHistoryProfile,
   loadSurfaceHistoryV2Profile,
+  loadSurfaceHistoryV3Profile,
 } from './application/surface-history.js';
 import {
   createOldCitySurfaceMaterialAssets,
@@ -1365,6 +1367,36 @@ environment
       data,
       (result) =>
         `✓ ${result.field.grid.activeCellCount} receiver cells solved with mass-balance error ${result.field.massBalance.errorCubicMeters} → ${result.path}`,
+    );
+  });
+environment
+  .command('create-surface-history-v3-field')
+  .argument('<paving-geometry>')
+  .argument('<surface-water-v2-field>')
+  .argument('<history-v3-profile>')
+  .argument('<output-field>')
+  .description(
+    'derive compact traffic, shelter, exposure, split runoff and mass-conserving dirt history from an exact routed water-v2 field',
+  )
+  .action(async function (
+    pavingGeometry: string,
+    surfaceWaterField: string,
+    historyProfile: string,
+    outputField: string,
+  ) {
+    const profile = await loadSurfaceHistoryV3Profile(historyProfile);
+    const data = await createPavingSurfaceHistoryV3Field({
+      pavingGeometryPath: pavingGeometry,
+      surfaceWaterFieldPath: surfaceWaterField,
+      profile,
+      outputPath: outputField,
+    });
+    output(
+      this,
+      'environment.create-surface-history-v3-field',
+      data,
+      (result) =>
+        `✓ ${result.field.cells.length} receiver cells preserve causal channels and conserve dirt mass with ${result.field.dirtMassBalance.errorKilograms} kg error → ${result.path}`,
     );
   });
 environment

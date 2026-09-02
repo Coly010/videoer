@@ -6,14 +6,20 @@ import { irregularPavingDefinitionSchema } from '../environments/irregular-pavin
 import {
   compileSurfaceHistory,
   compileSurfaceHistoryV2,
+  compileSurfaceHistoryV3,
   surfaceHistoryProfileSchema,
   surfaceHistoryV2ProfileSchema,
+  surfaceHistoryV3ProfileSchema,
+  surfaceHistoryTrafficPathDoseAtWorldPoint,
   verifySurfaceHistoryField,
   verifySurfaceHistoryFieldV2,
+  verifySurfaceHistoryFieldV3,
   type SurfaceHistoryField,
   type SurfaceHistoryFieldV2,
+  type SurfaceHistoryFieldV3,
   type SurfaceHistoryProfile,
   type SurfaceHistoryV2Profile,
+  type SurfaceHistoryV3Profile,
 } from '../environments/surface-history.js';
 import {
   verifyStaticSurfaceWaterField,
@@ -37,6 +43,10 @@ export async function loadSurfaceHistoryProfile(path: string) {
 
 export async function loadSurfaceHistoryV2Profile(path: string) {
   return surfaceHistoryV2ProfileSchema.parse(JSON.parse(await readFile(resolve(path), 'utf8')));
+}
+
+export async function loadSurfaceHistoryV3Profile(path: string) {
+  return surfaceHistoryV3ProfileSchema.parse(JSON.parse(await readFile(resolve(path), 'utf8')));
 }
 
 export async function createPavingSurfaceHistoryField(options: {
@@ -113,13 +123,16 @@ export async function createPavingSurfaceHistoryField(options: {
         'repairInfluence',
         'repairRelativeAge',
       ] as const
-    ).map((channel) => [
-      channel,
-      {
-        minimum: Math.min(...field.cells.map((cell) => cell[channel])),
-        maximum: Math.max(...field.cells.map((cell) => cell[channel])),
-      },
-    ]),
+    ).map((channel) => {
+      const range = field.cells.reduce(
+        (current, cell) => ({
+          minimum: Math.min(current.minimum, cell[channel]),
+          maximum: Math.max(current.maximum, cell[channel]),
+        }),
+        { minimum: Number.POSITIVE_INFINITY, maximum: Number.NEGATIVE_INFINITY },
+      );
+      return [channel, range];
+    }),
   );
   const report = {
     schemaVersion: 1,
@@ -217,16 +230,153 @@ export async function createPavingSurfaceHistoryV2Field(options: {
     trafficPathIds: profile.trafficPaths.map((path) => path.id).sort(),
     repairIds: profile.repairs.map((repair) => repair.id).sort(),
     dirtMassBalance: field.dirtMassBalance,
-    dirtCoverageRanges: {
-      loose: {
-        minimum: Math.min(...field.cells.map((cell) => cell.dirt.looseCoverage)),
-        maximum: Math.max(...field.cells.map((cell) => cell.dirt.looseCoverage)),
+    dirtCoverageRanges: field.cells.reduce(
+      (ranges, cell) => ({
+        loose: {
+          minimum: Math.min(ranges.loose.minimum, cell.dirt.looseCoverage),
+          maximum: Math.max(ranges.loose.maximum, cell.dirt.looseCoverage),
+        },
+        persistent: {
+          minimum: Math.min(ranges.persistent.minimum, cell.dirt.persistentCoverage),
+          maximum: Math.max(ranges.persistent.maximum, cell.dirt.persistentCoverage),
+        },
+      }),
+      {
+        loose: { minimum: Number.POSITIVE_INFINITY, maximum: Number.NEGATIVE_INFINITY },
+        persistent: { minimum: Number.POSITIVE_INFINITY, maximum: Number.NEGATIVE_INFINITY },
       },
-      persistent: {
-        minimum: Math.min(...field.cells.map((cell) => cell.dirt.persistentCoverage)),
-        maximum: Math.max(...field.cells.map((cell) => cell.dirt.persistentCoverage)),
-      },
+    ),
+    visualAcceptance: 'not-assessed',
+  };
+  await writeJsonAtomically(reportPath, report);
+  return { field, path: outputPath, report, reportPath };
+}
+
+export async function createPavingSurfaceHistoryV3Field(options: {
+  pavingGeometryPath: string;
+  surfaceWaterFieldPath: string;
+  profile: SurfaceHistoryV3Profile;
+  outputPath: string;
+  reportPath?: string;
+}): Promise<{ field: SurfaceHistoryFieldV3; path: string; report: unknown; reportPath: string }> {
+  const profile = surfaceHistoryV3ProfileSchema.parse(options.profile);
+  const pavingPath = resolve(options.pavingGeometryPath);
+  const waterPath = resolve(options.surfaceWaterFieldPath);
+  const [geometry, geometrySha256, waterBytes, waterSha256] = await Promise.all([
+    loadGeometry(pavingPath),
+    sha256File(pavingPath),
+    readFile(waterPath, 'utf8'),
+    sha256File(waterPath),
+  ]);
+  const waterVerification = verifyStaticSurfaceWaterFieldV2(JSON.parse(waterBytes)) as ReturnType<
+    typeof verifyStaticSurfaceWaterFieldV2
+  > & { field: SurfaceWaterFieldV2 };
+  if (!waterVerification.valid)
+    throw new Error(
+      `surface-history v3 source water is invalid: ${waterVerification.issues.join('; ')}`,
+    );
+  const water = waterVerification.field;
+  if (water.receiver.geometryId !== geometry.id || water.receiver.geometrySha256 !== geometrySha256)
+    throw new Error('surface-history v3 receiver does not match the exact source-water receiver');
+  const definition = irregularPavingDefinitionSchema.parse(geometry.metadata.definition);
+  const liveRepairIds = new Set(definition.repairPatches.map((patch) => patch.id));
+  for (const repair of profile.repairs)
+    if (!liveRepairIds.has(repair.id))
+      throw new Error(`surface-history v3 profile references absent repair '${repair.id}'`);
+  const field = compileSurfaceHistoryV3({
+    profile,
+    sourceWaterField: water,
+    repairPatches: definition.repairPatches.map(({ id, minimum, maximum }) => ({
+      id,
+      minimum,
+      maximum,
+    })),
+  });
+  const verification = verifySurfaceHistoryFieldV3(field, water);
+  if (!verification.valid)
+    throw new Error(
+      `compiled surface-history v3 field is invalid: ${verification.issues.join('; ')}`,
+    );
+  for (const path of profile.trafficPaths)
+    if (
+      !field.cells.some(
+        (cell) =>
+          surfaceHistoryTrafficPathDoseAtWorldPoint(
+            cell.worldPosition,
+            field.receiver.transform,
+            path,
+          ) > 0,
+      )
+    )
+      throw new Error(
+        `surface-history v3 traffic path '${path.id}' does not affect any active receiver cell`,
+      );
+  const outputPath = await writeJsonAtomically(options.outputPath, field);
+  const reportPath = resolve(
+    options.reportPath ?? `${options.outputPath.replace(/\.json$/u, '')}-report.json`,
+  );
+  const channelRanges = Object.fromEntries(
+    (
+      [
+        'trafficWear',
+        'rainExposureFraction',
+        'shelterProtection',
+        'exposureWeathering',
+        'runoffThroughflowStaining',
+        'retainedWaterStaining',
+        'runoffStaining',
+        'repairInfluence',
+        'repairRelativeAge',
+      ] as const
+    ).map((channel) => {
+      const range = field.cells.reduce(
+        (current, cell) => ({
+          minimum: Math.min(current.minimum, cell[channel]),
+          maximum: Math.max(current.maximum, cell[channel]),
+        }),
+        { minimum: Number.POSITIVE_INFINITY, maximum: Number.NEGATIVE_INFINITY },
+      );
+      return [channel, range];
+    }),
+  );
+  const report = {
+    schemaVersion: 3,
+    generator: 'videoer.surface-history-assembly.v3',
+    result: 'structural-pass',
+    field: {
+      path: outputPath,
+      sha256: await sha256File(outputPath),
+      semanticSha256: field.fieldSha256,
     },
+    receiver: { id: geometry.id, path: pavingPath, sha256: geometrySha256 },
+    sourceWater: {
+      id: water.id,
+      path: waterPath,
+      sha256: waterSha256,
+      semanticSha256: water.fieldSha256,
+      routingSha256: water.routing.routingSha256,
+    },
+    cellCount: field.cells.length,
+    trafficPathIds: profile.trafficPaths.map((path) => path.id).sort(),
+    repairIds: profile.repairs.map((repair) => repair.id).sort(),
+    channelRanges,
+    dirtMassBalance: field.dirtMassBalance,
+    dirtCoverageRanges: field.cells.reduce(
+      (ranges, cell) => ({
+        loose: {
+          minimum: Math.min(ranges.loose.minimum, cell.dirt.looseCoverage),
+          maximum: Math.max(ranges.loose.maximum, cell.dirt.looseCoverage),
+        },
+        persistent: {
+          minimum: Math.min(ranges.persistent.minimum, cell.dirt.persistentCoverage),
+          maximum: Math.max(ranges.persistent.maximum, cell.dirt.persistentCoverage),
+        },
+      }),
+      {
+        loose: { minimum: Number.POSITIVE_INFINITY, maximum: Number.NEGATIVE_INFINITY },
+        persistent: { minimum: Number.POSITIVE_INFINITY, maximum: Number.NEGATIVE_INFINITY },
+      },
+    ),
     visualAcceptance: 'not-assessed',
   };
   await writeJsonAtomically(reportPath, report);
