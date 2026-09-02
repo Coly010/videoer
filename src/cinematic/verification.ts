@@ -25,6 +25,7 @@ import {
   reconstructSurfaceWaterOpticalSurface,
   verifySurfaceWaterOpticalSurface,
 } from '../environments/surface-water-surface.js';
+import { verifySurfaceWaterReceiverAppearance } from '../environments/surface-water-appearance.js';
 import { loadLightingRig } from '../lighting/io.js';
 import { resolveFiniteFogDomain } from './fog.js';
 import { resolveRigBoundAtmosphere, rigWorldColorPrecedence } from './lighting.js';
@@ -230,6 +231,58 @@ export async function verifyCinematicScene(scene: CinematicScene, sceneFile: str
         id: `${entity.id}.surface-water-field`,
         status: 'fail',
         message: `Entity '${entity.id}' surface-water field could not be verified`,
+        measurements: { error: error instanceof Error ? error.message : String(error) },
+      });
+    }
+  }
+  for (const entity of scene.entities.filter(
+    (candidate) => candidate.surfaceWaterReceiverAppearancePath,
+  )) {
+    const fieldPath = resolve(sourceDirectory, entity.surfaceWaterFieldPath!);
+    const appearancePath = resolve(sourceDirectory, entity.surfaceWaterReceiverAppearancePath!);
+    try {
+      const rawField = JSON.parse(await readFile(fieldPath, 'utf8'));
+      const fieldVerification =
+        rawField.schemaVersion === 2
+          ? verifyStaticSurfaceWaterFieldV2(rawField)
+          : verifyStaticSurfaceWaterField(rawField);
+      const appearanceVerification = verifySurfaceWaterReceiverAppearance(
+        JSON.parse(await readFile(appearancePath, 'utf8')),
+        fieldVerification.field,
+      );
+      const receiverMatches =
+        appearanceVerification.appearance.receiver.geometryId ===
+          fieldVerification.field.receiver.geometryId &&
+        appearanceVerification.appearance.receiver.geometrySha256 ===
+          fieldVerification.field.receiver.geometrySha256 &&
+        appearanceVerification.appearance.receiver.geometrySemanticSha256 ===
+          fieldVerification.field.receiver.geometrySemanticSha256 &&
+        appearanceVerification.appearance.receiver.transformSha256 ===
+          fieldVerification.field.receiver.transformSha256;
+      const valid =
+        entity.role === 'environment' &&
+        fieldVerification.valid &&
+        appearanceVerification.valid &&
+        receiverMatches;
+      checks.push({
+        id: `${entity.id}.surface-water-receiver-appearance`,
+        status: valid ? 'pass' : 'fail',
+        message: valid
+          ? `Environment '${entity.id}' has exact porous-damp and coherent-film receiver appearance`
+          : `Entity '${entity.id}' has invalid or mismatched receiver-water appearance`,
+        measurements: {
+          appearanceId: appearanceVerification.appearance.id,
+          appearanceSha256: appearanceVerification.appearance.appearanceSha256,
+          receiverMatches,
+          appearanceIssues: appearanceVerification.issues,
+          ...appearanceVerification.appearance.report,
+        },
+      });
+    } catch (error) {
+      checks.push({
+        id: `${entity.id}.surface-water-receiver-appearance`,
+        status: 'fail',
+        message: `Entity '${entity.id}' receiver-water appearance could not be verified`,
         measurements: { error: error instanceof Error ? error.message : String(error) },
       });
     }

@@ -31,6 +31,7 @@ export const cinematicSceneEntitySchema = z
     productionRigProfilePath: z.string().min(1).optional(),
     productionCharacterBindingPath: z.string().min(1).optional(),
     surfaceWaterFieldPath: z.string().min(1).optional(),
+    surfaceWaterReceiverAppearancePath: z.string().min(1).optional(),
     surfaceHistoryFieldPath: z.string().min(1).optional(),
     surfaceWaterOpticalSurfacePath: z.string().min(1).optional(),
     fixturePath: z.string().min(1).optional(),
@@ -43,6 +44,18 @@ export const cinematicSceneEntitySchema = z
     visible: z.boolean().default(true),
   })
   .superRefine((entity, context) => {
+    if (entity.surfaceWaterReceiverAppearancePath && !entity.surfaceWaterFieldPath)
+      context.addIssue({
+        code: 'custom',
+        path: ['surfaceWaterReceiverAppearancePath'],
+        message: 'surface-water receiver appearance requires an exact source field path',
+      });
+    if (entity.surfaceWaterReceiverAppearancePath && entity.role !== 'environment')
+      context.addIssue({
+        code: 'custom',
+        path: ['surfaceWaterReceiverAppearancePath'],
+        message: 'surface-water receiver appearance may only bind environment entities',
+      });
     if (entity.surfaceWaterOpticalSurfacePath && !entity.surfaceWaterFieldPath)
       context.addIssue({
         code: 'custom',

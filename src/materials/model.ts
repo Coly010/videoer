@@ -10,6 +10,22 @@ const colorSchema = z.tuple([
 
 const surfaceAxisSchema = z.enum(['x', 'y', 'z']);
 
+export const surfaceWaterReceiverAppearanceResponseSchema = z.object({
+  model: z.literal('porous-damp-coherent-film-v1'),
+  saturatedBaseColorMultiplier: z.number().min(0.5).max(1),
+  saturatedRoughnessMultiplier: z.number().min(0.5).max(1),
+  asperityEnvelopeMeters: z.number().positive().max(0.02),
+  coherenceTransitionMeters: z.number().positive().max(0.02),
+  maximumCoherentFilmCoverage: z.number().min(0).max(1),
+  waterIor: z.number().min(1.3).max(1.36),
+  interfaceRoughness: z.number().min(0.005).max(0.3),
+  normalMode: z.literal('receiver-conformal'),
+  evidence: z.object({
+    basis: z.enum(['heuristic-prior', 'measured-reference', 'provider-declared']),
+    reference: z.string().trim().min(1),
+  }),
+});
+
 export const textureSurfaceCompositionSchema = z.enum([
   'continuous-layout-scan',
   'homogeneous-unit-material',
@@ -473,6 +489,7 @@ export const surfaceMaterialSchema = z
           multiplier: z.number().min(0).max(1),
           floor: z.number().min(0).max(1),
         }),
+        receiverAppearance: surfaceWaterReceiverAppearanceResponseSchema.optional(),
         splash: z.object({
           minimumFreeWaterDepthMeters: z.number().nonnegative().max(0.05),
           maximumSlopeDegrees: z.number().min(0).max(45),

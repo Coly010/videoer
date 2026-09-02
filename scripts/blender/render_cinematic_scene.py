@@ -1520,41 +1520,206 @@ def create_surface_water(definition, receiver_asset, receiver_mesh):
     ):
         raise RuntimeError(f"Entity '{definition['id']}' surface-water field fails mass balance")
 
-    maximum_free_depth = max(
-        1e-8,
-        *[
-            cell["filmDepthMeters"]
-            + cell["edgeAccumulationDepthMeters"]
-            + cell["puddleDepthMeters"]
-            for cell in field["cells"]
-        ],
-    )
     columns = field["grid"]["columns"]
     rows = field["grid"]["rows"]
     cell_size = field["grid"]["cellSizeMeters"]
     pixels = [0.0] * (columns * rows * 4)
     wet_cell_count = 0
-    for cell in field["cells"]:
-        free_depth = (
-            cell["filmDepthMeters"]
-            + cell["edgeAccumulationDepthMeters"]
-            + cell["puddleDepthMeters"]
-        )
-        absorbed = cell["absorbedDepthMeters"]
-        strength = min(
-            1.0,
-            (0.28 if absorbed > 1e-9 else 0.0)
-            + (0.72 * math.sqrt(free_depth / maximum_free_depth) if free_depth > 0 else 0.0),
-        )
-        pixel = cell["index"] * 4
-        pixels[pixel : pixel + 4] = [
-            strength * cell["coverage"],
-            min(1.0, cell["puddleDepthMeters"] / maximum_free_depth),
-            cell["effectiveRoughness"],
-            cell["exposure"],
+    receiver_appearance = None
+    if definition.get("surfaceWaterReceiverAppearancePath"):
+        receiver_appearance = load_json(definition["surfaceWaterReceiverAppearancePath"])
+        # Inactive grid texels must leave the receiver unchanged. Zero-filled texels
+        # would blacken base colour and roughness at receiver boundaries under linear
+        # filtering, even though no water cell exists there.
+        pixels = [
+            component
+            for _ in range(columns * rows)
+            for component in (1.0, 1.0, 0.0, 0.12)
         ]
-        if strength > 0:
-            wet_cell_count += 1
+        if (
+            receiver_appearance.get("generator")
+            != "videoer.surface-water-receiver-appearance.v1"
+            or receiver_appearance.get("sourceFieldId") != field.get("id")
+            or receiver_appearance.get("sourceFieldSha256") != field.get("fieldSha256")
+            or receiver_appearance.get("materialResponsesSha256")
+            != field.get("materialResponsesSha256")
+        ):
+            raise RuntimeError(
+                f"Entity '{definition['id']}' receiver-water appearance does not bind its exact field"
+            )
+        appearance_receiver = receiver_appearance.get("receiver") or {}
+        field_receiver = field.get("receiver") or {}
+        for key in (
+            "geometryId",
+            "geometrySha256",
+            "geometrySemanticSha256",
+            "transformSha256",
+        ):
+            if appearance_receiver.get(key) != field_receiver.get(key):
+                raise RuntimeError(
+                    f"Entity '{definition['id']}' receiver-water appearance receiver is stale"
+                )
+        appearance_cells = receiver_appearance.get("cells")
+        material_responses = receiver_appearance.get("materialResponses")
+        report = receiver_appearance.get("report")
+        if (
+            not isinstance(appearance_cells, list)
+            or not isinstance(material_responses, dict)
+            or not isinstance(report, dict)
+            or len(appearance_cells) != len(field["cells"])
+        ):
+            raise RuntimeError(
+                f"Entity '{definition['id']}' receiver-water appearance topology is invalid"
+            )
+        appearance_by_index = {cell.get("index"): cell for cell in appearance_cells}
+        damp_area = 0.0
+        coherent_area = 0.0
+        coherent_count = 0
+        for cell in field["cells"]:
+            appearance_cell = appearance_by_index.get(cell["index"])
+            response = material_responses.get(cell["materialId"])
+            optics = (response or {}).get("receiverAppearance")
+            if (
+                not isinstance(appearance_cell, dict)
+                or appearance_cell.get("materialId") != cell["materialId"]
+                or appearance_cell.get("coverage") != cell["coverage"]
+                or not isinstance(optics, dict)
+                or optics.get("model") != "porous-damp-coherent-film-v1"
+                or optics.get("normalMode") != "receiver-conformal"
+            ):
+                raise RuntimeError(
+                    f"Entity '{definition['id']}' receiver-water appearance cell {cell['index']} is stale"
+                )
+            capacity = response["absorption"]["capacityMeters"]
+            absorption_saturation = (
+                min(
+                    1.0,
+                    response["absorption"]["initialSaturation"]
+                    + cell["absorbedDepthMeters"] / capacity,
+                )
+                if capacity > 0
+                else 0.0
+            )
+            film_capacity = response["retention"]["filmCapacityMeters"]
+            film_saturation = (
+                min(1.0, cell["filmDepthMeters"] / film_capacity)
+                if film_capacity > 0
+                else 0.0
+            )
+            edge_capacity = response["retention"]["edgeCapacityMeters"]
+            edge_saturation = (
+                min(1.0, cell["edgeAccumulationDepthMeters"] / edge_capacity)
+                if edge_capacity > 0
+                else 0.0
+            )
+            dampness = 1.0 - (
+                (1.0 - absorption_saturation)
+                * (1.0 - film_saturation)
+                * (1.0 - edge_saturation)
+            )
+            amount = max(
+                0.0,
+                min(
+                    1.0,
+                    (
+                        cell["filmDepthMeters"] - optics["asperityEnvelopeMeters"]
+                    )
+                    / optics["coherenceTransitionMeters"],
+                ),
+            )
+            coherent_coverage = (
+                0.0
+                if cell["puddleDepthMeters"] > 0
+                else optics["maximumCoherentFilmCoverage"]
+                * amount
+                * amount
+                * (3.0 - 2.0 * amount)
+            )
+            expected = (
+                dampness,
+                1.0
+                + (optics["saturatedBaseColorMultiplier"] - 1.0) * dampness,
+                (
+                    1.0
+                    + (optics["saturatedRoughnessMultiplier"] - 1.0) * dampness
+                ),
+                coherent_coverage,
+                optics["interfaceRoughness"],
+            )
+            actual = (
+                appearance_cell.get("porousDampness"),
+                appearance_cell.get("baseColorMultiplier"),
+                appearance_cell.get("roughnessMultiplier"),
+                appearance_cell.get("coherentFilmCoverage"),
+                appearance_cell.get("interfaceRoughness"),
+            )
+            if any(
+                not isinstance(value, (int, float))
+                or not math.isfinite(value)
+                or abs(value - expected[index]) > 1e-10
+                for index, value in enumerate(actual)
+            ):
+                raise RuntimeError(
+                    f"Entity '{definition['id']}' receiver-water appearance cell {cell['index']} violates its material response"
+                )
+            pixel = cell["index"] * 4
+            pixels[pixel : pixel + 4] = [actual[1], actual[2], actual[3], actual[4]]
+            area = cell["coverage"] * cell_size * cell_size
+            if actual[0] > 0:
+                wet_cell_count += 1
+                damp_area += area
+            if actual[3] > 0:
+                coherent_count += 1
+                coherent_area += area * actual[3]
+        if (
+            report.get("activeCellCount") != len(field["cells"])
+            or report.get("dampCellCount") != wet_cell_count
+            or report.get("coherentFilmCellCount") != coherent_count
+            or abs(report.get("porousDampAreaSquareMeters", -1) - damp_area) > 1e-10
+            or abs(report.get("coherentFilmAreaSquareMeters", -1) - coherent_area) > 1e-10
+            or report.get("absorbedOnlyCoherentFilmCellCount") != 0
+            or report.get("belowAsperityCoherentFilmCellCount") != 0
+            or report.get("puddleOverlapCoherentFilmCellCount") != 0
+            or report.get("sceneGlobalNormalizationUsed") is not False
+        ):
+            raise RuntimeError(
+                f"Entity '{definition['id']}' receiver-water appearance report is stale"
+            )
+    else:
+        maximum_free_depth = max(
+            1e-8,
+            *[
+                cell["filmDepthMeters"]
+                + cell["edgeAccumulationDepthMeters"]
+                + cell["puddleDepthMeters"]
+                for cell in field["cells"]
+            ],
+        )
+        for cell in field["cells"]:
+            free_depth = (
+                cell["filmDepthMeters"]
+                + cell["edgeAccumulationDepthMeters"]
+                + cell["puddleDepthMeters"]
+            )
+            absorbed = cell["absorbedDepthMeters"]
+            strength = min(
+                1.0,
+                (0.28 if absorbed > 1e-9 else 0.0)
+                + (
+                    0.72 * math.sqrt(free_depth / maximum_free_depth)
+                    if free_depth > 0
+                    else 0.0
+                ),
+            )
+            pixel = cell["index"] * 4
+            pixels[pixel : pixel + 4] = [
+                strength * cell["coverage"],
+                min(1.0, cell["puddleDepthMeters"] / maximum_free_depth),
+                cell["effectiveRoughness"],
+                cell["exposure"],
+            ]
+            if strength > 0:
+                wet_cell_count += 1
 
     image = bpy.data.images.new(
         f"{definition['id']}-surface-water-field",
@@ -1602,6 +1767,72 @@ def create_surface_water(definition, receiver_asset, receiver_mesh):
         separate = nodes.new("ShaderNodeSeparateColor")
         links.new(uv.outputs["UV"], texture.inputs["Vector"])
         links.new(texture.outputs["Color"], separate.inputs["Color"])
+
+        if receiver_appearance:
+            base = principled.inputs["Base Color"]
+            base_source = base.links[0].from_socket if base.is_linked else None
+            base_default = tuple(base.default_value)
+            if base.is_linked:
+                links.remove(base.links[0])
+            damp_color = nodes.new("ShaderNodeMixRGB")
+            damp_color.name = "videoer-porous-damp-base-color"
+            damp_color.label = "Material-calibrated porous damp multiplier"
+            damp_color.blend_type = "MULTIPLY"
+            damp_color.inputs[0].default_value = 1
+            if base_source:
+                links.new(base_source, damp_color.inputs[1])
+            else:
+                damp_color.inputs[1].default_value = base_default
+            links.new(separate.outputs["Red"], damp_color.inputs[2])
+            links.new(damp_color.outputs[0], base)
+
+            roughness = principled.inputs["Roughness"]
+            roughness_source = roughness.links[0].from_socket if roughness.is_linked else None
+            roughness_default = roughness.default_value
+            if roughness.is_linked:
+                links.remove(roughness.links[0])
+            damp_roughness = nodes.new("ShaderNodeMath")
+            damp_roughness.name = "videoer-porous-damp-roughness"
+            damp_roughness.label = "Field-derived roughness multiplier"
+            damp_roughness.operation = "MULTIPLY"
+            if roughness_source:
+                links.new(roughness_source, damp_roughness.inputs[0])
+            else:
+                damp_roughness.inputs[0].default_value = roughness_default
+            links.new(separate.outputs["Green"], damp_roughness.inputs[1])
+            links.new(damp_roughness.outputs[0], roughness)
+
+            coat = principled.inputs.get("Coat Weight")
+            coat_roughness = principled.inputs.get("Coat Roughness")
+            coat_normal = principled.inputs.get("Coat Normal")
+            coat_ior = principled.inputs.get("Coat IOR")
+            if (
+                coat is None
+                or coat_roughness is None
+                or coat_normal is None
+                or coat_ior is None
+            ):
+                raise RuntimeError(
+                    f"Entity '{definition['id']}' material '{material.name}' lacks coherent-film Principled inputs"
+                )
+            if coat.is_linked or coat_roughness.is_linked or coat_normal.is_linked:
+                raise RuntimeError(
+                    f"Entity '{definition['id']}' material '{material.name}' already owns its coat interface"
+                )
+            links.new(separate.outputs["Blue"], coat)
+            links.new(texture.outputs["Alpha"], coat_roughness)
+            material_id = receiver_asset["materials"][slot_index]["id"]
+            material_response = receiver_appearance["materialResponses"].get(material_id)
+            material_optics = (material_response or {}).get("receiverAppearance")
+            if not isinstance(material_optics, dict):
+                raise RuntimeError(
+                    f"Entity '{definition['id']}' material '{material_id}' lacks receiver-water optics"
+                )
+            coat_ior.default_value = material_optics["waterIor"]
+            receiver_normal = principled.inputs.get("Normal")
+            if receiver_normal is not None and receiver_normal.is_linked:
+                links.new(receiver_normal.links[0].from_socket, coat_normal)
+            continue
 
         base = principled.inputs["Base Color"]
         base_source = base.links[0].from_socket if base.is_linked else None
@@ -1662,6 +1893,28 @@ def create_surface_water(definition, receiver_asset, receiver_mesh):
         "splashEligibleCells": [cell for cell in field["cells"] if cell["splashEligible"]],
         "cellSizeMeters": cell_size,
         "massBalance": mass,
+        "receiverAppearance": (
+            {
+                "id": receiver_appearance["id"],
+                "appearanceSha256": receiver_appearance["appearanceSha256"],
+                "model": "porous-damp-coherent-film-v1",
+                "sceneGlobalNormalizationUsed": False,
+                "dampCellCount": receiver_appearance["report"]["dampCellCount"],
+                "coherentFilmCellCount": receiver_appearance["report"][
+                    "coherentFilmCellCount"
+                ],
+                "porousDampAreaSquareMeters": receiver_appearance["report"][
+                    "porousDampAreaSquareMeters"
+                ],
+                "coherentFilmAreaSquareMeters": receiver_appearance["report"][
+                    "coherentFilmAreaSquareMeters"
+                ],
+                "coatNormalMode": "receiver-conformal",
+                "puddleInterfaceOwnedByOpticalSurface": True,
+            }
+            if receiver_appearance
+            else {"model": "legacy-scene-normalized-wet-strength"}
+        ),
     }
 
 

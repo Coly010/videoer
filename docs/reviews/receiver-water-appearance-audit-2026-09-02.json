@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "reviewId": "receiver-water-appearance-audit-2026-09-02",
+  "subject": "material-calibrated porous dampness and coherent receiver film",
+  "host": "unrelated contemporary plaster mixed-use environment with Granular Concrete paving",
+  "result": "structural-pass-visual-reject",
+  "evidence": {
+    "surfaceWaterFieldSha256": "c9072827361901ab4c072e97cabc55922ce8520c2c36d2454284863a54514712",
+    "receiverAppearanceSha256": "cdb66bb19e86079ea790577f0292ea555dc196429703e70895cf04e1d679c091",
+    "contactSheetFileSha256": "ae7b06eef00f68e1452cd1fce74471e8cc5877ae07648cf1c90fbd9298f8e434",
+    "cinematicGates": {
+      "passed": 5,
+      "total": 5
+    },
+    "activeCellCount": 3654,
+    "dampCellCount": 3654,
+    "porousDampAreaSquareMeters": 52.315200000001155,
+    "coherentFilmCellCount": 0,
+    "coherentFilmAreaSquareMeters": 0,
+    "sceneGlobalNormalizationUsed": false,
+    "cellRoughnessMultiplier": {
+      "minimum": 0.78,
+      "median": 0.82,
+      "p90": 0.84,
+      "maximum": 0.944
+    },
+    "puddleProjectedAreaSquareMeters": 2.894400000000019,
+    "puddleVolumeCubicMeters": 0.002290209275070598,
+    "preCorrectionComparison": {
+      "ssim": 0.957684,
+      "psnrDb": 30.911078
+    },
+    "nativeBlender": {
+      "version": "4.5.13 LTS",
+      "focusedWitness": "SURFACE_WATER_RECEIVER_APPEARANCE_PASS"
+    }
+  },
+  "accepted": [
+    "porous dampness, coherent microfilm and macroscopic puddles have separate owners",
+    "receiver appearance is exact-field, geometry, transform and material-response bound",
+    "absorbed-only, below-asperity and puddle-overlap coherent coverage fail closed",
+    "coherent interface uses declared water IOR and receiver-conformal normals",
+    "receiver-wide polished response from universal coat and hydraulic roughness reuse is removed"
+  ],
+  "rejected": [
+    "photographic or publication-ready environment quality",
+    "material-specific measured concrete damp-response calibration",
+    "current small-puddle darkness and atmospheric integration",
+    "simplified facade, glazing, inhabited interior and precipitation integration"
+  ],
+  "nextReusableGap": "measured or reference-calibrated homogeneous concrete response and richer multi-scale construction/weathering, followed by facade, glazing, interior-density and precipitation integration",
+  "benchmarkRole": "audit consumer only; no benchmark-specific tuning was performed",
+  "productionClothingQueue": "unchanged behind the active reusable environment/material tranche"
+}

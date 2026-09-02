@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { canonicalSha256 } from '../assets/sources/cache.js';
 import { geometryAssetSchema, type GeometryAsset, type Vec3 } from '../geometry/model.js';
+import { surfaceWaterReceiverAppearanceResponseSchema } from '../materials/model.js';
 import { sceneTransformSchema, type SceneTransform } from '../interactions/model.js';
 
 const identifier = z.string().regex(/^[a-z][a-z0-9-]*(?:\.[a-z0-9-]+)*$/);
@@ -27,6 +28,7 @@ export const surfaceWaterMaterialResponseSchema = z.object({
     multiplier: z.number().min(0).max(1),
     floor: z.number().min(0).max(1),
   }),
+  receiverAppearance: surfaceWaterReceiverAppearanceResponseSchema.optional(),
   splash: z.object({
     minimumFreeWaterDepthMeters: z.number().nonnegative().max(0.02),
     maximumSlopeDegrees: z.number().min(0).max(90),
@@ -185,6 +187,7 @@ export const surfaceWaterFieldSchema = z.object({
     }),
   ),
   materialResponsesSha256: sha256,
+  materialResponses: z.record(localIdentifier, surfaceWaterMaterialResponseSchema).optional(),
   cells: z.array(surfaceWaterCellSchema),
   massBalance: z.object({
     incidentCubicMeters: z.number().nonnegative(),
@@ -232,6 +235,11 @@ export function verifyStaticSurfaceWaterField(value: unknown) {
     issues.push(
       `surface-water field hash mismatch: expected ${expectedFieldSha256}, got ${fieldSha256}`,
     );
+  if (
+    field.materialResponses &&
+    canonicalSha256(field.materialResponses) !== field.materialResponsesSha256
+  )
+    issues.push('surface-water embedded material responses do not match their declared hash');
   const accounted =
     field.massBalance.absorbedCubicMeters +
     field.massBalance.filmCubicMeters +
@@ -257,6 +265,11 @@ export function verifyStaticSurfaceWaterFieldV2(value: unknown) {
     issues.push(
       `surface-water v2 field hash mismatch: expected ${expectedFieldSha256}, got ${fieldSha256}`,
     );
+  if (
+    field.materialResponses &&
+    canonicalSha256(field.materialResponses) !== field.materialResponsesSha256
+  )
+    issues.push('surface-water v2 embedded material responses do not match their declared hash');
   const { routingSha256, ...routingWithoutHash } = field.routing;
   const expectedRoutingSha256 = canonicalSha256(routingWithoutHash);
   if (routingSha256 !== expectedRoutingSha256)
@@ -853,6 +866,9 @@ export function compileStaticSurfaceWater(
       }),
     ),
     materialResponsesSha256,
+    ...(Object.values(materialResponses).some((response) => response.receiverAppearance)
+      ? { materialResponses }
+      : {}),
     cells: working.map((item) => item.cell),
     massBalance: {
       incidentCubicMeters,

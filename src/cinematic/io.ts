@@ -42,6 +42,8 @@ export function rebaseCinematicSceneDependencies(
       entity.productionCharacterBindingPath = rebase(entity.productionCharacterBindingPath);
     if (entity.surfaceWaterFieldPath)
       entity.surfaceWaterFieldPath = rebase(entity.surfaceWaterFieldPath);
+    if (entity.surfaceWaterReceiverAppearancePath)
+      entity.surfaceWaterReceiverAppearancePath = rebase(entity.surfaceWaterReceiverAppearancePath);
     if (entity.surfaceHistoryFieldPath)
       entity.surfaceHistoryFieldPath = rebase(entity.surfaceHistoryFieldPath);
     if (entity.surfaceWaterOpticalSurfacePath)

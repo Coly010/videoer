@@ -8,6 +8,7 @@ import { sha256File } from '../src/assets/library.js';
 import {
   createPavingSurfaceWaterField,
   createSurfaceWaterOpticalSurface,
+  createSurfaceWaterReceiverAppearance,
   rebindCinematicSurfaceWaterReceiver,
   rebindSurfaceWaterAssemblyProfile,
   surfaceWaterAssemblyProfileSchema,
@@ -48,6 +49,19 @@ describe('paving surface-water assembly', () => {
       (material) => material.id === targets.continuousJoint,
     )!;
     jointMaterial.surface = createPavingGranularSurfaceMaterial('natural-grit');
+    const receiverAppearance = {
+      model: 'porous-damp-coherent-film-v1' as const,
+      saturatedBaseColorMultiplier: 0.9,
+      saturatedRoughnessMultiplier: 0.82,
+      asperityEnvelopeMeters: 0.0007,
+      coherenceTransitionMeters: 0.0002,
+      maximumCoherentFilmCoverage: 1,
+      waterIor: 1.333,
+      interfaceRoughness: 0.12,
+      normalMode: 'receiver-conformal' as const,
+      evidence: { basis: 'heuristic-prior' as const, reference: 'contract-test calibration' },
+    };
+    jointMaterial.surface.surfaceWaterResponse!.receiverAppearance = receiverAppearance;
     const geometryPath = await saveGeometry(join(directory, 'paving.json'), generated.geometry);
     const vfxPath = await saveAtmosphericVfx(join(directory, 'rain.json'), createRainyDuskVfx());
     const targetClass = (materialId: string) => {
@@ -74,6 +88,7 @@ describe('paving surface-water assembly', () => {
               maximumPuddleDepthMeters: 0.02,
             },
             wetRoughness: { dry: material.roughness, multiplier: 0.38, floor: 0.05 },
+            receiverAppearance,
             splash: { minimumFreeWaterDepthMeters: 0.0003, maximumSlopeDegrees: 10 },
           },
         ]),
@@ -177,6 +192,18 @@ describe('paving surface-water assembly', () => {
     expect(routed.field.cells).toEqual(result.field.cells);
     expect(routed.field.massBalance).toEqual(result.field.massBalance);
     expect(routed.field.routing.nodes).toHaveLength(routed.field.cells.length);
+    expect(routed.field.materialResponses).toBeDefined();
+    const receiverAppearancePath = join(directory, 'surface-water-receiver-appearance.json');
+    const compiledAppearance = await createSurfaceWaterReceiverAppearance({
+      surfaceWaterFieldPath: routed.path,
+      assemblyProfilePath: sourceProfilePath,
+      outputPath: receiverAppearancePath,
+      id: 'environment.contemporary-paver-receiver-appearance',
+    });
+    expect(compiledAppearance.appearance).toMatchObject({
+      sourceFieldSha256: routed.field.fieldSha256,
+      report: { activeCellCount: routed.field.cells.length, sceneGlobalNormalizationUsed: false },
+    });
     const routedOptical = await createSurfaceWaterOpticalSurface({
       surfaceWaterFieldPath: routed.path,
       outputPath: join(directory, 'surface-water-v2-optical.json'),
@@ -320,6 +347,32 @@ describe('paving surface-water assembly', () => {
       },
     });
 
+    const cliAppearancePath = join(directory, 'cli-surface-water-receiver-appearance.json');
+    const cliAppearanceResult = await exec(process.execPath, [
+      '--import',
+      'tsx',
+      resolve('src/cli.ts'),
+      '--json',
+      'environment',
+      'create-surface-water-receiver-appearance',
+      result.path,
+      sourceProfilePath,
+      cliAppearancePath,
+      '--id',
+      'environment.contemporary-paver-cli-receiver-appearance',
+    ]);
+    expect(JSON.parse(cliAppearanceResult.stdout)).toMatchObject({
+      ok: true,
+      command: 'environment.create-surface-water-receiver-appearance',
+      data: {
+        appearance: {
+          sourceFieldSha256: result.field.fieldSha256,
+          report: { sceneGlobalNormalizationUsed: false },
+        },
+        path: cliAppearancePath,
+      },
+    });
+
     const scene = cinematicSceneSchema.parse({
       schemaVersion: 1,
       id: 'scene.surface-water-binding',
@@ -332,6 +385,7 @@ describe('paving surface-water assembly', () => {
           role: 'environment',
           geometryPath: relative(directory, geometryPath),
           surfaceWaterFieldPath: relative(directory, result.path),
+          surfaceWaterReceiverAppearancePath: relative(directory, cliAppearancePath),
           surfaceHistoryFieldPath: relative(directory, history.path),
           surfaceWaterOpticalSurfacePath: relative(directory, cliRefinedPath),
           transform: profile.receiverTransform,
@@ -379,6 +433,7 @@ describe('paving surface-water assembly', () => {
           {
             ...scene.entities[0],
             surfaceWaterFieldPath: undefined,
+            surfaceWaterReceiverAppearancePath: undefined,
             surfaceWaterOpticalSurfacePath: undefined,
           },
         ],
@@ -403,6 +458,10 @@ describe('paving surface-water assembly', () => {
           path: 'surface-water-field.json',
         }),
         expect.objectContaining({
+          role: 'surface-water-receiver-appearance:receiver',
+          path: 'cli-surface-water-receiver-appearance.json',
+        }),
+        expect.objectContaining({
           role: 'surface-water-optical:receiver',
           path: 'cli-surface-water-optical-v2.json',
         }),
@@ -418,6 +477,7 @@ describe('paving surface-water assembly', () => {
       receiverEntityId: 'receiver',
       pavingGeometryPath: geometryPath,
       surfaceWaterFieldPath: routed.path,
+      surfaceWaterReceiverAppearancePath: compiledAppearance.path,
       surfaceWaterOpticalSurfacePath: routedOptical.path,
       outputScenePath: join(directory, 'routed-scene.json'),
       sceneId: 'scene.surface-water-v2-binding',
@@ -428,6 +488,9 @@ describe('paving surface-water assembly', () => {
     expect(resolve(directory, routedScene.scene.entities[0]!.surfaceWaterOpticalSurfacePath!)).toBe(
       resolve(routedOptical.path),
     );
+    expect(
+      resolve(directory, routedScene.scene.entities[0]!.surfaceWaterReceiverAppearancePath!),
+    ).toBe(resolve(compiledAppearance.path));
     expect(routedScene.scene.entities[0]!.surfaceHistoryFieldPath).toBeUndefined();
     expect(await verifyCinematicScene(routedScene.scene, routedScene.path)).toMatchObject({
       status: 'pass',

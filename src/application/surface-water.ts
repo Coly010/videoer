@@ -2,6 +2,7 @@ import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
 import { dirname, relative, resolve } from 'node:path';
 import { z } from 'zod';
 import { sha256File } from '../assets/library.js';
+import { canonicalSha256 } from '../assets/sources/cache.js';
 import {
   compileStaticSurfaceWater,
   surfaceWaterMaterialResponseSchema,
@@ -21,6 +22,10 @@ import {
   verifySurfaceWaterOpticalSurface,
   type SurfaceWaterOpticalSurfaceOptions,
 } from '../environments/surface-water-surface.js';
+import {
+  compileSurfaceWaterReceiverAppearance,
+  verifySurfaceWaterReceiverAppearance,
+} from '../environments/surface-water-appearance.js';
 import {
   loadCinematicScene,
   portableCinematicDependencyPath,
@@ -207,6 +212,7 @@ export async function createPavingSurfaceWaterField(
         multiplier: response.wetRoughness.multiplier,
         floor: response.wetRoughness.floor,
       },
+      ...(response.receiverAppearance ? { receiverAppearance: response.receiverAppearance } : {}),
       splash: response.splash,
     });
     embeddedResponseMaterialIds.push(materialId);
@@ -431,11 +437,65 @@ export async function createSurfaceWaterOpticalSurface(options: {
   };
 }
 
+export async function createSurfaceWaterReceiverAppearance(options: {
+  surfaceWaterFieldPath: string;
+  assemblyProfilePath: string;
+  outputPath: string;
+  id: string;
+}) {
+  const fieldPath = resolve(options.surfaceWaterFieldPath);
+  const profilePath = resolve(options.assemblyProfilePath);
+  const [fieldValue, profile] = await Promise.all([
+    readFile(fieldPath, 'utf8').then((value) => JSON.parse(value)),
+    loadSurfaceWaterAssemblyProfile(profilePath),
+  ]);
+  const fieldVerification =
+    fieldValue.schemaVersion === 2
+      ? verifyStaticSurfaceWaterFieldV2(fieldValue)
+      : verifyStaticSurfaceWaterField(fieldValue);
+  if (!fieldVerification.valid)
+    throw new Error(
+      `surface-water receiver-appearance source field is invalid: ${fieldVerification.issues.join('; ')}`,
+    );
+  const materialResponses = fieldVerification.field.materialResponses ?? profile.materialResponses;
+  if (fieldVerification.field.materialResponses)
+    for (const [materialId, profileResponse] of Object.entries(profile.materialResponses)) {
+      const embeddedResponse = fieldVerification.field.materialResponses[materialId];
+      if (
+        !embeddedResponse ||
+        canonicalSha256(embeddedResponse) !== canonicalSha256(profileResponse)
+      )
+        throw new Error(
+          `surface-water receiver-appearance profile response '${materialId}' differs from the exact field response`,
+        );
+    }
+  const appearance = compileSurfaceWaterReceiverAppearance(
+    fieldVerification.field,
+    materialResponses,
+    options.id,
+  );
+  const verification = verifySurfaceWaterReceiverAppearance(appearance, fieldVerification.field);
+  if (!verification.valid)
+    throw new Error(
+      `surface-water receiver appearance is invalid: ${verification.issues.join('; ')}`,
+    );
+  const path = await writeJsonAtomically(options.outputPath, appearance);
+  return {
+    appearance,
+    path,
+    sourceFieldPath: fieldPath,
+    sourceFieldFileSha256: await sha256File(fieldPath),
+    assemblyProfilePath: profilePath,
+    assemblyProfileFileSha256: await sha256File(profilePath),
+  };
+}
+
 export async function rebindCinematicSurfaceWaterReceiver(options: {
   sourceScenePath: string;
   receiverEntityId: string;
   pavingGeometryPath: string;
   surfaceWaterFieldPath: string;
+  surfaceWaterReceiverAppearancePath?: string;
   surfaceHistoryFieldPath?: string;
   surfaceWaterOpticalSurfacePath?: string;
   outputScenePath: string;
@@ -473,6 +533,21 @@ export async function rebindCinematicSurfaceWaterReceiver(options: {
     );
   entity.geometryPath = portableCinematicDependencyPath(outputScenePath, geometryPath);
   entity.surfaceWaterFieldPath = portableCinematicDependencyPath(outputScenePath, fieldPath);
+  if (options.surfaceWaterReceiverAppearancePath) {
+    const appearancePath = resolve(options.surfaceWaterReceiverAppearancePath);
+    const appearanceVerification = verifySurfaceWaterReceiverAppearance(
+      JSON.parse(await readFile(appearancePath, 'utf8')),
+      field,
+    );
+    if (!appearanceVerification.valid)
+      throw new Error(
+        `surface-water receiver appearance is invalid: ${appearanceVerification.issues.join('; ')}`,
+      );
+    entity.surfaceWaterReceiverAppearancePath = portableCinematicDependencyPath(
+      outputScenePath,
+      appearancePath,
+    );
+  } else delete entity.surfaceWaterReceiverAppearancePath;
   if (options.surfaceHistoryFieldPath) {
     if (field.schemaVersion !== 2)
       throw new Error('surface-history v2/v3 binding requires a surface-water v2 field');

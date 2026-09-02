@@ -91,6 +91,14 @@ export async function fingerprintCinematicScene(sceneFile: string) {
             },
           ]
         : []),
+      ...(entity.surfaceWaterReceiverAppearancePath
+        ? [
+            {
+              role: `surface-water-receiver-appearance:${entity.id}`,
+              path: resolve(directory, entity.surfaceWaterReceiverAppearancePath),
+            },
+          ]
+        : []),
       ...(entity.surfaceHistoryFieldPath
         ? [
             {
@@ -161,6 +169,11 @@ export async function fingerprintCinematicScene(sceneFile: string) {
         : {}),
       ...(entity.surfaceWaterFieldPath
         ? { surfaceWaterFieldPath: `artifact:surface-water:${entity.id}` }
+        : {}),
+      ...(entity.surfaceWaterReceiverAppearancePath
+        ? {
+            surfaceWaterReceiverAppearancePath: `artifact:surface-water-receiver-appearance:${entity.id}`,
+          }
         : {}),
       ...(entity.surfaceHistoryFieldPath
         ? { surfaceHistoryFieldPath: `artifact:surface-history:${entity.id}` }

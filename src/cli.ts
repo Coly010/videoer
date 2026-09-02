@@ -73,6 +73,7 @@ import {
 import {
   createPavingSurfaceWaterField,
   createSurfaceWaterOpticalSurface,
+  createSurfaceWaterReceiverAppearance,
   loadSurfaceWaterAssemblyProfile,
   rebindCinematicSurfaceWaterReceiver,
   rebindSurfaceWaterAssemblyProfile,
@@ -1390,6 +1391,10 @@ environment
   .argument('<output-scene>')
   .requiredOption('--id <scene-id>', 'stable identity for the derived transfer scene')
   .option('--optical-surface <path>', 'exact smooth optical surface derived from the water field')
+  .option(
+    '--receiver-appearance <path>',
+    'exact porous-damp/coherent-film appearance derived from the water field',
+  )
   .option('--surface-history <path>', 'exact causal surface-history field derived from water v2')
   .description('derive a scene with an exact geometry/transform-bound surface-water receiver')
   .action(async function (
@@ -1398,13 +1403,21 @@ environment
     pavingGeometry: string,
     surfaceWaterField: string,
     outputScene: string,
-    options: { id: string; opticalSurface?: string; surfaceHistory?: string },
+    options: {
+      id: string;
+      opticalSurface?: string;
+      receiverAppearance?: string;
+      surfaceHistory?: string;
+    },
   ) {
     const data = await rebindCinematicSurfaceWaterReceiver({
       sourceScenePath: sourceScene,
       receiverEntityId,
       pavingGeometryPath: pavingGeometry,
       surfaceWaterFieldPath: surfaceWaterField,
+      ...(options.receiverAppearance
+        ? { surfaceWaterReceiverAppearancePath: options.receiverAppearance }
+        : {}),
       ...(options.surfaceHistory ? { surfaceHistoryFieldPath: options.surfaceHistory } : {}),
       ...(options.opticalSurface ? { surfaceWaterOpticalSurfacePath: options.opticalSurface } : {}),
       outputScenePath: outputScene,
@@ -1546,6 +1559,35 @@ environment
       data,
       (result) =>
         `✓ ${result.field.cells.length} receiver cells received causal construction history → ${result.path}`,
+    );
+  });
+environment
+  .command('create-surface-water-receiver-appearance')
+  .argument('<surface-water-field>')
+  .argument('<assembly-profile>')
+  .argument('<output-appearance>')
+  .requiredOption('--id <appearance-id>', 'stable receiver-appearance identity')
+  .description(
+    'derive exact porous dampness and material-calibrated coherent film independently from puddles',
+  )
+  .action(async function (
+    surfaceWaterField: string,
+    assemblyProfile: string,
+    outputAppearance: string,
+    options: { id: string },
+  ) {
+    const data = await createSurfaceWaterReceiverAppearance({
+      surfaceWaterFieldPath: surfaceWaterField,
+      assemblyProfilePath: assemblyProfile,
+      outputPath: outputAppearance,
+      id: options.id,
+    });
+    output(
+      this,
+      'environment.create-surface-water-receiver-appearance',
+      data,
+      (result) =>
+        `✓ ${result.appearance.report.dampCellCount} damp cells and ${result.appearance.report.coherentFilmCellCount} coherent-film cells → ${result.path}`,
     );
   });
 environment

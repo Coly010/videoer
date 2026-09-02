@@ -28,6 +28,7 @@ export async function rebindCinematicEntityGeometry(options: {
   const entity = matches[0]!;
   if (
     entity.surfaceWaterFieldPath ||
+    entity.surfaceWaterReceiverAppearancePath ||
     entity.surfaceHistoryFieldPath ||
     entity.surfaceWaterOpticalSurfacePath
   )

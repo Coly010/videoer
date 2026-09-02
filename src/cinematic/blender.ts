@@ -113,6 +113,14 @@ async function prepareCinematicRender(sceneFile: string, outputDirectory: string
             }
           : {}),
         ...(waterPath ? { surfaceWaterFieldPath: waterPath } : {}),
+        ...(entity.surfaceWaterReceiverAppearancePath
+          ? {
+              surfaceWaterReceiverAppearancePath: resolve(
+                sourceDirectory,
+                entity.surfaceWaterReceiverAppearancePath,
+              ),
+            }
+          : {}),
         ...(historyPath
           ? {
               surfaceHistoryFieldPath: historyPath,
