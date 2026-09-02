@@ -25,6 +25,7 @@ def load_module(filename, name):
 
 motion_probe = load_module("render_motion_probe.py", "videoer_cc0_reel_motion_probe")
 rigify_adapter = load_module("render_mpfb_motion_probe.py", "videoer_cc0_reel_rigify")
+character_assembly = load_module("production_character_assembly.py", "videoer_cc0_reel_assembly")
 geometry_probe = motion_probe.geometry_probe
 
 
@@ -32,8 +33,8 @@ def arguments():
     if "--" not in sys.argv:
         raise RuntimeError("Expected geometry, source FBX and output after --")
     values = sys.argv[sys.argv.index("--") + 1 :]
-    if len(values) != 3:
-        raise RuntimeError("Usage: render_cc0_rigify_action_reel.py -- geometry.json source.fbx output")
+    if len(values) not in (3, 4):
+        raise RuntimeError("Usage: render_cc0_rigify_action_reel.py -- geometry.json source.fbx output [character-binding.json]")
     return tuple(os.path.abspath(value) for value in values)
 
 
@@ -145,13 +146,31 @@ def remove_source(source):
 
 
 def main():
-    geometry_file, source_file, output = arguments()
+    values = arguments()
+    geometry_file, source_file, output = values[:3]
+    binding_file = values[3] if len(values) == 4 else None
     os.makedirs(output, exist_ok=True)
     with open(geometry_file, encoding="utf-8") as handle:
         asset = json.load(handle)
     source = import_source(source_file)
     mpfb_module = rigify_adapter.enable_backends()
     target, mesh = rigify_adapter.create_rigged_human(mpfb_module, asset, clear_scene=False)
+    assembly_report = None
+    if binding_file:
+        with open(binding_file, encoding="utf-8") as handle:
+            binding = json.load(handle)
+        profile_path = character_assembly.component_path(binding_file, binding["rigProfile"])
+        with open(profile_path, encoding="utf-8") as handle:
+            profile = json.load(handle)
+        definition = {
+            "id": binding["character"]["id"],
+            "geometryPath": geometry_file,
+            "productionRigProfilePath": profile_path,
+            "productionCharacterBindingPath": binding_file,
+        }
+        _objects, assembly_report = character_assembly.assemble(
+            definition, asset, target, mesh, profile, rigify_adapter.geometry_probe
+        )
     scene, camera, _, _ = geometry_probe.configure_scene(asset, output)
     scene.render.engine = "BLENDER_EEVEE_NEXT"
     scene.render.resolution_x, scene.render.resolution_y = 512, 512
@@ -178,7 +197,7 @@ def main():
     bpy.context.preferences.filepaths.save_version = 0
     bpy.ops.wm.save_as_mainfile(filepath=os.path.join(output, "cc0-rigify-action-reel.blend"))
     with open(os.path.join(output, "cc0-rigify-action-reel-report.json"), "w", encoding="utf-8") as handle:
-        json.dump({"schemaVersion": 1, "status": "experimental-not-accepted", "authoring": "cc0-full-source-to-native-rigify-fk-v1", "canonicalMotionUsed": False, "source": source_file, "geometry": geometry_file, "blender": bpy.app.version_string, "actions": reports}, handle, indent=2)
+        json.dump({"schemaVersion": 1, "status": "experimental-not-accepted", "authoring": "cc0-full-source-to-native-rigify-fk-v1", "canonicalMotionUsed": False, "source": source_file, "geometry": geometry_file, "characterBinding": binding_file, "assembly": assembly_report, "blender": bpy.app.version_string, "actions": reports}, handle, indent=2)
         handle.write("\n")
 
 
