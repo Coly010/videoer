@@ -217,7 +217,7 @@ projects/project-name/
   output/              versioned delivery renders and final.mp4
 ```
 
-A `source/campaign.yaml` under a directory containing `project.yaml` is a project campaign. The normal render command automatically delivers `render-###.mp4` and `final.mp4` to that project's `output/` directory; all other campaign material remains in `source/`. See [projects/README.md](projects/README.md) for usage and conventions.
+A `source/campaign.yaml` under a directory containing `project.yaml` is a project campaign. The normal render command automatically delivers `render-###.mp4` and `final.mp4` to that project's `output/` directory; all other campaign material remains in `source/`. The entire `projects/` tree is intentionally Git-ignored because it may contain client source material and delivery media.
 
 ## Codex usage example
 

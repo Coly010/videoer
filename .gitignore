@@ -16,8 +16,5 @@ __pycache__/
 .videoer-cache/
 campaigns/**/work/
 /work/
-projects/**/source/generated/
-projects/**/source/inspection/
-projects/**/source/reports/
-projects/**/source/campaign-state.json
-projects/**/source/work/
+# Real projects are local client work. Never publish their source material or deliveries.
+/projects/
