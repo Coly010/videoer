@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "status": "rejected",
+  "publicationAllowed": false,
+  "scope": "fixed-state native Blender isolation of every surface-history v2 material-response channel",
+  "targetedSubsystemVerdict": {
+    "channelAttribution": "pass",
+    "receiverFootprintMeasurement": "pass",
+    "realTransferSpatialDiscrimination": "reject",
+    "productionEnvironmentVisualAcceptance": "reject"
+  },
+  "fixture": {
+    "activeCellCount": 64,
+    "receiverPixelCount": 12988,
+    "method": "fixed-state-packed-field-single-channel-v1",
+    "controlSha256": "8b6de28bed9aff21b2a9583bea9b0d91e775040c6494577774dbe9fb55eee7d8",
+    "combinedSha256": "fcf42530ca108bc6fb8ba7d5ab285091eac2ba705bbe8f5aa1c6c317401b4ef8",
+    "combinedMeanAbsoluteLinearDifference": 0.058495124363915525
+  },
+  "isolatedChannelEvidence": {
+    "trafficWear": {
+      "sha256": "e54363ab23421b19bddacd86a6844521fa1ab7ee7c85c8e1a684e62823efc6e0",
+      "receiverMeanAbsoluteLinearDifference": 0.007929797948306174,
+      "affectedPixelFraction": 0.2875731444410225
+    },
+    "longTermExposure": {
+      "sha256": "f4780a8b92060a3a306362c40e354a853861e8e1a9a8b202af78e3df924992af",
+      "receiverMeanAbsoluteLinearDifference": 0.01463070105519977,
+      "affectedPixelFraction": 0.3794271635355713
+    },
+    "runoffStaining": {
+      "sha256": "a6ae4f2d3896fcc7c1d82cd6520567408191da3946d3df08c462a7e9614c15db",
+      "receiverMeanAbsoluteLinearDifference": 0.01308125587609159,
+      "affectedPixelFraction": 0.23367724052971975
+    },
+    "repairInfluence": {
+      "sha256": "a1bd8182fd1a50f80d4322f6aa39e0dbe89a5facbbcee8ec9f5936040065ecb3",
+      "receiverMeanAbsoluteLinearDifference": 0.005054137152930865,
+      "affectedPixelFraction": 0.15075454265475824
+    },
+    "looseDirt": {
+      "sha256": "0039087c5a7b0d34613801208887297e5d0f9ac883ab57875522bfde7d3674c7",
+      "receiverMeanAbsoluteLinearDifference": 0.032285809908519175,
+      "affectedPixelFraction": 0.5091623036649214
+    },
+    "persistentDirt": {
+      "sha256": "3429757eccc7bf988f2209e756c9f33d7fbfd8622ce78de34ab27a9d3eaba436",
+      "receiverMeanAbsoluteLinearDifference": 0.007360942152360047,
+      "affectedPixelFraction": 0.29781336618417
+    }
+  },
+  "acceptedEvidence": [
+    "geometry, camera, light, material and receiver footprint remain fixed across all eight renders",
+    "each isolated render retains one packed causal channel and zeros the other five",
+    "all eight artifact hashes are distinct",
+    "metrics are restricted to the rendered receiver alpha footprint rather than diluted by the background",
+    "the fixture gives traffic, exposure, runoff, repair, loose dirt and persistent dirt independent spatial shapes"
+  ],
+  "blockingFindings": [
+    "the real historic and contemporary v2 fields remain visually rejected even though every renderer channel is independently live",
+    "legacy Gaussian traffic tails make roughly 77 to 79 percent of transfer cells nonzero",
+    "open-sky exposure truthfully reaches one across most paving, but the old response channel does not distinguish raw exposure from shelter protection or accumulated age",
+    "runoff throughflow and retained edge or puddle water share one hard-clipped two-millimetre response, destroying high-dose ordering",
+    "response-isolation success cannot publish a material, environment or campaign"
+  ],
+  "nextGenericChange": "Introduce a separately versioned surface-history v3 with compact-support traffic, half-response parameters, raw rain exposure and shelter protection, split throughflow and retained-water response, unchanged exact water-v2 routing, and mass-equivalent dirt transport.",
+  "queuedReusableWork": {
+    "productionClothing": "Remains queued behind the current higher-priority reusable environment/material work: garment panels and pattern construction, seams, hems, thickness, shoulder and armhole quality, base weights and correctives, folds and wrinkles, cloth materials, selective simulation, and temporal verification. This is reusable-system work, not benchmark-specific polishing."
+  },
+  "notes": "This is diagnostic evidence only. It neither changes nor rerenders the benchmark."
+}

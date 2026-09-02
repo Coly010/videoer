@@ -33,9 +33,11 @@ Acceptance requires:
 - analytic traffic falloff, channel independence and zero traffic when no path is declared;
 - exact reuse of water exposure/runoff rather than parallel shelter or drainage solvers;
 - scene fingerprinting and verification of field bytes and semantic identities;
-- native Blender rejection of stale topology/ranges and a semantic/control render pair with measurable decoded-pixel change;
+- native Blender rejection of stale topology/ranges plus a fixed-state control, six single-channel response renders and a combined render; every isolated render changes only its declared causal channel, has a distinct hash and produces a measurable receiver-footprint pixel response;
 - exact source-water routing identity and schema compatibility, one-pass downstream transport, non-negative mass channels, per-cell `initial + incoming = final + outflow`, and whole-field `input = persistent + loose + exported`;
 - transfer through unrelated historic and contemporary paving receivers before visual publication.
+
+A non-zero whole-frame difference proves renderer consumption only. It does not prove channel attribution, spatial discrimination or visual quality. Fixed-state isolation evidence and qualitative transfer review remain separate requirements.
 
 ## Consequences
 
