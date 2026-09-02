@@ -79,6 +79,16 @@ const textureMacroVariationSchema = z
       });
   });
 
+export const textureUnitVariationSchema = z.object({
+  kind: z.literal('vertex-scalar-attributes-v1'),
+  valueAttribute: z.literal('videoer_unit_value_variation'),
+  roughnessAttribute: z.literal('videoer_unit_roughness_variation'),
+  weatheringAttribute: z.literal('videoer_unit_weathering_variation'),
+  valueAmplitude: z.number().min(0).max(0.25),
+  roughnessAmplitude: z.number().min(0).max(0.2),
+  weatheringAmplitude: z.number().min(0).max(0.75),
+});
+
 export const textureMaterialPlacementSchema = z.object({
   scalePolicy: z.literal('preserve-source-physical-scale'),
   orientation: z.enum([
@@ -91,12 +101,25 @@ export const textureMaterialPlacementSchema = z.object({
   rotationDegrees: z.number().min(-180).max(180),
   appearance: boundedTextureAppearanceSchema,
   macroVariation: textureMacroVariationSchema,
+  unitVariation: textureUnitVariationSchema.optional(),
 });
 
-export const textureMaterialApplicationSchema = z.object({
-  constructionDomain: constructionDomainSchema,
-  placement: textureMaterialPlacementSchema,
-});
+export const textureMaterialApplicationSchema = z
+  .object({
+    constructionDomain: constructionDomainSchema,
+    placement: textureMaterialPlacementSchema,
+  })
+  .superRefine((application, context) => {
+    if (
+      application.placement.unitVariation &&
+      application.constructionDomain !== 'modeled-paving-unit'
+    )
+      context.addIssue({
+        code: 'custom',
+        path: ['placement', 'unitVariation'],
+        message: 'unit variation attributes are only valid on modeled paving units',
+      });
+  });
 
 export const hashBoundTextureMapSetSchema = z
   .object({

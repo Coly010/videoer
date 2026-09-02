@@ -197,6 +197,26 @@ def validated_texture_application(texture_maps):
         amplitudes.append(number(macro.get(field), f"macroVariation.{field}", 0, maximum))
     if not any(amplitudes):
         raise RuntimeError("Texture application requires at least one macro variation amplitude")
+    unit = placement.get("unitVariation")
+    if unit is not None:
+        if domain != "modeled-paving-unit":
+            raise RuntimeError("Unit variation attributes are only valid on modeled paving units")
+        if unit.get("kind") != "vertex-scalar-attributes-v1":
+            raise RuntimeError("Texture unit variation has an unsupported attribute contract")
+        expected_attributes = {
+            "valueAttribute": "videoer_unit_value_variation",
+            "roughnessAttribute": "videoer_unit_roughness_variation",
+            "weatheringAttribute": "videoer_unit_weathering_variation",
+        }
+        for field, expected in expected_attributes.items():
+            if unit.get(field) != expected:
+                raise RuntimeError(f"Texture unit variation {field} must be '{expected}'")
+        for field, maximum in (
+            ("valueAmplitude", 0.25),
+            ("roughnessAmplitude", 0.2),
+            ("weatheringAmplitude", 0.75),
+        ):
+            number(unit.get(field), f"unitVariation.{field}", 0, maximum)
     return application
 
 
@@ -463,6 +483,18 @@ def configure_texture_map_nodes(material, principled, surface, asset_directory):
     signed_macro = math_node(
         "SUBTRACT", doubled_noise, 1.0, "videoer-application-macro-signed"
     )
+    unit = placement.get("unitVariation")
+    unit_outputs = {}
+    if unit:
+        for semantic, field in (
+            ("value", "valueAttribute"),
+            ("roughness", "roughnessAttribute"),
+            ("weathering", "weatheringAttribute"),
+        ):
+            attribute = nodes.new("ShaderNodeAttribute")
+            attribute.name = f"videoer-unit-{semantic}-attribute"
+            attribute.attribute_name = unit[field]
+            unit_outputs[semantic] = attribute.outputs["Fac"]
 
     base_color_output = image_nodes["base-color"]
     if "ambient-occlusion" in image_nodes:
@@ -494,6 +526,12 @@ def configure_texture_map_nodes(material, principled, surface, asset_directory):
         "MULTIPLY", signed_macro, macro["valueAmplitude"],
         "videoer-application-macro-value-amplitude",
     )
+    if unit:
+        unit_value = math_node(
+            "MULTIPLY", unit_outputs["value"], unit["valueAmplitude"],
+            "videoer-application-unit-value-amplitude",
+        )
+        macro_value = math_node("ADD", macro_value, unit_value)
     macro_value = math_node("ADD", macro_value, 1.0)
     value = math_node(
         "MULTIPLY", macro_value, 2.0 ** appearance["exposureStops"],
@@ -515,6 +553,12 @@ def configure_texture_map_nodes(material, principled, surface, asset_directory):
         "ADD", weather_macro, appearance["weatheringAmount"],
         "videoer-application-weathering-amount",
     )
+    if unit:
+        unit_weathering = math_node(
+            "MULTIPLY", unit_outputs["weathering"], unit["weatheringAmplitude"],
+            "videoer-application-unit-weathering-amplitude",
+        )
+        weather_amount = math_node("ADD", weather_amount, unit_weathering)
     weather_clamp = nodes.new("ShaderNodeClamp")
     weather_clamp.name = "videoer-application-weathering"
     weather_clamp.inputs["Min"].default_value = 0.0
@@ -542,6 +586,12 @@ def configure_texture_map_nodes(material, principled, surface, asset_directory):
         "MULTIPLY", signed_macro, macro["roughnessAmplitude"],
         "videoer-application-macro-roughness-amplitude",
     )
+    if unit:
+        unit_roughness = math_node(
+            "MULTIPLY", unit_outputs["roughness"], unit["roughnessAmplitude"],
+            "videoer-application-unit-roughness-amplitude",
+        )
+        macro_roughness = math_node("ADD", macro_roughness, unit_roughness)
     roughness_modulated = math_node("ADD", roughness_offset, macro_roughness)
     weather_roughness = math_node("MULTIPLY", weather_clamp.outputs["Result"], 0.12)
     roughness_modulated = math_node("ADD", roughness_modulated, weather_roughness)
@@ -660,6 +710,7 @@ def configure_texture_map_nodes(material, principled, surface, asset_directory):
             "constructionDomain": application["constructionDomain"],
             "appearance": dict(appearance),
             "macroVariation": dict(macro),
+            "unitVariation": dict(unit) if unit else None,
             "macroSeedOffset": list(seed_offset),
         },
         "wetSurfaceResponse": wet_response,
@@ -1358,6 +1409,25 @@ def create_mesh(asset, armature=None, asset_directory=None, vertex_converter=to_
     data = bpy.data.meshes.new(asset["id"])
     data.from_pydata(vertices, [], faces)
     data.update()
+    attribute_types = {
+        "float": ("FLOAT", "value"),
+        "vec2": ("FLOAT2", "vector"),
+        "vec3": ("FLOAT_VECTOR", "vector"),
+        "vec4": ("FLOAT_COLOR", "color"),
+    }
+    for name, definition in asset.get("attributes", {}).items():
+        if definition.get("interpolation") != "vertex":
+            raise RuntimeError(f"Geometry attribute '{name}' has unsupported interpolation")
+        data_type = definition.get("dataType")
+        if data_type not in attribute_types:
+            raise RuntimeError(f"Geometry attribute '{name}' has unsupported data type")
+        values = definition.get("values", [])
+        if len(values) != len(vertices):
+            raise RuntimeError(f"Geometry attribute '{name}' must contain one value per vertex")
+        blender_type, property_name = attribute_types[data_type]
+        attribute = data.attributes.new(name=name, type=blender_type, domain="POINT")
+        for index, value in enumerate(values):
+            setattr(attribute.data[index], property_name, value)
     if asset.get("metadata", {}).get("topology") == "project-owned-implicit-unified-body-v1" or asset.get("metadata", {}).get("hairClass"):
         for polygon in data.polygons:
             polygon.use_smooth = True
@@ -1380,6 +1450,17 @@ def create_mesh(asset, armature=None, asset_directory=None, vertex_converter=to_
                 f"Texture orientation '{orientation}' on material "
                 f"'{material_definition['id']}' requires one UV per vertex"
             )
+        unit_variation = texture_maps.get("application", {}).get("placement", {}).get(
+            "unitVariation"
+        ) if texture_maps else None
+        if unit_variation:
+            for field in ("valueAttribute", "roughnessAttribute", "weatheringAttribute"):
+                name = unit_variation[field]
+                definition = asset.get("attributes", {}).get(name)
+                if not definition or definition.get("dataType") != "float":
+                    raise RuntimeError(
+                        f"Texture unit variation requires float vertex attribute '{name}'"
+                    )
     if source_uvs:
         uv_layer = data.uv_layers.new(name="UVMap")
         for loop in data.loops:

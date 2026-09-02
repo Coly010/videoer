@@ -38,6 +38,16 @@ export function extractMaterialGeometry(
     ...(source.skinWeights
       ? { skinWeights: used.map((index) => source.skinWeights![index]!) }
       : {}),
+    ...(source.attributes
+      ? {
+          attributes: Object.fromEntries(
+            Object.entries(source.attributes).map(([name, attribute]) => [
+              name,
+              { ...attribute, values: used.map((index) => attribute.values[index]!) },
+            ]),
+          ),
+        }
+      : {}),
     materials: source.materials.filter((material) => selected.has(material.id)),
     materialGroups: selectedGroups.map((group) => {
       const output = { ...group, start: groupStart };

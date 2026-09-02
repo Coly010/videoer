@@ -2,7 +2,10 @@ import { randomUUID } from 'node:crypto';
 import { mkdir, rename, rm, writeFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { sha256File } from '../assets/library.js';
-import { pavingSurfaceMaterialTargetsSchema } from '../environments/irregular-paving.js';
+import {
+  pavingSurfaceMaterialTargetsSchema,
+  pavingUnitAppearanceAttributeNames,
+} from '../environments/irregular-paving.js';
 import { loadGeometry, saveGeometry } from '../geometry/io.js';
 import { loadSurfaceMaterial } from '../materials/io.js';
 import { bindSurfaceMaterial } from '../materials/adaptation.js';
@@ -195,6 +198,12 @@ export async function bindPavingUnitMaterial(options: BindPavingUnitMaterialOpti
     throw new Error(
       'Paving unit binding requires modeled-paving-unit with unit-local-uv-meters placement',
     );
+  if (application.placement.unitVariation)
+    for (const name of Object.values(pavingUnitAppearanceAttributeNames)) {
+      const attribute = geometry.attributes?.[name];
+      if (!attribute || attribute.dataType !== 'float' || attribute.interpolation !== 'vertex')
+        throw new Error(`Paving unit variation requires float vertex attribute '${name}'`);
+    }
   const surface = await loadSurfaceMaterial(sourceMaterialPath);
   const bound = (
     await bindStagedSurfaceMaterialValueToTargets({

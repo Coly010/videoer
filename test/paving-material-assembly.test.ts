@@ -99,6 +99,15 @@ describe('unit-aware paving material assembly', () => {
           roughnessAmplitude: 0.03,
           weatheringAmplitude: 0.1,
         },
+        unitVariation: {
+          kind: 'vertex-scalar-attributes-v1',
+          valueAttribute: 'videoer_unit_value_variation',
+          roughnessAttribute: 'videoer_unit_roughness_variation',
+          weatheringAttribute: 'videoer_unit_weathering_variation',
+          valueAmplitude: 0.08,
+          roughnessAmplitude: 0.06,
+          weatheringAmplitude: 0.2,
+        },
       },
     });
     const output = join(directory, 'bound/paving.json');
@@ -131,6 +140,18 @@ describe('unit-aware paving material assembly', () => {
       undefined,
     );
     expect(result.report.pavingGeometry.outputSha256).toMatch(/^[a-f0-9]{64}$/u);
+    expect(Object.keys(bound.attributes ?? {}).sort()).toEqual([
+      'videoer_unit_roughness_variation',
+      'videoer_unit_value_variation',
+      'videoer_unit_weathering_variation',
+    ]);
+    expect(
+      new Set(
+        (bound.attributes!.videoer_unit_value_variation!.values as number[]).map((value) =>
+          value.toFixed(6),
+        ),
+      ).size,
+    ).toBeGreaterThan(100);
 
     const jointPath = await saveSurfaceMaterial(
       join(directory, 'construction-materials/joint.json'),

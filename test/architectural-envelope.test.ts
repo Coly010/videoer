@@ -110,6 +110,23 @@ describe('irregular paving grammar', () => {
     expect(first.report.uniqueSurfaceFrameSignatures).toBeGreaterThan(
       first.report.stoneCount * 0.95,
     );
+    expect(Object.keys(first.geometry.attributes ?? {}).sort()).toEqual([
+      'videoer_unit_roughness_variation',
+      'videoer_unit_value_variation',
+      'videoer_unit_weathering_variation',
+    ]);
+    for (const attribute of Object.values(first.geometry.attributes ?? {})) {
+      expect(attribute.dataType).toBe('float');
+      expect(attribute.interpolation).toBe('vertex');
+      expect(attribute.values).toHaveLength(first.geometry.positions.length);
+      const values = attribute.values as number[];
+      expect(
+        values.reduce((minimum, value) => Math.min(minimum, value), Infinity),
+      ).toBeGreaterThanOrEqual(-1);
+      expect(
+        values.reduce((maximum, value) => Math.max(maximum, value), -Infinity),
+      ).toBeLessThanOrEqual(1);
+    }
     expect(first.report.unitPlanCoverageRatio).toBeGreaterThanOrEqual(
       first.definition.joints.minimumUnitCoverageRatio,
     );

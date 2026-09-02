@@ -16,6 +16,30 @@ const index4Schema = z.tuple([
   z.number().int().nonnegative(),
 ]);
 
+const geometryAttributeNameSchema = z.string().regex(/^[a-z][a-z0-9_]*$/);
+export const geometryAttributeSchema = z.discriminatedUnion('dataType', [
+  z.object({
+    dataType: z.literal('float'),
+    interpolation: z.literal('vertex'),
+    values: z.array(z.number().finite()),
+  }),
+  z.object({
+    dataType: z.literal('vec2'),
+    interpolation: z.literal('vertex'),
+    values: z.array(vec2Schema),
+  }),
+  z.object({
+    dataType: z.literal('vec3'),
+    interpolation: z.literal('vertex'),
+    values: z.array(vec3Schema),
+  }),
+  z.object({
+    dataType: z.literal('vec4'),
+    interpolation: z.literal('vertex'),
+    values: z.array(vec4Schema),
+  }),
+]);
+
 export const geometryMaterialSchema = z.object({
   id: z.string().regex(/^[a-z][a-z0-9-]*$/),
   baseColor: vec4Schema,
@@ -80,6 +104,7 @@ export const geometryAssetSchema = z
     indices: z.array(z.number().int().nonnegative()).min(3),
     skinIndices: z.array(index4Schema).optional(),
     skinWeights: z.array(vec4Schema).optional(),
+    attributes: z.record(geometryAttributeNameSchema, geometryAttributeSchema).optional(),
     materials: z.array(geometryMaterialSchema).default([]),
     materialGroups: z.array(geometryMaterialGroupSchema).default([]),
     skeleton: z.array(skeletonJointSchema).default([]),
@@ -107,6 +132,13 @@ export const geometryAssetSchema = z
           message: `${attribute} must contain one value per vertex`,
         });
     }
+    for (const [name, attribute] of Object.entries(geometry.attributes ?? {}))
+      if (attribute.values.length !== vertexCount)
+        ctx.addIssue({
+          code: 'custom',
+          path: ['attributes', name, 'values'],
+          message: `vertex attribute '${name}' must contain one value per vertex`,
+        });
     if (geometry.indices.length % 3 !== 0)
       ctx.addIssue({
         code: 'custom',
@@ -227,6 +259,7 @@ export type GeometryAsset = z.infer<typeof geometryAssetSchema>;
 export type SkeletonJoint = z.infer<typeof skeletonJointSchema>;
 export type GeometryMaterial = z.infer<typeof geometryMaterialSchema>;
 export type GeometryMorphTarget = z.infer<typeof geometryMorphTargetSchema>;
+export type GeometryAttribute = z.infer<typeof geometryAttributeSchema>;
 
 export interface GeometryValidationIssue {
   code: string;

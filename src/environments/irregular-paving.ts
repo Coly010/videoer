@@ -350,7 +350,18 @@ interface UnitSurfaceFrame {
   offsetMeters: [number, number];
   rotationDegrees: number;
   batchCell: [number, number];
+  appearanceVariation: {
+    value: number;
+    roughness: number;
+    weathering: number;
+  };
 }
+
+export const pavingUnitAppearanceAttributeNames = {
+  value: 'videoer_unit_value_variation',
+  roughness: 'videoer_unit_roughness_variation',
+  weathering: 'videoer_unit_weathering_variation',
+} as const;
 
 export const pavingSurfaceMaterialTargetsSchema = z
   .object({
@@ -473,6 +484,14 @@ function surfaceFrameForUnit(
   const rotationIndex =
     Math.floor(sample(`unit:${unitId}:rotation`) * 0x1_0000_0000) %
     definition.surfaceSampling.rotationChoicesDegrees.length;
+  const appearanceVariation = (channel: number, label: string) =>
+    Math.max(
+      -1,
+      Math.min(
+        1,
+        correlatedSample(channel) * 2 - 1 + (sample(`unit:${unitId}:${label}`) * 2 - 1) * 0.35,
+      ),
+    );
   return {
     kind: 'unit-local-uv-meters',
     offsetMeters: [
@@ -489,6 +508,11 @@ function surfaceFrameForUnit(
     ],
     rotationDegrees: definition.surfaceSampling.rotationChoicesDegrees[rotationIndex]!,
     batchCell: [gridX, gridZ],
+    appearanceVariation: {
+      value: appearanceVariation(2, 'value'),
+      roughness: appearanceVariation(3, 'roughness'),
+      weathering: appearanceVariation(4, 'weathering'),
+    },
   };
 }
 
@@ -661,7 +685,30 @@ function pavingStonePart(options: {
     vertex([point.x, bottomY, point.z], [0, -1, 0], planUv(point));
   for (let index = 1; index < plan.length - 1; index++)
     indices.push(bottomStart, bottomStart + index, bottomStart + index + 1);
-  return { positions, normals, uvs, indices, skinIndices, skinWeights, materialId };
+  return {
+    positions,
+    normals,
+    uvs,
+    indices,
+    skinIndices,
+    skinWeights,
+    attributes: Object.fromEntries(
+      Object.entries(pavingUnitAppearanceAttributeNames).map(([semantic, name]) => [
+        name,
+        {
+          dataType: 'float' as const,
+          interpolation: 'vertex' as const,
+          values: positions.map(
+            () =>
+              surfaceFrame.appearanceVariation[
+                semantic as keyof typeof surfaceFrame.appearanceVariation
+              ],
+          ),
+        },
+      ]),
+    ),
+    materialId,
+  };
 }
 
 function basicMaterial(id: string, index: number): GeometryMaterial {

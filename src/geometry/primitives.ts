@@ -1,4 +1,4 @@
-import type { GeometryAsset, Vec3, Vec4 } from './model.js';
+import type { GeometryAsset, GeometryAttribute, Vec3, Vec4 } from './model.js';
 
 export interface MeshPart {
   positions: Vec3[];
@@ -7,6 +7,7 @@ export interface MeshPart {
   indices: number[];
   skinIndices: Vec4[];
   skinWeights: Vec4[];
+  attributes?: Record<string, GeometryAttribute>;
   materialId?: string;
 }
 
@@ -1017,6 +1018,30 @@ export function mergeMeshParts(
   const skinIndices: Vec4[] = [];
   const skinWeights: Vec4[] = [];
   const materialGroups: GeometryAsset['materialGroups'] = [];
+  const attributeDefinitions = new Map<string, GeometryAttribute['dataType']>();
+  for (const part of parts)
+    for (const [name, attribute] of Object.entries(part.attributes ?? {})) {
+      const existing = attributeDefinitions.get(name);
+      if (existing && existing !== attribute.dataType)
+        throw new Error(
+          `Mesh attribute '${name}' changes data type from ${existing} to ${attribute.dataType}`,
+        );
+      if (attribute.values.length !== part.positions.length)
+        throw new Error(`Mesh attribute '${name}' must contain one value per part vertex`);
+      attributeDefinitions.set(name, attribute.dataType);
+    }
+  const attributes: Record<string, GeometryAttribute> = Object.fromEntries(
+    [...attributeDefinitions].map(([name, dataType]) => [
+      name,
+      { dataType, interpolation: 'vertex' as const, values: [] },
+    ]),
+  ) as Record<string, GeometryAttribute>;
+  const zero = (dataType: GeometryAttribute['dataType']) => {
+    if (dataType === 'float') return 0;
+    if (dataType === 'vec2') return [0, 0] as [number, number];
+    if (dataType === 'vec3') return [0, 0, 0] as Vec3;
+    return [0, 0, 0, 0] as Vec4;
+  };
   for (const part of parts) {
     const offset = positions.length;
     const indexStart = indices.length;
@@ -1025,6 +1050,11 @@ export function mergeMeshParts(
     for (const uv of part.uvs) uvs.push(uv);
     for (const value of part.skinIndices) skinIndices.push(value);
     for (const value of part.skinWeights) skinWeights.push(value);
+    for (const [name, attribute] of Object.entries(attributes)) {
+      const source = part.attributes?.[name];
+      const values = source?.values ?? part.positions.map(() => zero(attribute.dataType));
+      (attribute.values as unknown[]).push(...values);
+    }
     for (const index of part.indices) indices.push(index + offset);
     if (part.materialId) {
       const previous = materialGroups.at(-1);
@@ -1052,6 +1082,7 @@ export function mergeMeshParts(
     indices,
     skinIndices,
     skinWeights,
+    ...(Object.keys(attributes).length ? { attributes } : {}),
     materials: [],
     materialGroups,
     skeleton,

@@ -386,6 +386,15 @@ def main():
     unit_application["placement"]["offsetMeters"] = [0.035, -0.02]
     unit_application["placement"]["rotationDegrees"] = 15
     unit_application["placement"]["macroVariation"]["seed"] = 421
+    unit_application["placement"]["unitVariation"] = {
+        "kind": "vertex-scalar-attributes-v1",
+        "valueAttribute": "videoer_unit_value_variation",
+        "roughnessAttribute": "videoer_unit_roughness_variation",
+        "weatheringAttribute": "videoer_unit_weathering_variation",
+        "valueAmplitude": 0.08,
+        "roughnessAmplitude": 0.06,
+        "weatheringAmplitude": 0.2,
+    }
     unit_asset = {
         "id": "geometry.modeled-paving-unit-local-uv-witness",
         "positions": [
@@ -395,6 +404,20 @@ def main():
             [0.66, 0.055, 0.59], [0.42, 0.055, 0.59],
         ],
         "indices": [0, 1, 2, 0, 2, 3, 4, 5, 6, 4, 6, 7],
+        "attributes": {
+            "videoer_unit_value_variation": {
+                "dataType": "float", "interpolation": "vertex",
+                "values": [-0.8] * 4 + [0.65] * 4,
+            },
+            "videoer_unit_roughness_variation": {
+                "dataType": "float", "interpolation": "vertex",
+                "values": [0.45] * 4 + [-0.35] * 4,
+            },
+            "videoer_unit_weathering_variation": {
+                "dataType": "float", "interpolation": "vertex",
+                "values": [-0.25] * 4 + [0.9] * 4,
+            },
+        },
         # Each separately modeled unit owns a deterministic local frame in
         # metres. The second frame is rotated and phase-shifted deliberately;
         # neither frame is normalized to 0..1.
@@ -427,6 +450,17 @@ def main():
         )
     if unit_report["application"]["constructionDomain"] != "modeled-paving-unit":
         raise RuntimeError("Modeled paving construction domain was not persisted in the report")
+    if unit_report["application"]["unitVariation"] != unit_application["placement"]["unitVariation"]:
+        raise RuntimeError("Typed unit variation contract was not persisted exactly")
+    for semantic in ("value", "roughness", "weathering"):
+        if f"videoer-unit-{semantic}-attribute" not in unit_material.node_tree.nodes:
+            raise RuntimeError(f"Unit {semantic} attribute does not drive the material graph")
+    stored_values = [
+        round(item.value, 6)
+        for item in unit_mesh.data.attributes["videoer_unit_value_variation"].data
+    ]
+    if stored_values != unit_asset["attributes"]["videoer_unit_value_variation"]["values"]:
+        raise RuntimeError(f"Blender changed renderer-independent unit values: {stored_values}")
     unit_uv_loops = [
         tuple(round(value, 6) for value in loop.uv)
         for loop in unit_mesh.data.uv_layers["UVMap"].data
@@ -438,6 +472,16 @@ def main():
         raise RuntimeError(
             f"Unit-local metre UV frames changed during Blender mesh creation: {unit_uv_loops}"
         )
+    rejected_missing_unit_attribute = False
+    missing_unit_attribute_asset = copy.deepcopy(unit_asset)
+    missing_unit_attribute_asset["id"] = "geometry.modeled-paving-missing-unit-attribute"
+    del missing_unit_attribute_asset["attributes"]["videoer_unit_weathering_variation"]
+    try:
+        geometry_probe.create_mesh(missing_unit_attribute_asset, None, output)
+    except RuntimeError:
+        rejected_missing_unit_attribute = True
+    if not rejected_missing_unit_attribute:
+        raise RuntimeError("Blender accepted a missing declared unit variation attribute")
     unit_nodes = unit_material.node_tree.nodes
     synchronized_sources = {
         unit_nodes[f"videoer-texture-{semantic}-uv"].inputs["Vector"].links[0].from_node.name
