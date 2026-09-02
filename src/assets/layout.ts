@@ -1,5 +1,19 @@
 import { createHash } from 'node:crypto';
-import { join } from 'node:path';
+import { existsSync } from 'node:fs';
+import { basename, dirname, join } from 'node:path';
+
+/**
+ * A real client project stores its campaign workspace in `source/` and its
+ * delivery files in the sibling `output/` directory. The project marker keeps
+ * this opt-in so ordinary campaigns retain their established layout.
+ */
+function projectOutputDirectory(root: string) {
+  const projectRoot = dirname(root);
+  return basename(root) === 'source' && existsSync(join(projectRoot, 'project.yaml'))
+    ? join(projectRoot, 'output')
+    : join(root, 'renders');
+}
+
 export function campaignPaths(root: string) {
   return {
     campaign: join(root, 'campaign.yaml'),
@@ -12,7 +26,7 @@ export function campaignPaths(root: string) {
     },
     references: join(root, 'references'),
     imported: join(root, 'assets/imported'),
-    renders: join(root, 'renders'),
+    renders: projectOutputDirectory(root),
     inspection: join(root, 'inspection'),
     reports: join(root, 'reports'),
     productionPlan: join(root, 'production-plan.yaml'),

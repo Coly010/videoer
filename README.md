@@ -205,6 +205,20 @@ reports/                  verification reports
 
 Directories are created as operations need them. Existing examples retain their compact legacy-compatible `assets/` layout.
 
+## Real project workspace
+
+Use `projects/` for real, user-facing productions. This separates completed/client work from the product's examples, fixtures, conformance campaigns, and experiments in `campaigns/`.
+
+```text
+projects/project-name/
+  project.yaml
+  README.md
+  source/              campaign workspace and production material
+  output/              versioned delivery renders and final.mp4
+```
+
+A `source/campaign.yaml` under a directory containing `project.yaml` is a project campaign. The normal render command automatically delivers `render-###.mp4` and `final.mp4` to that project's `output/` directory; all other campaign material remains in `source/`. See [projects/README.md](projects/README.md) for usage and conventions.
+
 ## Codex usage example
 
 Open Codex, attach or identify reference material, and ask for a trailer. Codex can create/update campaign files, choose scene-based or still-based shot strategies, compose verified 3D assets and interactions, generate deterministic atmosphere, lighting, editorial, and audio, produce a frame-exact edit, inspect semantic frames and contact sheets, run objective verification, and selectively rebuild weak shots. Rendering and verification never invoke providers. See [the cinematic trailer workflow](docs/codex/trailer-workflow.md). The reference cinematic benchmark is a conformance suite, not the product API; general acceptance additionally requires a materially different campaign through the same reusable operations. See [ADR 028](docs/adr/028-benchmark-as-conformance-suite.md).

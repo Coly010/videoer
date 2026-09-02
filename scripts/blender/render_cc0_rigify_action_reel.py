@@ -91,11 +91,21 @@ def import_source(source_file):
 
 
 def bake_action(source, target, source_action, target_name):
-    mapping = full_control_map()
-    missing_source = [name for name in mapping if source.pose.bones.get(name) is None]
-    missing_target = [name for name in mapping.values() if target.pose.bones.get(name) is None]
+    ik_map = {
+        "hand_l": "hand_ik.L", "lowerarm_l": "upper_arm_ik_target.L",
+        "hand_r": "hand_ik.R", "lowerarm_r": "upper_arm_ik_target.R",
+        "ball_l": "foot_ik.L", "calf_l": "thigh_ik_target.L",
+        "ball_r": "foot_ik.R", "calf_r": "thigh_ik_target.R",
+    }
+    missing_source = [name for name in ["root", *ik_map] if source.pose.bones.get(name) is None]
+    missing_target = [name for name in ["root", *ik_map.values()] if target.pose.bones.get(name) is None]
     if missing_source or missing_target:
-        raise RuntimeError(f"Incomplete full-joint source adapter: source={missing_source}, target={missing_target}")
+        raise RuntimeError(f"Incomplete source IK adapter: source={missing_source}, target={missing_target}")
+    source.animation_data_clear()
+    scene = bpy.context.scene
+    scene.frame_set(1)
+    bpy.context.view_layer.update()
+    source_rest = {name: source.pose.bones[name].matrix.translation.copy() for name in ["root", *ik_map]}
     source.animation_data_create()
     source.animation_data.action = source_action
     # Blender 4.5 imports each FBX take into a slotted action.  Selecting only
@@ -107,31 +117,36 @@ def bake_action(source, target, source_action, target_name):
     target.animation_data_create()
     action = bpy.data.actions.new(target_name)
     target.animation_data.action = action
-    configure_fk(target)
-    scene = bpy.context.scene
+    for side in ("L", "R"):
+        target.pose.bones[f"thigh_parent.{side}"]["IK_FK"] = 0.0
+        target.pose.bones[f"thigh_parent.{side}"]["IK_Stretch"] = 0.0
+        target.pose.bones[f"upper_arm_parent.{side}"]["IK_FK"] = 0.0
+    target_rest = {name: target.pose.bones[name].matrix.copy() for name in ik_map.values()}
     start, end = (round(value) for value in source_action.frame_range)
     scene.frame_start, scene.frame_end = start, end
-    # Local rest-deltas respect the source's complete chain without a generic
-    # Videoer skeleton.  The target is driven only through native FK controls.
     scene.frame_set(start)
     bpy.context.view_layer.update()
-    source_rest = {name: source.pose.bones[name].matrix_basis.copy() for name in mapping}
-    source_root = source.pose.bones["root"].location.copy()
+    # Scale source motion from its ankle-to-hip span to the destination rig.
+    source_scale = (source_rest["ball_l"] - source_rest["root"]).length or 1.0
+    target_scale = (target_rest["foot_ik.L"].translation - target.pose.bones["root"].matrix.translation).length
+    scale = target_scale / source_scale
     for frame in range(start, end + 1):
         scene.frame_set(frame)
         bpy.context.view_layer.update()
         root = target.pose.bones["root"]
         root.rotation_mode = "QUATERNION"
-        root.location = (source.pose.bones["root"].location - source_root) * 1.0
-        root.rotation_quaternion = source.pose.bones["root"].rotation_quaternion.copy()
+        root_delta = (source.pose.bones["root"].matrix.translation - source_rest["root"]) * scale
+        root.location = root_delta
+        root.rotation_quaternion = (1, 0, 0, 0)
         key(root, frame, location=True)
-        for source_name, target_name in mapping.items():
-            source_bone = source.pose.bones[source_name]
-            target_bone = target.pose.bones[target_name]
-            target_bone.rotation_mode = "QUATERNION"
-            delta = source_rest[source_name].inverted() @ source_bone.matrix_basis
-            target_bone.rotation_quaternion = delta.to_quaternion()
-            key(target_bone, frame)
+        for source_name, control_name in ik_map.items():
+            relative_rest = source_rest[source_name] - source_rest["root"]
+            relative_pose = source.pose.bones[source_name].matrix.translation - source.pose.bones["root"].matrix.translation
+            control = target.pose.bones[control_name]
+            desired = target_rest[control_name].copy()
+            desired.translation = target_rest[control_name].translation + root_delta + (relative_pose - relative_rest) * scale
+            control.matrix = desired
+            key(control, frame, location=True)
         for side in ("L", "R"):
             parent = target.pose.bones[f"thigh_parent.{side}"]
             parent.keyframe_insert(data_path='["IK_FK"]', frame=frame)
@@ -140,7 +155,7 @@ def bake_action(source, target, source_action, target_name):
     for curve in action.fcurves:
         for point in curve.keyframe_points:
             point.interpolation = "BEZIER"
-    return {"sourceAction": source_action.name, "targetAction": action.name, "start": start, "end": end, "frames": end - start + 1, "mappedControls": len(mapping)}
+    return {"sourceAction": source_action.name, "targetAction": action.name, "start": start, "end": end, "frames": end - start + 1, "nativeIkControls": len(ik_map), "sourceScale": scale}
 
 
 def remove_source(source):
@@ -191,6 +206,18 @@ def main():
         report = bake_action(source, target, source_action, f"videoer.experimental.cc0-rigify.{clip}.v1")
         height = float(asset.get("metadata", {}).get("parameters", {}).get("height", 1.72))
         rigify_adapter.configure_mpfb_camera(scene, camera, height, 3.2, 2.2, -1, "three-quarter")
+        scene.frame_set(report["start"])
+        bpy.context.view_layer.update()
+        camera_origin = camera.location.copy()
+        camera_rotation = camera.rotation_euler.copy()
+        root_origin = target.pose.bones["root"].matrix.translation.copy()
+        for frame in range(report["start"], report["end"] + 1):
+            scene.frame_set(frame)
+            bpy.context.view_layer.update()
+            camera.location = camera_origin + (target.pose.bones["root"].matrix.translation - root_origin)
+            camera.rotation_euler = camera_rotation
+            camera.keyframe_insert(data_path="location", frame=frame)
+            camera.keyframe_insert(data_path="rotation_euler", frame=frame)
         scene.render.image_settings.file_format = "PNG"
         for frame in (report["start"], (report["start"] + report["end"]) // 2, report["end"]):
             scene.frame_set(frame)

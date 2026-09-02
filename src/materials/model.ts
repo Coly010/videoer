@@ -10,6 +10,32 @@ const colorSchema = z.tuple([
 
 const surfaceAxisSchema = z.enum(['x', 'y', 'z']);
 
+export const facadeSurfaceHistoryAttributeNames = {
+  lowerDamp: 'videoer_facade_lower_damp',
+  openingRunoff: 'videoer_facade_opening_runoff',
+  cornerWeathering: 'videoer_facade_corner_weathering',
+  parapetRunoff: 'videoer_facade_parapet_runoff',
+  repairInfluence: 'videoer_facade_repair_influence',
+} as const;
+
+const facadeHistoryChannel = <T extends string>(attribute: T) =>
+  z.object({
+    attribute: z.literal(attribute),
+    colorMultiplier: z.number().min(0.35).max(1.4),
+    roughnessOffset: z.number().min(-0.3).max(0.3),
+    detailScaleMeters: z.number().positive().max(5),
+    detailContrast: z.number().min(0).max(1),
+  });
+
+export const facadeSurfaceHistoryResponseSchema = z.object({
+  kind: z.literal('facade-receiver-attributes-v1'),
+  lowerDamp: facadeHistoryChannel(facadeSurfaceHistoryAttributeNames.lowerDamp),
+  openingRunoff: facadeHistoryChannel(facadeSurfaceHistoryAttributeNames.openingRunoff),
+  cornerWeathering: facadeHistoryChannel(facadeSurfaceHistoryAttributeNames.cornerWeathering),
+  parapetRunoff: facadeHistoryChannel(facadeSurfaceHistoryAttributeNames.parapetRunoff),
+  repairInfluence: facadeHistoryChannel(facadeSurfaceHistoryAttributeNames.repairInfluence),
+});
+
 export const surfaceWaterReceiverAppearanceResponseSchema = z.object({
   model: z.literal('porous-damp-coherent-film-v1'),
   saturatedBaseColorMultiplier: z.number().min(0.5).max(1),
@@ -520,6 +546,7 @@ export const surfaceMaterialSchema = z
           .optional(),
       })
       .optional(),
+    facadeHistoryResponse: facadeSurfaceHistoryResponseSchema.optional(),
     historyResponse: z
       .object({
         trafficWear: z.object({
@@ -653,6 +680,15 @@ export const surfaceMaterialSchema = z
         code: 'custom',
         path: ['pavingBorder'],
         message: 'paving-border compatibility requires paving-border construction metadata',
+      });
+    if (
+      material.facadeHistoryResponse &&
+      material.metadata.constructionDomain !== 'flat-facade-surface'
+    )
+      ctx.addIssue({
+        code: 'custom',
+        path: ['facadeHistoryResponse'],
+        message: 'facade history response requires flat-facade-surface construction metadata',
       });
     if (
       material.constructionSurfaceResponse &&

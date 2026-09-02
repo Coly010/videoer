@@ -14,6 +14,10 @@ import {
   compileFacadeConstructionDetail,
   type FacadeConstructionDetailReport,
 } from './facade-construction-detail.js';
+import {
+  applyFacadeSurfaceHistory,
+  type FacadeSurfaceHistoryReport,
+} from './facade-surface-history.js';
 
 const identifier = z.string().regex(/^[a-z][a-z0-9-]*(?:\.[a-z0-9-]+)*$/);
 const localIdentifier = z.string().regex(/^[a-z][a-z0-9-]*$/);
@@ -118,6 +122,18 @@ export const architecturalEnvelopeDefinitionSchema = z
           }),
         )
         .max(6),
+      surfaceRepairs: z
+        .array(
+          z.object({
+            id: localIdentifier,
+            polygonXY: z
+              .array(z.tuple([z.number().finite(), z.number().finite()]))
+              .min(3)
+              .max(12),
+            intensity: z.number().positive().max(1),
+          }),
+        )
+        .default([]),
     }),
     roof: z.discriminatedUnion('kind', [
       z.object({
@@ -323,6 +339,7 @@ export interface ArchitecturalEnvelopeReport {
   facadeLayerDepths: Array<{ id: string; frontZ: number; backZ: number }>;
   apertures: Array<{ id: string; centreRayClear: boolean; roomDepthMeters: number }>;
   surfaceMaterialTargets: ArchitecturalEnvelopeMaterialTargets;
+  facadeSurfaceHistory: FacadeSurfaceHistoryReport;
 }
 
 function compileSurfaceMaterialTargets(
@@ -620,6 +637,19 @@ export function compileArchitecturalEnvelope(input: ArchitecturalEnvelopeDefinit
 
   const facadeExteriorZ =
     frontZ - definition.shell.facadeLayers.reduce((sum, layer) => sum + layer.thicknessMeters, 0);
+  let facadeLayerBackZ = frontZ;
+  const facadeLayerFrontZByMaterialId: Record<string, number> = {};
+  for (const layer of definition.shell.facadeLayers) {
+    const layerFrontZ = facadeLayerBackZ - layer.thicknessMeters;
+    facadeLayerFrontZByMaterialId[layer.materialId] = Math.min(
+      facadeLayerFrontZByMaterialId[layer.materialId] ?? Infinity,
+      layerFrontZ,
+    );
+    facadeLayerBackZ = layerFrontZ;
+  }
+  const wearReceiverLayer = definition.shell.facadeLayers.find((layer) => layer.role === 'finish');
+  if (!wearReceiverLayer)
+    throw new Error(`Architectural envelope '${definition.id}' requires a facade finish layer`);
   const constructionDetail = compileFacadeConstructionDetail({
     schemaVersion: 1,
     id: `${definition.id}.construction-detail`,
@@ -629,6 +659,7 @@ export function compileArchitecturalEnvelope(input: ArchitecturalEnvelopeDefinit
     maximumX,
     totalHeightMeters: totalHeight,
     facadeExteriorZ,
+    wearReceiverFrontZ: facadeLayerFrontZByMaterialId[wearReceiverLayer.materialId],
     openings: modulePlacements.map((placement) => ({
       id: placement.openingId,
       kind: placement.kind,
@@ -640,6 +671,7 @@ export function compileArchitecturalEnvelope(input: ArchitecturalEnvelopeDefinit
     trimMaterialId: definition.materials.trim,
     wearReceiverMaterialId:
       definition.shell.facadeLayers[0]?.materialId ?? definition.materials.structure,
+    surfaceRepairs: definition.shell.surfaceRepairs,
   });
   parts.push(...constructionDetail.parts);
 
@@ -701,7 +733,7 @@ export function compileArchitecturalEnvelope(input: ArchitecturalEnvelopeDefinit
     );
   }
 
-  const geometry = mergeMeshParts(
+  let geometry = mergeMeshParts(
     definition.id,
     parts,
     [{ id: 'root', restPosition: [0, 0, 0], constraints: {} }],
@@ -724,6 +756,17 @@ export function compileArchitecturalEnvelope(input: ArchitecturalEnvelopeDefinit
     definition.threshold.materialId,
   ]);
   geometry.materials = [...materialIds].sort().map(basicMaterial);
+  const facadeSurfaceHistory = applyFacadeSurfaceHistory({
+    geometry,
+    seed: definition.seed,
+    receiverMaterialIds: [wearReceiverLayer.materialId],
+    receiverFrontZByMaterialId: {
+      [wearReceiverLayer.materialId]: facadeLayerFrontZByMaterialId[wearReceiverLayer.materialId]!,
+    },
+    zones: constructionDetail.report.dirtReceiverZones,
+    maximumFinishIrregularityMeters: definition.roof.kind === 'gable' ? 0.0018 : 0.0009,
+  });
+  geometry = facadeSurfaceHistory.geometry;
   for (const placement of modulePlacements) {
     const roomDepth = allOpenings.find(
       (opening) => opening.id === placement.openingId,
@@ -804,6 +847,7 @@ export function compileArchitecturalEnvelope(input: ArchitecturalEnvelopeDefinit
       roomDepthMeters: opening.roomDepthMeters,
     })),
     surfaceMaterialTargets,
+    facadeSurfaceHistory: facadeSurfaceHistory.report,
   };
   return { definition, geometry, modulePlacements, report };
 }
@@ -924,6 +968,21 @@ export function createHistoricShopfrontEnvelopeDefinition(): ArchitecturalEnvelo
           materialId: 'aged-limestone',
           minimumY: 0,
           maximumY: 0.58,
+        },
+      ],
+      surfaceRepairs: [
+        {
+          id: 'upper-entry-lime-repair',
+          polygonXY: [
+            [-3.24, 2.3],
+            [-3.02, 2.25],
+            [-2.79, 2.32],
+            [-2.73, 2.55],
+            [-2.84, 2.79],
+            [-3.08, 2.83],
+            [-3.28, 2.68],
+          ],
+          intensity: 0.74,
         },
       ],
     },
@@ -1064,6 +1123,22 @@ export function createContemporaryMixedUseEnvelopeDefinition(): ArchitecturalEnv
           materialId: 'dark-stone-plinth',
           minimumY: 0,
           maximumY: 0.5,
+        },
+      ],
+      surfaceRepairs: [
+        {
+          id: 'office-core-render-repair',
+          polygonXY: [
+            [-0.92, 4.5],
+            [-0.62, 4.42],
+            [-0.24, 4.48],
+            [-0.08, 4.72],
+            [-0.16, 5.08],
+            [-0.48, 5.22],
+            [-0.83, 5.13],
+            [-1, 4.84],
+          ],
+          intensity: 0.46,
         },
       ],
     },

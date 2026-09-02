@@ -1487,6 +1487,89 @@ def configure_surface_nodes(material, principled, surface, asset_directory=None)
         links.new(roughness_noise.outputs["Fac"], roughness.inputs["Fac"])
         links.new(roughness.outputs["Color"], principled.inputs["Roughness"])
 
+    facade_history = surface.get("facadeHistoryResponse")
+    if facade_history:
+        channel_masks = []
+        roughness_offsets = []
+        for channel in (
+            "lowerDamp",
+            "openingRunoff",
+            "cornerWeathering",
+            "parapetRunoff",
+            "repairInfluence",
+        ):
+            response = facade_history[channel]
+            attribute = nodes.new("ShaderNodeAttribute")
+            attribute.name = f"videoer-facade-history-{channel}-attribute"
+            attribute.attribute_name = response["attribute"]
+            detail = nodes.new("ShaderNodeTexNoise")
+            detail.name = f"videoer-facade-history-{channel}-detail"
+            detail.noise_dimensions = "3D"
+            detail.inputs["Scale"].default_value = 1.0 / response["detailScaleMeters"]
+            detail.inputs["Detail"].default_value = 3.5
+            detail.inputs["Roughness"].default_value = 0.68
+            links.new(mapping.outputs["Vector"], detail.inputs["Vector"])
+            detail_contrast = nodes.new("ShaderNodeMath")
+            detail_contrast.operation = "MULTIPLY"
+            detail_contrast.inputs[1].default_value = response["detailContrast"]
+            links.new(detail.outputs["Fac"], detail_contrast.inputs[0])
+            detail_floor = nodes.new("ShaderNodeMath")
+            detail_floor.operation = "ADD"
+            detail_floor.inputs[1].default_value = 1.0 - response["detailContrast"]
+            links.new(detail_contrast.outputs[0], detail_floor.inputs[0])
+            mask = nodes.new("ShaderNodeMath")
+            mask.name = f"videoer-facade-history-{channel}-mask"
+            mask.operation = "MULTIPLY"
+            links.new(attribute.outputs["Fac"], mask.inputs[0])
+            links.new(detail_floor.outputs[0], mask.inputs[1])
+            channel_masks.append((channel, mask.outputs[0], response))
+
+            roughness_offset = nodes.new("ShaderNodeMath")
+            roughness_offset.name = f"videoer-facade-history-{channel}-roughness-offset"
+            roughness_offset.operation = "MULTIPLY"
+            roughness_offset.inputs[1].default_value = response["roughnessOffset"]
+            links.new(mask.outputs[0], roughness_offset.inputs[0])
+            roughness_offsets.append(roughness_offset.outputs[0])
+
+        base_input = principled.inputs["Base Color"]
+        for channel, mask, response in channel_masks:
+            base_link = next(iter(base_input.links), None)
+            if not base_link:
+                raise RuntimeError("Facade history requires a connected base color")
+            base_source = base_link.from_socket
+            links.remove(base_link)
+            response_mix = nodes.new("ShaderNodeMixRGB")
+            response_mix.name = f"videoer-facade-history-{channel}-color"
+            response_mix.blend_type = "MULTIPLY"
+            response_mix.inputs[2].default_value = (response["colorMultiplier"],) * 3 + (1,)
+            links.new(mask, response_mix.inputs["Fac"])
+            links.new(base_source, response_mix.inputs[1])
+            links.new(response_mix.outputs["Color"], base_input)
+
+        total_roughness_offset = roughness_offsets[0]
+        for offset in roughness_offsets[1:]:
+            add_offset = nodes.new("ShaderNodeMath")
+            add_offset.operation = "ADD"
+            links.new(total_roughness_offset, add_offset.inputs[0])
+            links.new(offset, add_offset.inputs[1])
+            total_roughness_offset = add_offset.outputs[0]
+        roughness_input = principled.inputs["Roughness"]
+        roughness_link = next(iter(roughness_input.links), None)
+        if not roughness_link:
+            raise RuntimeError("Facade history requires a connected roughness")
+        roughness_source = roughness_link.from_socket
+        links.remove(roughness_link)
+        roughness_add = nodes.new("ShaderNodeMath")
+        roughness_add.operation = "ADD"
+        links.new(roughness_source, roughness_add.inputs[0])
+        links.new(total_roughness_offset, roughness_add.inputs[1])
+        roughness_clamp = nodes.new("ShaderNodeClamp")
+        roughness_clamp.name = "videoer-facade-history-roughness"
+        roughness_clamp.inputs["Min"].default_value = 0.0
+        roughness_clamp.inputs["Max"].default_value = 1.0
+        links.new(roughness_add.outputs[0], roughness_clamp.inputs["Value"])
+        links.new(roughness_clamp.outputs["Result"], roughness_input)
+
     coat_weight = principled.inputs.get("Coat Weight")
     coat_roughness = principled.inputs.get("Coat Roughness")
     if wetness > 0 and coat_weight and coat_roughness:
@@ -1774,6 +1857,38 @@ def create_mesh(asset, armature=None, asset_directory=None, vertex_converter=to_
                     raise RuntimeError(
                         f"Unit variation attribute '{name}' must remain within "
                         f"[{minimum}, {maximum}]; received {invalid}"
+                    )
+        facade_history = material_definition.get("surface", {}).get("facadeHistoryResponse")
+        if facade_history:
+            expected_attributes = {
+                "lowerDamp": "videoer_facade_lower_damp",
+                "openingRunoff": "videoer_facade_opening_runoff",
+                "cornerWeathering": "videoer_facade_corner_weathering",
+                "parapetRunoff": "videoer_facade_parapet_runoff",
+                "repairInfluence": "videoer_facade_repair_influence",
+            }
+            for channel, expected in expected_attributes.items():
+                if facade_history[channel]["attribute"] != expected:
+                    raise RuntimeError(
+                        f"Facade history {channel} attribute must be '{expected}'"
+                    )
+                definition = asset.get("attributes", {}).get(expected)
+                if not definition or definition.get("dataType") != "float":
+                    raise RuntimeError(
+                        f"Facade history requires float vertex attribute '{expected}'"
+                    )
+                invalid = next(
+                    (
+                        value
+                        for value in definition.get("values", [])
+                        if value < 0 or value > 1
+                    ),
+                    None,
+                )
+                if invalid is not None:
+                    raise RuntimeError(
+                        f"Facade history attribute '{expected}' must remain within [0, 1]; "
+                        f"received {invalid}"
                     )
     if source_uvs:
         uv_layer = data.uv_layers.new(name="UVMap")

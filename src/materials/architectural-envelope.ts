@@ -25,6 +25,7 @@ type MaterialSpec = {
   wetness?: number;
   pattern: SurfaceMaterial['pattern'];
   weathering?: SurfaceMaterial['weathering'];
+  facadeHistoryResponse?: SurfaceMaterial['facadeHistoryResponse'];
 };
 
 function material(host: ArchitecturalEnvelopeMaterialHost, spec: MaterialSpec): SurfaceMaterial {
@@ -51,6 +52,7 @@ function material(host: ArchitecturalEnvelopeMaterialHost, spec: MaterialSpec): 
     },
     pattern: spec.pattern,
     weathering: spec.weathering,
+    facadeHistoryResponse: spec.facadeHistoryResponse,
     metallic: spec.metallic ?? 0,
     metadata: {
       generator: 'videoer.architectural-envelope-material-library.v1',
@@ -70,6 +72,50 @@ const mineralWeathering = (amount: number, dampHeight: number): SurfaceMaterial[
   lowerDamp: { amount: Math.min(0.58, amount + 0.12), heightMeters: dampHeight },
   surfaceDirt: { amount: amount * 0.62, scaleMeters: 0.58 },
 });
+
+const facadeHistoryResponse = (
+  style: 'historic' | 'contemporary',
+): NonNullable<SurfaceMaterial['facadeHistoryResponse']> => {
+  const historic = style === 'historic';
+  return {
+    kind: 'facade-receiver-attributes-v1',
+    lowerDamp: {
+      attribute: 'videoer_facade_lower_damp',
+      colorMultiplier: historic ? 0.62 : 0.74,
+      roughnessOffset: historic ? -0.07 : -0.045,
+      detailScaleMeters: historic ? 0.16 : 0.22,
+      detailContrast: 0.48,
+    },
+    openingRunoff: {
+      attribute: 'videoer_facade_opening_runoff',
+      colorMultiplier: historic ? 0.56 : 0.7,
+      roughnessOffset: historic ? -0.045 : -0.025,
+      detailScaleMeters: historic ? 0.085 : 0.12,
+      detailContrast: 0.62,
+    },
+    cornerWeathering: {
+      attribute: 'videoer_facade_corner_weathering',
+      colorMultiplier: historic ? 0.74 : 0.84,
+      roughnessOffset: historic ? 0.055 : 0.035,
+      detailScaleMeters: historic ? 0.21 : 0.3,
+      detailContrast: 0.38,
+    },
+    parapetRunoff: {
+      attribute: 'videoer_facade_parapet_runoff',
+      colorMultiplier: historic ? 0.82 : 0.72,
+      roughnessOffset: historic ? 0.02 : -0.02,
+      detailScaleMeters: historic ? 0.24 : 0.14,
+      detailContrast: 0.55,
+    },
+    repairInfluence: {
+      attribute: 'videoer_facade_repair_influence',
+      colorMultiplier: historic ? 1.16 : 0.91,
+      roughnessOffset: historic ? -0.035 : 0.045,
+      detailScaleMeters: historic ? 0.11 : 0.16,
+      detailContrast: 0.24,
+    },
+  };
+};
 
 function historicSpecs(): MaterialSpec[] {
   return [
@@ -126,6 +172,7 @@ function historicSpecs(): MaterialSpec[] {
         porosity: 0.64,
       },
       weathering: mineralWeathering(0.34, 0.82),
+      facadeHistoryResponse: facadeHistoryResponse('historic'),
     },
     {
       target: 'aged-limestone',
@@ -352,6 +399,7 @@ function contemporarySpecs(): MaterialSpec[] {
         porosity: 0.52,
       },
       weathering: mineralWeathering(0.16, 0.54),
+      facadeHistoryResponse: facadeHistoryResponse('contemporary'),
     },
     {
       target: 'dark-stone-plinth',

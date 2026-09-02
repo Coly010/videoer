@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "campaignId": "rise-of-demons-demo",
+  "title": "The Rise of Demons — Continuous Battle Teaser",
+  "durationSeconds": 9.2,
+  "style": "cinematic-fantasy",
+  "shots": [
+    {"id":"continuous-battle","type":"scene","startSeconds":0,"durationSeconds":4.7,"transition":"cut","sources":[{"kind":"supplied","path":"../../misc-images/vivrel-dara-demon-camp-alpine.png"}],"scene":{"camera":{"preset":"slow-push-in","intensity":1.25,"easing":"ease-in-out"},"layers":[
+      {"id":"battle","type":"image","asset":"../../misc-images/vivrel-dara-demon-camp-alpine.png","fit":"cover","depth":"background","filters":[{"type":"brightness","value":0.98},{"type":"contrast","value":1.1},{"type":"saturate","value":1.08}]},
+      {"id":"camp-glow","type":"shape","shape":"circle","color":"#D85B22","width":620,"height":420,"depth":"midground","opacity":0.1,"transform":{"x":25,"y":7},"filters":[{"type":"blur","value":95}],"blendMode":"screen"},
+      {"id":"rain-far","type":"particle-system","preset":"rain","seed":619,"params":{"intensity":0.45},"depth":"midground","opacity":0.3,"blendMode":"screen"},
+      {"id":"rain-near","type":"particle-system","preset":"rain","seed":620,"params":{"intensity":0.8},"depth":"foreground","opacity":0.52,"blendMode":"screen"},
+      {"id":"smoke-drift","type":"shape","shape":"circle","color":"#AAB0B3","width":940,"height":240,"depth":"midground","opacity":0.085,"transform":{"x":-18,"y":17},"motion":{"preset":"drift","intensity":0.42,"easing":"ease-in-out"},"filters":[{"type":"blur","value":100}],"blendMode":"screen"},
+      {"id":"smoke-drift-two","type":"shape","shape":"circle","color":"#6C7175","width":760,"height":190,"depth":"midground","opacity":0.075,"transform":{"x":24,"y":6},"motion":{"preset":"drift","intensity":0.28,"easing":"ease-in-out"},"filters":[{"type":"blur","value":85}],"blendMode":"screen"},
+      {"id":"magic-blue","type":"shape","shape":"circle","color":"#4DABEE","width":330,"height":330,"depth":"foreground","opacity":0.16,"transform":{"x":-25,"y":18},"filters":[{"type":"blur","value":55}],"blendMode":"screen"},
+      {"id":"magic-green","type":"shape","shape":"circle","color":"#B7C84B","width":340,"height":340,"depth":"foreground","opacity":0.14,"transform":{"x":25,"y":18},"filters":[{"type":"blur","value":55}],"blendMode":"screen"},
+      {"id":"low-embers","type":"particle-system","preset":"embers","seed":621,"params":{"intensity":0.8},"depth":"foreground","blendMode":"screen"},
+      {"id":"atmosphere","type":"effect","preset":"haze","params":{"intensity":0.52},"depth":"screen","blendMode":"soft-light"},
+      {"id":"fire-flicker","type":"effect","preset":"flicker","params":{"intensity":0.62},"depth":"screen","blendMode":"screen"},
+      {"id":"vignette","type":"effect","preset":"vignette","params":{"intensity":0.38},"depth":"screen"},
+      {"id":"first-copy","type":"image","asset":"assets/hook-first.svg","fit":"contain","depth":"screen","start":0.4,"end":2.2},
+      {"id":"lightning-illumination","type":"effect","preset":"flash","params":{"intensity":0.3,"at":0.49},"depth":"screen","blendMode":"screen"},
+      {"id":"second-copy","type":"image","asset":"assets/hook-second.svg","fit":"contain","depth":"screen","start":2.5,"end":4.1}
+    ]}},
+    {"id":"cover-reveal","type":"scene","startSeconds":4.7,"durationSeconds":4.5,"transition":"cut","sources":[{"kind":"supplied","path":"../../misc-images/the-rise-of-demons-cover.png"}],"scene":{"camera":{"preset":"static","intensity":0},"layers":[
+      {"id":"cover-texture","type":"image","asset":"../../misc-images/the-rise-of-demons-cover.png","fit":"cover","depth":"background","opacity":0.48,"transform":{"scale":1.36},"filters":[{"type":"blur","value":38},{"type":"brightness","value":0.28},{"type":"saturate","value":0.72}]},
+      {"id":"cover-black","type":"shape","shape":"gradient","gradient":["#050406","#1D0907","#050406"],"width":1200,"height":2100,"depth":"midground","opacity":0.58},
+      {"id":"cover-aura","type":"shape","shape":"circle","color":"#A8421E","width":860,"height":860,"depth":"midground","opacity":0.2,"transform":{"y":-11},"filters":[{"type":"blur","value":125}],"blendMode":"screen"},
+      {"id":"hero-cover","type":"image","asset":"../../misc-images/the-rise-of-demons-cover.png","fit":"contain","depth":"foreground","transform":{"y":-7,"scale":0.84},"filters":[{"type":"glow","value":5}]},
+      {"id":"end-embers","type":"particle-system","preset":"embers","seed":624,"params":{"intensity":0.34},"depth":"foreground","blendMode":"screen"},
+      {"id":"cta-copy","type":"image","asset":"assets/end-card-copy.svg","fit":"contain","depth":"screen"},
+      {"id":"vignette","type":"effect","preset":"vignette","params":{"intensity":0.46},"depth":"screen"}
+    ]}}
+  ]
+}

@@ -16,6 +16,84 @@ export interface RevolutionProfilePoint {
   y: number;
 }
 
+/**
+ * Extrudes a convex XY polygon through a Z interval. This is useful for thin
+ * renderer-independent facade patches, plaques, reliefs, and other planar
+ * construction layers without delegating topology to a backend.
+ */
+export function extrudedPolygonAlongZPart(
+  polygon: Array<[number, number]>,
+  minimumZ: number,
+  maximumZ: number,
+  bone: number,
+  materialId?: string,
+): MeshPart {
+  if (polygon.length < 3) throw new Error('Extruded XY polygon requires at least three points');
+  if (!Number.isFinite(minimumZ) || !Number.isFinite(maximumZ) || maximumZ <= minimumZ)
+    throw new Error('Extruded XY polygon requires a positive finite Z interval');
+  const signedCrosses = polygon.map((point, index) => {
+    const next = polygon[(index + 1) % polygon.length]!;
+    const after = polygon[(index + 2) % polygon.length]!;
+    return (
+      (next[0] - point[0]) * (after[1] - next[1]) - (next[1] - point[1]) * (after[0] - next[0])
+    );
+  });
+  if (signedCrosses.some((value) => Math.abs(value) < 1e-10))
+    throw new Error('Extruded XY polygon cannot contain collinear consecutive points');
+  const winding = Math.sign(signedCrosses[0]!);
+  if (signedCrosses.some((value) => Math.sign(value) !== winding))
+    throw new Error('Extruded XY polygon must be strictly convex with consistent winding');
+  const ordered = winding > 0 ? polygon : [...polygon].reverse();
+  const positions: Vec3[] = [];
+  const normals: Vec3[] = [];
+  const uvs: [number, number][] = [];
+  const indices: number[] = [];
+  const skinIndices: Vec4[] = [];
+  const skinWeights: Vec4[] = [];
+  const minimumX = Math.min(...ordered.map((point) => point[0]));
+  const maximumX = Math.max(...ordered.map((point) => point[0]));
+  const minimumY = Math.min(...ordered.map((point) => point[1]));
+  const maximumY = Math.max(...ordered.map((point) => point[1]));
+  const width = maximumX - minimumX;
+  const height = maximumY - minimumY;
+  const addVertex = (position: Vec3, normal: Vec3) => {
+    positions.push(position);
+    normals.push(normal);
+    uvs.push([(position[0] - minimumX) / width, (position[1] - minimumY) / height]);
+    skinIndices.push([bone, 0, 0, 0]);
+    skinWeights.push([1, 0, 0, 0]);
+  };
+  const frontStart = positions.length;
+  for (const [x, y] of ordered) addVertex([x, y, minimumZ], [0, 0, -1]);
+  for (let index = 1; index < ordered.length - 1; index++)
+    indices.push(frontStart, frontStart + index + 1, frontStart + index);
+  const backStart = positions.length;
+  for (const [x, y] of ordered) addVertex([x, y, maximumZ], [0, 0, 1]);
+  for (let index = 1; index < ordered.length - 1; index++)
+    indices.push(backStart, backStart + index, backStart + index + 1);
+  for (let index = 0; index < ordered.length; index++) {
+    const next = (index + 1) % ordered.length;
+    const [x0, y0] = ordered[index]!;
+    const [x1, y1] = ordered[next]!;
+    const normal = normalize([y0 - y1, x1 - x0, 0]);
+    const offset = positions.length;
+    addVertex([x0, y0, minimumZ], normal);
+    addVertex([x1, y1, minimumZ], normal);
+    addVertex([x1, y1, maximumZ], normal);
+    addVertex([x0, y0, maximumZ], normal);
+    indices.push(offset, offset + 1, offset + 2, offset, offset + 2, offset + 3);
+  }
+  return {
+    positions,
+    normals,
+    uvs,
+    indices,
+    skinIndices,
+    skinWeights,
+    ...(materialId === undefined ? {} : { materialId }),
+  };
+}
+
 export interface OpenTroughOptions {
   minimumX: number;
   maximumX: number;

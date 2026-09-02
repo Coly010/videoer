@@ -26,12 +26,10 @@ function drawEffect(
       const x = (((index / count + time * (0.018 + index * 0.001)) % 1.25) - 0.12) * width;
       const y = (low ? 0.72 : 0.35) * height + Math.sin(time * 0.42 + phase) * height * 0.08;
       const radius = width * (0.25 + (index % 3) * 0.07);
-      graphics
-        .circle(x, y, radius)
-        .fill({
-          color: new Color(layer.preset === 'smoke' ? '#34343c' : '#d9ddea').toNumber(),
-          alpha: (low ? 0.052 : 0.032) * intensity,
-        });
+      graphics.circle(x, y, radius).fill({
+        color: new Color(layer.preset === 'smoke' ? '#34343c' : '#d9ddea').toNumber(),
+        alpha: (low ? 0.052 : 0.032) * intensity,
+      });
     }
   } else {
     const pulse = 0.5 + Math.sin(time * 1.7) * 0.18;

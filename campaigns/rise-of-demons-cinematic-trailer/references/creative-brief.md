@@ -1,4 +1,4 @@
-# Goal: Create a Cinematic Trailer for *The Rise of Demons*
+# Goal: Create a Cinematic Trailer for _The Rise of Demons_
 
 Create a polished **15-second vertical cinematic book trailer** for my fantasy novel **The Rise of Demons** using the marketing-video system in this repository.
 
@@ -8,16 +8,16 @@ You are responsible for taking the campaign from initial creative direction thro
 
 ## Primary Goal
 
-Produce a trailer that could realistically be posted to TikTok, Instagram Reels, or YouTube Shorts to advertise *The Rise of Demons*.
+Produce a trailer that could realistically be posted to TikTok, Instagram Reels, or YouTube Shorts to advertise _The Rise of Demons_.
 
 The finished video should feel:
 
-* dark
-* cinematic
-* ominous
-* epic
-* mysterious
-* high fantasy rather than generic horror
+- dark
+- cinematic
+- ominous
+- epic
+- mysterious
+- high fantasy rather than generic horror
 
 It should create curiosity about the story rather than attempt to explain the whole plot.
 
@@ -27,20 +27,20 @@ The viewer should come away with the impression that:
 
 ## Book Context
 
-*The Rise of Demons* is the first book of **The Dark War Trilogy**.
+_The Rise of Demons_ is the first book of **The Dark War Trilogy**.
 
 The setting is the fantasy world of **Onaem**.
 
 Important elements you may use visually include:
 
-* medieval / high-fantasy cities and landscapes
-* mages and magical conflict
-* dark forests
-* castles
-* forbidden or corrupted magic
-* fire and black fire
-* a growing demonic threat
-* an increasingly apocalyptic sense that something long gone is returning
+- medieval / high-fantasy cities and landscapes
+- mages and magical conflict
+- dark forests
+- castles
+- forbidden or corrupted magic
+- fire and black fire
+- a growing demonic threat
+- an increasingly apocalyptic sense that something long gone is returning
 
 The story builds toward the return of **Mordeutzel**, an enormous demonic figure approximately 40 feet tall when fully manifested.
 
@@ -54,11 +54,11 @@ Prefer atmosphere, implication, imagery, and short marketing copy over plot expo
 
 The following invented names are part of the book’s canon. Do not guess at them loosely or reinterpret them into unrelated fantasy tropes.
 
-* **Onaem**: the fantasy world in which the story takes place.
-* **Dolgrim**: demons. They are a real demonic threat within the story world.
-* **Mordeutzel**: a powerful demonic entity and major threat. At full manifestation, he is enormous — roughly 40 feet tall. He should feel ancient, terrifying, powerful, and mythic rather than campy or cartoonish.
-* **Daerites**: human followers aligned with the dark side of the conflict and associated with the demonic threat. They are not monsters or undead. Visually, they should read as dark-fantasy human antagonists / cult-aligned or militant followers, not generic zombies.
-* **Black fire**: a corrupted or unnatural magical fire. It should feel dark, magical, and threatening rather than like ordinary orange flame.
+- **Onaem**: the fantasy world in which the story takes place.
+- **Dolgrim**: demons. They are a real demonic threat within the story world.
+- **Mordeutzel**: a powerful demonic entity and major threat. At full manifestation, he is enormous — roughly 40 feet tall. He should feel ancient, terrifying, powerful, and mythic rather than campy or cartoonish.
+- **Daerites**: human followers aligned with the dark side of the conflict and associated with the demonic threat. They are not monsters or undead. Visually, they should read as dark-fantasy human antagonists / cult-aligned or militant followers, not generic zombies.
+- **Black fire**: a corrupted or unnatural magical fire. It should feel dark, magical, and threatening rather than like ordinary orange flame.
 
 If you use these concepts visually, keep them coherent with this guidance.
 
@@ -74,12 +74,12 @@ Do not feel required to follow that structure exactly if you can devise somethin
 
 Potential imagery might include things such as:
 
-* an apparently peaceful fantasy landscape with something subtly wrong
-* a lone mage or traveller moving through rain, fog, ruined streets, woodland, or firelight
-* evidence that dark magic has been used
-* distant conflict, dark followers, or signs of organised threat
-* a brief glimpse of something enormous emerging through smoke, fire, darkness, or magical energy
-* the final book cover / title reveal
+- an apparently peaceful fantasy landscape with something subtly wrong
+- a lone mage or traveller moving through rain, fog, ruined streets, woodland, or firelight
+- evidence that dark magic has been used
+- distant conflict, dark followers, or signs of organised threat
+- a brief glimpse of something enormous emerging through smoke, fire, darkness, or magical energy
+- the final book cover / title reveal
 
 Avoid trying to show too much.
 
@@ -115,16 +115,16 @@ The trailer should end with a simple, readable CTA.
 
 Use the following CTA logic:
 
-* If an exact, clean, real book link is available in the campaign assets or session context, use it on the final frame.
-* If no clean link is available, use: **Available now on Amazon**
-* Do not invent, guess, or hallucinate a URL.
+- If an exact, clean, real book link is available in the campaign assets or session context, use it on the final frame.
+- If no clean link is available, use: **Available now on Amazon**
+- Do not invent, guess, or hallucinate a URL.
 
 Keep the CTA visually restrained and readable. The final frame should primarily feature:
 
-* book title
-* author name
-* CTA
-* book cover if available
+- book title
+- author name
+- CTA
+- book cover if available
 
 ## Visual Generation
 
@@ -146,18 +146,18 @@ The finished piece should not look like a slideshow of AI images.
 
 Use restrained cinematic movement such as:
 
-* slow push-ins
-* tracking
-* parallax
-* atmospheric movement
-* particles
-* embers
-* fog
-* rain
-* light flicker
-* subtle shake
-* depth
-* transitions motivated by light, darkness, smoke, movement, or sound
+- slow push-ins
+- tracking
+- parallax
+- atmospheric movement
+- particles
+- embers
+- fog
+- rain
+- light flicker
+- subtle shake
+- depth
+- transitions motivated by light, darkness, smoke, movement, or sound
 
 Avoid excessive zooming and cheesy preset transitions.
 
@@ -173,13 +173,13 @@ Build toward the reveal rather than using a flat music bed.
 
 Where useful, include subtle effects such as:
 
-* distant impact
-* low rumble
-* fire
-* wind
-* magical energy
-* transition hits
-* demonic or environmental texture
+- distant impact
+- low rumble
+- fire
+- wind
+- magical energy
+- transition hits
+- demonic or environmental texture
 
 If narration is supported and produces a better trailer, use it.
 
@@ -205,12 +205,12 @@ Suggested identity:
 
 Target:
 
-* duration: approximately 15 seconds
-* aspect ratio: 9:16
-* resolution: 1080 × 1920
-* frame rate: 30fps
-* output: H.264 MP4 with AAC audio
-* style/template: cinematic fantasy
+- duration: approximately 15 seconds
+- aspect ratio: 9:16
+- resolution: 1080 × 1920
+- frame rate: 30fps
+- output: H.264 MP4 with AAC audio
+- style/template: cinematic fantasy
 
 Persist the storyboard and campaign configuration so individual shots can later be regenerated without rebuilding the entire campaign.
 
@@ -243,20 +243,20 @@ The goal is a strong social-media trailer, not mathematical perfection.
 
 Regenerate or repair assets containing obvious problems such as:
 
-* malformed faces or bodies
-* accidental duplicate people
-* nonsensical weapons
-* broken architecture
-* unreadable generated text
-* wildly inconsistent character appearance
-* obvious visual-style changes between adjacent shots
-* imagery that looks cartoonish when the rest is cinematic
-* badly cropped subjects
-* title or captions obscured by composition
-* bland imagery that lacks a clear focal point
-* motion that exposes the underlying still-image trick
-* abrupt or amateur-looking transitions
-* audio clipping or dialogue buried beneath music
+- malformed faces or bodies
+- accidental duplicate people
+- nonsensical weapons
+- broken architecture
+- unreadable generated text
+- wildly inconsistent character appearance
+- obvious visual-style changes between adjacent shots
+- imagery that looks cartoonish when the rest is cinematic
+- badly cropped subjects
+- title or captions obscured by composition
+- bland imagery that lacks a clear focal point
+- motion that exposes the underlying still-image trick
+- abrupt or amateur-looking transitions
+- audio clipping or dialogue buried beneath music
 
 ## Creative Autonomy
 
@@ -274,13 +274,13 @@ Do not weaken the output merely to work around an obvious defect in the tool.
 
 At completion I should have:
 
-* the campaign configuration
-* the final storyboard
-* generated source assets
-* any narration/audio used
-* the final rendered MP4
-* inspection/verification artifacts produced by the system
-* a concise record of any shots you regenerated and why
+- the campaign configuration
+- the final storyboard
+- generated source assets
+- any narration/audio used
+- the final rendered MP4
+- inspection/verification artifacts produced by the system
+- a concise record of any shots you regenerated and why
 
 Most importantly:
 
@@ -288,4 +288,4 @@ Most importantly:
 
 Success is not that the pipeline ran.
 
-Success is that the resulting 15-second video feels like a convincing cinematic advertisement for *The Rise of Demons*.
+Success is that the resulting 15-second video feels like a convincing cinematic advertisement for _The Rise of Demons_.

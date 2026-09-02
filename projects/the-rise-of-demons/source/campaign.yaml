@@ -1,0 +1,18 @@
+schemaVersion: 1
+id: rise-of-demons-demo
+title: The Rise of Demons — Battle Demo
+type: book
+style: cinematic-fantasy
+durationSeconds: 9.2
+targetAudience: Adult epic and dark-fantasy readers on TikTok, Instagram Reels, and YouTube Shorts
+description: A short vertical book trailer that turns a supplied demon battle into an animated, ember-lit reveal.
+tone: [dark, cinematic, ominous, epic, high-fantasy]
+cta: Amazon
+output: { width: 1080, height: 1920, fps: 30, format: mp4 }
+assets:
+  battle: ../../../misc-images/vivrel-dara-demon-camp-alpine.png
+  cover: ../../../misc-images/the-rise-of-demons-cover.png
+  soundtrack: generated/audio/soundtrack.wav
+brand:
+  name: The Rise of Demons
+  colors: ['#07090D', '#C45C2B', '#E6C678', '#F5E9D0']
