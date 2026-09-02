@@ -20,6 +20,48 @@ const localIdentifier = z.string().regex(/^[a-z][a-z0-9-]*$/);
 const semver = z.string().regex(/^\d+\.\d+\.\d+$/);
 const vec3 = z.tuple([z.number().finite(), z.number().finite(), z.number().finite()]);
 
+export const architecturalEnvelopeMaterialRoleSchema = z.enum([
+  'structure',
+  'foundation',
+  'facade-finish',
+  'facade-trim',
+  'facade-damp-course',
+  'roof',
+  'roof-trim',
+  'threshold',
+  'interior-wall',
+  'dark-room',
+  'lit-room',
+  'occupancy',
+]);
+
+export type ArchitecturalEnvelopeMaterialRole = z.infer<
+  typeof architecturalEnvelopeMaterialRoleSchema
+>;
+
+export const architecturalEnvelopeMaterialTargetsSchema = z.object({
+  schemaVersion: z.literal(1),
+  targets: z
+    .array(
+      z.object({
+        materialId: localIdentifier,
+        roles: z
+          .array(architecturalEnvelopeMaterialRoleSchema)
+          .min(1)
+          .refine((roles) => new Set(roles).size === roles.length, 'material roles must be unique'),
+      }),
+    )
+    .min(1)
+    .refine(
+      (targets) => new Set(targets.map((target) => target.materialId)).size === targets.length,
+      'architectural material targets must be unique',
+    ),
+});
+
+export type ArchitecturalEnvelopeMaterialTargets = z.infer<
+  typeof architecturalEnvelopeMaterialTargetsSchema
+>;
+
 const openingSchema = z.object({
   id: localIdentifier,
   kind: z.enum(['door', 'window', 'shopfront']),
@@ -280,6 +322,47 @@ export interface ArchitecturalEnvelopeReport {
   constructionDetail: FacadeConstructionDetailReport;
   facadeLayerDepths: Array<{ id: string; frontZ: number; backZ: number }>;
   apertures: Array<{ id: string; centreRayClear: boolean; roomDepthMeters: number }>;
+  surfaceMaterialTargets: ArchitecturalEnvelopeMaterialTargets;
+}
+
+function compileSurfaceMaterialTargets(
+  definition: ArchitecturalEnvelopeDefinition,
+): ArchitecturalEnvelopeMaterialTargets {
+  const roles = new Map<string, Set<ArchitecturalEnvelopeMaterialRole>>();
+  const add = (materialId: string, role: ArchitecturalEnvelopeMaterialRole) => {
+    const existing = roles.get(materialId) ?? new Set<ArchitecturalEnvelopeMaterialRole>();
+    existing.add(role);
+    roles.set(materialId, existing);
+  };
+  add(definition.materials.structure, 'structure');
+  add(definition.materials.foundation, 'foundation');
+  add(definition.materials.roof, 'roof');
+  add(definition.materials.trim, 'facade-trim');
+  add(definition.materials.interior, 'interior-wall');
+  add(definition.materials.darkRoom, 'dark-room');
+  add(definition.materials.litRoom, 'lit-room');
+  add(definition.materials.occupancy, 'occupancy');
+  for (const layer of definition.shell.facadeLayers)
+    add(
+      layer.materialId,
+      layer.role === 'finish'
+        ? 'facade-finish'
+        : layer.role === 'trim'
+          ? 'facade-trim'
+          : 'facade-damp-course',
+    );
+  add(definition.roof.materialId, 'roof');
+  add(definition.roof.trimMaterialId, 'roof-trim');
+  add(definition.threshold.materialId, 'threshold');
+  return architecturalEnvelopeMaterialTargetsSchema.parse({
+    schemaVersion: 1,
+    targets: [...roles.entries()]
+      .sort(([left], [right]) => left.localeCompare(right))
+      .map(([materialId, materialRoles]) => ({
+        materialId,
+        roles: [...materialRoles].sort(),
+      })),
+  });
 }
 
 function basicMaterial(id: string, index: number): GeometryMaterial {
@@ -536,8 +619,7 @@ export function compileArchitecturalEnvelope(input: ArchitecturalEnvelopeDefinit
   }
 
   const facadeExteriorZ =
-    frontZ -
-    definition.shell.facadeLayers.reduce((sum, layer) => sum + layer.thicknessMeters, 0);
+    frontZ - definition.shell.facadeLayers.reduce((sum, layer) => sum + layer.thicknessMeters, 0);
   const constructionDetail = compileFacadeConstructionDetail({
     schemaVersion: 1,
     id: `${definition.id}.construction-detail`,
@@ -556,9 +638,12 @@ export function compileArchitecturalEnvelope(input: ArchitecturalEnvelopeDefinit
       maximumY: placement.opening.maximumY,
     })),
     trimMaterialId: definition.materials.trim,
-    wearReceiverMaterialId: definition.shell.facadeLayers[0]?.materialId ?? definition.materials.structure,
+    wearReceiverMaterialId:
+      definition.shell.facadeLayers[0]?.materialId ?? definition.materials.structure,
   });
   parts.push(...constructionDetail.parts);
+
+  const surfaceMaterialTargets = compileSurfaceMaterialTargets(definition);
 
   parts.push(
     boxPart(
@@ -628,6 +713,7 @@ export function compileArchitecturalEnvelope(input: ArchitecturalEnvelopeDefinit
       detailTier: definition.detailTier,
       modulePlacements,
       constructionDetail: constructionDetail.report,
+      architecturalMaterialTargets: surfaceMaterialTargets,
     },
   );
   const materialIds = new Set([
@@ -717,6 +803,7 @@ export function compileArchitecturalEnvelope(input: ArchitecturalEnvelopeDefinit
       ),
       roomDepthMeters: opening.roomDepthMeters,
     })),
+    surfaceMaterialTargets,
   };
   return { definition, geometry, modulePlacements, report };
 }

@@ -1,5 +1,6 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join, relative, resolve } from 'node:path';
+import { bindArchitecturalEnvelopeMaterials } from './architectural-envelope-material-assembly.js';
 import { renderCinematicScene } from '../cinematic/blender.js';
 import { saveCinematicScene } from '../cinematic/io.js';
 import { cinematicSceneSchema } from '../cinematic/model.js';
@@ -15,6 +16,8 @@ import {
 } from '../environments/irregular-paving.js';
 import { saveGeometry } from '../geometry/io.js';
 import type { GeometryAsset, Vec3 } from '../geometry/model.js';
+import { createArchitecturalEnvelopeSurfaceProfile } from '../materials/architectural-envelope.js';
+import { saveSurfaceMaterial } from '../materials/io.js';
 import { createOldCityWallLanternGeometry } from '../fixtures/wall-lantern.js';
 import { createProjectingSupportedCanopy } from '../props/projecting-canopy.js';
 import { createProjectingHangingSign } from '../props/projecting-sign.js';
@@ -175,7 +178,26 @@ export async function createArchitecturalEnvelopeTransferFixtures(
       throw new Error(`${host} envelope failed structural acceptance`);
     if (!paving.report.geometryValid || !paving.report.supportGeometryValid || paving.report.supportQueryCoverage.hits !== paving.report.supportQueryCoverage.samples)
       throw new Error(`${host} paving failed structural acceptance`);
-    const envelopeFile = await saveGeometry(join(directory, 'envelope-geometry.json'), envelope.geometry);
+    const unboundEnvelopeFile = await saveGeometry(
+      join(directory, 'envelope-geometry-unbound.json'),
+      envelope.geometry,
+    );
+    const materialDirectory = join(directory, 'envelope-materials');
+    const materialPaths: Record<string, string> = {};
+    for (const [target, material] of Object.entries(
+      createArchitecturalEnvelopeSurfaceProfile(host),
+    ))
+      materialPaths[target] = await saveSurfaceMaterial(
+        join(materialDirectory, target, 'material.json'),
+        material,
+      );
+    const materialAssembly = await bindArchitecturalEnvelopeMaterials({
+      envelopeGeometryPath: unboundEnvelopeFile,
+      materialPaths,
+      outputGeometryPath: join(directory, 'envelope-geometry.json'),
+      reportPath: join(directory, 'envelope-material-binding-report.json'),
+    });
+    const envelopeFile = materialAssembly.path;
     const pavingFile = await saveGeometry(join(directory, 'paving-geometry.json'), paving.geometry);
     await saveGeometry(join(directory, 'paving-support-geometry.json'), paving.supportGeometry);
     await json(join(directory, 'envelope-definition.json'), envelope.definition);
@@ -316,8 +338,26 @@ export async function createArchitecturalEnvelopeTransferFixtures(
       );
       scenes.push({ intent, sceneFile, render: options.render === false ? undefined : await renderCinematicScene(sceneFile, sceneDirectory) });
     }
-    hosts.push({ host, directory, envelope: envelope.report, paving: paving.report, compatibility, scenes });
+    hosts.push({
+      host,
+      directory,
+      envelope: envelope.report,
+      envelopeMaterials: materialAssembly.report,
+      paving: paving.report,
+      compatibility,
+      scenes,
+    });
   }
-  await json(join(output, 'fixture-report.json'), { schemaVersion: 1, status: 'candidate-awaiting-visual-acceptance', hosts: hosts.map(({ host, directory, compatibility, scenes }) => ({ host, directory, compatibility, scenes: scenes.map(({ intent, sceneFile }) => ({ intent, sceneFile })) })) });
+  await json(join(output, 'fixture-report.json'), {
+    schemaVersion: 1,
+    status: 'candidate-awaiting-visual-acceptance',
+    hosts: hosts.map(({ host, directory, envelopeMaterials, compatibility, scenes }) => ({
+      host,
+      directory,
+      envelopeMaterialBindingReport: envelopeMaterials,
+      compatibility,
+      scenes: scenes.map(({ intent, sceneFile }) => ({ intent, sceneFile })),
+    })),
+  });
   return { output, hosts };
 }

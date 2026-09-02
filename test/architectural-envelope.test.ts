@@ -40,6 +40,26 @@ describe('construction-aware architectural envelopes', () => {
     expect(historic.report.constructionDetail.openingHeadCount).toBe(6);
     expect(contemporary.report.constructionDetail.style).toBe('contemporary-plaster');
     expect(contemporary.report.constructionDetail.revealBandCount).toBe(15);
+    expect(contemporary.report.surfaceMaterialTargets).toEqual({
+      schemaVersion: 1,
+      targets: [
+        { materialId: 'concrete-block', roles: ['structure'] },
+        { materialId: 'contemporary-mineral-render', roles: ['facade-finish'] },
+        { materialId: 'dark-room', roles: ['dark-room'] },
+        {
+          materialId: 'dark-stone-plinth',
+          roles: ['facade-damp-course', 'foundation', 'threshold'],
+        },
+        { materialId: 'flat-roof-membrane', roles: ['roof'] },
+        { materialId: 'lit-room', roles: ['lit-room'] },
+        { materialId: 'neutral-interior-plaster', roles: ['interior-wall'] },
+        { materialId: 'painted-metal-interior', roles: ['occupancy'] },
+        { materialId: 'painted-metal-trim', roles: ['facade-trim', 'roof-trim'] },
+      ],
+    });
+    expect(contemporary.geometry.metadata.architecturalMaterialTargets).toEqual(
+      contemporary.report.surfaceMaterialTargets,
+    );
     expect(
       contemporary.report.constructionDetail.dirtReceiverZones.some(
         (zone) => zone.role === 'parapet-runoff',

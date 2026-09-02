@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "audit": "exact-role-aware-architectural-envelope-material-transfer",
+  "date": "2026-09-02",
+  "scope": "Reusable architectural-envelope material assembly across unrelated historic and contemporary hosts; no benchmark scene was changed or rerendered.",
+  "decision": "structurally-accepted-visually-rejected",
+  "architecture": {
+    "adr": "docs/adr/070-exact-role-aware-architectural-envelope-material-assembly.md",
+    "liveRoles": [
+      "structure",
+      "foundation",
+      "facade-finish",
+      "facade-trim",
+      "facade-damp-course",
+      "roof",
+      "roof-trim",
+      "threshold",
+      "interior-wall",
+      "dark-room",
+      "lit-room",
+      "occupancy"
+    ],
+    "exactCoverageRequired": true,
+    "atomicBinding": true,
+    "topologyAndAttachmentsPreserved": true,
+    "providerFreeRenderAndVerification": true
+  },
+  "hosts": [
+    {
+      "host": "historic-masonry-shopfront",
+      "boundTargets": 9,
+      "unboundTargets": 0,
+      "renderChecks": "8/8 pass",
+      "geometrySha256": "4445347b1d3824360a48f0eb28120c477b962ca6ea4c6fc5636bf3484d229e0e",
+      "contactSheet": "work/environments/architectural-envelope-material-v1/historic-masonry-shopfront/verification/neutral-diagnostic/contact-sheet.png",
+      "contactSheetSha256": "ca1932a2534b829069bafd3b448f8dc512d868fcc1dd4c27519e7f6288e11303"
+    },
+    {
+      "host": "contemporary-plaster-mixed-use",
+      "boundTargets": 9,
+      "unboundTargets": 0,
+      "renderChecks": "8/8 pass",
+      "geometrySha256": "88049dc5b994143745f51c8db98f7e58f8063396a33a29d11aefbd5cb3f5354f",
+      "contactSheet": "work/environments/architectural-envelope-material-v1/contemporary-plaster-mixed-use/verification/neutral-diagnostic/contact-sheet.png",
+      "contactSheetSha256": "c38e44efc8509ddc60f5f501114bbeb67cbeef6737013d9ef807cbca0975c3d9"
+    }
+  ],
+  "sameCameraFallbackComparison": {
+    "host": "contemporary-plaster-mixed-use",
+    "framePsnrDb": [17.407596, 19.72991, 18.78099],
+    "interpretation": "The exact surface assembly materially changes all canonical views and is not a metadata-only path."
+  },
+  "visualAssessment": {
+    "publicationAccepted": false,
+    "improvements": [
+      "dark stone plinth and painted trim now separate by construction role",
+      "historic stone, timber, plaster, masonry and slate have distinct procedural responses",
+      "interior wall, room-state and occupancy surfaces no longer inherit arbitrary envelope palette slots"
+    ],
+    "remainingDefects": [
+      "facade planes, corners and construction joins remain too clean and perfect",
+      "macro material variation, local repair, runoff history and edge wear remain weak",
+      "procedural plaster and masonry response is restrained or visually flat at the audit shot distance",
+      "glazing and inhabited interiors remain sparse and synthetic",
+      "neutral transfer evidence is not photographic reference-matched material acceptance"
+    ],
+    "largestNextReusableGap": "renderer-independent multi-scale facade construction history and bounded geometry irregularity on the unchanged role-aware material contract"
+  },
+  "productionClothing": {
+    "priority": "queued behind the current higher-priority reusable environment/material tranche",
+    "benchmarkSpecific": false,
+    "gaps": [
+      "garment panels and pattern construction",
+      "seams",
+      "hems",
+      "physical thickness",
+      "shoulder and armhole quality",
+      "reusable base weights and targeted correctives",
+      "folds and wrinkles",
+      "production cloth materials",
+      "selective simulation",
+      "deterministic temporal verification"
+    ]
+  }
+}

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
 import { readFile } from 'node:fs/promises';
-import { dirname, resolve } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import YAML from 'yaml';
 import {
   inspectCampaign,
@@ -65,6 +65,7 @@ import { acceptProjectingHangingSign } from './application/projecting-sign-accep
 import { createProjectingSupportedCanopyAsset } from './application/projecting-canopies.js';
 import { acceptProjectingSupportedCanopy } from './application/projecting-canopy-acceptance.js';
 import { createArchitecturalEnvelopeTransferFixtures } from './application/architectural-envelope-fixtures.js';
+import { bindArchitecturalEnvelopeMaterials } from './application/architectural-envelope-material-assembly.js';
 import {
   bindPavingConstructionMaterials,
   bindProceduralPavingUnitMaterial,
@@ -97,6 +98,10 @@ import {
 import { createEnvironmentalSurfaceGallery } from './application/material-gallery.js';
 import { acceptEnvironmentalSurfaceSuite } from './application/environmental-material-acceptance.js';
 import { loadSurfaceMaterial, saveSurfaceMaterial } from './materials/io.js';
+import {
+  createArchitecturalEnvelopeSurfaceProfile,
+  type ArchitecturalEnvelopeMaterialHost,
+} from './materials/architectural-envelope.js';
 import {
   createPavingUnitSurfaceMaterial,
   type PavingUnitMaterialKind,
@@ -1255,6 +1260,45 @@ environment
     );
   });
 environment
+  .command('bind-architectural-envelope-materials')
+  .argument('<envelope-geometry>')
+  .argument('<output-geometry>')
+  .requiredOption(
+    '--material <target=path>',
+    'bind a role-checked surface to an exact live envelope target; repeat for every target',
+    (value: string, previous: string[]) => [...previous, value],
+    [],
+  )
+  .description('atomically replace every envelope fallback with an exact role-compatible surface')
+  .action(async function (
+    envelopeGeometry: string,
+    outputGeometry: string,
+    options: { material: string[] },
+  ) {
+    const materialPaths = Object.fromEntries(
+      options.material.map((entry) => {
+        const separator = entry.indexOf('=');
+        if (separator <= 0 || separator === entry.length - 1)
+          throw new Error(`architectural material '${entry}' must use target=path`);
+        return [entry.slice(0, separator), entry.slice(separator + 1)];
+      }),
+    );
+    if (Object.keys(materialPaths).length !== options.material.length)
+      throw new Error('architectural material targets must be unique');
+    const data = await bindArchitecturalEnvelopeMaterials({
+      envelopeGeometryPath: envelopeGeometry,
+      materialPaths,
+      outputGeometryPath: outputGeometry,
+    });
+    output(
+      this,
+      'environment.bind-architectural-envelope-materials',
+      data,
+      (result) =>
+        `✓ ${result.report.bindings.length} exact architectural material targets bound → ${result.path}`,
+    );
+  });
+environment
   .command('bind-paving-construction-materials')
   .argument('<paving-geometry>')
   .argument('<joint-material>')
@@ -2270,6 +2314,34 @@ surfaceMaterial
       data,
       (result) =>
         `✓ wet cobble palette + relief + roughness swatch (${result.validation.stats.vertices} vertices) → ${result.output}`,
+    );
+  });
+surfaceMaterial
+  .command('create-architectural-envelope-suite')
+  .argument('<host>')
+  .argument('<output-directory>')
+  .description('create a project-owned role-compatible surface suite for an envelope host class')
+  .action(async function (host: string, directory: string) {
+    if (host !== 'historic-masonry-shopfront' && host !== 'contemporary-plaster-mixed-use')
+      throw new Error(`unknown architectural envelope material host '${host}'`);
+    const outputDirectory = resolve(directory);
+    const profile = createArchitecturalEnvelopeSurfaceProfile(
+      host as ArchitecturalEnvelopeMaterialHost,
+    );
+    const paths = Object.fromEntries(
+      await Promise.all(
+        Object.entries(profile).map(async ([target, material]) => [
+          target,
+          await saveSurfaceMaterial(join(outputDirectory, target, 'material.json'), material),
+        ]),
+      ),
+    );
+    output(
+      this,
+      'material.create-architectural-envelope-suite',
+      { host, output: outputDirectory, paths },
+      (result) =>
+        `✓ ${Object.keys(result.paths).length} role-compatible envelope surfaces → ${result.output}`,
     );
   });
 surfaceMaterial
