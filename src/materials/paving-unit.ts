@@ -109,6 +109,7 @@ export function createPavingUnitSurfaceMaterial(kind: PavingUnitMaterialKind): S
           loose: { colorMultiplier: 0.76, roughnessOffset: 0.14 },
           persistent: { colorMultiplier: 0.84, roughnessOffset: 0.08 },
         },
+    surfaceHistoryV3Participation: { policy: 'optical-response' },
     metallic: 0,
     metadata: {
       generator: 'videoer.procedural-paving-unit-material.v1',

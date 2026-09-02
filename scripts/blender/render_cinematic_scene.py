@@ -1942,6 +1942,36 @@ def create_surface_history(definition, receiver_asset, receiver_mesh):
         )
 
     definitions = receiver_asset.get("materials", [])
+    active_material_ids = {cell["materialId"] for cell in field["cells"]}
+    definitions_by_id = {item.get("id"): item for item in definitions}
+    optical_materials = []
+    transport_only_materials = []
+    if schema_version == 3:
+        for material_id in sorted(active_material_ids):
+            material_definition = definitions_by_id.get(material_id)
+            if material_definition is None:
+                raise RuntimeError(
+                    f"Entity '{definition['id']}' active v3 material '{material_id}' is absent from receiver geometry"
+                )
+            surface = material_definition.get("surface") or {}
+            participation = surface.get("surfaceHistoryV3Participation")
+            policy = (participation or {}).get("policy")
+            has_causal = bool(surface.get("historyResponseV3"))
+            has_dirt = bool(surface.get("dirtMassResponse"))
+            if policy == "optical-response" and has_causal and has_dirt:
+                optical_materials.append(material_id)
+            elif (
+                policy == "transport-only"
+                and isinstance(participation.get("rationale"), str)
+                and participation["rationale"].strip()
+                and not has_causal
+                and not has_dirt
+            ):
+                transport_only_materials.append(material_id)
+            else:
+                raise RuntimeError(
+                    f"Entity '{definition['id']}' active v3 material '{material_id}' has invalid or incomplete surface-history participation"
+                )
     response_materials = []
     dirt_response_materials = []
     unmapped_materials = []
@@ -1954,12 +1984,17 @@ def create_surface_history(definition, receiver_asset, receiver_mesh):
     )
     for slot_index, original in enumerate(list(receiver_mesh.data.materials)):
         material_definition = definitions[slot_index] if slot_index < len(definitions) else None
+        material_id = (material_definition or {}).get("id")
+        if schema_version == 3 and material_id not in active_material_ids:
+            continue
         response = (material_definition or {}).get("surface", {}).get(response_contract)
         dirt_response = (material_definition or {}).get("surface", {}).get("dirtMassResponse")
-        if schema_version == 3 and dirt_response and not response:
-            raise RuntimeError(
-                f"Entity '{definition['id']}' material '{material_definition['id']}' declares dirt response without historyResponseV3"
+        if schema_version == 3:
+            participation = (material_definition or {}).get("surface", {}).get(
+                "surfaceHistoryV3Participation", {}
             )
+            if participation.get("policy") == "transport-only":
+                continue
         if not response and not (dirt_image and dirt_response):
             if material_definition:
                 unmapped_materials.append(material_definition["id"])
@@ -2096,7 +2131,7 @@ def create_surface_history(definition, receiver_asset, receiver_mesh):
             response_materials.append(material_definition["id"])
         if dirt_response:
             dirt_response_materials.append(material_definition["id"])
-    if not response_materials:
+    if schema_version != 3 and not response_materials and not dirt_response_materials:
         raise RuntimeError(
             f"Entity '{definition['id']}' has a surface-history field but no material history responses"
         )
@@ -2110,6 +2145,14 @@ def create_surface_history(definition, receiver_asset, receiver_mesh):
         "historyResponseContract": response_contract,
         "responseMaterialIds": sorted(response_materials),
         "unmappedMaterialIds": sorted(unmapped_materials),
+        **(
+            {
+                "opticalResponseMaterialIds": sorted(optical_materials),
+                "transportOnlyMaterialIds": sorted(transport_only_materials),
+            }
+            if schema_version == 3
+            else {}
+        ),
         "trafficAffectedCellCount": sum(cell["trafficWear"] > 0 for cell in field["cells"]),
         "exposureAffectedCellCount": sum(cell[exposure_channel] > 0 for cell in field["cells"]),
         "runoffAffectedCellCount": sum(cell["runoffStaining"] > 0 for cell in field["cells"]),

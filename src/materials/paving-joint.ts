@@ -78,6 +78,42 @@ const definitions: Record<
 
 export function createPavingGranularSurfaceMaterial(kind: PavingGranularKind): SurfaceMaterial {
   const definition = definitions[kind];
+  const historyResponseV3 =
+    kind === 'natural-grit'
+      ? {
+          trafficWear: { colorMultiplier: 1.02, roughnessOffset: -0.08 },
+          exposureWeathering: { colorMultiplier: 0.96, roughnessOffset: 0.05 },
+          runoffStaining: { colorMultiplier: 0.68, roughnessOffset: 0.15 },
+          repairInfluence: { colorMultiplier: 1.05, roughnessOffset: -0.02 },
+        }
+      : kind === 'polymeric-sand'
+        ? {
+            trafficWear: { colorMultiplier: 1.02, roughnessOffset: -0.07 },
+            exposureWeathering: { colorMultiplier: 1.03, roughnessOffset: 0.03 },
+            runoffStaining: { colorMultiplier: 0.74, roughnessOffset: 0.12 },
+            repairInfluence: { colorMultiplier: 1.06, roughnessOffset: -0.03 },
+          }
+        : {
+            trafficWear: { colorMultiplier: 0.94, roughnessOffset: -0.12 },
+            exposureWeathering: { colorMultiplier: 1.02, roughnessOffset: 0.02 },
+            runoffStaining: { colorMultiplier: 0.64, roughnessOffset: 0.16 },
+            repairInfluence: { colorMultiplier: 1.08, roughnessOffset: -0.02 },
+          };
+  const dirtMassResponse =
+    kind === 'natural-grit'
+      ? {
+          loose: { colorMultiplier: 0.58, roughnessOffset: 0.18 },
+          persistent: { colorMultiplier: 0.68, roughnessOffset: 0.12 },
+        }
+      : kind === 'polymeric-sand'
+        ? {
+            loose: { colorMultiplier: 0.66, roughnessOffset: 0.15 },
+            persistent: { colorMultiplier: 0.75, roughnessOffset: 0.1 },
+          }
+        : {
+            loose: { colorMultiplier: 0.55, roughnessOffset: 0.18 },
+            persistent: { colorMultiplier: 0.65, roughnessOffset: 0.12 },
+          };
   return surfaceMaterialSchema.parse({
     schemaVersion: 1,
     id: definition.id,
@@ -130,6 +166,9 @@ export function createPavingGranularSurfaceMaterial(kind: PavingGranularKind): S
         scaleMeters: kind === 'natural-grit' ? 0.22 : kind === 'polymeric-sand' ? 0.35 : 0.45,
       },
     },
+    historyResponseV3,
+    dirtMassResponse,
+    surfaceHistoryV3Participation: { policy: 'optical-response' },
     metallic: 0,
     metadata: {
       generator: 'videoer.paving-joint-material.v1',

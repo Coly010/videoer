@@ -85,6 +85,7 @@ import {
 import {
   createOldCitySurfaceMaterialAssets,
   createOldCitySurfaceMaterialAsset,
+  createPavingBorderMaterialAsset,
   createPavingGranularMaterialAsset,
   createWetCobbleMaterialAsset,
 } from './application/materials.js';
@@ -1190,18 +1191,38 @@ environment
   .argument('<joint-material>')
   .argument('<substrate-material>')
   .argument('<output-geometry>')
-  .description('bind role-checked granular joint and substrate materials to paving construction')
+  .option(
+    '--border-material <target=path>',
+    'bind a role-checked border material to an exact live target; repeat for every border target',
+    (value: string, previous: string[]) => [...previous, value],
+    [],
+  )
+  .description(
+    'atomically bind role-checked joint, substrate, and optionally exact border materials to paving construction',
+  )
   .action(async function (
     pavingGeometry: string,
     jointMaterial: string,
     substrateMaterial: string,
     outputGeometry: string,
+    options: { borderMaterial: string[] },
   ) {
+    const borderMaterialPaths = Object.fromEntries(
+      options.borderMaterial.map((entry) => {
+        const separator = entry.indexOf('=');
+        if (separator <= 0 || separator === entry.length - 1)
+          throw new Error(`border material '${entry}' must use target=path`);
+        return [entry.slice(0, separator), entry.slice(separator + 1)];
+      }),
+    );
+    if (Object.keys(borderMaterialPaths).length !== options.borderMaterial.length)
+      throw new Error('border material targets must be unique');
     const data = await bindPavingConstructionMaterials({
       pavingGeometryPath: pavingGeometry,
       jointMaterialPath: jointMaterial,
       substrateMaterialPath: substrateMaterial,
       outputGeometryPath: outputGeometry,
+      ...(options.borderMaterial.length > 0 ? { borderMaterialPaths } : {}),
     });
     output(
       this,
@@ -2019,6 +2040,30 @@ surfaceMaterial
       'material.create-paving-granular',
       data,
       (result) => `✓ granular paving construction material → ${result.output}`,
+    );
+  });
+surfaceMaterial
+  .command('create-paving-border')
+  .argument('<kind>')
+  .argument('<output-directory>')
+  .description('build a metre-scaled typed paving kerb, gutter, or soldier-course material')
+  .action(async function (kind: string, directory: string) {
+    const kinds = [
+      'historic-granite-kerb',
+      'historic-dark-stone-gutter',
+      'contemporary-concrete-kerb',
+      'contemporary-channel-stone',
+    ];
+    if (!kinds.includes(kind)) throw new Error(`kind must be one of ${kinds.join(', ')}`);
+    const data = await createPavingBorderMaterialAsset(
+      kind as Parameters<typeof createPavingBorderMaterialAsset>[0],
+      directory,
+    );
+    output(
+      this,
+      'material.create-paving-border',
+      data,
+      (result) => `✓ typed paving border material → ${result.output}`,
     );
   });
 surfaceMaterial

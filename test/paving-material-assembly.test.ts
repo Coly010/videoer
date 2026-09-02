@@ -15,6 +15,10 @@ import {
 } from '../src/environments/irregular-paving.js';
 import { loadGeometry, saveGeometry } from '../src/geometry/io.js';
 import { saveSurfaceMaterial } from '../src/materials/io.js';
+import {
+  createPavingBorderSurfaceMaterial,
+  createPavingBorderSwatch,
+} from '../src/materials/paving-border.js';
 import { createPavingGranularSurfaceMaterial } from '../src/materials/paving-joint.js';
 import { createPavingUnitSurfaceMaterial } from '../src/materials/paving-unit.js';
 import { surfaceMaterialSchema, textureMaterialApplicationSchema } from '../src/materials/model.js';
@@ -80,6 +84,7 @@ describe('unit-aware paving material assembly', () => {
     expect(material.historyResponseV3).toMatchObject({
       exposureWeathering: { colorMultiplier: 1.025, roughnessOffset: 0.025 },
     });
+    expect(material.surfaceHistoryV3Participation).toEqual({ policy: 'optical-response' });
     expect(material.metadata).toMatchObject({
       constructionDomain: 'modeled-paving-unit',
       provenance: 'project-owned-procedural-definition',
@@ -337,6 +342,12 @@ describe('unit-aware paving material assembly', () => {
       bound.materials.find((material) => material.id === targets.continuousSubstrate)?.surface
         ?.metadata,
     ).toMatchObject({ granularKind: 'compacted-base' });
+    for (const target of [targets.continuousJoint, targets.continuousSubstrate]) {
+      const surface = bound.materials.find((material) => material.id === target)?.surface;
+      expect(surface?.surfaceHistoryV3Participation).toEqual({ policy: 'optical-response' });
+      expect(surface?.historyResponseV3).toBeDefined();
+      expect(surface?.dirtMassResponse).toBeDefined();
+    }
     expect(
       targets.modeledUnits.every(
         (target) =>
@@ -349,6 +360,161 @@ describe('unit-aware paving material assembly', () => {
           bound.materials.find((material) => material.id === target)?.surface === undefined,
       ),
     ).toBe(true);
+  });
+
+  it('binds every declared border target in the same atomic construction transaction', async () => {
+    directory = await mkdtemp(join(tmpdir(), 'videoer-paving-border-material-'));
+    const source = compileIrregularPaving(createHistoricSettPavingDefinition());
+    const geometryPath = await saveGeometry(join(directory, 'source/paving.json'), source.geometry);
+    const jointPath = await saveSurfaceMaterial(
+      join(directory, 'materials/joint.json'),
+      createPavingGranularSurfaceMaterial('natural-grit'),
+    );
+    const substratePath = await saveSurfaceMaterial(
+      join(directory, 'materials/substrate.json'),
+      createPavingGranularSurfaceMaterial('compacted-base'),
+    );
+    const kerbPath = await saveSurfaceMaterial(
+      join(directory, 'materials/kerb.json'),
+      createPavingBorderSurfaceMaterial('historic-granite-kerb'),
+    );
+    const gutterPath = await saveSurfaceMaterial(
+      join(directory, 'materials/gutter.json'),
+      createPavingBorderSurfaceMaterial('historic-dark-stone-gutter'),
+    );
+    const outputPath = join(directory, 'bound/paving.json');
+    const targets = source.report.surfaceMaterialTargets;
+    const swatch = createPavingBorderSwatch('historic-granite-kerb');
+    expect(swatch.metadata).toMatchObject({
+      generator: 'videoer.paving-border-swatch.v1',
+      pavingBorderMaterialKind: 'historic-granite-kerb',
+    });
+    expect(swatch.materials[0]?.surface?.pavingBorder?.compatibleKinds).toContain('kerb');
+
+    const result = await bindPavingConstructionMaterials({
+      pavingGeometryPath: geometryPath,
+      jointMaterialPath: jointPath,
+      substrateMaterialPath: substratePath,
+      borderMaterialPaths: {
+        'granite-kerb': kerbPath,
+        'dark-stone-gutter': gutterPath,
+      },
+      outputGeometryPath: outputPath,
+    });
+    const bound = await loadGeometry(outputPath);
+
+    expect(result.borderTargets).toEqual([...targets.borders].sort());
+    expect(result.materials.borders).toEqual({
+      'dark-stone-gutter': 'material.paving-border-historic-dark-stone-gutter',
+      'granite-kerb': 'material.paving-border-historic-granite-kerb',
+    });
+    for (const target of targets.borders) {
+      const surface = bound.materials.find((material) => material.id === target)?.surface;
+      expect(surface?.metadata.constructionDomain).toBe('paving-border');
+      expect(surface?.surfaceHistoryV3Participation).toEqual({ policy: 'optical-response' });
+      expect(surface?.historyResponseV3).toBeDefined();
+      expect(surface?.dirtMassResponse).toBeDefined();
+    }
+  });
+
+  it('rejects incomplete, extra and wrong-kind border bindings without replacing prior output', async () => {
+    directory = await mkdtemp(join(tmpdir(), 'videoer-paving-border-rejection-'));
+    const source = compileIrregularPaving(createHistoricSettPavingDefinition());
+    const geometryPath = await saveGeometry(join(directory, 'source/paving.json'), source.geometry);
+    const jointPath = await saveSurfaceMaterial(
+      join(directory, 'materials/joint.json'),
+      createPavingGranularSurfaceMaterial('polymeric-sand'),
+    );
+    const substratePath = await saveSurfaceMaterial(
+      join(directory, 'materials/substrate.json'),
+      createPavingGranularSurfaceMaterial('compacted-base'),
+    );
+    const kerbPath = await saveSurfaceMaterial(
+      join(directory, 'materials/kerb.json'),
+      createPavingBorderSurfaceMaterial('historic-granite-kerb'),
+    );
+    const gutterPath = await saveSurfaceMaterial(
+      join(directory, 'materials/gutter.json'),
+      createPavingBorderSurfaceMaterial('historic-dark-stone-gutter'),
+    );
+    const outputPath = await saveGeometry(join(directory, 'output/paving.json'), source.geometry);
+    const originalOutputSha256 = sha256Bytes(await readFile(outputPath));
+    const common = {
+      pavingGeometryPath: geometryPath,
+      jointMaterialPath: jointPath,
+      substrateMaterialPath: substratePath,
+      outputGeometryPath: outputPath,
+    };
+
+    await expect(
+      bindPavingConstructionMaterials({
+        ...common,
+        borderMaterialPaths: { 'granite-kerb': kerbPath },
+      }),
+    ).rejects.toThrow(/exactly match live targets.*missing/u);
+    expect(sha256Bytes(await readFile(outputPath))).toBe(originalOutputSha256);
+
+    await expect(
+      bindPavingConstructionMaterials({
+        ...common,
+        borderMaterialPaths: {
+          'granite-kerb': kerbPath,
+          'dark-stone-gutter': gutterPath,
+          'not-a-live-border': kerbPath,
+        },
+      }),
+    ).rejects.toThrow(/extra \[not-a-live-border\]/u);
+    expect(sha256Bytes(await readFile(outputPath))).toBe(originalOutputSha256);
+
+    await expect(
+      bindPavingConstructionMaterials({
+        ...common,
+        borderMaterialPaths: {
+          'granite-kerb': gutterPath,
+          'dark-stone-gutter': gutterPath,
+        },
+      }),
+    ).rejects.toThrow(/incompatible with target 'granite-kerb'/u);
+    expect(sha256Bytes(await readFile(outputPath))).toBe(originalOutputSha256);
+  });
+
+  it('cross-validates explicit surface-history v3 optical and transport-only policies', () => {
+    const optical = createPavingUnitSurfaceMaterial('historic-cut-granite');
+    expect(
+      createPavingBorderSurfaceMaterial('contemporary-channel-stone').pavingBorder?.compatibleKinds,
+    ).toEqual(['gutter']);
+    expect(
+      createPavingBorderSurfaceMaterial('contemporary-concrete-kerb').pavingBorder?.compatibleKinds,
+    ).toEqual(['kerb', 'soldier-course']);
+    expect(() => surfaceMaterialSchema.parse({ ...optical, historyResponseV3: undefined })).toThrow(
+      /optical participation requires historyResponseV3/u,
+    );
+    expect(() => surfaceMaterialSchema.parse({ ...optical, dirtMassResponse: undefined })).toThrow(
+      /optical participation requires dirtMassResponse/u,
+    );
+    expect(() =>
+      surfaceMaterialSchema.parse({
+        ...optical,
+        surfaceHistoryV3Participation: {
+          policy: 'transport-only',
+          rationale: 'Hydrology-only diagnostic receiver.',
+        },
+      }),
+    ).toThrow(/transport-only participation forbids/u);
+    expect(
+      surfaceMaterialSchema.parse({
+        ...optical,
+        historyResponseV3: undefined,
+        dirtMassResponse: undefined,
+        surfaceHistoryV3Participation: {
+          policy: 'transport-only',
+          rationale: 'Hydrology-only diagnostic receiver.',
+        },
+      }).surfaceHistoryV3Participation,
+    ).toEqual({
+      policy: 'transport-only',
+      rationale: 'Hydrology-only diagnostic receiver.',
+    });
   });
 
   it('rejects wrong granular roles, construction domains, and pattern kinds', async () => {

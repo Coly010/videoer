@@ -17,6 +17,11 @@ import {
   createPavingGranularSwatch,
   type PavingGranularKind,
 } from '../materials/paving-joint.js';
+import {
+  createPavingBorderSurfaceMaterial,
+  createPavingBorderSwatch,
+  type PavingBorderMaterialKind,
+} from '../materials/paving-border.js';
 
 interface SurfaceAssetDefinition {
   material: SurfaceMaterial;
@@ -156,7 +161,7 @@ export async function createPavingGranularMaterialAsset(
   return createSurfaceMaterialAsset(outputDirectory, {
     material,
     swatch: createPavingGranularSwatch(kind),
-    version: '0.1.0',
+    version: '0.2.0',
     title: isSubstrate
       ? 'Procedural compacted paving substrate'
       : `Procedural ${kind} paving joint`,
@@ -164,6 +169,22 @@ export async function createPavingGranularMaterialAsset(
       ? 'Renderer-independent compacted granular base with physical aggregate and fines scales, pore relief, embedded dirt, and explicit surface-water absorption.'
       : 'Renderer-independent paving joint fill with physical aggregate and fines scales, compaction, pore relief, embedded dirt, and explicit surface-water response.',
     tags: ['paving', isSubstrate ? 'substrate' : 'joint', 'granular', 'construction'],
+  });
+}
+
+export async function createPavingBorderMaterialAsset(
+  kind: PavingBorderMaterialKind,
+  outputDirectory: string,
+) {
+  const material = createPavingBorderSurfaceMaterial(kind);
+  return createSurfaceMaterialAsset(outputDirectory, {
+    material,
+    swatch: createPavingBorderSwatch(kind),
+    version: '0.1.0',
+    title: `Procedural ${kind.replaceAll('-', ' ')} paving border`,
+    description:
+      'Renderer-independent paving border material with typed kerb, gutter, or soldier-course compatibility and explicit water, construction-history, and dirt response.',
+    tags: ['paving', 'border', 'construction', ...material.pavingBorder!.compatibleKinds],
   });
 }
 

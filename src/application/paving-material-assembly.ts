@@ -2,7 +2,10 @@ import { randomUUID } from 'node:crypto';
 import { mkdir, rename, rm, writeFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { sha256File } from '../assets/library.js';
-import { pavingSurfaceMaterialTargetsSchema } from '../environments/irregular-paving.js';
+import {
+  irregularPavingDefinitionSchema,
+  pavingSurfaceMaterialTargetsSchema,
+} from '../environments/irregular-paving.js';
 import { loadGeometry, saveGeometry } from '../geometry/io.js';
 import { loadSurfaceMaterial } from '../materials/io.js';
 import { bindSurfaceMaterial, bindSurfaceMaterialTargets } from '../materials/adaptation.js';
@@ -32,6 +35,8 @@ export interface BindPavingConstructionMaterialsOptions {
   outputGeometryPath: string;
   jointApplication?: TextureMaterialApplication;
   substrateApplication?: TextureMaterialApplication;
+  borderMaterialPaths?: Record<string, string>;
+  borderApplications?: Record<string, TextureMaterialApplication>;
 }
 
 export interface BindProceduralPavingUnitMaterialOptions {
@@ -115,6 +120,26 @@ function assertGranularConstructionMaterial(
     );
 }
 
+function assertPavingBorderMaterial(
+  material: SurfaceMaterial,
+  targetMaterialId: string,
+  expectedKinds: Array<'kerb' | 'gutter' | 'soldier-course'>,
+) {
+  if (material.metadata.constructionDomain !== 'paving-border')
+    throw new Error(
+      `Paving border material '${material.id}' has wrong construction domain; expected paving-border`,
+    );
+  if (!material.pavingBorder)
+    throw new Error(`Paving border material '${material.id}' has no typed border compatibility`);
+  const incompatible = expectedKinds.filter(
+    (kind) => !material.pavingBorder!.compatibleKinds.includes(kind),
+  );
+  if (incompatible.length > 0)
+    throw new Error(
+      `Paving border material '${material.id}' is incompatible with target '${targetMaterialId}' kinds ${incompatible.join(', ')}`,
+    );
+}
+
 function assertLiveConstructionTarget(
   geometry: Awaited<ReturnType<typeof loadGeometry>>,
   materialId: string,
@@ -131,9 +156,9 @@ function assertLiveConstructionTarget(
 }
 
 /**
- * Binds granular joint and substrate surfaces only through the disjoint construction targets
- * authored by the paving generator. The final geometry file appears atomically after both roles
- * and every texture dependency have passed validation.
+ * Binds granular joint/substrate surfaces and, when declared, the exact border-material set
+ * through the disjoint construction targets authored by the paving generator. The final geometry
+ * file appears atomically after every role and texture dependency has passed validation.
  */
 export async function bindPavingConstructionMaterials(
   options: BindPavingConstructionMaterialsOptions,
@@ -146,6 +171,7 @@ export async function bindPavingConstructionMaterials(
   const targets = pavingSurfaceMaterialTargetsSchema.parse(
     geometry.metadata.surfaceMaterialTargets,
   );
+  const definition = irregularPavingDefinitionSchema.parse(geometry.metadata.definition);
   assertLiveConstructionTarget(geometry, targets.continuousJoint, 'continuousJoint');
   assertLiveConstructionTarget(geometry, targets.continuousSubstrate, 'continuousSubstrate');
 
@@ -153,6 +179,41 @@ export async function bindPavingConstructionMaterials(
   const substrate = await loadSurfaceMaterial(substrateMaterialPath);
   assertGranularConstructionMaterial(joint, 'joint');
   assertGranularConstructionMaterial(substrate, 'substrate');
+  const suppliedBorderTargets = Object.keys(options.borderMaterialPaths ?? {}).sort();
+  const expectedBorderTargets = [...targets.borders].sort();
+  if (options.borderMaterialPaths) {
+    const missing = expectedBorderTargets.filter(
+      (target) => !suppliedBorderTargets.includes(target),
+    );
+    const extra = suppliedBorderTargets.filter((target) => !expectedBorderTargets.includes(target));
+    if (missing.length > 0 || extra.length > 0)
+      throw new Error(
+        `Paving border material bindings must exactly match live targets; missing [${missing.join(', ')}], extra [${extra.join(', ')}]`,
+      );
+  }
+  const extraApplications = Object.keys(options.borderApplications ?? {}).filter(
+    (target) => !suppliedBorderTargets.includes(target),
+  );
+  if (extraApplications.length > 0)
+    throw new Error(
+      `Paving border applications have no material binding for [${extraApplications.sort().join(', ')}]`,
+    );
+  const borderMaterials = new Map<string, { material: SurfaceMaterial; path: string }>();
+  for (const target of suppliedBorderTargets) {
+    const path = resolve(options.borderMaterialPaths![target]!);
+    const material = await loadSurfaceMaterial(path);
+    const kinds = [
+      ...new Set(
+        definition.borders
+          .filter((border) => border.materialId === target)
+          .map((border) => border.kind),
+      ),
+    ];
+    if (kinds.length === 0)
+      throw new Error(`Paving border target '${target}' has no live border definition`);
+    assertPavingBorderMaterial(material, target, kinds);
+    borderMaterials.set(target, { material, path });
+  }
 
   await mkdir(dirname(outputGeometryPath), { recursive: true });
   const temporaryPath = `${outputGeometryPath}.incoming-${process.pid}-${randomUUID()}`;
@@ -196,6 +257,32 @@ export async function bindPavingConstructionMaterials(
       ).geometry;
     } else bound = bindSurfaceMaterial(bound, targets.continuousSubstrate, substrate);
 
+    for (const target of suppliedBorderTargets) {
+      const { material, path } = borderMaterials.get(target)!;
+      if (material.textureMaps) {
+        const applicationValue = options.borderApplications?.[target];
+        if (!applicationValue)
+          throw new Error(
+            `Texture-backed paving border material '${material.id}' requires an application for '${target}'`,
+          );
+        const application = textureMaterialApplicationSchema.parse(applicationValue);
+        if (application.constructionDomain !== 'paving-border')
+          throw new Error(
+            `Paving border application for '${target}' requires paving-border construction domain`,
+          );
+        bound = (
+          await bindStagedSurfaceMaterialValue({
+            geometry: bound,
+            targetMaterialId: target,
+            surface: material,
+            sourceTextureDirectory: dirname(path),
+            outputGeometryPath: temporaryPath,
+            application,
+          })
+        ).geometry;
+      } else bound = bindSurfaceMaterial(bound, target, material);
+    }
+
     await saveGeometry(temporaryPath, bound);
     await rename(temporaryPath, outputGeometryPath);
   } catch (error) {
@@ -209,7 +296,14 @@ export async function bindPavingConstructionMaterials(
       joint: targets.continuousJoint,
       substrate: targets.continuousSubstrate,
     },
-    materials: { joint: joint.id, substrate: substrate.id },
+    borderTargets: suppliedBorderTargets,
+    materials: {
+      joint: joint.id,
+      substrate: substrate.id,
+      borders: Object.fromEntries(
+        suppliedBorderTargets.map((target) => [target, borderMaterials.get(target)!.material.id]),
+      ),
+    },
   };
 }
 

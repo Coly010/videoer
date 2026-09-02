@@ -82,8 +82,20 @@ describe('surface-history v3 application assembly', () => {
     directory = undefined;
   });
 
-  async function fixture() {
+  async function fixture(
+    participation: 'optical-response' | 'missing' | 'transport-only' = 'optical-response',
+  ) {
     directory = await mkdtemp(join(tmpdir(), 'videoer-surface-history-v3-'));
+    const surface = structuredClone(createPavingUnitSurfaceMaterial('historic-cut-granite'));
+    if (participation === 'missing') delete surface.surfaceHistoryV3Participation;
+    if (participation === 'transport-only') {
+      delete surface.historyResponseV3;
+      delete surface.dirtMassResponse;
+      surface.surfaceHistoryV3Participation = {
+        policy: 'transport-only',
+        rationale: 'Participates in routed mass transport without an optical history response.',
+      };
+    }
     const geometry = mergeMeshParts(
       'environment.surface-history-v3-receiver',
       [boxPart([0, -0.1, 0], [2, 0, 2], 0, 'stone')],
@@ -98,7 +110,7 @@ describe('surface-history v3 application assembly', () => {
         metallic: 0,
         emission: [0, 0, 0],
         emissionStrength: 0,
-        surface: createPavingUnitSurfaceMaterial('historic-cut-granite'),
+        surface,
       },
     ];
     const geometryPath = join(directory, 'paving.json');
@@ -141,6 +153,63 @@ describe('surface-history v3 application assembly', () => {
     const waterPath = join(directory, 'water-v2.json');
     await writeFile(waterPath, `${JSON.stringify(water, null, 2)}\n`, 'utf8');
     return { geometryPath, waterPath };
+  }
+
+  async function verifyParticipation(
+    participation: 'optical-response' | 'missing' | 'transport-only',
+  ) {
+    const { geometryPath, waterPath } = await fixture(participation);
+    const historyPath = join(directory!, `history-${participation}.json`);
+    await createPavingSurfaceHistoryV3Field({
+      pavingGeometryPath: geometryPath,
+      surfaceWaterFieldPath: waterPath,
+      profile: profile(),
+      outputPath: historyPath,
+    });
+    const scene = cinematicSceneSchema.parse({
+      schemaVersion: 1,
+      id: `scene.surface-history-v3-${participation}`,
+      durationSeconds: 1,
+      fps: 24,
+      resolution: { width: 320, height: 180, percentage: 100 },
+      entities: [
+        {
+          id: 'receiver',
+          role: 'environment',
+          geometryPath,
+          surfaceWaterFieldPath: waterPath,
+          surfaceHistoryFieldPath: historyPath,
+          transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
+        },
+      ],
+      camera: {
+        keyframes: [
+          { time: 0, position: [2, 2, 4], target: [0, 0, 0], lensMillimeters: 50 },
+          { time: 1, position: [2, 2, 4], target: [0, 0, 0], lensMillimeters: 50 },
+        ],
+      },
+      lights: [
+        {
+          id: 'key',
+          type: 'area',
+          position: [1, 3, 2],
+          target: [0, 0, 0],
+          color: [1, 1, 1],
+          energy: 500,
+          sizeMeters: 2,
+        },
+      ],
+      atmosphere: {},
+      landmarks: [
+        { id: 'start', progress: 0, description: 'Start' },
+        { id: 'end', progress: 1, description: 'End' },
+      ],
+    });
+    const scenePath = await saveCinematicScene(
+      join(directory!, `scene-${participation}.json`),
+      scene,
+    );
+    return verifyCinematicScene(scene, scenePath);
   }
 
   it('loads, verifies and reports a persisted v3 field without collapsing causal channels', async () => {
@@ -268,7 +337,17 @@ describe('surface-history v3 application assembly', () => {
         expect.objectContaining({
           id: 'receiver.surface-history-field',
           status: 'pass',
-          measurements: expect.objectContaining({ schemaVersion: 3 }),
+          measurements: expect.objectContaining({
+            schemaVersion: 3,
+            v3OpticalMaterialIds: ['stone'],
+            v3TransportOnlyMaterialIds: [],
+            v3ParticipationByTargetClass: expect.objectContaining({
+              'modeled-unit': expect.objectContaining({
+                opticalResponseMaterialIds: ['stone'],
+                transportOnlyMaterialIds: [],
+              }),
+            }),
+          }),
         }),
       ]),
     });
@@ -302,6 +381,46 @@ describe('surface-history v3 application assembly', () => {
         outputScenePath: join(directory!, 'forged-history-scene.json'),
       }),
     ).rejects.toThrow(/field is invalid/u);
+  });
+
+  it('fails closed when an active v3 material omits its participation declaration', async () => {
+    expect(await verifyParticipation('missing')).toMatchObject({
+      status: 'fail',
+      checks: expect.arrayContaining([
+        expect.objectContaining({
+          id: 'receiver.surface-history-field',
+          status: 'fail',
+          measurements: expect.objectContaining({
+            v3OpticalMaterialIds: [],
+            v3TransportOnlyMaterialIds: [],
+            v3MaterialPolicyIssues: [expect.stringContaining('stone: declared undefined')],
+          }),
+        }),
+      ]),
+    });
+  });
+
+  it('accepts and classifies an explicit transport-only active v3 material', async () => {
+    expect(await verifyParticipation('transport-only')).toMatchObject({
+      status: 'pass',
+      checks: expect.arrayContaining([
+        expect.objectContaining({
+          id: 'receiver.surface-history-field',
+          status: 'pass',
+          measurements: expect.objectContaining({
+            v3OpticalMaterialIds: [],
+            v3TransportOnlyMaterialIds: ['stone'],
+            v3MaterialPolicyIssues: [],
+            v3ParticipationByTargetClass: expect.objectContaining({
+              'modeled-unit': expect.objectContaining({
+                opticalResponseMaterialIds: [],
+                transportOnlyMaterialIds: ['stone'],
+              }),
+            }),
+          }),
+        }),
+      ]),
+    });
   });
 
   it('fails closed when a v3 traffic path cannot affect the paving definition', async () => {

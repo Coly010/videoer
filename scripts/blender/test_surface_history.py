@@ -55,6 +55,9 @@ def main():
             {
                 "id": "stone",
                 "surface": {
+                    "surfaceHistoryV3Participation": {
+                        "policy": "optical-response"
+                    },
                     "historyResponse": {
                         "trafficWear": {"colorMultiplier": 1.25, "roughnessOffset": -0.2},
                         "longTermExposure": {"colorMultiplier": 0.8, "roughnessOffset": 0.15},
@@ -323,9 +326,34 @@ def main():
         renderer.create_surface_history(definition_v3, asset, mesh_v3)
         raise RuntimeError("surface history v3 accepted dirt-only material response")
     except RuntimeError as error:
-        if "declares dirt response without historyResponseV3" not in str(error):
+        if "invalid or incomplete surface-history participation" not in str(error):
             raise
     asset["materials"][0]["surface"]["historyResponseV3"] = v3_response
+    participation = asset["materials"][0]["surface"].pop(
+        "surfaceHistoryV3Participation"
+    )
+    try:
+        renderer.create_surface_history(definition_v3, asset, mesh_v3)
+        raise RuntimeError("surface history v3 accepted undeclared material participation")
+    except RuntimeError as error:
+        if "invalid or incomplete surface-history participation" not in str(error):
+            raise
+    asset["materials"][0]["surface"]["surfaceHistoryV3Participation"] = {
+        "policy": "transport-only",
+        "rationale": "Native probe for an explicitly non-optical hydrology material.",
+    }
+    dirt_response = asset["materials"][0]["surface"].pop("dirtMassResponse")
+    v3_response = asset["materials"][0]["surface"].pop("historyResponseV3")
+    transport_report = renderer.create_surface_history(definition_v3, asset, mesh_v3)
+    if transport_report["transportOnlyMaterialIds"] != ["stone"]:
+        raise RuntimeError("surface history v3 did not report transport-only participation")
+    if transport_report["opticalResponseMaterialIds"]:
+        raise RuntimeError("surface history v3 treated transport-only material as optical")
+    if transport_report["unmappedMaterialIds"]:
+        raise RuntimeError("surface history v3 reported declared transport-only material as unmapped")
+    asset["materials"][0]["surface"]["surfaceHistoryV3Participation"] = participation
+    asset["materials"][0]["surface"]["historyResponseV3"] = v3_response
+    asset["materials"][0]["surface"]["dirtMassResponse"] = dirt_response
     invalid_v3 = json.loads(json.dumps(history_v3))
     invalid_v3["cells"][0]["runoffStaining"] = 0.5
     write_json(history_v3_path, invalid_v3)
@@ -535,6 +563,12 @@ def main():
     with open(contact_sheet_path, "rb") as handle:
         contact_sheet_sha256 = hashlib.sha256(handle.read()).hexdigest()
     report["semanticControlMeanAbsoluteLinearDifference"] = combined_difference
+    report["v3ParticipationEvidence"] = {
+        "opticalResponseMaterialIds": report_v3["opticalResponseMaterialIds"],
+        "transportOnlyMaterialIds": transport_report["transportOnlyMaterialIds"],
+        "undeclaredParticipationRejected": True,
+        "incompleteOpticalResponseRejected": True,
+    }
     report["isolatedChannelEvidence"] = {
         "method": "fixed-state-packed-field-single-channel-v1",
         "receiverFootprint": "rendered-alpha-greater-than-0.5",

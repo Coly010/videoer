@@ -268,19 +268,68 @@ export async function verifyCinematicScene(scene: CinematicScene, sceneFile: str
       const missingMaterialIds = [...activeMaterialIds].filter(
         (materialId) => !geometryMaterialsById.has(materialId),
       );
-      const v3DirtOnlyMaterialIds =
+      const v3OpticalMaterialIds =
         historyVerification.field.schemaVersion === 3
-          ? [...activeMaterialIds].filter((materialId) => {
-              const surface = geometryMaterialsById.get(materialId)?.surface;
-              return Boolean(surface?.dirtMassResponse && !surface.historyResponseV3);
-            })
-          : [];
-      const v3ResponseMaterialIds =
-        historyVerification.field.schemaVersion === 3
-          ? [...activeMaterialIds].filter((materialId) =>
-              Boolean(geometryMaterialsById.get(materialId)?.surface?.historyResponseV3),
+          ? [...activeMaterialIds].filter(
+              (materialId) =>
+                geometryMaterialsById.get(materialId)?.surface?.surfaceHistoryV3Participation
+                  ?.policy === 'optical-response',
             )
           : [];
+      const v3TransportOnlyMaterialIds =
+        historyVerification.field.schemaVersion === 3
+          ? [...activeMaterialIds].filter(
+              (materialId) =>
+                geometryMaterialsById.get(materialId)?.surface?.surfaceHistoryV3Participation
+                  ?.policy === 'transport-only',
+            )
+          : [];
+      const v3MaterialPolicyIssues =
+        historyVerification.field.schemaVersion === 3
+          ? [...activeMaterialIds].flatMap((materialId) => {
+              const surface = geometryMaterialsById.get(materialId)?.surface;
+              const hasCausal = Boolean(surface?.historyResponseV3);
+              const hasDirt = Boolean(surface?.dirtMassResponse);
+              const participation = surface?.surfaceHistoryV3Participation;
+              const matched =
+                (participation?.policy === 'optical-response' && hasCausal && hasDirt) ||
+                (participation?.policy === 'transport-only' &&
+                  participation.rationale.trim().length > 0 &&
+                  !hasCausal &&
+                  !hasDirt);
+              return matched
+                ? []
+                : [
+                    `${materialId}: declared ${String(participation?.policy)}, causal=${hasCausal}, dirt=${hasDirt}`,
+                  ];
+            })
+          : [];
+      const v3ParticipationByTargetClass =
+        historyVerification.field.schemaVersion === 3
+          ? Object.fromEntries(
+              ['modeled-unit', 'joint', 'substrate', 'border'].map((targetClass) => {
+                const materialIds = [
+                  ...new Set(
+                    historyVerification.field.cells
+                      .filter((cell) => cell.targetClass === targetClass)
+                      .map((cell) => cell.materialId),
+                  ),
+                ].sort();
+                return [
+                  targetClass,
+                  {
+                    materialIds,
+                    opticalResponseMaterialIds: materialIds.filter((id) =>
+                      v3OpticalMaterialIds.includes(id),
+                    ),
+                    transportOnlyMaterialIds: materialIds.filter((id) =>
+                      v3TransportOnlyMaterialIds.includes(id),
+                    ),
+                  },
+                ];
+              }),
+            )
+          : {};
       const receiverMatched =
         historyVerification.field.receiver.geometryId === geometry.id &&
         historyVerification.field.receiver.geometrySha256 === geometrySha256 &&
@@ -291,8 +340,7 @@ export async function verifyCinematicScene(scene: CinematicScene, sceneFile: str
         historyVerification.valid &&
         receiverMatched &&
         missingMaterialIds.length === 0 &&
-        v3DirtOnlyMaterialIds.length === 0 &&
-        (historyVerification.field.schemaVersion !== 3 || v3ResponseMaterialIds.length > 0);
+        v3MaterialPolicyIssues.length === 0;
       checks.push({
         id: `${entity.id}.surface-history-field`,
         status: valid ? 'pass' : 'fail',
@@ -314,8 +362,11 @@ export async function verifyCinematicScene(scene: CinematicScene, sceneFile: str
             (cell) => cell.repairInfluence > 0,
           ).length,
           missingMaterialIds,
-          v3ResponseMaterialIds,
-          v3DirtOnlyMaterialIds,
+          v3ResponseMaterialIds: v3OpticalMaterialIds,
+          v3OpticalMaterialIds,
+          v3TransportOnlyMaterialIds,
+          v3ParticipationByTargetClass,
+          v3MaterialPolicyIssues,
           issues: [...waterVerification.issues, ...historyVerification.issues],
         },
       });

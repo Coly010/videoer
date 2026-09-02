@@ -20,11 +20,20 @@ export const constructionDomainSchema = z.enum([
   'flat-ground-surface',
   'modeled-paving-unit',
   'paving-joint-substrate',
+  'paving-border',
   'flat-facade-surface',
   'modeled-masonry-unit',
   'monolithic-architectural-surface',
   'natural-rock-surface',
   'prop-surface',
+]);
+
+export const surfaceHistoryV3ParticipationSchema = z.discriminatedUnion('policy', [
+  z.object({ policy: z.literal('optical-response') }),
+  z.object({
+    policy: z.literal('transport-only'),
+    rationale: z.string().trim().min(1),
+  }),
 ]);
 
 export const textureMaterialSuitabilitySchema = z
@@ -398,6 +407,15 @@ export const surfaceMaterialSchema = z
         }),
       })
       .optional(),
+    surfaceHistoryV3Participation: surfaceHistoryV3ParticipationSchema.optional(),
+    pavingBorder: z
+      .object({
+        compatibleKinds: z
+          .array(z.enum(['kerb', 'gutter', 'soldier-course']))
+          .min(1)
+          .refine((kinds) => new Set(kinds).size === kinds.length, 'border kinds must be unique'),
+      })
+      .optional(),
     metallic: z.number().min(0).max(1).default(0),
     unitVariation: surfaceUnitVariationSchema.optional(),
     textureMaps: hashBoundTextureMapSetSchema.optional(),
@@ -435,6 +453,40 @@ export const surfaceMaterialSchema = z
         code: 'custom',
         path: ['pattern', 'finesScaleMeters'],
         message: 'granular fines must be smaller than the aggregate scale',
+      });
+    if (material.surfaceHistoryV3Participation?.policy === 'optical-response') {
+      if (!material.historyResponseV3)
+        ctx.addIssue({
+          code: 'custom',
+          path: ['historyResponseV3'],
+          message: 'surface-history v3 optical participation requires historyResponseV3',
+        });
+      if (!material.dirtMassResponse)
+        ctx.addIssue({
+          code: 'custom',
+          path: ['dirtMassResponse'],
+          message: 'surface-history v3 optical participation requires dirtMassResponse',
+        });
+    }
+    if (material.surfaceHistoryV3Participation?.policy === 'transport-only') {
+      if (material.historyResponseV3)
+        ctx.addIssue({
+          code: 'custom',
+          path: ['historyResponseV3'],
+          message: 'surface-history v3 transport-only participation forbids historyResponseV3',
+        });
+      if (material.dirtMassResponse)
+        ctx.addIssue({
+          code: 'custom',
+          path: ['dirtMassResponse'],
+          message: 'surface-history v3 transport-only participation forbids dirtMassResponse',
+        });
+    }
+    if (material.pavingBorder && material.metadata.constructionDomain !== 'paving-border')
+      ctx.addIssue({
+        code: 'custom',
+        path: ['pavingBorder'],
+        message: 'paving-border compatibility requires paving-border construction metadata',
       });
   });
 
