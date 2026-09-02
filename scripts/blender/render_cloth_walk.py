@@ -86,34 +86,44 @@ GARMENT_SPECS = {
         # region_tokens): 0.9 places the waistband near the top (the hips).
         "waist_height_frac": 0.9,    # waistband at the hips (top of pelvis region)
         "length_m": 0.22,            # short: waist to upper-thigh (mini)
-        "rings": 18,                 # vertical resolution
-        "segments": 44,              # angular resolution
-        "clearance_top_m": 0.02,     # snug waistband (just outside the thin collider)
-        "clearance_bottom_m": 0.06,  # A-line flare: room for the legs to swing inside
+        # Moderate resolution + a smooth pin fade so no single edge takes the whole
+        # rigid->free transition (a source of boundary stretch spikes).
+        "rings": 22,                 # vertical resolution
+        "segments": 48,              # angular resolution
+        "clearance_top_m": 0.025,    # snug waistband (just outside the thin collider)
+        # Moderate A-line: enough room for the thighs to pass inside the hem. A much
+        # wider flare was tried and made it worse (more free fabric swings/stretches);
+        # this is the best-performing width.
+        "clearance_bottom_m": 0.10,
         # Pelvis+thigh region only: excludes the arms (whose hands hang at waist
         # height in the rest A-pose and would otherwise be encircled -> a 0.5 m
         # disc) and the chest-inflating spine bones.
         "region_tokens": ("pelvis", "thigh"),
-        # Hybrid pin gradient: the top FITTED_FRACTION of rings is fully pinned to
-        # the armature (fitted, cannot thrash); the bottom FREE_FRACTION is free
-        # cloth (a light-swinging hem); a short transition ramps between. A full
-        # free tube around two swinging legs is inherently unstable (collision
-        # spikes / 64x edge stretch), so most of a mini skirt is fitted geometry.
-        "lock_rings": 4,             # a thin fitted waistband band (rest is free drape)
-        "pin_fade_rings": 9,         # pin weight fades 1->0 over this many rings
+        # Hybrid drape: EVERY ring's armature deform hangs from one stable pelvis
+        # hoop (see _lock_and_gradient), so the base cone never follows the swinging
+        # thighs. On top of that base the cloth PIN fades from 1.0 at the waistband
+        # to 0 down the skirt: the upper rings are held to the hoop, the lower rings
+        # simulate freely and drape over the legs via collision. A fully free tube
+        # around two swinging legs is inherently unstable, so most of the skirt is
+        # hoop-tracked geometry and only the short bottom hem is free.
+        "lock_rings": 6,             # (armature now hangs ALL rings from the hoop)
+        # A moderate pin fade: too much pinning makes the held rings unable to yield
+        # to a leg push (they spike instead), so keep a soft free hem that drapes.
+        "pin_fade_rings": 12,        # cloth pin weight fades 1->0 over this many rings
         "color": (0.10, 0.27, 0.31, 1.0),
         "cloth": {
-            "quality": 14,             # high substeps: legs swing through the hem
+            "quality": 18,             # substeps to resolve leg collisions
             "mass": 0.3,
-            "tension_stiffness": 30,   # resist stretch at the fitted/free boundary
-            "compression_stiffness": 30,
-            "shear_stiffness": 15,
-            "bending_stiffness": 3.0,  # holds skirt form, less crumpling
-            "air_damping": 2.0,        # calms the hem
-            "pin_stiffness": 5.0,      # hold the fitted region firmly
+            "tension_stiffness": 40,   # resist stretch, soft enough to yield (not spike)
+            "compression_stiffness": 40,
+            "shear_stiffness": 20,
+            "bending_stiffness": 4.0,  # holds skirt form, less crumpling
+            "air_damping": 2.5,        # calms the hem
+            "pin_stiffness": 6.0,      # hold the pinned rings on the hoop
             "collision_quality": 14,   # robust against fast legs
             "distance_min": 0.006,
             "self_distance_min": 0.005,
+            "self_impulse_clamp": 3.0, # gentler than the body clamp: fewer fold spikes
             "impulse_clamp": 6.0,
         },
     },
@@ -128,6 +138,67 @@ GARMENT_SPECS = {
         "surface_offset_m": 0.02,    # stands off the skin so it reads as a garment
         "region_tokens": ("spine",), # torso surface only (exclude arms/legs)
         "color": (0.55, 0.16, 0.22, 1.0),
+    },
+    # --- Phase-2 fitted garments (duplicate a body surface region + armature) ---
+    # Legs: pelvis+thigh+shin gives a connected trouser tube whose waistband sits
+    # at the hips (top_z_m ~1.0) and whose hem reaches the ankles. Denim reads via
+    # a close offset + a thicker solidify; tailored trousers a touch looser.
+    "jeans": {
+        "kind": "fitted",
+        "from_body_surface": True,
+        "region_tokens": ("pelvis", "thigh", "shin"),
+        "top_z_m": 1.00,             # waistband at the hips
+        "length_m": 0.92,            # down to the ankles
+        "surface_offset_m": 0.012,   # close denim fit
+        "solidify_m": 0.008,         # denim body
+        "color": (0.16, 0.22, 0.40, 1.0),  # indigo denim
+    },
+    "trousers": {
+        "kind": "fitted",
+        "from_body_surface": True,
+        "region_tokens": ("pelvis", "thigh", "shin"),
+        "top_z_m": 1.00,
+        "length_m": 0.92,
+        "surface_offset_m": 0.016,   # slightly looser tailored leg
+        "solidify_m": 0.006,
+        "color": (0.13, 0.14, 0.17, 1.0),  # charcoal
+    },
+    # Torso + short sleeves: keep the shoulders/upper arms (exclude_tokens=()),
+    # while region_tokens stay specific so the sleeves end at the elbow (upper_arm
+    # does not match forearm). top_z_m sits at the shoulders; the hem reaches the
+    # waist/hips.
+    "shirt": {
+        "kind": "fitted",
+        "from_body_surface": True,
+        "region_tokens": ("spine", "breast", "shoulder", "upper_arm"),
+        "exclude_tokens": (),        # keep shoulders + upper arms (short sleeves)
+        "top_z_m": 1.44,             # collar at the shoulders
+        "length_m": 0.46,            # down to the waist
+        "surface_offset_m": 0.016,   # stands off as a shirt
+        "solidify_m": 0.006,
+        "color": (0.62, 0.72, 0.85, 1.0),  # light blue
+    },
+    "sweater": {
+        "kind": "fitted",
+        "from_body_surface": True,
+        "region_tokens": ("spine", "breast", "shoulder", "upper_arm"),
+        "exclude_tokens": (),
+        "top_z_m": 1.45,
+        "length_m": 0.50,            # longer than the shirt, over the hips
+        "surface_offset_m": 0.024,   # bulky knit stands well off the body
+        "solidify_m": 0.012,         # thick knit
+        "color": (0.14, 0.30, 0.22, 1.0),  # forest-green knit
+    },
+    "pyjama-top": {
+        "kind": "fitted",
+        "from_body_surface": True,
+        "region_tokens": ("spine", "breast", "shoulder", "upper_arm"),
+        "exclude_tokens": (),
+        "top_z_m": 1.44,
+        "length_m": 0.50,            # loose top over the hips
+        "surface_offset_m": 0.022,   # slightly loose fit
+        "solidify_m": 0.006,
+        "color": (0.72, 0.60, 0.78, 1.0),  # soft lavender
     },
 }
 
@@ -289,6 +360,26 @@ def body_bvh(body, deps):
     return bvh
 
 
+def _region_group_indices(vertex_groups, spec):
+    """Vertex-group indices whose deform-bone name matches the garment region.
+
+    ``region_tokens`` selects the body region the garment wraps; ``exclude_tokens``
+    (default: the upper-limb tokens) removes sub-regions the garment must never
+    follow. Torso garments with sleeves (shirt/sweater/pyjama-top) override
+    ``exclude_tokens`` with an empty tuple so the shoulders and upper arms are
+    kept, while their ``region_tokens`` stay specific enough (``upper_arm`` does
+    not match ``forearm``) that the sleeves still end cleanly at the elbow.
+    """
+    tokens = spec.get("region_tokens") or ("spine",)
+    excludes = spec.get("exclude_tokens", _UPPER_LIMB_TOKENS)
+    return {
+        vg.index
+        for vg in vertex_groups
+        if any(t in vg.name.lower() for t in tokens)
+        and not any(x in vg.name.lower() for x in excludes)
+    }
+
+
 def body_reference_verts(body, spec):
     """World-space body vertices for the garment's region, in the REST pose.
 
@@ -303,11 +394,7 @@ def body_reference_verts(body, spec):
     matrix = body.matrix_world
     tokens = spec.get("region_tokens")
     if tokens:
-        region = {
-            vg.index
-            for vg in body.vertex_groups
-            if any(t in vg.name.lower() for t in tokens) and not _is_upper_limb_bone(vg.name)
-        }
+        region = _region_group_indices(body.vertex_groups, spec)
         if region:
             verts = [
                 matrix @ v.co
@@ -385,7 +472,13 @@ def generate_from_body_surface(body, spec):
     zs = [v.z for v in torso]
     zmin, zmax = min(zs), max(zs)
     height = zmax - zmin
-    top_z = zmin + spec["waist_height_frac"] * height
+    # ``top_z_m`` (absolute world z of the top hem) is preferred for garments whose
+    # region spans head/arm bones, where a fraction of the region height is not a
+    # stable placement; the crop top keeps the region-fraction placement.
+    if "top_z_m" in spec:
+        top_z = spec["top_z_m"]
+    else:
+        top_z = zmin + spec["waist_height_frac"] * height
     hem_z = top_z - spec["length_m"]
 
     dup = body.copy()
@@ -394,12 +487,7 @@ def generate_from_body_surface(body, spec):
     bpy.context.collection.objects.link(dup)
     dup.modifiers.clear()
 
-    region_tokens = spec.get("region_tokens", ("spine",))
-    region = {
-        vg.index
-        for vg in dup.vertex_groups
-        if any(t in vg.name.lower() for t in region_tokens) and not _is_upper_limb_bone(vg.name)
-    }
+    region = _region_group_indices(dup.vertex_groups, spec)
     body_group = dup.vertex_groups.get("body")
     body_index = body_group.index if body_group else None
     matrix = dup.matrix_world
@@ -615,15 +703,19 @@ def _delimb_skirt(skirt, armature):
 
 
 def _lock_and_gradient(skirt, armature, meta, spec):
-    """Hip-lock the top rings and build a smooth pin gradient (no tear line).
+    """Hang the whole skirt from one stable hip hoop; fade the cloth pin down it.
 
-    * Armature: the top ``lock_rings`` rings are bound 1.0 to their nearest
-      pelvis/hip/thigh deform bone, so they sit ON the hips at clearance distance
-      and track the walk (waistband anchor drift -> ~clearance, not 0.8 m).
-    * Cloth pin: ``vertex_group_mass`` fades linearly from 1.0 at the top ring to
-      0 over ``pin_fade_rings`` rings. The smooth fade removes the hard pinned/free
-      boundary that tore the mesh (edge stretch), while the lower rings simulate
-      freely and drape.
+    * Armature: EVERY ring is bound 1.0 to a single pelvis/lower-spine deform bone,
+      so the skirt's armature-deformed base is a stable hip-hung cone. This is the
+      key fix for the bulk edge stretch: the earlier binding left the mid rings
+      weighted to the independently swinging thighs, so a stride pulled the two
+      sides of the pinned band apart and stretched those edges ~3x regardless of
+      any cloth material setting. With the base a stable hoop, the free hem drapes
+      over the moving legs through cloth *collision*, not the armature.
+    * Cloth pin: ``vertex_group_mass`` fades linearly from 1.0 at the top ring to 0
+      over ``pin_fade_rings`` rings. The pinned upper rings are held to the hoop
+      (waistband stays on the hips); the lower rings (pin weight 0) simulate freely
+      and drape. The smooth fade removes the hard pinned/free tear boundary.
     """
     ring_of = meta["ring_of"]
     rings = meta["rings"]
@@ -663,17 +755,19 @@ def _lock_and_gradient(skirt, armature, meta, spec):
 
     for i in range(rings):
         verts = ring_verts[i]
-        if i < lock_rings:
-            for group in skirt.vertex_groups:
-                if group.name != "waistband":
-                    group.remove(verts)
-            hip_group.add(verts, 1.0, "REPLACE")
+        # Bind every ring's armature deform to the single pelvis hoop bone (not the
+        # thighs), so the base cone is stable and only cloth+collision move the hem.
+        for group in skirt.vertex_groups:
+            if group.name != "waistband":
+                group.remove(verts)
+        hip_group.add(verts, 1.0, "REPLACE")
         weight = max(0.0, 1.0 - i / pin_fade)
         if weight > 0.0:
             pin.add(verts, weight, "REPLACE")
         else:
             pin.remove(verts)
-    return {"lockRings": lock_rings, "pinFadeRings": pin_fade, "hipBone": hip_bone.name}
+    return {"lockRings": lock_rings, "pinFadeRings": pin_fade, "hipBone": hip_bone.name,
+            "armatureBind": "all-rings-pelvis-hoop"}
 
 
 # --- cloth + bake ------------------------------------------------------------
@@ -698,7 +792,10 @@ def setup_cloth(skirt, spec):
     c.use_self_collision = True
     c.self_distance_min = cfg["self_distance_min"]
     c.impulse_clamp = cfg["impulse_clamp"]
-    c.self_impulse_clamp = cfg["impulse_clamp"]
+    # A gentler self-impulse clamp than the body clamp lets internal folds settle
+    # without spiking (cloth-system-design: self-collision is the expensive, spike-
+    # prone term); defaults to the body clamp when unset.
+    c.self_impulse_clamp = cfg.get("self_impulse_clamp", cfg["impulse_clamp"])
     return modifier
 
 
