@@ -15,6 +15,8 @@ import {
   createPavingGranularSwatch,
 } from '../src/materials/paving-joint.js';
 import { createPavingBorderSurfaceMaterial } from '../src/materials/paving-border.js';
+import { createPavingUnitSurfaceMaterial } from '../src/materials/paving-unit.js';
+import { createSurfaceMaterialSwatch } from '../src/materials/old-city.js';
 
 describe('renderer-independent reusable materials', () => {
   it('separates texture-placement variation from construction-semantic surface masks', () => {
@@ -65,6 +67,25 @@ describe('renderer-independent reusable materials', () => {
     expect(validateGeometry(swatch).valid).toBe(true);
     expect(swatch.positions.length).toBeGreaterThan(1_000);
     expect(swatch.materials).toHaveLength(3);
+  });
+
+  it('gives generic unit-material swatches every renderer-required variation attribute', () => {
+    const material = createPavingUnitSurfaceMaterial('contemporary-concrete-paver');
+    const swatch = createSurfaceMaterialSwatch(material);
+    expect(validateGeometry(swatch).valid).toBe(true);
+    for (const name of [
+      material.unitVariation!.valueAttribute,
+      material.unitVariation!.roughnessAttribute,
+      material.unitVariation!.weatheringAttribute,
+      material.unitVariation!.edgeWearAttribute!,
+      material.unitVariation!.dirtAccumulationAttribute!,
+    ]) {
+      expect(swatch.attributes?.[name]).toMatchObject({
+        dataType: 'float',
+        interpolation: 'vertex',
+      });
+      expect(swatch.attributes?.[name]?.values).toHaveLength(swatch.positions.length);
+    }
   });
 
   it('rejects inverted roughness ranges', () => {

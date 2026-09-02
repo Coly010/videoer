@@ -1,11 +1,15 @@
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { lstat, mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, extname, join, relative, resolve, sep } from 'node:path';
 import { canonicalSha256, sha256Bytes } from '../assets/sources/cache.js';
 import {
-  openMaterialSourceManifestSchema,
+  materialSourceManifestSchema,
   type MaterialTextureChannel,
-  type OpenMaterialSourceManifest,
+  type MaterialSourceManifest,
 } from '../assets/sources/model.js';
+import {
+  recomputePolyHavenMaterialSourceIdentity,
+  verifyPolyHavenMaterialSourceEvidence,
+} from '../assets/sources/polyhaven.js';
 import { loadGeometry, saveGeometry } from '../geometry/io.js';
 import type { GeometryAsset } from '../geometry/model.js';
 import { bindSurfaceMaterialTargets } from './adaptation.js';
@@ -36,9 +40,36 @@ function portablePath(fromDirectory: string, target: string) {
   return value;
 }
 
-async function readExact(path: string, expectedSha256: string, expectedSize?: number) {
+async function assertNoPackageSymlink(root: string, path: string) {
+  const base = resolve(root);
+  const target = resolve(path);
+  const portable = relative(base, target);
+  if (!portable || portable === '..' || portable.startsWith(`..${sep}`))
+    throw new Error(`Texture dependency escapes its package: ${path}`);
+  const rootStatus = await lstat(base);
+  if (!rootStatus.isDirectory() || rootStatus.isSymbolicLink())
+    throw new Error(`Texture package root must be a real directory: ${base}`);
+  let current = base;
+  for (const component of portable.split(sep)) {
+    current = join(current, component);
+    const status = await lstat(current);
+    if (status.isSymbolicLink())
+      throw new Error(`Texture package dependency cannot be a symbolic link: ${portable}`);
+  }
+  const targetStatus = await lstat(target);
+  if (!targetStatus.isFile())
+    throw new Error(`Texture package dependency must be a regular file: ${portable}`);
+}
+
+async function readExact(
+  path: string,
+  expectedSha256: string,
+  expectedSize?: number,
+  containmentRoot?: string,
+) {
   let bytes: Uint8Array;
   try {
+    if (containmentRoot) await assertNoPackageSymlink(containmentRoot, path);
     bytes = await readFile(path);
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === 'ENOENT')
@@ -68,11 +99,8 @@ async function writeExact(path: string, bytes: Uint8Array) {
   }
 }
 
-async function verifyManifestPackage(
-  manifestDirectory: string,
-  manifest: OpenMaterialSourceManifest,
-) {
-  if (manifest.provider === 'ambientcg') {
+async function verifyManifestPackage(manifestDirectory: string, manifest: MaterialSourceManifest) {
+  if (manifest.schemaVersion === 1) {
     const expectedIdentity = canonicalSha256({
       schemaVersion: 1,
       provider: manifest.provider,
@@ -89,20 +117,41 @@ async function verifyManifestPackage(
       throw new Error(
         `Open material source identity mismatch: expected ${expectedIdentity}, got ${manifest.sourceIdentitySha256}`,
       );
+    await readExact(
+      containedPath(manifestDirectory, manifest.providerApi.responsePath),
+      manifest.providerApi.responseSha256,
+      undefined,
+      manifestDirectory,
+    );
+    await readExact(
+      containedPath(manifestDirectory, manifest.licence.evidencePath),
+      manifest.licence.evidenceSha256,
+      undefined,
+      manifestDirectory,
+    );
+    await readExact(
+      containedPath(manifestDirectory, manifest.sourceArchive.path),
+      manifest.sourceArchive.sha256,
+      manifest.sourceArchive.sizeBytes,
+      manifestDirectory,
+    );
+  } else {
+    const expectedIdentity = recomputePolyHavenMaterialSourceIdentity(manifest);
+    if (manifest.sourceIdentitySha256 !== expectedIdentity)
+      throw new Error(
+        `Poly Haven material source identity mismatch: expected ${expectedIdentity}, got ${manifest.sourceIdentitySha256}`,
+      );
+    await verifyPolyHavenMaterialSourceEvidence(
+      manifest,
+      (path, expectedSha256, expectedSizeBytes) =>
+        readExact(
+          containedPath(manifestDirectory, path),
+          expectedSha256,
+          expectedSizeBytes,
+          manifestDirectory,
+        ),
+    );
   }
-  await readExact(
-    containedPath(manifestDirectory, manifest.providerApi.responsePath),
-    manifest.providerApi.responseSha256,
-  );
-  await readExact(
-    containedPath(manifestDirectory, manifest.licence.evidencePath),
-    manifest.licence.evidenceSha256,
-  );
-  await readExact(
-    containedPath(manifestDirectory, manifest.sourceArchive.path),
-    manifest.sourceArchive.sha256,
-    manifest.sourceArchive.sizeBytes,
-  );
   return Promise.all(
     manifest.channels.map(async (channel) => ({
       channel,
@@ -110,6 +159,7 @@ async function verifyManifestPackage(
         containedPath(manifestDirectory, channel.path),
         channel.sha256,
         channel.sizeBytes,
+        manifestDirectory,
       ),
     })),
   );
@@ -132,7 +182,7 @@ export interface DeriveTextureSurfaceMaterialOptions {
 export async function deriveTextureSurfaceMaterial(options: DeriveTextureSurfaceMaterialOptions) {
   const manifestPath = resolve(options.sourceManifestPath);
   const manifestBytes = await readFile(manifestPath);
-  const manifest = openMaterialSourceManifestSchema.parse(
+  const manifest = materialSourceManifestSchema.parse(
     JSON.parse(new TextDecoder().decode(manifestBytes)),
   );
   if (manifest.physicalScale.status !== 'known')
@@ -185,7 +235,8 @@ export async function deriveTextureSurfaceMaterial(options: DeriveTextureSurface
         provider: manifest.provider,
         sourceIdentitySha256: manifest.sourceIdentitySha256,
         manifestSha256: sha256Bytes(manifestBytes),
-        licenceSpdx: manifest.licence.spdx,
+        licenceSpdx:
+          manifest.schemaVersion === 1 ? manifest.licence.spdx : manifest.assetLicence.spdx,
       },
       physicalScale: {
         widthMeters: manifest.physicalScale.widthMeters,
@@ -234,7 +285,7 @@ export async function restageGeometryTextureDependencies(options: {
     if (!channels) continue;
     for (const channel of channels) {
       const sourcePath = containedPath(sourceDirectory, channel.path);
-      const bytes = await readExact(sourcePath, channel.sha256, channel.sizeBytes);
+      const bytes = await readExact(sourcePath, channel.sha256, channel.sizeBytes, sourceDirectory);
       const extension = extname(channel.path).toLowerCase();
       const target = join(
         outputDirectory,
@@ -391,7 +442,7 @@ export async function geometryTextureDependencies(geometryPath: string) {
     }
     for (const channel of material.surface?.textureMaps?.channels ?? []) {
       const path = containedPath(dirname(source), channel.path);
-      await readExact(path, channel.sha256, channel.sizeBytes);
+      await readExact(path, channel.sha256, channel.sizeBytes, dirname(source));
       dependencies.push({
         materialId: material.id,
         semantic: channel.semantic,
@@ -459,7 +510,12 @@ export async function bindStagedSurfaceMaterialValueToTargets(
     staged.textureMaps.application = assessment.application;
     for (const channel of staged.textureMaps.channels) {
       const sourcePath = containedPath(options.sourceTextureDirectory, channel.path);
-      const bytes = await readExact(sourcePath, channel.sha256, channel.sizeBytes);
+      const bytes = await readExact(
+        sourcePath,
+        channel.sha256,
+        channel.sizeBytes,
+        options.sourceTextureDirectory,
+      );
       const target = join(
         outputDirectory,
         'textures',

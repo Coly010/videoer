@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-09-02",
+  "scope": "Reusable Poly Haven provider-file material-source acquisition and deterministic consumer boundary",
+  "benchmarkSpecific": false,
+  "decision": "accepted-source-boundary-visual-publication-pending",
+  "accepted": [
+    "Exact reviewed and current API terms are acquired and hash-compared before any live API call.",
+    "Live acquisition identifies Videoer and requires visible Poly Haven credit; offline exact-identity replay creates no provider dependency.",
+    "The manifest separates API-service obligations from the downloaded asset's CC0-1.0 licence.",
+    "Required and optional maps use canonical provider semantics, decoded dimensions, provider MD5, Videoer SHA-256, colour space and OpenGL normal evidence.",
+    "Renderer-consumed physical scale, channels, files, origins, attribution and response evidence are bound into the source identity.",
+    "Refresh, cache, candidate inventory, symlink, traversal, corrupt-image and no-overwrite behavior fail closed.",
+    "The public CLI and texture-material derivation path both replay persisted bytes without network access.",
+    "Uncalibrated provider displacement is preserved but explicitly disabled rather than assigned an invented physical amplitude.",
+    "The official Rough Concrete 2K PNG response was acquired successfully as source identity 9620afeb25a1c13719a674fef04472eed1008359bec55cec7e45094329fc88f0 with five decoded 2048-square maps.",
+    "A generic provider-free material probe now stages hash-bound dependencies, requires an explicit construction application, verifies unit-variation attributes, and produces canonical views plus a temporal turntable."
+  ],
+  "notAccepted": [
+    "Rough Concrete passed neutral probe generation but remains visually rejected for publication: it is pale and plaster-like, repeats the same unit-local source character across regular proxy slabs, and has no calibrated displacement silhouette.",
+    "No Poly Haven material has passed unrelated-host, wet-response and complete temporal visual publication probes yet.",
+    "The current historic and contemporary environment assemblies remain below photographic quality.",
+    "Provider lateral scale is not displacement-height calibration."
+  ],
+  "nextGenericChange": "Bind the real Rough Concrete candidate to the unrelated contemporary construction host, run dry/wet intended-camera comparisons without changing the benchmark, and decide whether its pale source character is useful or whether a stronger concrete candidate is required. Keep displacement disabled unless calibrated evidence exists.",
+  "productionClothing": "Queued behind the active reusable environment/material work: garment panels and pattern construction, seams, hems, thickness, shoulder and armhole quality, base weights and correctives, folds and wrinkles, cloth materials, selective simulation, and temporal verification. This remains reusable-system work, not benchmark-specific polishing."
+}

@@ -157,6 +157,9 @@ npm run video -- environment create-bookshop work/old-city-bookshop
 npm run video -- clothing extract-dark-dress work/elara-vale/geometry.json work/elara-midnight-dress
 # Legacy geometry without embedded assetVersion additionally needs: --character-version <version>
 npm run video -- material create-wet-cobble work/wet-cobble
+npm run video -- asset source import-material poly-haven --asset rough_concrete --resolution 2K --encoding PNG --cache work/material-sources/cache --output work/material-sources/candidates --mode online
+npm run video -- material derive-texture path/to/base-material.json path/to/material-source.json work/material-sources/derived/example/material.json --id material.example --suitability path/to/suitability.json --displacement-response path/to/displacement-response.json
+npm run video -- material probe work/material-sources/derived/example/material.json work/material-sources/probes/example --application path/to/construction-application.json
 npm run video -- vfx create-rainy-dusk work/old-city-bookshop/geometry.json work/rainy-dusk
 npm run video -- lighting create-bookshop-rigs work/old-city-bookshop/geometry.json work/elara-vale/geometry.json work/lighting
 npm run video -- editorial create-assets campaigns/reference-cinematic-benchmark/references/cover.png work/editorial

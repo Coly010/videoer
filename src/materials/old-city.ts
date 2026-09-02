@@ -406,6 +406,50 @@ export function createSurfaceMaterialSwatch(
     emissionStrength: 0,
     surface: material,
   };
+  if (material.unitVariation) {
+    const perBox = (salt: number, minimum: number, maximum: number) =>
+      geometry.positions.map((_, vertexIndex) => {
+        const boxIndex = Math.floor(vertexIndex / 24);
+        const unit = ((boxIndex * 37 + material.baseColor.seed + salt) % 101) / 100;
+        return minimum + unit * (maximum - minimum);
+      });
+    geometry.attributes = {
+      ...(geometry.attributes ?? {}),
+      [material.unitVariation.valueAttribute]: {
+        dataType: 'float',
+        interpolation: 'vertex',
+        values: perBox(11, -1, 1),
+      },
+      [material.unitVariation.roughnessAttribute]: {
+        dataType: 'float',
+        interpolation: 'vertex',
+        values: perBox(29, -1, 1),
+      },
+      [material.unitVariation.weatheringAttribute]: {
+        dataType: 'float',
+        interpolation: 'vertex',
+        values: perBox(47, -1, 1),
+      },
+      ...(material.unitVariation.edgeWearAttribute
+        ? {
+            [material.unitVariation.edgeWearAttribute]: {
+              dataType: 'float' as const,
+              interpolation: 'vertex' as const,
+              values: perBox(61, 0, 1),
+            },
+          }
+        : {}),
+      ...(material.unitVariation.dirtAccumulationAttribute
+        ? {
+            [material.unitVariation.dirtAccumulationAttribute]: {
+              dataType: 'float' as const,
+              interpolation: 'vertex' as const,
+              values: perBox(79, 0, 1),
+            },
+          }
+        : {}),
+    };
+  }
   geometry.materials = [
     renderMaterial,
     ...(material.pattern.kind === 'architectural-glazing'

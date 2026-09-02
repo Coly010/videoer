@@ -1,16 +1,17 @@
 import { mkdir, writeFile } from 'node:fs/promises';
-import { join, resolve } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { assetMetadataSchema, writeHashedAssetMetadata } from '../assets/library.js';
 import { renderGeometryProbe } from '../geometry/blender.js';
 import { saveGeometry } from '../geometry/io.js';
 import { validateGeometry, type GeometryAsset } from '../geometry/model.js';
-import { saveSurfaceMaterial } from '../materials/io.js';
-import type { SurfaceMaterial } from '../materials/model.js';
+import { loadSurfaceMaterial, saveSurfaceMaterial } from '../materials/io.js';
+import type { SurfaceMaterial, TextureMaterialApplication } from '../materials/model.js';
 import {
   createOldCitySurfacePresets,
   createSurfaceMaterialSwatch,
   type OldCitySurfacePreset,
 } from '../materials/old-city.js';
+import { bindStagedSurfaceMaterialValue } from '../materials/texture-maps.js';
 import { createWetCobbleSurfaceMaterial, createWetCobbleSwatch } from '../materials/wet-cobble.js';
 import {
   createPavingGranularSurfaceMaterial,
@@ -137,6 +138,53 @@ async function createSurfaceMaterialAsset(
   });
   await writeHashedAssetMetadata(join(output, 'asset.yaml'), metadata);
   return { output, materialFile, geometryFile, validation, probe };
+}
+
+export async function createSurfaceMaterialProbe(
+  materialPath: string,
+  outputDirectory: string,
+  application?: TextureMaterialApplication,
+) {
+  const output = resolve(outputDirectory);
+  await mkdir(output, { recursive: true });
+  const material = await loadSurfaceMaterial(materialPath);
+  const geometryPath = join(output, 'swatch-geometry.json');
+  const unboundSwatch = createSurfaceMaterialSwatch(material);
+  if (material.textureMaps && !application)
+    throw new Error(
+      `Texture-backed material '${material.id}' requires an explicit construction application for its neutral probe`,
+    );
+  if (!material.textureMaps && application)
+    throw new Error(
+      `Procedural material '${material.id}' cannot use a texture construction application`,
+    );
+  const swatch = material.textureMaps
+    ? (
+        await bindStagedSurfaceMaterialValue({
+          geometry: unboundSwatch,
+          targetMaterialId: 'surface',
+          surface: material,
+          sourceTextureDirectory: dirname(resolve(materialPath)),
+          outputGeometryPath: geometryPath,
+          application: application!,
+        })
+      ).geometry
+    : unboundSwatch;
+  const validation = validateGeometry(swatch);
+  if (!validation.valid)
+    throw new Error(
+      `Surface material swatch '${material.id}' failed: ${validation.issues.map((issue) => issue.code).join(', ')}`,
+    );
+  const geometryFile = material.textureMaps
+    ? geometryPath
+    : await saveGeometry(geometryPath, swatch);
+  await writeFile(
+    join(output, 'validation.json'),
+    `${JSON.stringify(validation, null, 2)}\n`,
+    'utf8',
+  );
+  const probe = await renderGeometryProbe(geometryFile, join(output, 'verification'));
+  return { output, materialPath: resolve(materialPath), geometryFile, validation, probe };
 }
 
 export async function createWetCobbleMaterialAsset(outputDirectory: string) {

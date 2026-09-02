@@ -35,9 +35,11 @@ import {
 import { auditAssetLibrary, repairAssetLibraryFromSources } from './assets/integrity.js';
 import { importAmbientCgMaterialSource } from './assets/sources/ambientcg.js';
 import { importAmbientCgEnvironmentRadianceSource } from './assets/sources/ambientcg-environment.js';
+import { importPolyHavenMaterialSource } from './assets/sources/polyhaven.js';
 import {
   openEnvironmentRadianceSourceImportRequestSchema,
   openMaterialSourceImportRequestSchema,
+  polyHavenMaterialSourceImportRequestSchema,
 } from './assets/sources/model.js';
 import { resolveProductionAssets, validateProductionPlan } from './application/production.js';
 import type { AssetKind } from './production/model.js';
@@ -87,6 +89,7 @@ import {
   createOldCitySurfaceMaterialAsset,
   createPavingBorderMaterialAsset,
   createPavingGranularMaterialAsset,
+  createSurfaceMaterialProbe,
   createWetCobbleMaterialAsset,
 } from './application/materials.js';
 import { createEnvironmentalSurfaceGallery } from './application/material-gallery.js';
@@ -862,6 +865,69 @@ importMaterialSource
       data,
       (result) =>
         `✓ ${result.manifest.asset.id} ${result.manifest.selection.resolution}-${result.manifest.selection.encoding} ${result.fromCache ? 'from cache' : 'acquired'} → ${result.candidate}`,
+    );
+  });
+importMaterialSource
+  .command('poly-haven')
+  .requiredOption('--asset <id>', 'exact lowercase Poly Haven material asset ID')
+  .requiredOption('--resolution <resolution>', 'download resolution such as 1K or 2K')
+  .requiredOption('--encoding <encoding>', 'texture encoding: JPG or PNG')
+  .requiredOption('--cache <directory>', 'content-addressed source cache root')
+  .requiredOption('--output <directory>', 'candidate package output root')
+  .requiredOption('--mode <mode>', 'source acquisition mode: online or offline')
+  .option('--refresh', 'explicitly reacquire current provider bytes in online mode', false)
+  .option('--exact-identity <sha256>', 'require this exact source identity SHA-256')
+  .description(
+    'import one Poly Haven provider-file material with visible service attribution; never publishes or renders',
+  )
+  .action(async function (options: {
+    asset: string;
+    resolution: string;
+    encoding: string;
+    cache: string;
+    output: string;
+    mode: string;
+    refresh: boolean;
+    exactIdentity?: string;
+  }) {
+    const request = polyHavenMaterialSourceImportRequestSchema.parse({
+      provider: 'poly-haven',
+      assetId: options.asset,
+      resolution: options.resolution,
+      encoding: options.encoding,
+      cacheDirectory: resolve(options.cache),
+      outputDirectory: resolve(options.output),
+      mode: options.mode,
+      refresh: options.refresh,
+      ...(options.exactIdentity ? { expectedSourceIdentitySha256: options.exactIdentity } : {}),
+    });
+    const data = await importPolyHavenMaterialSource({
+      assetId: request.assetId,
+      resolution: `${Number.parseInt(request.resolution, 10)}k`,
+      encoding: request.encoding.toLowerCase() as 'jpg' | 'png',
+      cacheDirectory: request.cacheDirectory,
+      outputDirectory: request.outputDirectory,
+      mode: request.mode,
+      refresh: request.refresh,
+      ...(request.mode === 'online'
+        ? {
+            visibleAttribution: {
+              confirmed: true as const,
+              text: 'Powered by Poly Haven',
+              location: 'Videoer material-source command output',
+            },
+          }
+        : {}),
+      ...(request.expectedSourceIdentitySha256
+        ? { expectedSourceIdentitySha256: request.expectedSourceIdentitySha256 }
+        : {}),
+    });
+    output(
+      this,
+      'asset.source.import-material.poly-haven',
+      data,
+      (result) =>
+        `✓ Powered by Poly Haven — ${result.manifest.asset.id} ${result.manifest.selection.resolution}-${result.manifest.selection.encoding} ${result.fromCache ? 'from cache' : 'acquired'} → ${result.candidate}`,
     );
   });
 const importEnvironmentRadianceSource = assetSource
@@ -2033,6 +2099,31 @@ surfaceMaterial
       'material.create-paving-unit',
       { material, path },
       (result) => `✓ project-owned ${result.material.id} → ${result.path}`,
+    );
+  });
+surfaceMaterial
+  .command('probe')
+  .argument('<material>')
+  .argument('<output-directory>')
+  .option(
+    '--application <json-file>',
+    'explicit construction-domain and texture-placement application for a texture-backed material',
+  )
+  .description(
+    'render deterministic neutral top, raking, close and glancing views of any surface material',
+  )
+  .action(async function (material: string, directory: string, options: { application?: string }) {
+    const application = options.application
+      ? textureMaterialApplicationSchema.parse(
+          JSON.parse(await readFile(resolve(options.application), 'utf8')),
+        )
+      : undefined;
+    const data = await createSurfaceMaterialProbe(material, directory, application);
+    output(
+      this,
+      'material.probe',
+      data,
+      (result) => `✓ neutral surface-material probe awaiting visual review → ${result.output}`,
     );
   });
 surfaceMaterial

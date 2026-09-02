@@ -2,7 +2,7 @@ import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, resolve } from 'node:path';
-import { mkdir, writeFile } from 'node:fs/promises';
+import { access, mkdir, writeFile } from 'node:fs/promises';
 import { createContactSheet, inspectVideo } from '../media/inspection.js';
 import { resolveBlenderExecutable } from '../media/blender.js';
 import { loadGeometry } from './io.js';
@@ -55,6 +55,17 @@ export async function renderGeometryProbe(geometryFile: string, outputDirectory:
           ]
         : ['front.png', 'three-quarter.png', 'side.png', 'back.png'];
   const views = names.map((name) => join(output, name));
+  const missingViews = [];
+  for (const view of views)
+    try {
+      await access(view);
+    } catch {
+      missingViews.push(view);
+    }
+  if (missingViews.length)
+    throw new Error(
+      `Blender geometry probe produced no required views (${missingViews.join(', ')}).\nstdout:\n${stdout}\nstderr:\n${stderr}`,
+    );
   const contactSheet = join(output, 'contact-sheet.png');
   await createContactSheet(
     views,
