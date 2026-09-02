@@ -35,7 +35,8 @@ Reusable lighting rigs and editorial identities can resolve through the same lib
 - npm 11
 - Blender 4.5 LTS or newer with working background Python, bundled OpenVDB and NumPy modules, fixed-seed Cycles CPU final rendering, and Eevee preview rendering (GPL tooling)
 - OpenEXR `exrinfo` from a security-patched OpenEXR release for fail-closed inspection of CC0 environment-radiance sources (BSD-3-Clause tooling)
-- MPFB 2.0.17 commit `437dd513888a92399d1d3200d2e80859fae55abc` plus Blender's bundled Rigify addon for the production-character rig backend (GPL tooling with CC0 rig/weight/mesh assets; installed by the repository script)
+- MPFB 2.0.17 commit `437dd513888a92399d1d3200d2e80859fae55abc` plus Blender's bundled Rigify addon for the production-character rig backend (GPL tooling with CC0 rig/weight/mesh assets; installed by the repository script). MPFB's hm08 CC0 mesh + Rigify is the production human ([ADR 074](docs/adr/074-mpfb-rigify-is-the-production-human.md)).
+- Expy Kit v0.6.1 commit `3c4d5d7b8b9aa585e9e304f6b9ed35c2690238ae` for retargeting CC0 Unreal-Mannequin actions onto the Rigify production human (GPL tooling; pinned and installed by `scripts/install-expykit-extension.sh` into the git-ignored `.venv-blender/`; see [ADR 075](docs/adr/075-expykit-humanoid-retargeting.md))
 - eSpeak NG 1.52+ with development headers for deterministic speech audio and native phoneme timing (GPL-3.0-or-later)
 - A C compiler for the small eSpeak NG event bridge (Apple Clang/Xcode Command Line Tools on macOS, build-essential on Debian/Ubuntu)
 - Cormorant Garamond installed as a system font for the benchmark editorial treatment (OFL-1.1)
@@ -107,6 +108,7 @@ On macOS, `brew install espeak-ng` installs both the runtime and development hea
 npm install
 npx remotion browser ensure
 scripts/install-mpfb-extension.sh
+scripts/install-expykit-extension.sh   # humanoid action retargeting (ADR 075); needed only for human motion
 npm run video -- doctor
 npm run check
 npm run video -- --help

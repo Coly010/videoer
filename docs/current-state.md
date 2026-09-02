@@ -28,7 +28,8 @@ engine; it is an editorial/production tool that picks whichever technique makes 
 | Remotion + React | Timeline, final composition, 2D layers, delivery encode | Stable, load-bearing |
 | PixiJS/WebGL | Dense 2D particles/procedural VFX behind the scene registry | Stable |
 | FFmpeg-full | Diagnostics, probing, frame extraction, contact sheets, delivery codecs | Stable, required |
-| Blender 4.5 + MPFB/Rigify | Headless 3D geometry, rigging, simulation, rendering for the cinematic path | Stable for the shots it's used on. **MPFB (hm08 CC0) + Rigify is the production human (ADR 074)** — the project-owned body/skeleton is retired as a target. The MPFB body/rig quality is good; the walking *performance* (arm carriage) is still unsolved (see below). |
+| Blender 4.5 + MPFB/Rigify | Headless 3D geometry, rigging, simulation, rendering for the cinematic path | Stable for the shots it's used on. **MPFB (hm08 CC0) + Rigify is the production human (ADR 074)**; the project-owned body/skeleton is retired. |
+| Expy Kit (GPL, pinned) | Retargets CC0 Unreal-Mannequin actions onto the Rigify production human (ADR 075) | Adopted. Produces a natural full-body walk (arms solved) and generalises across the CC0 clip library. Not yet wired into the declarative campaign pipeline (follow-up when a campaign needs a walking character). |
 | eSpeak NG | Deterministic speech audio + native phoneme timing for lip sync | Stable |
 | Three.js | Structural geometry/skeleton/morph conversion utility (`src/renderers/three-geometry.ts`), not a rendering backend | Decided (ADR 073): kept as a devDependency/test-only utility; not a production dependency. No `three-3d` backend exists or is planned unless a concrete need (e.g. live in-browser preview) appears. |
 | Poly Haven / ambientCG source adapters | Import CC0/licence-clear materials and HDR environments | Stable |
@@ -60,12 +61,12 @@ human characters the owned way.
 
 ## Experimental / R&D
 
-The MPFB/Rigify motion-authoring path (`scripts/blender/render_cc0_rigify_action_reel.py`,
-source-provenanced CC0 action → native Rigify bake): grounding, stride, and forward travel work;
-the arm carriage is unsolved across four retarget modes and is **not** a retarget-math fix (see
-`docs/characters.md`). Also still around but superseded by ADR 074: continuous-body face/hand
-topology and the frozen human gait synthesis (`docs/research/character-face.md`,
-`character-retopology.md`, `human-gait.md`).
+Human motion via Expy Kit (`scripts/blender/render_expykit_action_reel.py`, ADR 075) now produces a
+good full-body walk but is not yet wired into the declarative campaign pipeline, and clothed /
+multi-character / full-campaign validation is still to do (when a campaign needs it). The hand-rolled
+retarget modes in `render_cc0_rigify_action_reel.py` are superseded. Also still around but superseded
+by ADR 074: continuous-body face/hand topology and the frozen human gait synthesis
+(`docs/research/character-face.md`, `character-retopology.md`, `human-gait.md`).
 
 ## Known weak points (from the last subsystem scorecard, now a secondary diagnostic — see
 [`docs/quality-model.md`](quality-model.md))

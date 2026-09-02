@@ -18,11 +18,16 @@ The production human is created by MPFB — the same pinned CC0 hm08 base, but k
 mesh with a generated Rigify rig, rather than reduced into a project-owned contract. See
 `scripts/blender/render_mpfb_motion_probe.py` (`create_rigged_human`) for how the body and
 `rigify.human_toes` rig are generated, and `docs/install-blender.md` for the MPFB/Rigify install.
-Human motion is authored against the Rigify rig as native actions — see the source-provenanced CC0
-bake path below (`scripts/blender/render_cc0_rigify_action_reel.py`), which is the current
-motion-authoring direction. That walk is grounded and strides correctly but its arm carriage is
-still unsolved (see the CC0→Rigify section further down); the model + rig direction is settled, the
-walking performance is not.
+
+**Human motion is retargeted onto the Rigify rig with Expy Kit** ([ADR 075](adr/075-expykit-humanoid-retargeting.md)),
+a maintained GPL addon that ships the exact `Unreal_Mannequin → Rigify_Controls` preset for the
+Quaternius CC0 action library. `scripts/blender/render_expykit_action_reel.py` is the durable path;
+install Expy Kit with `scripts/install-expykit-extension.sh` (pinned, into the git-ignored
+`.venv-blender/`). This produced a natural full-body walk — arms hang and swing, real stride,
+forward travel — and generalises across the CC0 clip library (walk, jog, …) via
+`VIDEOER_EXPYKIT_ACTIONS`. The earlier hand-rolled retarget modes in
+`render_cc0_rigify_action_reel.py` are superseded (see the CC0→Rigify history below); do not add new
+hand-rolled modes.
 
 ## Deprecated: the project-owned human foundation
 
@@ -77,16 +82,15 @@ swing natively on Rigify's own FK controls. Do not add a v15 hand-rolled retarge
 
 **Side-to-side, diagnosed.** `rootTravel` for the Walk_Loop is `[0, 1.78, 0]` — dead-straight forward, zero lateral drift. The weaving in the evidence MP4 is the render camera being glued to the root (cancelling that forward travel) plus torso yaw, not a motion defect. A fixed or path-tracking camera that lets the forward travel read would remove it. Cheap presentation fix, separate from the arm problem.
 
-**Where this leaves the experiment.** The bake pipeline is proven and legs/grounding/forward-travel
-are good; the arms need a proper retarget tool, not more hand-rolled math. The
-[animation-approach evaluation](research/animation-approach-evaluation.md) recommends **Expy Kit**
-(GPLv3, ships the exact Unreal-Mannequin↔Rigify-Controls preset) as the tool route, with native
-Rigify arm authoring over the good CC0 legs as the dependency-free fallback. Both are being spiked
-and compared. The "side-to-side" in the evidence MP4s is unrelated — it is the render camera glued
-to the root cancelling the confirmed dead-straight `+1.78 m` forward travel, not a motion defect.
-This stays `experimental-not-accepted` until a spike produces a clean full-body walk. Note ADR 074
-retired Videoer's own procedural gait, so "use the canonical gait" is no longer an option — the
-human is MPFB/Rigify and its motion is authored on the Rigify rig.
+**Resolved — superseded by Expy Kit ([ADR 075](adr/075-expykit-humanoid-retargeting.md)).** Both
+approaches from the [animation-approach evaluation](research/animation-approach-evaluation.md) were
+spiked and produced a good full-body walk: **Expy Kit** (the adopted tool route — natural mocap
+arm swing that generalises to the whole clip library) and native Rigify arm-correction over the CC0
+legs (the dependency-free fallback, good but walk-only). The hand-rolled modes in this reel are kept
+only as history. The "side-to-side" in the old evidence MP4s was the render camera glued to the root
+cancelling the confirmed dead-straight `+1.78 m` forward travel, not a motion defect — the durable
+Expy Kit script uses a fixed camera so travel reads. See the production human section at the top for
+the current path.
 
 Blender 4.5 stores imported FBX takes in action slots. The adapter must select both the source action and its object slot before sampling; action-only selection evaluates the rest pose and creates a frozen movie. Frozen MP4s are rejected evidence even when their duration and codec are valid. The repair is covered by frame-separated video review, not by the encoding check alone.
 

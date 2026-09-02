@@ -174,15 +174,38 @@ Scope-limited on purpose: only docs + ADR 074 changed; **no code removed or repo
 affected**, so the benchmark still renders on the owned human until a later migration moves it.
 ADR 020 is superseded for the production human, ADR 024 demoted.
 
+## Addendum — 2026-09-02: arms solved; Expy Kit adopted ([ADR 075](adr/075-expykit-humanoid-retargeting.md))
+
+The MPFB/Rigify arm carriage — broken across four hand-rolled retarget modes — is **solved**. The
+diagnosis was corrected first (it was a retarget-tool bug, not the source clip; see the
+`docs(characters)` commit and `docs/research/animation-approach-evaluation.md`), then two spikes
+validated the fix, and the winner was productionized:
+
+- **Expy Kit** (GitHub `pKrime/Expy-Kit`, v0.6.1, commit `3c4d5d7`, GPL) is adopted as the humanoid
+  retargeting tool. Pinned + installed by `scripts/install-expykit-extension.sh` into git-ignored
+  `.venv-blender/` (verified by headless registration), and driven by the durable
+  `scripts/blender/render_expykit_action_reel.py` (constrain `Rigify_Controls`←`Unreal_Mannequin`
+  `match_transform='Bone'`, drive source action+slot, `nla.bake`; two headless gotchas documented in
+  ADR 075).
+- Validated on **walk and jog** (evidence under
+  `work/characters/production-rig-scene-integration/expykit-reel-v1/`): natural full-body
+  performance, motion-appropriate arms per clip, head-droop fixed. The hand-rolled retarget modes are
+  superseded; the native-FK arm-correction remains a dependency-free fallback.
+
+Deliberately *not* done (per ADR 072, no speculative pipeline-building): wiring Expy-Kit-retargeted
+actions into the declarative cinematic-campaign pipeline as a resolvable character-motion input, and
+clothed / multi-character / full-campaign validation. Do those when a campaign needs a walking
+character.
+
 ## Recommended next tasks
 
 1. **The owned-human → MPFB/Rigify migration** (deferred by ADR 074): repoint the reference
    benchmark and campaign character resolution at the MPFB/Rigify human, then remove or clearly
    quarantine the owned body mesh, canonical production skeleton, and procedural gait. Do it when a
    campaign needs a production human or when picking up cleanup — it is real work, not a doc flip.
-2. **When a campaign needs a walking character, solve the MPFB/Rigify arm carriage** at the
-   strategy level (a different/less-stylised source walk, or hand-correcting only the arms) — not
-   with more retarget-math tweaks. See `docs/characters.md`.
+2. **Wire Expy-Kit human motion into the campaign pipeline** when a campaign needs a walking
+   character: make a retargeted action a resolvable character-motion input, and validate clothed /
+   multi-character / in-context. The tool + script are ready (ADR 075); this is the integration.
 3. **Do a full audio-inclusive playthrough review of `projects/the-rise-of-demons/output/final.mp4`
    and one benchmark shot**, and record it with `finished-video-review`. This realignment already
    validated the schema against that project's final render from contact-sheet/render-history

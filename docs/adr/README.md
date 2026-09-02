@@ -91,6 +91,7 @@ Status legend:
 | 072 | Pragmatic production realignment | Current — the superseding ADR |
 | 073 | Three.js is a conversion utility, not a backend | Current — first follow-up decision from the realignment's cinematic backend evaluation |
 | 074 | MPFB (hm08 CC0) + Rigify is the production human | Current — supersedes ADR 020's project-owned human, demotes ADR 024 |
+| 075 | Retarget CC0 actions with Expy Kit, not hand-rolled math | Current — human-motion retargeting tool; supersedes the hand-rolled retarget modes |
 
 ## Why so many "Reference" entries
 
