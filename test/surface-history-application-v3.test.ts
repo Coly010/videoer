@@ -332,7 +332,9 @@ describe('surface-history v3 application assembly', () => {
       surfaceHistoryFieldPath: outputPath,
       outputScenePath: join(directory!, 'v3-bound-scene.json'),
     });
-    expect(rebound.scene.entities[0]!.surfaceHistoryFieldPath).toBe(outputPath);
+    expect(resolve(directory!, rebound.scene.entities[0]!.surfaceHistoryFieldPath!)).toBe(
+      outputPath,
+    );
     expect(await verifyCinematicScene(rebound.scene, rebound.path)).toMatchObject({
       status: 'pass',
       checks: expect.arrayContaining([

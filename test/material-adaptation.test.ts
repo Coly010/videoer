@@ -70,5 +70,13 @@ describe('surface material derivation and binding', () => {
     expect(bound.metadata.surfaceBindings).toEqual([
       { targetMaterialId: 'ground', surfaceMaterial: 'material.wet-old-city-cobble' },
     ]);
+    const reboundSurface = adaptSurfaceMaterial(surface, {
+      assetId: 'material.rebound-ground',
+      roughness: { minimum: 0.3 },
+    });
+    const rebound = bindSurfaceMaterial(bound, 'ground', reboundSurface);
+    expect(rebound.metadata.surfaceBindings).toEqual([
+      { targetMaterialId: 'ground', surfaceMaterial: 'material.rebound-ground' },
+    ]);
   });
 });

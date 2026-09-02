@@ -10,6 +10,7 @@ import { loadGeometry, saveGeometry } from '../geometry/io.js';
 import { loadSurfaceMaterial } from '../materials/io.js';
 import { bindSurfaceMaterial, bindSurfaceMaterialTargets } from '../materials/adaptation.js';
 import {
+  surfaceMaterialSchema,
   textureMaterialApplicationSchema,
   type SurfaceMaterial,
   type TextureMaterialApplication,
@@ -52,6 +53,55 @@ type UnitVariationDeclaration = {
   edgeWearAttribute?: string | undefined;
   dirtAccumulationAttribute?: string | undefined;
 };
+
+const pavingConstructionResponseFields = [
+  'surfaceWaterResponse',
+  'historyResponse',
+  'historyResponseV3',
+  'dirtMassResponse',
+  'surfaceHistoryV3Participation',
+  'constructionSurfaceResponse',
+] as const satisfies readonly (keyof SurfaceMaterial)[];
+
+function composePavingUnitConstructionResponse(
+  geometry: Awaited<ReturnType<typeof loadGeometry>>,
+  targetMaterialIds: string[],
+  appearance: SurfaceMaterial,
+) {
+  const composed = structuredClone(appearance);
+  const inheritedFields: string[] = [];
+  for (const field of pavingConstructionResponseFields) {
+    if (composed[field] !== undefined) continue;
+    const declarations = targetMaterialIds.map(
+      (target) => geometry.materials.find((material) => material.id === target)?.surface?.[field],
+    );
+    if (declarations.every((declaration) => declaration === undefined)) continue;
+    if (declarations.some((declaration) => declaration === undefined))
+      throw new Error(
+        `Paving appearance '${appearance.id}' cannot inherit '${field}' because modeled-unit targets do not all declare it`,
+      );
+    const canonical = JSON.stringify(declarations[0]);
+    if (declarations.some((declaration) => JSON.stringify(declaration) !== canonical))
+      throw new Error(
+        `Paving appearance '${appearance.id}' cannot inherit ambiguous '${field}' declarations across modeled-unit targets`,
+      );
+    Object.assign(composed, { [field]: structuredClone(declarations[0]) });
+    inheritedFields.push(field);
+  }
+  composed.metadata = {
+    ...composed.metadata,
+    ...(inheritedFields.length
+      ? {
+          inheritedConstructionResponse: {
+            sourceGeometryId: geometry.id,
+            targetMaterialIds,
+            fields: inheritedFields,
+          },
+        }
+      : {}),
+  };
+  return { surface: surfaceMaterialSchema.parse(composed), inheritedFields };
+}
 
 function assertUnitVariationAttributes(
   geometry: Awaited<ReturnType<typeof loadGeometry>>,
@@ -356,7 +406,13 @@ export async function bindPavingUnitMaterial(options: BindPavingUnitMaterialOpti
     );
   if (application.placement.unitVariation)
     assertUnitVariationAttributes(geometry, application.placement.unitVariation);
-  const surface = await loadSurfaceMaterial(sourceMaterialPath);
+  const sourceSurface = await loadSurfaceMaterial(sourceMaterialPath);
+  const responseComposition = composePavingUnitConstructionResponse(
+    geometry,
+    targets.modeledUnits,
+    sourceSurface,
+  );
+  const surface = responseComposition.surface;
   const bound = (
     await bindStagedSurfaceMaterialValueToTargets({
       geometry,
@@ -379,9 +435,13 @@ export async function bindPavingUnitMaterial(options: BindPavingUnitMaterialOpti
       outputSha256: await sha256File(outputGeometryPath),
     },
     surfaceMaterial: {
-      id: surface.id,
+      id: sourceSurface.id,
       sourcePath: sourceMaterialPath,
       sourceSha256: await sha256File(sourceMaterialPath),
+    },
+    responseComposition: {
+      policy: 'source-response-or-exact-live-target-inheritance',
+      inheritedFields: responseComposition.inheritedFields,
     },
     application,
     modeledUnitTargets: targets.modeledUnits,

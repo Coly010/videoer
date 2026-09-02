@@ -20,6 +20,7 @@ import { CodexImageProvider } from './providers/codex-image.js';
 import { FakeImageProvider } from './providers/fake-image.js';
 import { ProviderRegistry } from './providers/contracts.js';
 import { inspectScenes, inspectShotVideo, renderShot } from './application/scenes.js';
+import { rebindCinematicEntityGeometry } from './application/cinematic-scene-derivation.js';
 import { effectBundleNames, effectPresetNames } from './vfx/registry.js';
 import { particlePresetNames } from './particles/presets.js';
 import {
@@ -1980,6 +1981,37 @@ cinematic
       data,
       (result) =>
         `✓ ${result.scene}: ${result.frames.length} authoritative-profile landmark probes (iteration-only) → ${result.contactSheet}`,
+    );
+  });
+cinematic
+  .command('rebind-entity-geometry')
+  .argument('<source-scene>')
+  .argument('<entity-id>')
+  .argument('<geometry>')
+  .argument('<output-scene>')
+  .requiredOption('--id <scene-id>', 'stable identity for the derived scene')
+  .description(
+    'derive a scene with one validated geometry replacement; rejects receiver-bound water/history evidence',
+  )
+  .action(async function (
+    sourceScene: string,
+    entityId: string,
+    geometry: string,
+    outputScene: string,
+    options: { id: string },
+  ) {
+    const data = await rebindCinematicEntityGeometry({
+      sourceScenePath: sourceScene,
+      entityId,
+      geometryPath: geometry,
+      outputScenePath: outputScene,
+      sceneId: options.id,
+    });
+    output(
+      this,
+      'cinematic.rebind-entity-geometry',
+      data,
+      (result) => `✓ ${result.entityId} rebound to ${result.geometryId} → ${result.path}`,
     );
   });
 cinematic

@@ -97,12 +97,16 @@ describe('unit-aware paving material assembly', () => {
     const geometryPath = await saveGeometry(join(directory, 'source/paving.json'), source.geometry);
     const materialDirectory = join(directory, 'material');
     await mkdir(join(materialDirectory, 'textures'), { recursive: true });
+    const channelDefinitions: Array<{
+      semantic: 'base-color' | 'normal' | 'roughness';
+      colorSpace: 'srgb-texture' | 'non-color';
+    }> = [
+      { semantic: 'base-color', colorSpace: 'srgb-texture' },
+      { semantic: 'normal', colorSpace: 'non-color' },
+      { semantic: 'roughness', colorSpace: 'non-color' },
+    ];
     const channels = await Promise.all(
-      [
-        ['base-color', 'srgb-texture'],
-        ['normal', 'non-color'],
-        ['roughness', 'non-color'],
-      ].map(async ([semantic, colorSpace]) => {
+      channelDefinitions.map(async ({ semantic, colorSpace }) => {
         const bytes = Buffer.from(`paving-${semantic}`);
         const path = `textures/${semantic}.png`;
         await writeFile(join(materialDirectory, path), bytes);
@@ -262,6 +266,141 @@ describe('unit-aware paving material assembly', () => {
         outputGeometryPath: join(directory, 'invalid/paving.json'),
       }),
     ).rejects.toThrow(/unit-local-uv-meters/u);
+  }, 10_000);
+
+  it('preserves exact live construction responses when a texture source supplies appearance only', async () => {
+    directory = await mkdtemp(join(tmpdir(), 'videoer-paving-response-composition-'));
+    const source = compileIrregularPaving(createHistoricSettPavingDefinition());
+    const procedural = createPavingUnitSurfaceMaterial('historic-cut-granite');
+    const responseGeometry = structuredClone(source.geometry);
+    for (const target of source.report.surfaceMaterialTargets.modeledUnits) {
+      const material = responseGeometry.materials.find((candidate) => candidate.id === target)!;
+      material.surface = structuredClone(procedural);
+    }
+    const geometryPath = await saveGeometry(
+      join(directory, 'source/paving.json'),
+      responseGeometry,
+    );
+    const materialDirectory = join(directory, 'appearance');
+    await mkdir(join(materialDirectory, 'textures'), { recursive: true });
+    const appearanceChannelDefinitions: Array<{
+      semantic: 'base-color' | 'normal' | 'roughness';
+      colorSpace: 'srgb-texture' | 'non-color';
+    }> = [
+      { semantic: 'base-color', colorSpace: 'srgb-texture' },
+      { semantic: 'normal', colorSpace: 'non-color' },
+      { semantic: 'roughness', colorSpace: 'non-color' },
+    ];
+    const channels = await Promise.all(
+      appearanceChannelDefinitions.map(async ({ semantic, colorSpace }) => {
+        const bytes = Buffer.from(`appearance-${semantic}`);
+        const path = `textures/${semantic}.png`;
+        await writeFile(join(materialDirectory, path), bytes);
+        return {
+          semantic,
+          providerName: semantic,
+          path,
+          mediaType: 'image/png',
+          sha256: sha256Bytes(bytes),
+          sizeBytes: bytes.byteLength,
+          colorSpace,
+          ...(semantic === 'normal' ? { normalConvention: 'opengl-positive-green' as const } : {}),
+        };
+      }),
+    );
+    const appearance = structuredClone(createWetCobbleSurfaceMaterial());
+    appearance.id = 'material.appearance-only-paving';
+    delete appearance.surfaceWaterResponse;
+    delete appearance.historyResponse;
+    delete appearance.historyResponseV3;
+    delete appearance.dirtMassResponse;
+    delete appearance.surfaceHistoryV3Participation;
+    delete appearance.constructionSurfaceResponse;
+    appearance.textureMaps = {
+      kind: 'hash-bound',
+      source: {
+        provider: 'ambientcg',
+        sourceIdentitySha256: '1'.repeat(64),
+        manifestSha256: '2'.repeat(64),
+        licenceSpdx: 'CC0-1.0',
+      },
+      physicalScale: { widthMeters: 1, heightMeters: 1 },
+      suitability: {
+        composition: 'homogeneous-unit-material',
+        intendedConstructionDomains: ['modeled-paving-unit'],
+        rationale: 'Appearance-only construction-response inheritance fixture.',
+      },
+      channels,
+    };
+    const materialPath = await saveSurfaceMaterial(
+      join(materialDirectory, 'material.json'),
+      appearance,
+    );
+    const application = textureMaterialApplicationSchema.parse({
+      constructionDomain: 'modeled-paving-unit',
+      placement: {
+        scalePolicy: 'preserve-source-physical-scale',
+        orientation: 'unit-local-uv-meters',
+        offsetMeters: [0, 0],
+        rotationDegrees: 0,
+        appearance: {
+          exposureStops: 0,
+          saturationScale: 1,
+          hueShiftDegrees: 0,
+          roughnessScale: 1,
+          roughnessOffset: 0,
+          weatheringAmount: 0,
+        },
+        macroVariation: {
+          seed: 1,
+          scaleMeters: 2,
+          valueAmplitude: 0.01,
+          saturationAmplitude: 0,
+          hueAmplitudeDegrees: 0,
+          roughnessAmplitude: 0,
+          weatheringAmplitude: 0,
+        },
+      },
+    });
+    const result = await bindPavingUnitMaterial({
+      pavingGeometryPath: geometryPath,
+      unitMaterialPath: materialPath,
+      unitApplication: application,
+      outputGeometryPath: join(directory, 'bound/paving.json'),
+    });
+    const bound = await loadGeometry(result.path);
+    for (const target of source.report.surfaceMaterialTargets.modeledUnits) {
+      const surface = bound.materials.find((candidate) => candidate.id === target)!.surface!;
+      expect(surface.historyResponseV3).toEqual(procedural.historyResponseV3);
+      expect(surface.dirtMassResponse).toEqual(procedural.dirtMassResponse);
+      expect(surface.surfaceHistoryV3Participation).toEqual({ policy: 'optical-response' });
+      expect(surface.metadata.inheritedConstructionResponse).toMatchObject({
+        sourceGeometryId: responseGeometry.id,
+        targetMaterialIds: source.report.surfaceMaterialTargets.modeledUnits,
+      });
+    }
+    expect(result.report.responseComposition).toMatchObject({
+      policy: 'source-response-or-exact-live-target-inheritance',
+      inheritedFields: expect.arrayContaining([
+        'historyResponseV3',
+        'dirtMassResponse',
+        'surfaceHistoryV3Participation',
+      ]),
+    });
+
+    const ambiguous = structuredClone(responseGeometry);
+    ambiguous.materials.find(
+      (candidate) => candidate.id === source.report.surfaceMaterialTargets.modeledUnits[1],
+    )!.surface!.historyResponseV3!.trafficWear.roughnessOffset = -0.01;
+    const ambiguousPath = await saveGeometry(join(directory, 'ambiguous.json'), ambiguous);
+    await expect(
+      bindPavingUnitMaterial({
+        pavingGeometryPath: ambiguousPath,
+        unitMaterialPath: materialPath,
+        unitApplication: application,
+        outputGeometryPath: join(directory, 'forbidden/paving.json'),
+      }),
+    ).rejects.toThrow(/ambiguous 'historyResponseV3'/u);
   }, 10_000);
 
   it('rejects out-of-range semantic masks and stale construction targets atomically', async () => {

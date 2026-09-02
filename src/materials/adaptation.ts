@@ -139,6 +139,13 @@ export function bindSurfaceMaterialTargets(
         `Geometry '${geometry.id}' has no material '${targetMaterialId}' for surface binding`,
       );
   const colors = surface.baseColor.colors;
+  const retainedBindings = ((geometry.metadata.surfaceBindings as unknown[]) ?? []).filter(
+    (binding) => {
+      if (!binding || typeof binding !== 'object' || Array.isArray(binding)) return true;
+      const target = (binding as { targetMaterialId?: unknown }).targetMaterialId;
+      return typeof target !== 'string' || !targets.has(target);
+    },
+  );
   const averageColor = colors
     .reduce(
       (sum, color) =>
@@ -162,7 +169,7 @@ export function bindSurfaceMaterialTargets(
     metadata: {
       ...geometry.metadata,
       surfaceBindings: [
-        ...((geometry.metadata.surfaceBindings as unknown[]) ?? []),
+        ...retainedBindings,
         ...targetMaterialIds.map((targetMaterialId) => ({
           targetMaterialId,
           surfaceMaterial: surface.id,

@@ -21,7 +21,12 @@ import {
   verifySurfaceWaterOpticalSurface,
   type SurfaceWaterOpticalSurfaceOptions,
 } from '../environments/surface-water-surface.js';
-import { loadCinematicScene, saveCinematicScene } from '../cinematic/io.js';
+import {
+  loadCinematicScene,
+  portableCinematicDependencyPath,
+  rebaseCinematicSceneDependencies,
+  saveCinematicScene,
+} from '../cinematic/io.js';
 import {
   irregularPavingDefinitionSchema,
   pavingSurfaceMaterialTargetsSchema,
@@ -436,7 +441,12 @@ export async function rebindCinematicSurfaceWaterReceiver(options: {
   outputScenePath: string;
   sceneId?: string;
 }) {
-  const scene = await loadCinematicScene(options.sourceScenePath);
+  const outputScenePath = resolve(options.outputScenePath);
+  const scene = rebaseCinematicSceneDependencies(
+    await loadCinematicScene(options.sourceScenePath),
+    options.sourceScenePath,
+    outputScenePath,
+  );
   const geometryPath = resolve(options.pavingGeometryPath);
   const fieldPath = resolve(options.surfaceWaterFieldPath);
   const [geometry, geometrySha256, rawField] = await Promise.all([
@@ -461,8 +471,8 @@ export async function rebindCinematicSurfaceWaterReceiver(options: {
     throw new Error(
       `scene receiver entity '${entity.id}' transform does not match surface-water field`,
     );
-  entity.geometryPath = geometryPath;
-  entity.surfaceWaterFieldPath = fieldPath;
+  entity.geometryPath = portableCinematicDependencyPath(outputScenePath, geometryPath);
+  entity.surfaceWaterFieldPath = portableCinematicDependencyPath(outputScenePath, fieldPath);
   if (options.surfaceHistoryFieldPath) {
     if (field.schemaVersion !== 2)
       throw new Error('surface-history v2/v3 binding requires a surface-water v2 field');
@@ -480,7 +490,7 @@ export async function rebindCinematicSurfaceWaterReceiver(options: {
       throw new Error(
         `surface-history v${rawHistory.schemaVersion} field is invalid: ${historyVerification.issues.join('; ')}`,
       );
-    entity.surfaceHistoryFieldPath = historyPath;
+    entity.surfaceHistoryFieldPath = portableCinematicDependencyPath(outputScenePath, historyPath);
   } else delete entity.surfaceHistoryFieldPath;
   if (options.surfaceWaterOpticalSurfacePath) {
     const opticalPath = resolve(options.surfaceWaterOpticalSurfacePath);
@@ -496,10 +506,13 @@ export async function rebindCinematicSurfaceWaterReceiver(options: {
       verification.surface.sourceFieldSha256 !== field.fieldSha256
     )
       throw new Error('surface-water optical surface does not bind the requested field');
-    entity.surfaceWaterOpticalSurfacePath = opticalPath;
+    entity.surfaceWaterOpticalSurfacePath = portableCinematicDependencyPath(
+      outputScenePath,
+      opticalPath,
+    );
   } else delete entity.surfaceWaterOpticalSurfacePath;
   if (options.sceneId) scene.id = options.sceneId;
-  const path = await saveCinematicScene(options.outputScenePath, scene);
+  const path = await saveCinematicScene(outputScenePath, scene);
   return {
     scene,
     path,

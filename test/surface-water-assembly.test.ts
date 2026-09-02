@@ -422,10 +422,12 @@ describe('paving surface-water assembly', () => {
       outputScenePath: join(directory, 'routed-scene.json'),
       sceneId: 'scene.surface-water-v2-binding',
     });
-    expect(routedScene.scene.entities[0]).toMatchObject({
-      surfaceWaterFieldPath: resolve(routed.path),
-      surfaceWaterOpticalSurfacePath: resolve(routedOptical.path),
-    });
+    expect(resolve(directory, routedScene.scene.entities[0]!.surfaceWaterFieldPath!)).toBe(
+      resolve(routed.path),
+    );
+    expect(resolve(directory, routedScene.scene.entities[0]!.surfaceWaterOpticalSurfacePath!)).toBe(
+      resolve(routedOptical.path),
+    );
     expect(routedScene.scene.entities[0]!.surfaceHistoryFieldPath).toBeUndefined();
     expect(await verifyCinematicScene(routedScene.scene, routedScene.path)).toMatchObject({
       status: 'pass',

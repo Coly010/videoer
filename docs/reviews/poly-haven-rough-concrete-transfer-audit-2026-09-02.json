@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-09-02",
+  "scope": "Unchanged unrelated-host dry/wet transfer of the official Poly Haven Rough Concrete 2K PNG source",
+  "benchmarkSpecific": false,
+  "sourceIdentitySha256": "9620afeb25a1c13719a674fef04472eed1008359bec55cec7e45094329fc88f0",
+  "decision": "structural-transfer-accepted-visual-publication-rejected",
+  "structuralEvidence": {
+    "dryCinematicGates": "1/1 pass",
+    "wetCinematicGates": "4/4 pass",
+    "modeledUnitTargets": 5,
+    "surfaceCells": 3654,
+    "splashEligibleCells": 3437,
+    "opticalWaterTriangles": 38780,
+    "waterMassBalanceErrorCubicMeters": 7.244205235679146e-15,
+    "dirtMassBalanceErrorKilograms": -1.7763568394002505e-13,
+    "dryWetContactSheetSsim": 0.952089,
+    "dryWetContactSheetPsnrDb": 25.699113
+  },
+  "accepted": [
+    "The source remains a five-map, hash-bound, decoded, provider-file package with provider MD5 and Videoer SHA-256 evidence.",
+    "A texture appearance may inherit live water/history/construction responses only when every modeled-unit target declares the same response; incomplete or ambiguous inheritance fails closed.",
+    "Repeated surface binding now replaces stale target metadata instead of accumulating contradictory declarations.",
+    "Derived scenes rebase every geometry, motion, rig, fixture, water/history, overlay and finish dependency relative to the new scene and record source/replacement hashes.",
+    "Dry and wet intended-camera probes were rendered with canonical Blender 4.5.13 and the benchmark was not modified."
+  ],
+  "rejected": [
+    "Dry concrete remains bleached, chalky and too uniform across the regular paving units.",
+    "Wet response forms broad glassy contiguous regions with abrupt patch boundaries instead of convincing fine drainage and material absorption variation.",
+    "Disabled uncalibrated displacement correctly prevents invented relief but leaves no reviewed silhouette-scale surface breakup.",
+    "The facade, glazing and interior host remain clean sparse blockouts, so the assembled scene is not photographic even if a future paving source improves."
+  ],
+  "learning": [
+    "A legally and technically sound source package is necessary but does not establish useful production material character.",
+    "Appearance replacement and causal construction response are separate contracts and must be composed explicitly.",
+    "Wet/dry transfer is a stronger audit than a neutral swatch because it exposes response erasure, scene-path portability and water-boundary defects before publication."
+  ],
+  "nextGenericChange": "Acquire and compare a stronger homogeneous concrete source using the unchanged provider and transfer contracts, then improve renderer-independent multi-scale surface history and water boundary/coverage behavior. Do not tune or rerender the cinematic benchmark for this work.",
+  "productionClothing": "Queued behind the active reusable environment/material work: garment panels and pattern construction, seams, hems, thickness, shoulder and armhole quality, base weights and correctives, folds and wrinkles, cloth materials, selective simulation, and temporal verification. This is reusable-system work, not benchmark-specific polishing."
+}
