@@ -63,11 +63,30 @@ The reel exposes a `VIDEOER_CC0_REEL_MODE` selector over three retarget bakes, d
 - `local-fk-grounded` (v13): local-space FK rotation deltas + the world-space metre-scaled root translation that grounds the feet. Grounds the body and strides the legs, but the arms sit in a bent-up "guard" in front of the chest.
 - `rest-compensated` (v14): rest-pose-compensated rotation transfer, `T_pose = T_rest · S_rest⁻¹ · S_pose` per bone — the textbook fix for two rigs with different rest poses. Marginally cleaner arm world-orientation than v13, but the arms still stay in the same bent-up guard through the whole cycle.
 
-**Honest status of the arms (unsolved).** Watched across the full 41-frame cycle, all four modes leave the arms in a bent-up guard posture that never opens into a natural swing. When four different retarget formulations (IK, world-FK, local-FK, rest-compensated) fail the *same* way, the cause is almost certainly not the retarget math — it is most likely the source clip's own stylised game-engine arm carriage, or something in the arm/hand skin binding. Another rotation-space tweak will not fix it. Do not add a v15 retarget mode chasing this; that is the rabbit hole.
+**Arms — the diagnosis was corrected (it is a retarget-tool bug, not the source).** An earlier
+version of this note guessed that, because all four hand-rolled modes produced a bent-up guard, the
+cause was "the source clip's stylised arm carriage." **That was wrong**, and refuted by direct
+measurement (see `docs/research/animation-approach-evaluation.md`): the Quaternius `Walk_Loop` arms
+hang at the sides with a natural ~0.30 m opposite-phase swing, and Rigify's own FK arms hang
+correctly when keyed directly (see `work/characters/production-rig-scene-integration/native-rigify-walk-v1/`).
+The guard is manufactured entirely by the hand-rolled retarget. "Four modes failed identically → it
+must be the source" was a fallacy — all four share the same `clavicle→shoulder` mapping and the same
+MPFB↔Rigify arm rest-pose/bone-roll relationship, so one shared bug fails them all the same way. The
+lesson: **stop hand-rolling retarget math; use a mature retarget tool** (Expy Kit) or author the arm
+swing natively on Rigify's own FK controls. Do not add a v15 hand-rolled retarget mode.
 
 **Side-to-side, diagnosed.** `rootTravel` for the Walk_Loop is `[0, 1.78, 0]` — dead-straight forward, zero lateral drift. The weaving in the evidence MP4 is the render camera being glued to the root (cancelling that forward travel) plus torso yaw, not a motion defect. A fixed or path-tracking camera that lets the forward travel read would remove it. Cheap presentation fix, separate from the arm problem.
 
-**Where this leaves the experiment.** The pipeline is proven (source-provenanced CC0 action → grounded native Rigify bake), and legs/grounding/forward-travel are good. The arm carriage is the remaining blocker and is not a quick retarget fix. Under [ADR 072](adr/072-pragmatic-production-realignment.md) this stays `experimental-not-accepted` and nothing depends on it, so the right move is to **stop here** rather than grind. When a real campaign needs a walking character, the higher-value paths to weigh are: (a) try a different, less stylised source walk clip or animation library; (b) use Videoer's own canonical procedural gait, which has no cross-rig mismatch and was rejected only for weight/foot-roll/silhouette, not broken arms; or (c) accept the CC0 legs and hand-correct only the arm carriage. Do not pursue any of these speculatively ahead of a shot that needs them.
+**Where this leaves the experiment.** The bake pipeline is proven and legs/grounding/forward-travel
+are good; the arms need a proper retarget tool, not more hand-rolled math. The
+[animation-approach evaluation](research/animation-approach-evaluation.md) recommends **Expy Kit**
+(GPLv3, ships the exact Unreal-Mannequin↔Rigify-Controls preset) as the tool route, with native
+Rigify arm authoring over the good CC0 legs as the dependency-free fallback. Both are being spiked
+and compared. The "side-to-side" in the evidence MP4s is unrelated — it is the render camera glued
+to the root cancelling the confirmed dead-straight `+1.78 m` forward travel, not a motion defect.
+This stays `experimental-not-accepted` until a spike produces a clean full-body walk. Note ADR 074
+retired Videoer's own procedural gait, so "use the canonical gait" is no longer an option — the
+human is MPFB/Rigify and its motion is authored on the Rigify rig.
 
 Blender 4.5 stores imported FBX takes in action slots. The adapter must select both the source action and its object slot before sampling; action-only selection evaluates the rest pose and creates a frozen movie. Frozen MP4s are rejected evidence even when their duration and codec are valid. The repair is covered by frame-separated video review, not by the encoding check alone.
 
