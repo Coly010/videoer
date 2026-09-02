@@ -97,3 +97,18 @@ iterations:
     decision: accepted
     evidence: [../../campaigns/reference-cinematic-production-audit/verification/shots/city-establish/contact-sheet.png, ../../campaigns/reference-cinematic-benchmark/work/motions/walk-natural-neutral/verification/visual-review.json]
     finding: Existing evidence establishes a broad baseline and rejects further narrow surface-only iteration as a portfolio strategy.
+  - id: typed-camera-intent-2026-09-02
+    domains: [cameras]
+    decision: queued
+    evidence: [../../docs/adr/071-typed-shot-intent-over-executable-camera-paths.md, ../../campaigns/reference-cinematic-production-audit/verification/shots/city-establish/framing-report.json]
+    finding: Shot-intent, framing and kinematic gates are implemented; an integrated final-render comparison is still required before the camera domain can advance.
+  - id: provenance-bound-mix-review-2026-09-02
+    domains: [sound-design-and-layering]
+    decision: queued
+    evidence: [../../campaigns/reference-cinematic-benchmark/work/audio/production-sfx-audition-v1/audition-verification.json, ../../campaigns/reference-cinematic-production-audit/work/audio/soundtrack.wav]
+    finding: The reusable human-review contract now blocks unsupported audio claims; accountable listening evidence remains required before acceptance.
+  - id: production-quality-reel-first-build-2026-09-02
+    domains: [production-characters, clothing-and-hair, animation-and-interaction, cameras, sound-design-and-layering]
+    decision: rejected
+    evidence: [../../campaigns/production-quality-reel/cinematic-campaign.yaml, ../../campaigns/production-quality-reel/README.md]
+    finding: The reuse-only reel validates but its no-render build rejects the stale whole-body gait release, which lacks a required upper-arm track. No proxy or verifier relaxation is permitted.
