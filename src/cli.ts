@@ -44,6 +44,7 @@ import {
 } from './assets/sources/model.js';
 import { resolveProductionAssets, validateProductionPlan } from './application/production.js';
 import { validateQualityScorecard } from './application/quality-scorecard.js';
+import { validateProductionQualityReelReview } from './quality/production-quality-reel-review.js';
 import type { AssetKind } from './production/model.js';
 import {
   createMannequin,
@@ -213,6 +214,21 @@ program
     const data = await validateQualityScorecard(scorecardFile);
     output(this, 'quality-scorecard.validate', data, (result) =>
       `✓ ${result.id}: ${result.domains} domains, ${result.evidence} evidence references`,
+    );
+  });
+
+program
+  .command('production-quality-reel-review')
+  .argument('<review-file>')
+  .description('verify hash-bound visual and audio evidence for the production quality reel')
+  .action(async function (reviewFile: string) {
+    const data = await validateProductionQualityReelReview(reviewFile);
+    output(
+      this,
+      'production-quality-reel-review.validate',
+      data,
+      (result) =>
+        `✓ ${result.campaignId}: ${result.decision}, ${result.evidence} hash-bound evidence files`,
     );
   });
 

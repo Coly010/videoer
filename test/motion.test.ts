@@ -217,6 +217,10 @@ describe('canonical character motion', () => {
         expect.arrayContaining([
           expect.objectContaining({ joint: 'left-toe', property: 'rotation-euler' }),
           expect.objectContaining({ joint: 'right-toe', property: 'rotation-euler' }),
+          // These are authored gait dynamics, not optional rest-pose corrections.
+          // A release without them cannot satisfy the whole-body motion contract.
+          expect.objectContaining({ joint: 'left-upper-arm', property: 'rotation-euler' }),
+          expect.objectContaining({ joint: 'right-upper-arm', property: 'rotation-euler' }),
           expect.objectContaining({ joint: 'head', property: 'rotation-euler' }),
         ]),
       );

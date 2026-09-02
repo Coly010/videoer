@@ -30,6 +30,18 @@ review of the criteria in that scorecard; a passing render is evidence, not a
 quality decision. The campaign does not publish assets: improvements belong in
 their domain library only after their own provenance and transfer checks pass.
 
+After a complete render, create a `quality-review.yaml` alongside this README
+and verify it with `npm run video -- production-quality-reel-review
+campaigns/production-quality-reel/quality-review.yaml`. That additive review
+record binds SHA-256 values for the campaign manifest, retained scorecard,
+every shot contact sheet, motion clip and render-gate report, plus the final
+delivery/contact sheet/edit report. It must inspect all nine review criteria,
+cite only bound evidence, preserve limitations, state the visible baseline
+delta, and give a concrete repair whenever it rejects a result. An accepted
+record fails validation unless the visible baseline delta is a material
+improvement. This accompanies—rather than replaces—the normal cinematic
+production review and its objective gates.
+
 ## Current build finding
 
 The initial no-render build is deliberately retained as **rejected**. It stops

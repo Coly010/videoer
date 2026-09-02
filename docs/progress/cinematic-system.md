@@ -33,6 +33,8 @@ The retained evidence establishes a broad baseline rather than a new acceptance 
 
 The next work must rotate through independent weak domains after each bounded accepted or rejected result. Every candidate needs an isolated canonical probe, a comparable integrated scene or reel frame/clip, an explicit visual review against silhouette, scale, material response, lighting hierarchy, motion, continuity, atmosphere, compositing and audio, and a provenance-bound library record when accepted. The audit campaign remains an instrument only; a new representative reel must be campaign-neutral and draw on verified reusable releases.
 
+The first repair candidate for the stale cautious-gait release was rendered through the canonical side, three-quarter, front, hand and foot probes. It correctly restores the mandatory upper-arm tracks, but its three-quarter contact sheet remains visibly mannequin-grade: arm swing is rigid, weight transfer and torso counter-motion are weak, and the silhouette is not production credible. The candidate is rejected and unpublished. The existing immutable releases remain unchanged; this is evidence that track completeness is necessary but not a visual-performance acceptance substitute.
+
 ## 2026-09-01 production-value priority steer
 
 Naturalistic gait remains rejected, but it is deliberately parked rather than treated as the highest-value use of the current iteration budget. The full MPFB/Rigify production rig remains the intended render/deformation backend; the reduced canonical skeleton remains the portable motion, interaction, compatibility, and retargeting contract, not a lower-quality production substitute. The failed v23 lateral-support attempt is retained as rejected evidence and must not be described as completion.
