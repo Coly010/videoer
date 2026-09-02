@@ -5,7 +5,10 @@
 Accepted.
 
 **Narrowed by [ADR 072](072-pragmatic-production-realignment.md):** valid where animated fitted
-clothing is actually needed; not mandatory scaffolding for every garment.
+clothing is actually needed; not mandatory scaffolding for every garment. **Superseded for the
+production cloth path by [ADR 076](076-blender-native-cloth-system.md):** cloth on the MPFB/Rigify
+human is now Blender-native (built-in Cloth modifier + armature-deformed fitted garments), not the
+project-owned CPU solver; this ADR's strain thresholds and garment-region ideas were salvaged.
 
 ## Context
 

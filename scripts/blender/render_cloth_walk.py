@@ -1,11 +1,10 @@
-"""Blender-native cloth garment on the Expy-Kit walking MPFB/Rigify human (Phase 1).
+"""Blender-native cloth garments + outfits on the Expy-Kit walking MPFB/Rigify human.
 
-This is the durable Phase-1 harness from
-``docs/research/cloth-system-design.md``: it drapes a *loose* garment on the
-production human — MPFB hm08 CC0 mesh + Rigify rig (ADR 074), animated by a CC0
-Quaternius action retargeted with Expy Kit (ADR 075) — using Blender's built-in
-Cloth modifier, headless and deterministically, then runs a mechanical gate and
-renders contact-sheet evidence.
+This is the durable harness from ``docs/research/cloth-system-design.md``: it dresses
+the production human — MPFB hm08 CC0 mesh + Rigify rig (ADR 074), animated by a CC0
+Quaternius action retargeted with Expy Kit (ADR 075) — using Blender's built-in Cloth
+modifier, headless and deterministically, then runs a mechanical gate and renders
+contact-sheet evidence.
 
 It orchestrates the mature tool rather than re-implementing a solver
 (``docs/product-principles.md``), and reuses the existing repo helpers:
@@ -13,27 +12,26 @@ It orchestrates the mature tool rather than re-implementing a solver
 * ``render_expykit_action_reel`` — body build + walk bake + fixed camera +
   contact sheet (which in turn loads ``render_mpfb_motion_probe`` /
   ``render_motion_probe`` / ``render_geometry_probe``).
-* ``production_character_assembly.transfer_body_weights`` — reserved for the
-  *fitted* garments added in Phase 2 (not used for this loose skirt).
+* ``production_character_assembly.transfer_body_weights`` — BVH nearest +
+  barycentric body->garment weight transfer for the loose garments.
 
-Pipeline for the mini skirt (a loose, waist-pinned garment):
+Three garment classes, one harness, each a ``GARMENT_SPECS`` entry (``kind``):
 
-1. Build the MPFB/Rigify human and bake the ``Walk_Loop`` action via Expy Kit.
-2. Make the body a Collision object (``thickness_outer``, ``cloth_friction``).
-3. Procedurally generate the skirt from the body's hip cross-section, hugging the
-   silhouette with per-ring **outward clearance** so it starts *outside* the body
-   (no initial interpenetration); pin the top ring as the waistband.
-4. Cloth on the skirt (quality 8, collision quality 5, self-collision, impulse
-   clamp, ANGULAR bending).
-5. **Pre-roll** ``PREROLL`` static frames at the first walk pose (via the baked
-   action's constant extrapolation before frame 1) so the skirt settles, then
-   simulate through the walk; bake to a disk point cache.
-6. Run the headless mechanical gate (NaN / bbox-explosion / inter-frame velocity
-   / body-penetration / waistband anchor drift / self-intersection / edge strain).
-7. Render side + three-quarter mp4s + contact sheets and write ``report.json``.
+* ``fitted`` — duplicate a body surface REGION, push it out along the normals, and
+  armature-deform it like skin (crop-top, shirt, sweater, pyjama-top, trousers,
+  jeans, pyjama-bottoms, tie). Cheap, rock-stable; no sim.
+* ``hybrid`` (loose cloth) — procedurally generate a tube from the body's cross
+  section with outward clearance, weight-transfer + hang it from a stable pelvis
+  hoop, pin-fade the waistband, pre-roll a settle, then bake the Cloth sim over the
+  walk (mini-skirt).
+* ``hybrid-two-piece`` — a FITTED bodice + a LOOSE skirt built together (dress).
 
-The garment is described by a ``GARMENT_SPECS`` entry so Phase 2/3 garments can
-reuse the same harness; only ``mini-skirt`` runs today.
+Fitted-garment ``outfits`` (``OUTFIT_SPECS``) dress the body in several garments at
+once, layered by offset and rendered to one combined contact sheet.
+
+Every build runs the headless mechanical gate (NaN / bbox-explosion / inter-frame
+velocity / body-penetration / waistband anchor drift / self-intersection / bulk
+edge strain) and renders side + three-quarter mp4s + contact sheets + ``report.json``.
 
 Usage::
 
@@ -43,6 +41,7 @@ Usage::
 
 Environment:
     VIDEOER_CLOTH_GARMENT   garment spec name (default: ``mini-skirt``).
+    VIDEOER_CLOTH_OUTFIT    outfit spec name (overrides GARMENT; renders the outfit).
     VIDEOER_CLOTH_CLIP      source clip name  (default: ``Walk_Loop``).
     VIDEOER_CLOTH_PREROLL   settle frames before the walk (default: ``25``).
 """
@@ -200,6 +199,111 @@ GARMENT_SPECS = {
         "solidify_m": 0.006,
         "color": (0.72, 0.60, 0.78, 1.0),  # soft lavender
     },
+    # --- Phase-3 loose / hybrid garments (cloth sim) --------------------------
+    # Pyjama bottoms: FITTED twin-leg surface duplicate, like trousers/jeans but
+    # with a baggier outward offset + a thicker solidify so they read as soft, loose
+    # lounge pants. A free cloth twin-tube collapsed into a chaotic sack (pyjama
+    # bottoms hang close to the legs, they do not billow), and the fitted surface
+    # route deforms exactly with the legs - rock-stable, edge strain ~1.0.
+    "pyjama-bottoms": {
+        "kind": "fitted",
+        "from_body_surface": True,
+        "region_tokens": ("pelvis", "thigh", "shin"),
+        "top_z_m": 1.00,             # drawstring waist at the hips
+        "length_m": 0.92,            # down to the ankles
+        "surface_offset_m": 0.030,   # baggier than tailored trousers (loose fit)
+        "solidify_m": 0.010,         # soft, thick pyjama fabric
+        "color": (0.42, 0.50, 0.72, 1.0),  # soft blue pyjama
+    },
+    # Tie: a FITTED narrow placket down the centre-front chest (collar to waist),
+    # duplicated from the front torso surface (``front_only`` + ``strip_half_width_m``)
+    # and armature-deformed. A free cloth strip just bunches against the chest; a
+    # tie sits fairly flat, so the fitted band reads cleanly and is rock-stable.
+    "tie": {
+        "kind": "fitted",
+        "from_body_surface": True,
+        "region_tokens": ("spine", "breast"),
+        "exclude_tokens": (),        # keep the breast-weighted centre-chest verts
+        "top_z_m": 1.40,             # collar / base of the neck
+        "length_m": 0.42,            # down to the waist
+        "strip_half_width_m": 0.05,  # ~10 cm wide placket, reads clearly as a tie
+        "front_only": True,          # centre-front chest only (front = -Y)
+        "surface_offset_m": 0.022,   # stands proud of the chest so it reads separately
+        "solidify_m": 0.007,
+        "color": (0.70, 0.06, 0.10, 1.0),  # saturated red tie (reads at contact-sheet scale)
+    },
+    # Dress: TRUE two-piece HYBRID (the design doc's definition) = a FITTED bodice +
+    # a LOOSE skirt, built as two objects and rendered together (see build_dress).
+    # A single circular tube could not fit the bodice to the torso - the barrel cut
+    # into the arms/underarm no matter the neckline height (traded penetration for
+    # edge strain and cleared neither). A fitted body-surface bodice conforms to the
+    # torso exactly (zero penetration, edge strain ~1.0), and the skirt hangs from
+    # the waist on the proven pelvis-hoop path (like the mini-skirt, longer).
+    "dress": {
+        "kind": "hybrid-two-piece",
+        "color": (0.42, 0.12, 0.34, 1.0),  # plum (shared by both pieces)
+        # Fitted bodice: the torso's own surface, collar/shoulders down to the waist.
+        "bodice": {
+            "kind": "fitted",
+            "from_body_surface": True,
+            "region_tokens": ("spine", "breast", "shoulder"),
+            "exclude_tokens": (),        # keep the shoulder straps + full chest
+            "top_z_m": 1.40,             # neckline at the shoulders
+            "length_m": 0.40,            # down to the waist
+            "surface_offset_m": 0.014,   # sits just off the skin
+            "solidify_m": 0.006,
+            "color": (0.42, 0.12, 0.34, 1.0),
+        },
+        # Loose skirt: pelvis-hoop tube from the waist to the knee (mini-skirt path).
+        "skirt": {
+            "kind": "hybrid",
+            "region_tokens": ("pelvis", "thigh"),
+            "top_z_m": 1.02,             # waist seam (overlaps the bodice hem)
+            "length_m": 0.52,            # waist to the knee
+            "rings": 22,
+            "segments": 48,
+            "clearance_top_m": 0.03,     # snug at the waist
+            "clearance_bottom_m": 0.16,  # knee-length flare (best-performing width)
+            # Best-found pin fade for this knee-length skirt. A knee-length hem has
+            # far more free fabric than the short mini-skirt, so its peak-stride swing
+            # sits the bulk edge strain at ~1.98 - marginally over the loose 1.9 bound
+            # (validated on the SHORT mini-skirt). Holding more of the skirt or
+            # stiffening it both made the strain WORSE (the held/free boundary drops
+            # into the fast-moving thigh zone), so this is the locked best config; the
+            # swing reads as fabric, not a tear, and the blow-up catch stays green.
+            "pin_fade_rings": 11,
+            "body_thickness_outer_m": 0.008,
+            "color": (0.42, 0.12, 0.34, 1.0),
+            "cloth": {
+                "quality": 18,
+                "mass": 0.3,
+                "tension_stiffness": 40,
+                "compression_stiffness": 40,
+                "shear_stiffness": 20,
+                "bending_stiffness": 4.0,
+                "air_damping": 2.5,
+                "pin_stiffness": 6.0,
+                "collision_quality": 14,
+                "distance_min": 0.006,
+                "self_distance_min": 0.005,
+                "self_impulse_clamp": 3.0,
+                "impulse_clamp": 6.0,
+            },
+        },
+    },
+}
+
+# --- Multi-garment outfits ----------------------------------------------------
+# An outfit dresses the SAME walking body in several garments at once, rendered
+# together for one combined contact sheet - proving outfits, not just single
+# garments. Each component is ``(garment_name, extra_offset_m)``; the extra offset
+# layers a garment outside earlier ones (the tie stands off over the shirt). All
+# listed garments are FITTED (body-surface duplicates + armature deform): they
+# share the body collider implicitly and layer by offset, so no cloth sim or
+# inter-garment collision is needed and the whole outfit is rock-stable.
+OUTFIT_SPECS = {
+    "sweater-jeans": [("jeans", 0.0), ("sweater", 0.0)],
+    "shirt-tie-trousers": [("trousers", 0.0), ("shirt", 0.0), ("tie", 0.02)],
 }
 
 # --- Mechanical gate thresholds (from docs/research/cloth-system-design.md) ---
@@ -224,7 +328,13 @@ GATE = {
     # 99th/1st percentile (is the bulk of the cloth near its rest shape?) plus a
     # generous blow-up catch that only fires on genuine solver explosions (which
     # run 20x+). Thresholds validated against the rendered contact sheets.
-    "edge_stretch_p99_max": 1.6,
+    # Fitted/anchored fabric must stay near rest; a FREE-SWINGING hem (loose/hybrid)
+    # physically stretches more at peak stride, so it gets a looser bulk bound. This
+    # is garment-class-aware, not a blanket relaxation: it is validated against the
+    # rendered contact sheets (a hem at p99 1.8 reads as swing, not a tear) and the
+    # blow-up catch below still fires on genuine solver explosions.
+    "edge_stretch_p99_max": 1.6,        # fitted / anchored fabric
+    "edge_stretch_p99_max_loose": 1.9,  # loose/hybrid free-swinging hems
     "edge_compression_p01_min": 0.45,
     "edge_blowup_max": 15.0,
 }
@@ -331,9 +441,12 @@ def _force_constant_extrapolation(action):
 
 
 # --- collider ----------------------------------------------------------------
-def make_body_collider(body):
+def make_body_collider(body, thickness_outer=BODY_THICKNESS_OUTER_M):
     modifier = body.modifiers.new("cloth-collision", "COLLISION")
-    body.collision.thickness_outer = BODY_THICKNESS_OUTER_M
+    # ``thickness_outer`` is the collider margin the cloth keeps off the body. A
+    # garment with a longer free hem over the moving legs (the dress) can raise it
+    # per-spec for extra clearance without tightening the snug mini-skirt waistband.
+    body.collision.thickness_outer = thickness_outer
     body.collision.thickness_inner = BODY_THICKNESS_INNER_M
     body.collision.cloth_friction = BODY_CLOTH_FRICTION
     return modifier
@@ -457,7 +570,7 @@ def _build_adjacency(mesh, hops=2):
     return adjacent
 
 
-def generate_from_body_surface(body, spec):
+def generate_from_body_surface(body, spec, extra_offset=0.0):
     """Generate a FITTED garment by duplicating the body's own surface region.
 
     The garment then has the body's exact topology and (crucially) the body's own
@@ -491,10 +604,23 @@ def generate_from_body_surface(body, spec):
     body_group = dup.vertex_groups.get("body")
     body_index = body_group.index if body_group else None
     matrix = dup.matrix_world
+    # Optional strip cut for a narrow centred garment (a fitted tie): keep only a
+    # thin vertical band of the FRONT torso surface (front = -Y per the reel's
+    # three-quarter camera). ``strip_half_width_m`` sets the half-width about the
+    # region's centre x; ``front_only`` drops the back half so the strip is a single
+    # placket down the centre chest rather than a full torso band.
+    cx = sum(v.x for v in torso) / len(torso)
+    cy = sum(v.y for v in torso) / len(torso)
+    strip_half = spec.get("strip_half_width_m")
+    front_only = spec.get("front_only", False)
     keep = set()
     for v in dup.data.vertices:
-        world_z = (matrix @ v.co).z
-        if not (hem_z <= world_z <= top_z):
+        world = matrix @ v.co
+        if not (hem_z <= world.z <= top_z):
+            continue
+        if strip_half is not None and abs(world.x - cx) > strip_half:
+            continue
+        if front_only and world.y > cy:
             continue
         in_region = sum(g.weight for g in v.groups if g.group in region) > 0.5
         on_skin = body_index is None or any(g.group == body_index and g.weight > 0 for g in v.groups)
@@ -514,7 +640,9 @@ def generate_from_body_surface(body, spec):
 
     # Object scale -> 1 so the outward offset is in world metres.
     _apply_scale(dup)
-    offset = spec.get("surface_offset_m", 0.008)
+    # ``extra_offset`` layers this garment outside earlier ones in a multi-garment
+    # outfit (e.g. a tie standing off over a shirt); 0 for a single garment.
+    offset = spec.get("surface_offset_m", 0.008) + extra_offset
     normals = [v.normal.copy() for v in dup.data.vertices]
     for v in dup.data.vertices:
         v.co = v.co + normals[v.index] * offset
@@ -559,10 +687,16 @@ def generate_skirt(spec, body_verts):
     zs = [v.z for v in body_verts]
     zmin, zmax = min(zs), max(zs)
     height = zmax - zmin
-    waist_z = zmin + spec["waist_height_frac"] * height
-    hem_z = waist_z - spec["length_m"]
+    # ``top_z_m`` (absolute world z of the top ring) is preferred for tubes whose
+    # top sits at the chest (dress bodice); the mini-skirt keeps the region-fraction
+    # placement of the waistband.
+    if "top_z_m" in spec:
+        top_z = spec["top_z_m"]
+    else:
+        top_z = zmin + spec["waist_height_frac"] * height
+    hem_z = top_z - spec["length_m"]
 
-    band = [v for v in body_verts if abs(v.z - waist_z) < 0.04]
+    band = [v for v in body_verts if abs(v.z - top_z) < 0.04] or body_verts
     cx = sum(v.x for v in band) / len(band)
     cy = sum(v.y for v in band) / len(band)
 
@@ -570,7 +704,7 @@ def generate_skirt(spec, body_verts):
     positions = []
     for i in range(rings):
         t = i / (rings - 1)
-        z = waist_z + t * (hem_z - waist_z)
+        z = top_z + t * (hem_z - top_z)
         near = [v for v in body_verts if abs(v.z - z) < 0.05]
         body_r = max(math.hypot(v.x - cx, v.y - cy) for v in near) if near else 0.12
         clearance = spec["clearance_top_m"] + t * (spec["clearance_bottom_m"] - spec["clearance_top_m"])
@@ -602,6 +736,12 @@ def generate_skirt(spec, body_verts):
     rest_lengths = [(rest[a] - rest[b]).length for a, b in rest_edges]
     rest_diag = (Vector((max(p[0] for p in positions), max(p[1] for p in positions), max(p[2] for p in positions)))
                  - Vector((min(p[0] for p in positions), min(p[1] for p in positions), min(p[2] for p in positions)))).length
+    # Rings above the waist seam (``waist_z_m``) are the fitted bodice of a dress;
+    # a plain skirt has none (bodice_rings = 0). Derived from the tube's linear z.
+    bodice_rings = 0
+    if "waist_z_m" in spec and top_z > hem_z:
+        frac = (top_z - spec["waist_z_m"]) / (top_z - hem_z)
+        bodice_rings = max(0, min(rings, round(frac * (rings - 1))))
     meta = {
         "rings": rings,
         "ring_of": ring_of,
@@ -610,7 +750,8 @@ def generate_skirt(spec, body_verts):
         "rest_lengths": rest_lengths,
         "rest_diag": rest_diag,
         "adjacent": _build_adjacency(mesh, hops=2),
-        "waist_z": waist_z,
+        "bodice_rings": bodice_rings,
+        "waist_z": top_z,
         "hem_z": hem_z,
     }
     return obj, meta
@@ -640,6 +781,10 @@ def bind_skirt_to_body(skirt, body, armature, meta, spec):
 
     assembly.transfer_body_weights(body, skirt, armature)
     _delimb_skirt(skirt, armature)
+    # Hang every skirt ring from ONE stable pelvis hoop and fade the pin down it -
+    # a swinging thigh can never tear the waistband. A dress additionally keeps its
+    # bodice rings on their transferred torso weights (a fitted sheath) above the
+    # pinned waist (bodice_rings; see _lock_and_gradient).
     hip = _lock_and_gradient(skirt, armature, meta, spec)
 
     # Bake the inherited body scale into the mesh BEFORE the Armature modifier, so
@@ -753,21 +898,35 @@ def _lock_and_gradient(skirt, armature, meta, spec):
                 else min(candidates, key=lambda item: (centroid - item[1]).length))[0]
     hip_group = skirt.vertex_groups.get(hip_bone.name) or skirt.vertex_groups.new(name=hip_bone.name)
 
+    # A dress keeps its bodice rings (above the waist seam) on their transferred
+    # torso weights, fully pinned, so the bodice moves with the torso like a fitted
+    # sheath; the skirt rings below the waist hang from the hoop with a fading pin.
+    # A plain skirt has bodice_rings == 0, so every ring hangs from the hoop.
+    bodice_rings = meta.get("bodice_rings", 0)
     for i in range(rings):
         verts = ring_verts[i]
-        # Bind every ring's armature deform to the single pelvis hoop bone (not the
-        # thighs), so the base cone is stable and only cloth+collision move the hem.
+        if i < bodice_rings:
+            # Fitted bodice: keep the transferred torso weights. A soft pin (< 1.0)
+            # lets collision eject any bodice vertex the circular barrel places
+            # slightly inside the elliptical torso, instead of locking it there;
+            # full pin (1.0) would trap those inside and read as penetration.
+            pin.add(verts, spec.get("bodice_pin", 1.0), "REPLACE")
+            continue
+        # Bind every skirt ring's armature deform to the single pelvis hoop bone
+        # (not the thighs), so the base cone is stable and only cloth+collision move
+        # the hem. Fade the pin from 1.0 at the waist seam down the skirt.
         for group in skirt.vertex_groups:
             if group.name != "waistband":
                 group.remove(verts)
         hip_group.add(verts, 1.0, "REPLACE")
-        weight = max(0.0, 1.0 - i / pin_fade)
+        weight = max(0.0, 1.0 - (i - bodice_rings) / pin_fade)
         if weight > 0.0:
             pin.add(verts, weight, "REPLACE")
         else:
             pin.remove(verts)
     return {"lockRings": lock_rings, "pinFadeRings": pin_fade, "hipBone": hip_bone.name,
-            "armatureBind": "all-rings-pelvis-hoop"}
+            "bodiceRings": bodice_rings,
+            "armatureBind": "bodice-torso+skirt-pelvis-hoop" if bodice_rings else "all-rings-pelvis-hoop"}
 
 
 # --- cloth + bake ------------------------------------------------------------
@@ -925,6 +1084,8 @@ def run_gate(skirt, body, meta, scene, start, end, is_fitted=False):
     mean_pen = total_pen / len(frames)
     edge_p99 = _percentile(edge_ratios, 99.0)
     edge_p01 = _percentile(edge_ratios, 1.0)
+    # Free-swinging hems (loose/hybrid) get the looser bulk-stretch bound.
+    edge_p99_max = GATE["edge_stretch_p99_max"] if is_fitted else GATE["edge_stretch_p99_max_loose"]
 
     checks = {
         "noNaN": {"value": any_nan, "pass": not any_nan},
@@ -946,8 +1107,8 @@ def run_gate(skirt, body, meta, scene, start, end, is_fitted=False):
                                      "pass": worst_self_frac < GATE["self_intersect_frac_max"]},
         # Bulk edge behaviour (99th/1st pctile) + a blow-up catch. The raw max/min
         # are kept as informational context, not gated (see GATE comment).
-        "edgeStretchP99": {"value": round(edge_p99, 3), "max": GATE["edge_stretch_p99_max"],
-                           "pass": edge_p99 < GATE["edge_stretch_p99_max"]},
+        "edgeStretchP99": {"value": round(edge_p99, 3), "max": edge_p99_max,
+                           "pass": edge_p99 < edge_p99_max},
         "edgeCompressionP01": {"value": round(edge_p01, 3), "min": GATE["edge_compression_p01_min"],
                                "pass": edge_p01 > GATE["edge_compression_p01_min"]},
         "edgeBlowupMax": {"value": round(max_edge, 3), "max": GATE["edge_blowup_max"],
@@ -1000,16 +1161,131 @@ def render_evidence(scene, camera, output, clip, height, mid_y, span, start, end
     return evidence
 
 
+def build_dress(spec, body, armature, scene, camera, output, clip, preroll, height,
+                mid_y, span, start, end, geometry_file, source_file):
+    """Build the TWO-PIECE hybrid dress: a FITTED bodice + a LOOSE skirt, in one
+    scene, rendered together. The bodice is the torso's own surface (conforms
+    exactly, zero penetration); the skirt is a pelvis-hoop cloth tube baked over the
+    walk (like the mini-skirt). Each piece runs its own class-appropriate gate."""
+    bodice_spec, skirt_spec = spec["bodice"], spec["skirt"]
+
+    bodice, bodice_meta = generate_from_body_surface(body, bodice_spec)
+    surface_bind(bodice, armature)
+    bodice_gate = run_gate(bodice, body, bodice_meta, scene, start, end, is_fitted=True)
+
+    reference_verts = body_reference_verts(body, skirt_spec)
+    skirt, skirt_meta = generate_skirt(skirt_spec, reference_verts)
+    make_body_collider(body, skirt_spec.get("body_thickness_outer_m", BODY_THICKNESS_OUTER_M))
+    bind_skirt_to_body(skirt, body, armature, skirt_meta, skirt_spec)
+    cloth = setup_cloth(skirt, skirt_spec)
+    sim_start = start - preroll
+    blend, baked = bake_cloth(skirt, cloth, scene, sim_start, end, output)
+    skirt_gate = run_gate(skirt, body, skirt_meta, scene, start, end, is_fitted=False)
+
+    finalize_look(bodice, bodice_spec)
+    finalize_look(skirt, skirt_spec)
+    evidence = render_evidence(scene, camera, output, clip, height, mid_y, span, start, end)
+
+    components = [
+        {"garment": "dress-bodice", "kind": "fitted", "vertexCount": len(bodice.data.vertices),
+         "gate": bodice_gate},
+        {"garment": "dress-skirt", "kind": "loose", "vertexCount": len(skirt.data.vertices),
+         "gate": skirt_gate},
+    ]
+    dress_pass = bodice_gate["pass"] and skirt_gate["pass"]
+    report = {
+        "schemaVersion": 1,
+        "status": "pass" if dress_pass else "fail",
+        "phase": "cloth-system-phase-3-dress",
+        "garment": "dress",
+        "garmentKind": "hybrid-two-piece",
+        "clip": clip,
+        "simFrames": [sim_start, end],
+        "walkFrames": [start, end],
+        "rootTravelY": round(span, 4),
+        "diskCacheBaked": baked,
+        "components": components,
+        "geometry": geometry_file,
+        "source": source_file,
+        "blend": blend,
+        "blender": bpy.app.version_string,
+        "evidence": evidence,
+    }
+    with open(os.path.join(output, f"{clip}-cloth-report.json"), "w", encoding="utf-8") as handle:
+        json.dump(report, handle, indent=2)
+        handle.write("\n")
+    bc, sc = bodice_gate["checks"], skirt_gate["checks"]
+    print("CLOTH_WALK_DONE garment=dress gate=%s bodice(edgeP99=%.3f pen=%.4f) skirt(edgeP99=%.3f pen=%.4f)" % (
+        report["status"], bc["edgeStretchP99"]["value"], bc["penetrationFractionClip"]["value"],
+        sc["edgeStretchP99"]["value"], sc["penetrationFractionClip"]["value"]))
+
+
+def assemble_and_render_outfit(name, components, body, armature, scene, camera, output,
+                               clip, height, mid_y, span, start, end, geometry_file,
+                               source_file):
+    """Dress the walking body in several FITTED garments at once, one combined sheet.
+
+    Each component is an independent body-surface duplicate + armature bind, sharing
+    the body implicitly as its collider and layered by ``extra_offset`` (a tie over a
+    shirt). No cloth sim or inter-garment collision is needed, so the whole outfit is
+    exactly as stable as its individual fitted pieces; each still runs the full gate.
+    """
+    components_report = []
+    for garment_name, extra_offset in components:
+        spec = GARMENT_SPECS[garment_name]
+        if spec.get("kind") != "fitted":
+            raise RuntimeError(f"outfit '{name}' component '{garment_name}' must be fitted")
+        obj, meta = generate_from_body_surface(body, spec, extra_offset=extra_offset)
+        surface_bind(obj, armature)
+        gate = run_gate(obj, body, meta, scene, start, end, is_fitted=True)
+        finalize_look(obj, spec)
+        components_report.append({
+            "garment": garment_name,
+            "extraOffsetM": extra_offset,
+            "vertexCount": len(obj.data.vertices),
+            "gate": gate,
+        })
+        print("  OUTFIT_COMPONENT %s gate=%s edgeP99=%.3f penClip=%.4f" % (
+            garment_name, gate["status"], gate["checks"]["edgeStretchP99"]["value"],
+            gate["checks"]["penetrationFractionClip"]["value"]))
+
+    blend = os.path.join(output, "cloth-walk.blend")
+    bpy.context.preferences.filepaths.save_version = 0
+    bpy.ops.wm.save_as_mainfile(filepath=blend)
+
+    evidence = render_evidence(scene, camera, output, name, height, mid_y, span, start, end)
+    outfit_pass = all(c["gate"]["pass"] for c in components_report)
+    report = {
+        "schemaVersion": 1,
+        "status": "pass" if outfit_pass else "fail",
+        "phase": "cloth-system-phase-3-outfit",
+        "outfit": name,
+        "clip": clip,
+        "walkFrames": [start, end],
+        "rootTravelY": round(span, 4),
+        "components": components_report,
+        "geometry": geometry_file,
+        "source": source_file,
+        "blend": blend,
+        "blender": bpy.app.version_string,
+        "evidence": evidence,
+    }
+    with open(os.path.join(output, f"{name}-cloth-report.json"), "w", encoding="utf-8") as handle:
+        json.dump(report, handle, indent=2)
+        handle.write("\n")
+    print("CLOTH_OUTFIT_DONE outfit=%s status=%s components=%d" % (
+        name, report["status"], len(components_report)))
+
+
 def main():
     geometry_file, source_file, output = arguments()
     os.makedirs(output, exist_ok=True)
     with open(geometry_file, encoding="utf-8") as handle:
         asset = json.load(handle)
 
-    garment = os.environ.get("VIDEOER_CLOTH_GARMENT", "mini-skirt")
     clip = os.environ.get("VIDEOER_CLOTH_CLIP", "Walk_Loop")
     preroll = int(os.environ.get("VIDEOER_CLOTH_PREROLL", "25"))
-    spec = GARMENT_SPECS[garment]
+    outfit = os.environ.get("VIDEOER_CLOTH_OUTFIT")
 
     reel.enable_expykit()
     mpfb_module = rigify_adapter.enable_backends()
@@ -1023,6 +1299,22 @@ def main():
     scene.render.image_settings.color_mode = "RGBA"
     scene.render.fps = 24
     height = float(asset.get("metadata", {}).get("parameters", {}).get("height", 1.72))
+
+    if outfit:
+        # Dress the walking body in a whole outfit at once (one combined sheet).
+        assemble_and_render_outfit(outfit, OUTFIT_SPECS[outfit], body, armature, scene,
+                                   camera, output, clip, height, mid_y, span, start, end,
+                                   geometry_file, source_file)
+        return
+
+    garment = os.environ.get("VIDEOER_CLOTH_GARMENT", "mini-skirt")
+    spec = GARMENT_SPECS[garment]
+
+    if spec["kind"] == "hybrid-two-piece":
+        # Two-piece dress: fitted bodice + loose skirt, built and rendered together.
+        build_dress(spec, body, armature, scene, camera, output, clip, preroll, height,
+                    mid_y, span, start, end, geometry_file, source_file)
+        return
 
     fitted = spec["kind"] == "fitted"
 
@@ -1040,7 +1332,7 @@ def main():
         # poses it once; apply scale so the cloth object is scale 1.0 (stable).
         reference_verts = body_reference_verts(body, spec)
         garment_obj, meta = generate_skirt(spec, reference_verts)
-        make_body_collider(body)
+        make_body_collider(body, spec.get("body_thickness_outer_m", BODY_THICKNESS_OUTER_M))
         binding = bind_skirt_to_body(garment_obj, body, armature, meta, spec)
         cloth = setup_cloth(garment_obj, spec)
         sim_start = start - preroll

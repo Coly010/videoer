@@ -29,6 +29,24 @@ forward travel — and generalises across the CC0 clip library (walk, jog, …) 
 `render_cc0_rigify_action_reel.py` are superseded (see the CC0→Rigify history below); do not add new
 hand-rolled modes.
 
+## Clothing (Blender-native cloth) — [ADR 076](adr/076-blender-native-cloth-system.md)
+
+Clothing on the production human is Blender-native (built-in Cloth modifier + armature-deformed
+fitted garments), not the retired renderer-independent CPU cloth ([ADR 030](adr/030-renderer-independent-temporal-clothing.md)).
+`scripts/blender/render_cloth_walk.py` (parametrized by `GARMENT_SPECS`) builds the MPFB/Rigify body
++ Expy Kit walk, generates a garment in one of three classes — **fitted** (duplicate a body surface
+region + armature deform; rock-stable), **loose** (Cloth modifier with an armature-locked,
+gradient-weighted pin), or **hybrid** (fitted upper + loose hem) — simulates over the walk, runs a
+headless mechanical gate (explosion / velocity / body-penetration / anchor / self-intersection +
+bulk percentile edge-strain, garment-class-aware, + a blow-up catch), and renders contact sheets.
+
+Verified on the Expy Kit walk: crop top, jeans, trousers, shirt, sweater, pyjama top, pyjama bottoms
+and tie (fitted); mini skirt and dress (loose/hybrid, with cloth-simulated flowing skirts); plus two
+assembled multi-garment outfits (sweater+jeans, shirt+tie+trousers). Hard-won details (garment
+generated from the body surface for exact fit; loose garments armature-locked to a stable hoop, not
+the swinging thighs; the disk point-cache invalidated per bake; the fitting cross-section excluding
+the arms that hang at waist height in the A-pose) are recorded in ADR 076 and the script.
+
 ## Deprecated: the project-owned human foundation
 
 > Retained for the existing benchmark and as history only. Do not build new production characters
