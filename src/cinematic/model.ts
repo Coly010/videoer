@@ -31,6 +31,7 @@ export const cinematicSceneEntitySchema = z
     productionRigProfilePath: z.string().min(1).optional(),
     productionCharacterBindingPath: z.string().min(1).optional(),
     surfaceWaterFieldPath: z.string().min(1).optional(),
+    surfaceHistoryFieldPath: z.string().min(1).optional(),
     surfaceWaterOpticalSurfacePath: z.string().min(1).optional(),
     fixturePath: z.string().min(1).optional(),
     transform: sceneTransformSchema.default({
@@ -53,6 +54,18 @@ export const cinematicSceneEntitySchema = z
         code: 'custom',
         path: ['surfaceWaterOpticalSurfacePath'],
         message: 'surface-water optical surfaces may only bind environment entities',
+      });
+    if (entity.surfaceHistoryFieldPath && !entity.surfaceWaterFieldPath)
+      context.addIssue({
+        code: 'custom',
+        path: ['surfaceHistoryFieldPath'],
+        message: 'surface-history fields require their exact source surface-water field path',
+      });
+    if (entity.surfaceHistoryFieldPath && entity.role !== 'environment')
+      context.addIssue({
+        code: 'custom',
+        path: ['surfaceHistoryFieldPath'],
+        message: 'surface-history fields may only bind environment entities',
       });
   });
 

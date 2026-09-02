@@ -15,6 +15,7 @@ import { loadProductionCharacterBinding } from '../characters/production-binding
 import { sha256File } from '../assets/library.js';
 import { geometryTextureDependencies } from '../materials/texture-maps.js';
 import { verifyStaticSurfaceWaterField } from '../environments/surface-water.js';
+import { verifySurfaceHistoryField } from '../environments/surface-history.js';
 import {
   reconstructSurfaceWaterOpticalSurface,
   verifySurfaceWaterOpticalSurface,
@@ -222,6 +223,60 @@ export async function verifyCinematicScene(scene: CinematicScene, sceneFile: str
         id: `${entity.id}.surface-water-field`,
         status: 'fail',
         message: `Entity '${entity.id}' surface-water field could not be verified`,
+        measurements: { error: error instanceof Error ? error.message : String(error) },
+      });
+    }
+  }
+  for (const entity of scene.entities.filter((candidate) => candidate.surfaceHistoryFieldPath)) {
+    const geometryPath = resolve(sourceDirectory, entity.geometryPath);
+    const waterPath = resolve(sourceDirectory, entity.surfaceWaterFieldPath!);
+    const historyPath = resolve(sourceDirectory, entity.surfaceHistoryFieldPath!);
+    try {
+      const waterVerification = verifyStaticSurfaceWaterField(
+        JSON.parse(await readFile(waterPath, 'utf8')),
+      );
+      const historyVerification = verifySurfaceHistoryField(
+        JSON.parse(await readFile(historyPath, 'utf8')),
+        waterVerification.field,
+      );
+      const geometry = await loadGeometry(geometryPath);
+      const geometrySha256 = await sha256File(geometryPath);
+      const receiverMatched =
+        historyVerification.field.receiver.geometryId === geometry.id &&
+        historyVerification.field.receiver.geometrySha256 === geometrySha256 &&
+        isDeepStrictEqual(historyVerification.field.receiver.transform, entity.transform);
+      const valid =
+        entity.role === 'environment' &&
+        waterVerification.valid &&
+        historyVerification.valid &&
+        receiverMatched;
+      checks.push({
+        id: `${entity.id}.surface-history-field`,
+        status: valid ? 'pass' : 'fail',
+        message: valid
+          ? `Environment '${entity.id}' has verified causal construction-surface history`
+          : `Entity '${entity.id}' has invalid or mismatched construction-surface history`,
+        measurements: {
+          fieldId: historyVerification.field.id,
+          sourceWaterMatched:
+            historyVerification.field.sourceWaterField.fieldSha256 ===
+            waterVerification.field.fieldSha256,
+          receiverMatched,
+          cellCount: historyVerification.field.cells.length,
+          trafficAffectedCellCount: historyVerification.field.cells.filter(
+            (cell) => cell.trafficWear > 0,
+          ).length,
+          repairAffectedCellCount: historyVerification.field.cells.filter(
+            (cell) => cell.repairInfluence > 0,
+          ).length,
+          issues: [...waterVerification.issues, ...historyVerification.issues],
+        },
+      });
+    } catch (error) {
+      checks.push({
+        id: `${entity.id}.surface-history-field`,
+        status: 'fail',
+        message: `Entity '${entity.id}' surface-history field could not be verified`,
         measurements: { error: error instanceof Error ? error.message : String(error) },
       });
     }

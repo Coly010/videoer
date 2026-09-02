@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-09-02",
+  "scope": "reusable construction-surface history, not benchmark polishing",
+  "result": "structural-pass-visual-publication-rejected",
+  "architecture": {
+    "field": "videoer.construction-surface-history.v1",
+    "receiverMutation": false,
+    "sourceWaterReused": true,
+    "parallelShelterOrDrainageSolver": false,
+    "causalChannels": [
+      "trafficWear",
+      "longTermExposure",
+      "runoffStaining",
+      "repairInfluence",
+      "repairRelativeAge"
+    ]
+  },
+  "transfer": {
+    "historic-masonry-shopfront": {
+      "cellCount": 3157,
+      "trafficPathCount": 2,
+      "repairId": "older-repair",
+      "fieldSemanticSha256": "ea20f6ddfec8ef17153b194e46b49cf9bfeb0cd379462668ca73f17e7481e2e2"
+    },
+    "contemporary-plaster-mixed-use": {
+      "cellCount": 3654,
+      "trafficPathCount": 2,
+      "repairId": "utility-reinstatement",
+      "fieldSemanticSha256": "6da6adb108f50e5cf35f166d0fc7a4d7a78b1620881ddcdb1159a0ed32d852b7"
+    }
+  },
+  "nativeRendererEvidence": {
+    "blenderVersion": "4.5.13 LTS",
+    "hostMetalAccessRequired": true,
+    "semanticControlMeanAbsoluteLinearDifference": 0.004563142340986006,
+    "result": "pass"
+  },
+  "remainingGaps": [
+    "mass-conserving loose and persistent dirt buildup, transport, deposition and export",
+    "explicit pedestrian route-choice and twin-wheel vehicle pass-density synthesis",
+    "event-led repair ledger and material-batch discontinuity",
+    "temporal multi-date verification",
+    "richer mineral and concrete response plus bounded silhouette/course irregularity",
+    "photographic facade, glazing, interior, precipitation and atmospheric integration"
+  ],
+  "visualAcceptance": "rejected",
+  "publication": "none",
+  "benchmarkRerendered": false,
+  "queuedProductionClothing": [
+    "garment panels and pattern construction",
+    "seams",
+    "hems",
+    "thickness",
+    "shoulder and armhole quality",
+    "base weights and correctives",
+    "folds and wrinkles",
+    "cloth materials",
+    "selective simulation",
+    "temporal verification"
+  ]
+}

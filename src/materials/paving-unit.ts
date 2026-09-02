@@ -74,6 +74,19 @@ export function createPavingUnitSurfaceMaterial(kind: PavingUnitMaterialKind): S
         ? { valueAmplitude: 0.09, roughnessAmplitude: 0.08, weatheringAmplitude: 0.24 }
         : { edgeWearAmount: 0.38, dirtAccumulationAmount: 0.48 }),
     },
+    historyResponse: historic
+      ? {
+          trafficWear: { colorMultiplier: 1.04, roughnessOffset: -0.16 },
+          longTermExposure: { colorMultiplier: 1.025, roughnessOffset: 0.025 },
+          runoffStaining: { colorMultiplier: 0.72, roughnessOffset: 0.13 },
+          repairInfluence: { colorMultiplier: 1.1, roughnessOffset: -0.04 },
+        }
+      : {
+          trafficWear: { colorMultiplier: 1.025, roughnessOffset: -0.12 },
+          longTermExposure: { colorMultiplier: 1.04, roughnessOffset: 0.04 },
+          runoffStaining: { colorMultiplier: 0.78, roughnessOffset: 0.1 },
+          repairInfluence: { colorMultiplier: 1.07, roughnessOffset: -0.025 },
+        },
     metallic: 0,
     metadata: {
       generator: 'videoer.procedural-paving-unit-material.v1',

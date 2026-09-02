@@ -1618,6 +1618,199 @@ def create_surface_water(definition, receiver_asset, receiver_mesh):
     }
 
 
+def create_surface_history(definition, receiver_asset, receiver_mesh):
+    field = load_json(definition["surfaceHistoryFieldPath"])
+    water = load_json(definition["surfaceWaterFieldPath"])
+    if field.get("generator") != "videoer.construction-surface-history.v1":
+        raise RuntimeError(
+            f"Entity '{definition['id']}' surface-history field has an unsupported generator"
+        )
+    if field.get("sourceWaterField", {}).get("id") != water.get("id") or field.get(
+        "sourceWaterField", {}
+    ).get("fieldSha256") != water.get("fieldSha256"):
+        raise RuntimeError(
+            f"Entity '{definition['id']}' surface-history field does not bind its exact source water"
+        )
+    if field.get("receiver", {}).get("geometryId") != receiver_asset.get("id"):
+        raise RuntimeError(
+            f"Entity '{definition['id']}' surface-history receiver identity does not match geometry"
+        )
+    if field.get("receiver", {}).get("transform") != definition.get("transform"):
+        raise RuntimeError(
+            f"Entity '{definition['id']}' surface-history receiver transform does not match entity"
+        )
+    if field.get("grid") != water.get("grid") or len(field.get("cells", [])) != len(
+        water.get("cells", [])
+    ):
+        raise RuntimeError(
+            f"Entity '{definition['id']}' surface-history topology does not match source water"
+        )
+    for history_cell, water_cell in zip(field["cells"], water["cells"]):
+        identity = ("index", "row", "column", "worldPosition", "triangleIndex", "materialId")
+        if any(history_cell.get(key) != water_cell.get(key) for key in identity):
+            raise RuntimeError(
+                f"Entity '{definition['id']}' surface-history cell topology is stale"
+            )
+        for channel in (
+            "trafficWear",
+            "longTermExposure",
+            "runoffStaining",
+            "repairInfluence",
+            "repairRelativeAge",
+        ):
+            value = history_cell.get(channel)
+            if not isinstance(value, (int, float)) or not math.isfinite(value) or value < 0 or value > 1:
+                raise RuntimeError(
+                    f"Entity '{definition['id']}' surface-history channel '{channel}' is invalid"
+                )
+
+    columns = field["grid"]["columns"]
+    rows = field["grid"]["rows"]
+    cell_size = field["grid"]["cellSizeMeters"]
+    pixels = [0.0] * (columns * rows * 4)
+    for cell in field["cells"]:
+        pixel = cell["index"] * 4
+        pixels[pixel : pixel + 4] = [
+            cell["trafficWear"] * cell["coverage"],
+            cell["longTermExposure"] * cell["coverage"],
+            cell["runoffStaining"] * cell["coverage"],
+            cell["repairInfluence"] * cell["coverage"],
+        ]
+    image = bpy.data.images.new(
+        f"{definition['id']}-surface-history-field",
+        width=columns,
+        height=rows,
+        alpha=True,
+        float_buffer=True,
+    )
+    image.colorspace_settings.name = "Non-Color"
+    image.pixels.foreach_set(pixels)
+    image.pack()
+    uv_layer = receiver_mesh.data.uv_layers.get("surface_history_uv")
+    if uv_layer is None:
+        uv_layer = receiver_mesh.data.uv_layers.new(name="surface_history_uv")
+    origin_x, origin_z = field["grid"]["worldOriginXZ"]
+    extent_x = columns * cell_size
+    extent_z = rows * cell_size
+    for loop in receiver_mesh.data.loops:
+        point = transform_canonical_point(
+            receiver_asset["positions"][loop.vertex_index], definition["transform"]
+        )
+        uv_layer.data[loop.index].uv = (
+            (point[0] - origin_x) / extent_x,
+            (point[2] - origin_z) / extent_z,
+        )
+
+    definitions = receiver_asset.get("materials", [])
+    response_materials = []
+    channel_outputs = ("Red", "Green", "Blue", "Alpha")
+    response_names = (
+        "trafficWear",
+        "longTermExposure",
+        "runoffStaining",
+        "repairInfluence",
+    )
+    for slot_index, original in enumerate(list(receiver_mesh.data.materials)):
+        material_definition = definitions[slot_index] if slot_index < len(definitions) else None
+        response = (material_definition or {}).get("surface", {}).get("historyResponse")
+        if not response:
+            continue
+        material = original.copy()
+        material.name = f"{original.name}-receiver-history"
+        receiver_mesh.data.materials[slot_index] = material
+        material.use_nodes = True
+        nodes = material.node_tree.nodes
+        links = material.node_tree.links
+        principled = nodes.get("Principled BSDF")
+        if principled is None:
+            raise RuntimeError(
+                f"Entity '{definition['id']}' history material '{material.name}' lacks Principled BSDF"
+            )
+        uv = nodes.new("ShaderNodeUVMap")
+        uv.name = "videoer-surface-history-uv"
+        uv.uv_map = "surface_history_uv"
+        texture = nodes.new("ShaderNodeTexImage")
+        texture.name = "videoer-surface-history-field"
+        texture.image = image
+        texture.interpolation = "Linear"
+        texture.extension = "EXTEND"
+        separate = nodes.new("ShaderNodeSeparateColor")
+        separate.name = "videoer-surface-history-channels"
+        links.new(uv.outputs["UV"], texture.inputs["Vector"])
+        links.new(texture.outputs["Color"], separate.inputs["Color"])
+
+        base = principled.inputs["Base Color"]
+        base_source = base.links[0].from_socket if base.is_linked else None
+        base_default = tuple(base.default_value)
+        if base.is_linked:
+            links.remove(base.links[0])
+        current_color = base_source
+        for response_name, output_name in zip(response_names, channel_outputs):
+            response_value = response[response_name]
+            signal_output = (
+                texture.outputs["Alpha"]
+                if output_name == "Alpha"
+                else separate.outputs[output_name]
+            )
+            scale = nodes.new("ShaderNodeMath")
+            scale.operation = "MULTIPLY_ADD"
+            scale.inputs[1].default_value = response_value["colorMultiplier"] - 1
+            scale.inputs[2].default_value = 1
+            links.new(signal_output, scale.inputs[0])
+            multiply = nodes.new("ShaderNodeMixRGB")
+            multiply.blend_type = "MULTIPLY"
+            multiply.inputs[0].default_value = 1
+            links.new(scale.outputs[0], multiply.inputs[2])
+            if current_color:
+                links.new(current_color, multiply.inputs[1])
+            else:
+                multiply.inputs[1].default_value = base_default
+            current_color = multiply.outputs[0]
+        links.new(current_color, base)
+
+        roughness = principled.inputs["Roughness"]
+        current_roughness = roughness.links[0].from_socket if roughness.is_linked else None
+        roughness_default = roughness.default_value
+        if roughness.is_linked:
+            links.remove(roughness.links[0])
+        for response_name, output_name in zip(response_names, channel_outputs):
+            signal_output = (
+                texture.outputs["Alpha"]
+                if output_name == "Alpha"
+                else separate.outputs[output_name]
+            )
+            delta = nodes.new("ShaderNodeMath")
+            delta.operation = "MULTIPLY"
+            delta.inputs[1].default_value = response[response_name]["roughnessOffset"]
+            links.new(signal_output, delta.inputs[0])
+            add = nodes.new("ShaderNodeMath")
+            add.operation = "ADD"
+            add.use_clamp = True
+            if current_roughness:
+                links.new(current_roughness, add.inputs[0])
+            else:
+                add.inputs[0].default_value = roughness_default
+            links.new(delta.outputs[0], add.inputs[1])
+            current_roughness = add.outputs[0]
+        links.new(current_roughness, roughness)
+        response_materials.append(material_definition["id"])
+    if not response_materials:
+        raise RuntimeError(
+            f"Entity '{definition['id']}' has a surface-history field but no material history responses"
+        )
+    return {
+        "entityId": definition["id"],
+        "fieldId": field["id"],
+        "fieldSha256": field["fieldSha256"],
+        "sourceWaterFieldSha256": field["sourceWaterField"]["fieldSha256"],
+        "activeCellCount": field["grid"]["activeCellCount"],
+        "responseMaterialIds": sorted(response_materials),
+        "trafficAffectedCellCount": sum(cell["trafficWear"] > 0 for cell in field["cells"]),
+        "runoffAffectedCellCount": sum(cell["runoffStaining"] > 0 for cell in field["cells"]),
+        "repairAffectedCellCount": sum(cell["repairInfluence"] > 0 for cell in field["cells"]),
+    }
+
+
 def create_ground_splashes(definition, fps, surface_water_fields=None):
     if not definition or not definition.get("enabled") or definition.get("count", 0) <= 0:
         return
@@ -2253,9 +2446,16 @@ def main():
     scene = configure_scene(manifest)
     entity_meshes = {}
     surface_water_fields = []
+    surface_history_fields = []
     for entity in manifest["entities"]:
         asset, armature, mesh = create_entity(entity, manifest["fps"], manifest["durationSeconds"])
         entity_meshes[entity["id"]] = mesh
+        if entity.get("surfaceHistoryFieldPath"):
+            if not entity.get("surfaceWaterFieldPath"):
+                raise RuntimeError(
+                    f"Entity '{entity['id']}' cannot render surface history without its source water"
+                )
+            surface_history_fields.append(create_surface_history(entity, asset, mesh))
         if entity.get("surfaceWaterFieldPath"):
             field_report = create_surface_water(entity, asset, mesh)
             if entity.get("surfaceWaterOpticalSurfacePath"):
@@ -2282,6 +2482,21 @@ def main():
                     {key: value for key, value in field.items() if key != "splashEligibleCells"}
                     for field in surface_water_fields
                 ],
+            },
+            handle,
+            indent=2,
+        )
+        handle.write("\n")
+    with open(
+        os.path.join(output, "surface-history-report.json"),
+        "w",
+        encoding="utf-8",
+    ) as handle:
+        json.dump(
+            {
+                "schemaVersion": 1,
+                "sceneId": manifest["id"],
+                "fields": surface_history_fields,
             },
             handle,
             indent=2,

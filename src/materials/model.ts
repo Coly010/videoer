@@ -346,6 +346,26 @@ export const surfaceMaterialSchema = z
           .optional(),
       })
       .optional(),
+    historyResponse: z
+      .object({
+        trafficWear: z.object({
+          colorMultiplier: z.number().min(0.5).max(1.5),
+          roughnessOffset: z.number().min(-0.5).max(0.5),
+        }),
+        longTermExposure: z.object({
+          colorMultiplier: z.number().min(0.5).max(1.5),
+          roughnessOffset: z.number().min(-0.5).max(0.5),
+        }),
+        runoffStaining: z.object({
+          colorMultiplier: z.number().min(0.5).max(1.5),
+          roughnessOffset: z.number().min(-0.5).max(0.5),
+        }),
+        repairInfluence: z.object({
+          colorMultiplier: z.number().min(0.5).max(1.5),
+          roughnessOffset: z.number().min(-0.5).max(0.5),
+        }),
+      })
+      .optional(),
     metallic: z.number().min(0).max(1).default(0),
     unitVariation: surfaceUnitVariationSchema.optional(),
     textureMaps: hashBoundTextureMapSetSchema.optional(),

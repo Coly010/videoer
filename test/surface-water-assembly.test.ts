@@ -24,6 +24,7 @@ import { saveCinematicScene } from '../src/cinematic/io.js';
 import { verifyCinematicScene } from '../src/cinematic/verification.js';
 import { fingerprintCinematicScene } from '../src/cinematic/fingerprint.js';
 import { createPavingGranularSurfaceMaterial } from '../src/materials/paving-joint.js';
+import { createPavingSurfaceHistoryField } from '../src/application/surface-history.js';
 
 const temporaryDirectories: string[] = [];
 const exec = promisify(execFile);
@@ -126,6 +127,37 @@ describe('paving surface-water assembly', () => {
       materialResponseSources: { embedded: [targets.continuousJoint] },
     });
     expect(await sha256File(result.path)).toMatch(/^[a-f0-9]{64}$/u);
+    const history = await createPavingSurfaceHistoryField({
+      pavingGeometryPath: geometryPath,
+      surfaceWaterFieldPath: result.path,
+      profile: {
+        schemaVersion: 1,
+        id: 'environment.contemporary-paver-history',
+        referenceDate: '2026-09-02',
+        installationAgeYears: 18,
+        trafficPaths: [
+          {
+            id: 'footfall',
+            kind: 'pedestrian',
+            localPoints: [
+              [-3, -2],
+              [4, -2],
+            ],
+            halfWidthMeters: 0.25,
+            falloffMeters: 0.3,
+            equivalentPasses: 100_000,
+            wearPerPass: 0.00001,
+          },
+        ],
+        repairs: [{ id: definition.repairPatches[0]!.id, ageYears: 3 }],
+        runoff: { referenceDepthMeters: 0.002, edgeWeight: 1, puddleWeight: 0.5 },
+      },
+      outputPath: join(directory, 'surface-history-field.json'),
+    });
+    expect(history.report).toMatchObject({
+      result: 'structural-pass',
+      visualAcceptance: 'not-assessed',
+    });
     const opticalPath = join(directory, 'surface-water-optical.json');
     const optical = await createSurfaceWaterOpticalSurface({
       surfaceWaterFieldPath: result.path,
@@ -219,6 +251,7 @@ describe('paving surface-water assembly', () => {
           role: 'environment',
           geometryPath: relative(directory, geometryPath),
           surfaceWaterFieldPath: relative(directory, result.path),
+          surfaceHistoryFieldPath: relative(directory, history.path),
           surfaceWaterOpticalSurfacePath: relative(directory, cliRefinedPath),
           transform: profile.receiverTransform,
         },
@@ -258,6 +291,18 @@ describe('paving surface-water assembly', () => {
         entities: [{ ...scene.entities[0], role: 'prop' }],
       }),
     ).toThrow(/only bind environment entities/u);
+    expect(() =>
+      cinematicSceneSchema.parse({
+        ...scene,
+        entities: [
+          {
+            ...scene.entities[0],
+            surfaceWaterFieldPath: undefined,
+            surfaceWaterOpticalSurfacePath: undefined,
+          },
+        ],
+      }),
+    ).toThrow(/surface-history fields require/u);
     const scenePath = await saveCinematicScene(join(directory, 'scene.json'), scene);
     expect(await verifyCinematicScene(scene, scenePath)).toMatchObject({
       status: 'pass',
@@ -266,6 +311,7 @@ describe('paving surface-water assembly', () => {
           id: 'receiver.surface-water-optical-surface',
           status: 'pass',
         }),
+        expect.objectContaining({ id: 'receiver.surface-history-field', status: 'pass' }),
       ]),
     });
     const initialFingerprint = await fingerprintCinematicScene(scenePath);
@@ -278,6 +324,10 @@ describe('paving surface-water assembly', () => {
         expect.objectContaining({
           role: 'surface-water-optical:receiver',
           path: 'cli-surface-water-optical-v2.json',
+        }),
+        expect.objectContaining({
+          role: 'surface-history:receiver',
+          path: 'surface-history-field.json',
         }),
       ]),
     );

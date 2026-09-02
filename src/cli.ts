@@ -75,6 +75,10 @@ import {
   rebindSurfaceWaterAssemblyProfile,
 } from './application/surface-water.js';
 import {
+  createPavingSurfaceHistoryField,
+  loadSurfaceHistoryProfile,
+} from './application/surface-history.js';
+import {
   createOldCitySurfaceMaterialAssets,
   createOldCitySurfaceMaterialAsset,
   createPavingGranularMaterialAsset,
@@ -1349,6 +1353,36 @@ environment
       data,
       (result) =>
         `✓ ${result.field.grid.activeCellCount} receiver cells solved with mass-balance error ${result.field.massBalance.errorCubicMeters} → ${result.path}`,
+    );
+  });
+environment
+  .command('create-surface-history-field')
+  .argument('<paving-geometry>')
+  .argument('<surface-water-field>')
+  .argument('<history-profile>')
+  .argument('<output-field>')
+  .description(
+    'derive renderer-independent traffic, exposure, runoff-stain and repair history over an exact water receiver',
+  )
+  .action(async function (
+    pavingGeometry: string,
+    surfaceWaterField: string,
+    historyProfile: string,
+    outputField: string,
+  ) {
+    const profile = await loadSurfaceHistoryProfile(historyProfile);
+    const data = await createPavingSurfaceHistoryField({
+      pavingGeometryPath: pavingGeometry,
+      surfaceWaterFieldPath: surfaceWaterField,
+      profile,
+      outputPath: outputField,
+    });
+    output(
+      this,
+      'environment.create-surface-history-field',
+      data,
+      (result) =>
+        `✓ ${result.field.cells.length} receiver cells received causal construction history → ${result.path}`,
     );
   });
 environment

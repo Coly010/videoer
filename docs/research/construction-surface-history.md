@@ -1,0 +1,24 @@
+# Construction-surface history research
+
+Research date: 2026-09-02.
+
+## Adopted foundations
+
+- Blocken et al.'s wind-driven-rain literature defines facade rain as horizontal rainfall multiplied by a catch ratio dependent on geometry, wind and droplets. The open 2023 Zurich study provides the working definition and evidence basis ([Building and Environment, DOI 10.1016/j.buildenv.2023.110038](https://doi.org/10.1016/j.buildenv.2023.110038)). Videoer currently reuses the existing verified fractional exposure field; directional catch and deterministic hemisphere visibility are queued extensions, not claimed as implemented CFD.
+- Chew and Tan report that ledges, joints and projections disturb runoff and determine facade staining ([Construction and Building Materials, DOI 10.1016/S0950-0618(02)00102-2](<https://doi.org/10.1016/S0950-0618(02)00102-2>)). Videoer adopts the causal distinction between exposure, flow and staining, without copying text, code or proprietary assets.
+- Helbing, Keltsch and Molnár model active-walker trail reinforcement and decay ([arXiv:cond-mat/9805158](https://arxiv.org/abs/cond-mat/9805158)). The first implementation uses explicit routes and a deterministic lateral kernel; active route reinforcement remains an optional higher-value synthesis tier.
+- FHWA reports wheel-wander standard deviations from 8 to 24 inches and publishes a public pavement-distress vocabulary covering wheel paths, polished aggregate, rutting, patching and spalling ([FHWA-HRT-12-072](https://www.fhwa.dot.gov/publications/research/infrastructure/pavements/12072/006.cfm), [FHWA-HRT-13-092](https://www.fhwa.dot.gov/publications/research/infrastructure/pavements/ltpp/13092/)). Future vehicle profiles must declare track gauge, tyre width and wander; the system will not hide one universal wheel-path number.
+- Barnes, Lehman and Mulla's Priority-Flood work supports depression filling and spill connectivity on regular and irregular domains ([arXiv:1511.04463](https://arxiv.org/abs/1511.04463)). If richer persistent drainage is required, Videoer will implement the published algorithm cleanly. It will not copy RichDEM's GPL-3.0 implementation into the project.
+- EPA SWMM documents bounded buildup and supply-limited washoff equations and explicitly warns that coefficients require calibration ([SWMM Water Quality Reference Manual](https://nepis.epa.gov/Exe/ZyPURL.cgi?Dockey=P100P2NY.TXT), [official SWMM](https://www.epa.gov/water-research/storm-water-management-model-swmm)). The public-domain equations are the planned dirt-mass foundation. Published pollutant coefficients will not be relabelled as visual defaults.
+- NOAA CDO and NASA POWER are possible persisted climate inputs ([NOAA Climate Data Online](https://www.ncdc.noaa.gov/cdo-web/), [NASA POWER](https://power.larc.nasa.gov/)). Rendering must remain provider-free; any fetched dataset needs exact product, retrieval date, hash and licence provenance.
+
+## Licensing and adoption exclusions
+
+- Do not copy RichDEM GPL-3.0, JuPedSim/libpedsim LGPL, or SUMO EPL code into the core without a deliberate licence decision.
+- Do not bundle OpenStreetMap extracts as permissive defaults; ODbL provenance/share-alike obligations require an explicit campaign input decision.
+- Do not use Google Street View, Quixel/Megascans, Substance-only generators, proprietary ASTM tables, AASHTOWare material or commercial texture libraries as reusable defaults.
+- Recast Navigation is zlib and the `recast-navigation` JavaScript/WASM package is MIT; either may be evaluated for complex walkable route synthesis. A small project-owned deterministic route solver is preferable while current needs remain simple.
+
+## Implemented boundary and next research-backed slices
+
+Version 1 deliberately stops at explainable traffic wear, water-derived exposure/runoff staining, and repair footprint/age. It does not yet simulate dirt mass, climate histories, route choice, wheel wander, or repair hazards. The next causal slices, in order, are mass-conserving loose/persistent dirt buildup-washoff, explicit pedestrian/twin-wheel pass density, event-led repair ledgers, then directional exposure only if a real shot demonstrates that the existing water exposure is insufficient.
