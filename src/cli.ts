@@ -97,6 +97,7 @@ import {
   type PavingUnitMaterialKind,
 } from './materials/paving-unit.js';
 import {
+  textureDisplacementResponseSchema,
   textureMaterialApplicationSchema,
   textureMaterialSuitabilitySchema,
 } from './materials/model.js';
@@ -1961,12 +1962,16 @@ surfaceMaterial
     '--suitability <json-file>',
     'composition, intended construction domains, and rationale JSON',
   )
+  .option(
+    '--displacement-response <json-file>',
+    'explicit calibrated or disabled-uncalibrated displacement response JSON',
+  )
   .description('derive a provenance-bound texture material without rendering or rescaling it')
   .action(async function (
     baseMaterial: string,
     sourceManifest: string,
     outputMaterial: string,
-    options: { id: string; suitability: string },
+    options: { id: string; suitability: string; displacementResponse?: string },
   ) {
     const suitability = textureMaterialSuitabilitySchema.parse(
       JSON.parse(await readFile(resolve(options.suitability), 'utf8')),
@@ -1977,6 +1982,13 @@ surfaceMaterial
       sourceManifestPath: sourceManifest,
       outputMaterialPath: outputMaterial,
       suitability,
+      ...(options.displacementResponse
+        ? {
+            displacementResponse: textureDisplacementResponseSchema.parse(
+              JSON.parse(await readFile(resolve(options.displacementResponse), 'utf8')),
+            ),
+          }
+        : {}),
     });
     output(
       this,

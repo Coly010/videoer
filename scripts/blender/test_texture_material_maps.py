@@ -126,6 +126,16 @@ def main():
                 "licenceSpdx": "CC0-1.0",
             },
             "physicalScale": {"widthMeters": 0.5, "heightMeters": 0.25},
+            "displacementResponse": {
+                "policy": "calibrated",
+                "amplitudeMeters": 0.003,
+                "midpoint": 0.43,
+                "positiveDirection": "higher-values-outward",
+                "evidence": {
+                    "basis": "project-calibration",
+                    "reference": "native Blender metre witness v1",
+                },
+            },
             "suitability": {
                 "composition": "homogeneous-unit-material",
                 "intendedConstructionDomains": ["prop-surface"],
@@ -219,6 +229,53 @@ def main():
     absent_nodes = sorted(required_nodes - node_names)
     if absent_nodes:
         raise RuntimeError(f"Blender PBR graph lacks nodes: {absent_nodes}")
+    displacement = material.node_tree.nodes["videoer-texture-displacement"]
+    if displacement.bl_idname != "ShaderNodeDisplacement":
+        raise RuntimeError("Calibrated displacement node has the wrong Blender type")
+    if abs(displacement.inputs["Midlevel"].default_value - 0.43) > 1e-6:
+        raise RuntimeError("Calibrated displacement midpoint was not consumed exactly")
+    if abs(displacement.inputs["Scale"].default_value - 0.003) > 1e-6:
+        raise RuntimeError("Calibrated displacement amplitude was not consumed exactly")
+    if abs(displacement.inputs["Scale"].default_value - surface["normal"]["scaleMeters"]) < 1e-6:
+        raise RuntimeError("Displacement amplitude still aliases normal feature scale")
+    if report["displacementResponse"] != {
+        **surface["textureMaps"]["displacementResponse"],
+        "enabled": True,
+        "formula": "signed-metres=(sample-midpoint)*amplitudeMeters",
+    }:
+        raise RuntimeError(f"Calibrated displacement report is incomplete: {report['displacementResponse']}")
+    if report["normalStrength"] != surface["normal"]["strength"]:
+        raise RuntimeError("Texture normal strength is not reported independently")
+    output_node = material.node_tree.nodes.get("Material Output")
+    if not output_node or not output_node.inputs["Displacement"].is_linked:
+        raise RuntimeError("Calibrated displacement is not linked to Material Output")
+
+    disabled_definition = copy.deepcopy(definition)
+    disabled_definition["id"] = "probe-material-disabled-displacement"
+    disabled_definition["surface"]["id"] = "material.disabled-displacement-probe"
+    disabled_definition["surface"]["textureMaps"]["displacementResponse"] = {
+        "policy": "disabled-uncalibrated",
+        "rationale": "Fixture proves retained source bytes do not enable unknown displacement.",
+    }
+    disabled_asset = copy.deepcopy(cube_asset)
+    disabled_asset["id"] = "geometry.disabled-displacement-witness"
+    disabled_asset["materials"] = [disabled_definition]
+    disabled_asset["materialGroups"][0]["materialId"] = disabled_definition["id"]
+    disabled_mesh = geometry_probe.create_mesh(disabled_asset, None, output)
+    disabled_material = disabled_mesh.data.materials[0]
+    disabled_output = disabled_material.node_tree.nodes.get("Material Output")
+    if any(
+        item.bl_idname == "ShaderNodeDisplacement"
+        for item in disabled_material.node_tree.nodes
+    ):
+        raise RuntimeError("Disabled uncalibrated height created a displacement node")
+    if disabled_output and disabled_output.inputs["Displacement"].is_linked:
+        raise RuntimeError("Disabled uncalibrated height reached Material Output")
+    if "videoer-texture-displacement-sample" not in disabled_material.node_tree.nodes:
+        raise RuntimeError("Disabled displacement did not retain its verified source channel")
+    disabled_report = json.loads(disabled_material["videoer_texture_report"])
+    if disabled_report["displacementResponse"].get("enabled") is not False:
+        raise RuntimeError("Disabled displacement report does not fail closed")
     expected_plane_mapping = {"xy": {"axes": ["X", "Y"], "scale": [2.0, 4.0]}}
     if report["mapping"]["kind"] != "world-horizontal-physical" or report["mapping"]["planes"] != expected_plane_mapping:
         raise RuntimeError(f"World-horizontal mapping is incorrect: {report['mapping']}")
@@ -922,6 +979,9 @@ def main():
                 "channels": report["channels"],
                 "physicalScale": report["physicalScale"],
                 "mapping": report["mapping"],
+                "normalStrength": report["normalStrength"],
+                "displacementResponse": report["displacementResponse"],
+                "disabledDisplacementResponse": disabled_report["displacementResponse"],
                 "liveBlenderGraphPlaneScales": graph_plane_scales,
                 "measuredRepeatAspect": measured_repeats,
                 "nodeNames": sorted(required_nodes),

@@ -88,6 +88,16 @@ def main():
                         "licenceSpdx": "CC0-1.0",
                     },
                     "physicalScale": {"widthMeters": 0.5, "heightMeters": 0.25},
+                    "displacementResponse": {
+                        "policy": "calibrated",
+                        "amplitudeMeters": 0.0025,
+                        "midpoint": 0.47,
+                        "positiveDirection": "higher-values-outward",
+                        "evidence": {
+                            "basis": "project-calibration",
+                            "reference": "wet response isolation fixture v1",
+                        },
+                    },
                     "suitability": {
                         "composition": "homogeneous-unit-material",
                         "intendedConstructionDomains": ["prop-surface"],
@@ -173,6 +183,16 @@ def main():
     wet_hashes = {item["semantic"]: item["sha256"] for item in wet_report["channels"]}
     if dry_hashes != wet_hashes:
         raise RuntimeError("Wet response changed staged texture identities")
+    if dry_report["displacementResponse"] != wet_report["displacementResponse"]:
+        raise RuntimeError("Wet response changed calibrated displacement semantics")
+    for material in (dry_material, wet_material):
+        displacement = material.node_tree.nodes.get("videoer-texture-displacement")
+        if (
+            displacement is None
+            or abs(displacement.inputs["Midlevel"].default_value - 0.47) > 1e-6
+            or abs(displacement.inputs["Scale"].default_value - 0.0025) > 1e-6
+        ):
+            raise RuntimeError("Wet/dry material did not preserve calibrated displacement defaults")
 
     principled = wet_nodes.get("Principled BSDF")
     live_values = {

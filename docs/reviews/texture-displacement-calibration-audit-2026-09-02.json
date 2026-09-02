@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "status": "targeted-subsystem-accepted",
+  "publicationAllowed": false,
+  "scope": "renderer-neutral physical calibration and Blender consumption of hash-bound texture displacement",
+  "verdict": {
+    "explicitPolicyRequired": "pass",
+    "normalScaleIndependence": "pass",
+    "calibratedSignedHeight": "pass",
+    "disabledSourceIsolation": "pass",
+    "wetResponseIsolation": "pass",
+    "productionEnvironmentVisualAcceptance": "reject"
+  },
+  "nativeWitness": {
+    "blenderVersion": "4.5.13 LTS",
+    "amplitudeMeters": 0.003,
+    "midpoint": 0.43,
+    "normalStrength": 0.7,
+    "positiveDirection": "higher-values-outward",
+    "formula": "signed-metres=(sample-midpoint)*amplitudeMeters",
+    "calibratedEnabled": true,
+    "disabledEnabled": false
+  },
+  "acceptedEvidence": [
+    "a displacement channel without an explicit calibrated or disabled-uncalibrated response is rejected",
+    "a displacement response without a source displacement channel is rejected",
+    "calibrated amplitude and midpoint are persisted in the renderer-independent material and participate in fingerprints",
+    "changing normal feature spacing cannot change displacement calibration",
+    "disabled source bytes remain hash-bound and registered but do not connect to Material Output",
+    "native Blender uses the declared 0.003 m amplitude and 0.43 midpoint while normal strength remains independently 0.7",
+    "native wet and dry probes preserve identical displacement calibration and source identity",
+    "construction response can preserve and chain an existing calibrated texture displacement"
+  ],
+  "remainingFindings": [
+    "provider normalized displacement maps still require separate physical calibration evidence before activation",
+    "current historic and contemporary environments remain below photographic acceptance for independent source-character, facade, glazing, interior, precipitation and atmosphere reasons"
+  ],
+  "nextGenericChange": "Complete the provenance-correct Poly Haven provider-file-set source adapter under the newly reconciled 2026-07-18 API terms, then ingest homogeneous candidates with displacement disabled until physical calibration is reviewed.",
+  "queuedReusableWork": {
+    "productionClothing": "Queued behind current higher-priority reusable environment/material work: garment panels and pattern construction, seams, hems, thickness, shoulder and armhole quality, base weights and correctives, folds and wrinkles, cloth materials, selective simulation, and temporal verification. This is reusable-system work, not benchmark-specific polishing."
+  }
+}

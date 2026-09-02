@@ -370,6 +370,53 @@ def configure_texture_map_nodes(material, principled, surface, asset_directory):
     for required in ("base-color", "normal", "roughness"):
         if required not in semantic_channels:
             raise RuntimeError(f"Texture-map set is missing required channel '{required}'")
+    displacement_response = texture_maps.get("displacementResponse")
+    has_displacement = "displacement" in semantic_channels
+    if has_displacement != (displacement_response is not None):
+        raise RuntimeError(
+            "Displacement texture and explicit displacement response must be declared together"
+        )
+    if displacement_response is not None:
+        policy = displacement_response.get("policy")
+        if policy == "disabled-uncalibrated":
+            rationale = displacement_response.get("rationale")
+            if not isinstance(rationale, str) or not rationale.strip():
+                raise RuntimeError("Disabled displacement response requires a rationale")
+        elif policy == "calibrated":
+            amplitude = displacement_response.get("amplitudeMeters")
+            midpoint = displacement_response.get("midpoint")
+            evidence = displacement_response.get("evidence")
+            if (
+                isinstance(amplitude, bool)
+                or not isinstance(amplitude, (int, float))
+                or not math.isfinite(amplitude)
+                or amplitude <= 0
+                or amplitude > max(width, height)
+            ):
+                raise RuntimeError(
+                    "Calibrated displacement amplitude must be positive and no larger than the physical tile"
+                )
+            if (
+                isinstance(midpoint, bool)
+                or not isinstance(midpoint, (int, float))
+                or not math.isfinite(midpoint)
+                or midpoint < 0
+                or midpoint > 1
+            ):
+                raise RuntimeError("Calibrated displacement midpoint must be within 0..1")
+            if displacement_response.get("positiveDirection") != "higher-values-outward":
+                raise RuntimeError("Calibrated displacement requires higher-values-outward semantics")
+            if (
+                not isinstance(evidence, dict)
+                or evidence.get("basis") not in {
+                    "provider-declared", "measured-reference", "project-calibration",
+                }
+                or not isinstance(evidence.get("reference"), str)
+                or not evidence["reference"].strip()
+            ):
+                raise RuntimeError("Calibrated displacement requires explicit evidence")
+        else:
+            raise RuntimeError(f"Unsupported displacement response policy: {policy}")
     wetness = surface.get("roughness", {}).get("wetness", 0)
     if (
         isinstance(wetness, bool)
@@ -498,12 +545,17 @@ def configure_texture_map_nodes(material, principled, surface, asset_directory):
             plane_weights[plane] = normalized.outputs[0]
 
     def weighted_plane_sum(outputs, semantic):
+        aggregate_name = (
+            "videoer-texture-displacement-sample"
+            if semantic == "displacement"
+            else f"videoer-texture-{semantic}"
+        )
         if len(outputs) == 1:
             plane = next(iter(outputs))
             passthrough = nodes.new("ShaderNodeVectorMath")
             passthrough.operation = "SCALE"
             passthrough.inputs["Scale"].default_value = 1.0
-            passthrough.name = f"videoer-texture-{semantic}"
+            passthrough.name = aggregate_name
             links.new(outputs[plane], passthrough.inputs[0])
             return passthrough.outputs["Vector"]
         weighted = []
@@ -517,7 +569,7 @@ def configure_texture_map_nodes(material, principled, surface, asset_directory):
         first_sum.operation = "ADD"
         links.new(weighted[0], first_sum.inputs[0])
         links.new(weighted[1], first_sum.inputs[1])
-        first_sum.name = f"videoer-texture-{semantic}"
+        first_sum.name = aggregate_name
         return first_sum.outputs["Vector"]
 
     image_nodes = {}
@@ -767,15 +819,21 @@ def configure_texture_map_nodes(material, principled, surface, asset_directory):
     links.new(image_nodes["normal"], normal_map.inputs["Color"])
     links.new(normal_map.outputs["Normal"], principled.inputs["Normal"])
 
-    if "displacement" in image_nodes:
+    if (
+        "displacement" in image_nodes
+        and displacement_response["policy"] == "calibrated"
+    ):
         displacement = nodes.new("ShaderNodeDisplacement")
         displacement.name = "videoer-texture-displacement"
-        displacement.inputs["Midlevel"].default_value = 0.5
-        displacement.inputs["Scale"].default_value = surface["normal"].get("scaleMeters", 0.01)
+        displacement.inputs["Midlevel"].default_value = displacement_response["midpoint"]
+        displacement.inputs["Scale"].default_value = displacement_response["amplitudeMeters"]
         links.new(image_nodes["displacement"], displacement.inputs["Height"])
         output = nodes.get("Material Output")
         if output:
             links.new(displacement.outputs["Displacement"], output.inputs["Displacement"])
+        cycles = getattr(material, "cycles", None)
+        if cycles is not None and hasattr(cycles, "displacement_method"):
+            cycles.displacement_method = "BOTH"
 
     if "opacity" in image_nodes:
         links.new(image_nodes["opacity"], principled.inputs["Alpha"])
@@ -812,6 +870,20 @@ def configure_texture_map_nodes(material, principled, surface, asset_directory):
             "macroSeedOffset": list(seed_offset),
         },
         "wetSurfaceResponse": wet_response,
+        "normalStrength": surface["normal"].get("strength", 1.0),
+        "displacementResponse": (
+            {
+                **dict(displacement_response),
+                "enabled": displacement_response["policy"] == "calibrated",
+                **(
+                    {"formula": "signed-metres=(sample-midpoint)*amplitudeMeters"}
+                    if displacement_response["policy"] == "calibrated"
+                    else {}
+                ),
+            }
+            if displacement_response is not None
+            else None
+        ),
         "channels": report_channels,
     }
     material["videoer_texture_report"] = json.dumps(report, sort_keys=True)

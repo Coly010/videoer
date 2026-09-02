@@ -12,9 +12,11 @@ import { bindSurfaceMaterialTargets } from './adaptation.js';
 import { loadSurfaceMaterial } from './io.js';
 import {
   surfaceMaterialSchema,
+  textureDisplacementResponseSchema,
   textureMaterialApplicationSchema,
   textureMaterialSuitabilitySchema,
   type SurfaceMaterial,
+  type TextureDisplacementResponse,
   type TextureMaterialApplication,
   type TextureMaterialSuitability,
 } from './model.js';
@@ -119,6 +121,7 @@ export interface DeriveTextureSurfaceMaterialOptions {
   sourceManifestPath: string;
   outputMaterialPath: string;
   suitability: TextureMaterialSuitability;
+  displacementResponse?: TextureDisplacementResponse;
 }
 
 /**
@@ -135,6 +138,26 @@ export async function deriveTextureSurfaceMaterial(options: DeriveTextureSurface
   if (manifest.physicalScale.status !== 'known')
     throw new Error(
       `Open material '${manifest.asset.id}' has unknown physical scale; supply corrected source evidence before derivation`,
+    );
+  const displacementResponse = options.displacementResponse
+    ? textureDisplacementResponseSchema.parse(options.displacementResponse)
+    : undefined;
+  const hasDisplacement = manifest.channels.some((channel) => channel.semantic === 'displacement');
+  if (hasDisplacement && !displacementResponse)
+    throw new Error(
+      `Open material '${manifest.asset.id}' has a displacement channel; supply an explicit calibrated or disabled-uncalibrated displacement response`,
+    );
+  if (!hasDisplacement && displacementResponse)
+    throw new Error(
+      `Open material '${manifest.asset.id}' has no displacement channel for the supplied displacement response`,
+    );
+  if (
+    displacementResponse?.policy === 'calibrated' &&
+    displacementResponse.amplitudeMeters >
+      Math.max(manifest.physicalScale.widthMeters, manifest.physicalScale.heightMeters)
+  )
+    throw new Error(
+      `Open material '${manifest.asset.id}' displacement amplitude must not exceed its largest physical tile dimension`,
     );
   const channels = await verifyManifestPackage(dirname(manifestPath), manifest);
   const outputPath = resolve(options.outputMaterialPath);
@@ -169,6 +192,9 @@ export async function deriveTextureSurfaceMaterial(options: DeriveTextureSurface
         heightMeters: manifest.physicalScale.heightMeters,
       },
       suitability: textureMaterialSuitabilitySchema.parse(options.suitability),
+      ...(displacementResponse
+        ? { displacementResponse: structuredClone(displacementResponse) }
+        : {}),
       channels: stagedChannels,
     },
     metadata: {

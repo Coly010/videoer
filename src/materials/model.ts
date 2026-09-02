@@ -263,6 +263,23 @@ export const textureMaterialApplicationSchema = z
       });
   });
 
+export const textureDisplacementResponseSchema = z.discriminatedUnion('policy', [
+  z.object({
+    policy: z.literal('disabled-uncalibrated'),
+    rationale: z.string().trim().min(1),
+  }),
+  z.object({
+    policy: z.literal('calibrated'),
+    amplitudeMeters: z.number().positive().finite(),
+    midpoint: z.number().min(0).max(1),
+    positiveDirection: z.literal('higher-values-outward'),
+    evidence: z.object({
+      basis: z.enum(['provider-declared', 'measured-reference', 'project-calibration']),
+      reference: z.string().trim().min(1),
+    }),
+  }),
+]);
+
 export const hashBoundTextureMapSetSchema = z
   .object({
     kind: z.literal('hash-bound'),
@@ -278,6 +295,7 @@ export const hashBoundTextureMapSetSchema = z
     }),
     suitability: textureMaterialSuitabilitySchema,
     application: textureMaterialApplicationSchema.optional(),
+    displacementResponse: textureDisplacementResponseSchema.optional(),
     channels: z.array(materialTextureChannelSchema).min(3),
   })
   .superRefine((textureMaps, ctx) => {
@@ -310,6 +328,30 @@ export const hashBoundTextureMapSetSchema = z
           message: 'normal texture must use the canonical OpenGL convention',
         });
     }
+    const hasDisplacement = semantics.includes('displacement');
+    if (hasDisplacement && !textureMaps.displacementResponse)
+      ctx.addIssue({
+        code: 'custom',
+        path: ['displacementResponse'],
+        message:
+          'displacement texture requires an explicit calibrated or disabled-uncalibrated response',
+      });
+    if (!hasDisplacement && textureMaps.displacementResponse)
+      ctx.addIssue({
+        code: 'custom',
+        path: ['displacementResponse'],
+        message: 'displacement response requires a displacement texture channel',
+      });
+    if (
+      textureMaps.displacementResponse?.policy === 'calibrated' &&
+      textureMaps.displacementResponse.amplitudeMeters >
+        Math.max(textureMaps.physicalScale.widthMeters, textureMaps.physicalScale.heightMeters)
+    )
+      ctx.addIssue({
+        code: 'custom',
+        path: ['displacementResponse', 'amplitudeMeters'],
+        message: 'displacement amplitude must not exceed the largest physical tile dimension',
+      });
   });
 
 const surfacePatternSchema = z.discriminatedUnion('kind', [
@@ -677,3 +719,4 @@ export type HashBoundTextureMapSet = z.infer<typeof hashBoundTextureMapSetSchema
 export type ConstructionDomain = z.infer<typeof constructionDomainSchema>;
 export type TextureMaterialSuitability = z.infer<typeof textureMaterialSuitabilitySchema>;
 export type TextureMaterialApplication = z.infer<typeof textureMaterialApplicationSchema>;
+export type TextureDisplacementResponse = z.infer<typeof textureDisplacementResponseSchema>;

@@ -25,6 +25,7 @@ import {
 } from '../src/materials/texture-maps.js';
 import { createWetCobbleSurfaceMaterial } from '../src/materials/wet-cobble.js';
 import { saveSurfaceMaterial } from '../src/materials/io.js';
+import { adaptSurfaceMaterial } from '../src/materials/adaptation.js';
 
 const exec = promisify(execFile);
 
@@ -150,6 +151,17 @@ const flatGroundSuitability = {
   rationale: 'The source records a complete paving layout intended for a flat ground host.',
 };
 
+const calibratedDisplacement = {
+  policy: 'calibrated' as const,
+  amplitudeMeters: 0.003,
+  midpoint: 0.43,
+  positiveDirection: 'higher-values-outward' as const,
+  evidence: {
+    basis: 'project-calibration' as const,
+    reference: 'fixture metre reference v1',
+  },
+};
+
 const flatGroundApplication: TextureMaterialApplication = {
   constructionDomain: 'flat-ground-surface',
   placement: {
@@ -218,6 +230,7 @@ describe('hash-bound texture surface materials', () => {
         rationale:
           'Fixture intentionally declares broad domains so structural rejection is tested.',
       },
+      displacementResponse: calibratedDisplacement,
     });
     const modeledSetts = structuredClone(flatGroundApplication);
     modeledSetts.constructionDomain = 'modeled-paving-unit';
@@ -267,9 +280,7 @@ describe('hash-bound texture surface materials', () => {
     unitMappedFlatGround.placement.orientation = 'unit-local-uv-meters';
     expect(assessTextureMaterialSuitability(homogeneous, unitMappedFlatGround)).toMatchObject({
       accepted: false,
-      reasons: [
-        expect.objectContaining({ code: 'unit-local-mapping-on-non-modeled-unit' }),
-      ],
+      reasons: [expect.objectContaining({ code: 'unit-local-mapping-on-non-modeled-unit' })],
     });
 
     const jointBed = structuredClone(flatGroundApplication);
@@ -334,10 +345,15 @@ describe('hash-bound texture surface materials', () => {
     const basePath = join(directory, 'operator/base.json');
     const suitabilityPath = join(directory, 'operator/suitability.json');
     const applicationPath = join(directory, 'operator/application.json');
+    const displacementResponsePath = join(directory, 'operator/displacement-response.json');
     const outputPath = join(directory, 'operator/derived/material.json');
     await saveSurfaceMaterial(basePath, createWetCobbleSurfaceMaterial());
     await writeFile(suitabilityPath, `${JSON.stringify(flatGroundSuitability, null, 2)}\n`);
     await writeFile(applicationPath, `${JSON.stringify(flatGroundApplication, null, 2)}\n`);
+    await writeFile(
+      displacementResponsePath,
+      `${JSON.stringify(calibratedDisplacement, null, 2)}\n`,
+    );
     const derived = await exec(process.execPath, [
       '--import',
       'tsx',
@@ -352,6 +368,8 @@ describe('hash-bound texture surface materials', () => {
       'material.operator-texture-fixture',
       '--suitability',
       suitabilityPath,
+      '--displacement-response',
+      displacementResponsePath,
     ]);
     expect(JSON.parse(derived.stdout)).toMatchObject({
       version: 1,
@@ -387,10 +405,12 @@ describe('hash-bound texture surface materials', () => {
       sourceManifestPath: source.manifestPath,
       outputMaterialPath: materialPath,
       suitability: flatGroundSuitability,
+      displacementResponse: calibratedDisplacement,
     });
     expect(derived.material.textureMaps).toMatchObject({
       kind: 'hash-bound',
       physicalScale: { widthMeters: 1.1, heightMeters: 1.1 },
+      displacementResponse: calibratedDisplacement,
       source: {
         provider: 'ambientcg',
         sourceIdentitySha256: source.manifest.sourceIdentitySha256,
@@ -421,6 +441,32 @@ describe('hash-bound texture surface materials', () => {
       normalConvention: 'opengl-positive-green',
     });
     expect(createWetCobbleSurfaceMaterial()).not.toHaveProperty('textureMaps');
+    const missingResponse = structuredClone(derived.material);
+    delete missingResponse.textureMaps!.displacementResponse;
+    expect(() => surfaceMaterialSchema.parse(missingResponse)).toThrow(
+      /explicit calibrated or disabled-uncalibrated response/u,
+    );
+    const responseWithoutMap = structuredClone(derived.material);
+    responseWithoutMap.textureMaps!.channels = responseWithoutMap.textureMaps!.channels.filter(
+      (channel) => channel.semantic !== 'displacement',
+    );
+    expect(() => surfaceMaterialSchema.parse(responseWithoutMap)).toThrow(
+      /response requires a displacement texture channel/u,
+    );
+    const excessiveAmplitude = structuredClone(derived.material);
+    if (excessiveAmplitude.textureMaps!.displacementResponse?.policy === 'calibrated')
+      excessiveAmplitude.textureMaps!.displacementResponse.amplitudeMeters = 1.2;
+    expect(() => surfaceMaterialSchema.parse(excessiveAmplitude)).toThrow(
+      /must not exceed the largest physical tile dimension/u,
+    );
+    const changedNormalScale = structuredClone(derived.material);
+    changedNormalScale.normal.scaleMeters = 0.75;
+    expect(changedNormalScale.textureMaps!.displacementResponse).toEqual(calibratedDisplacement);
+    const adaptedNormal = adaptSurfaceMaterial(derived.material, {
+      assetId: 'material.paving-stones-036.normal-adaptation',
+      normal: { scaleMeters: 0.75 },
+    });
+    expect(adaptedNormal.textureMaps?.displacementResponse).toEqual(calibratedDisplacement);
     await writeFile(materialPath, 'different material bytes');
     await expect(
       deriveTextureSurfaceMaterial({
@@ -429,8 +475,42 @@ describe('hash-bound texture surface materials', () => {
         sourceManifestPath: source.manifestPath,
         outputMaterialPath: materialPath,
         suitability: flatGroundSuitability,
+        displacementResponse: calibratedDisplacement,
       }),
     ).rejects.toThrow(/staging target already contains different bytes/);
+  });
+
+  it('requires an explicit displacement policy and preserves a disabled source without enabling it', async () => {
+    const source = await sourcePackage();
+    await expect(
+      deriveTextureSurfaceMaterial({
+        base: createWetCobbleSurfaceMaterial(),
+        assetId: 'material.missing-displacement-policy',
+        sourceManifestPath: source.manifestPath,
+        outputMaterialPath: join(directory, 'missing-policy/material.json'),
+        suitability: flatGroundSuitability,
+      }),
+    ).rejects.toThrow(/explicit calibrated or disabled-uncalibrated displacement response/u);
+    const disabled = await deriveTextureSurfaceMaterial({
+      base: createWetCobbleSurfaceMaterial(),
+      assetId: 'material.disabled-displacement',
+      sourceManifestPath: source.manifestPath,
+      outputMaterialPath: join(directory, 'disabled/material.json'),
+      suitability: flatGroundSuitability,
+      displacementResponse: {
+        policy: 'disabled-uncalibrated',
+        rationale: 'No physical height calibration exists for this source fixture.',
+      },
+    });
+    expect(disabled.material.textureMaps?.displacementResponse).toEqual({
+      policy: 'disabled-uncalibrated',
+      rationale: 'No physical height calibration exists for this source fixture.',
+    });
+    expect(
+      disabled.material.textureMaps?.channels.some(
+        (channel) => channel.semantic === 'displacement',
+      ),
+    ).toBe(true);
   });
 
   it('stages only valid unit-local paving and world-horizontal joint applications', async () => {
@@ -446,6 +526,7 @@ describe('hash-bound texture surface materials', () => {
         intendedConstructionDomains: ['modeled-paving-unit', 'paving-joint-substrate'],
         rationale: 'Fixture isolates the modeled unit and continuous joint-bed mapping contracts.',
       },
+      displacementResponse: calibratedDisplacement,
     });
     const unitApplication = structuredClone(flatGroundApplication);
     unitApplication.constructionDomain = 'modeled-paving-unit';
@@ -457,9 +538,9 @@ describe('hash-bound texture surface materials', () => {
       outputGeometryPath: join(directory, 'unit-bound/geometry.json'),
       application: unitApplication,
     });
-    expect(
-      unitBound.geometry.materials[0]!.surface!.textureMaps!.application,
-    ).toMatchObject(unitApplication);
+    expect(unitBound.geometry.materials[0]!.surface!.textureMaps!.application).toMatchObject(
+      unitApplication,
+    );
 
     const jointApplication = structuredClone(flatGroundApplication);
     jointApplication.constructionDomain = 'paving-joint-substrate';
@@ -470,9 +551,9 @@ describe('hash-bound texture surface materials', () => {
       outputGeometryPath: join(directory, 'joint-bound/geometry.json'),
       application: jointApplication,
     });
-    expect(
-      jointBound.geometry.materials[0]!.surface!.textureMaps!.application,
-    ).toMatchObject(jointApplication);
+    expect(jointBound.geometry.materials[0]!.surface!.textureMaps!.application).toMatchObject(
+      jointApplication,
+    );
 
     const invalidUnitApplication = structuredClone(unitApplication);
     invalidUnitApplication.placement.orientation = 'world-horizontal';
@@ -508,6 +589,7 @@ describe('hash-bound texture surface materials', () => {
       sourceManifestPath: source.manifestPath,
       outputMaterialPath: materialPath,
       suitability: flatGroundSuitability,
+      displacementResponse: calibratedDisplacement,
     });
     const sceneDirectory = join(directory, 'scene');
     const geometryPath = join(sceneDirectory, 'ground.json');
@@ -570,6 +652,13 @@ describe('hash-bound texture surface materials', () => {
     const rotatedFingerprint = await fingerprintCinematicScene(scenePath);
     expect(rotatedFingerprint.renderSha256).not.toBe(fingerprint.renderSha256);
 
+    const recalibratedGeometry = structuredClone(bound.geometry);
+    const response = recalibratedGeometry.materials[0]!.surface!.textureMaps!.displacementResponse;
+    if (response?.policy === 'calibrated') response.amplitudeMeters = 0.004;
+    await writeFile(geometryPath, `${JSON.stringify(recalibratedGeometry, null, 2)}\n`);
+    const recalibratedFingerprint = await fingerprintCinematicScene(scenePath);
+    expect(recalibratedFingerprint.renderSha256).not.toBe(fingerprint.renderSha256);
+
     const baseColor = channels.find((channel) => channel.semantic === 'base-color')!;
     await writeFile(join(sceneDirectory, baseColor.path), 'tampered texture bytes');
     await expect(fingerprintCinematicScene(scenePath)).rejects.toThrow(/(?:size|hash) mismatch/);
@@ -593,6 +682,7 @@ describe('hash-bound texture surface materials', () => {
         sourceManifestPath: forgedIdentity.manifestPath,
         outputMaterialPath: join(directory, 'forged/material.json'),
         suitability: flatGroundSuitability,
+        displacementResponse: calibratedDisplacement,
       }),
     ).rejects.toThrow(/source identity mismatch/);
 
@@ -605,6 +695,7 @@ describe('hash-bound texture surface materials', () => {
         sourceManifestPath: missing.manifestPath,
         outputMaterialPath: join(directory, 'missing/material.json'),
         suitability: flatGroundSuitability,
+        displacementResponse: calibratedDisplacement,
       }),
     ).rejects.toThrow(/missing/);
 
@@ -644,6 +735,7 @@ describe('hash-bound texture surface materials', () => {
         sourceManifestPath: unknown.manifestPath,
         outputMaterialPath: join(directory, 'unknown/material.json'),
         suitability: flatGroundSuitability,
+        displacementResponse: calibratedDisplacement,
       }),
     ).rejects.toThrow(/unknown physical scale/);
   });
