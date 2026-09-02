@@ -9,6 +9,12 @@ import { validateMotionClip } from '../motion/model.js';
 import { createWalkStyleMotion, verifyCasualWalkMotion } from '../motion/walk.js';
 import type { GaitStyle } from '../motion/gait.js';
 
+/**
+ * @deprecated Retired as a production path by ADR 074. Human motion is authored on
+ * the Rigify rig (see `scripts/blender/render_cc0_rigify_action_reel.py`), not this
+ * procedural gait targeting the retired canonical skeleton. Kept for existing tests
+ * and the benchmark until a migration removes or repoints it.
+ */
 export async function createWalkMotion(path: string, style: GaitStyle['id'] = 'neutral') {
   const clip = createWalkStyleMotion(style);
   const output = await saveMotionClip(path, clip);

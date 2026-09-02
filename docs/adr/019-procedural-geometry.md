@@ -2,6 +2,9 @@
 
 Status: Accepted for implementation
 
+**Narrowed by [ADR 072](072-pragmatic-production-realignment.md):** a valid, reusable generator,
+not a mandatory path — Blender-native geometry or a supplied/generated asset is equally valid.
+
 ## Decision
 
 Videoer will own a serializable indexed-mesh representation containing positions, normals, indices, UVs, vertex colours, skin indices/weights, morph targets, named attachment points, units, coordinate convention, and bounds. Generator requests use domain primitives and operations—curves, parametric surfaces, extrusion, transform, merge, mirror, and deformation—not Three.js or Blender classes.

@@ -4,6 +4,10 @@
 
 Accepted.
 
+**Narrowed by [ADR 072](072-pragmatic-production-realignment.md):** the benchmark is a fixture and
+example, not a conformance gate. A second campaign proving reuse is welcome evidence, never a
+requirement for a campaign or the system to be considered done.
+
 ## Context
 
 The reference cinematic benchmark is intentionally demanding: one recurring character crosses a rainy old-city street, notices and enters a bookshop, handles a book, and yields to title and cover reveals. It is useful because it forces geometry, motion, interaction, continuity, lighting, atmosphere, editorial, rendering, and verification to work together.

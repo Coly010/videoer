@@ -2,6 +2,9 @@
 
 Status: Accepted
 
+**Narrowed by [ADR 072](072-pragmatic-production-realignment.md):** publication remains available
+but is optional — no longer required before an asset or campaign counts as progress.
+
 ## Decision
 
 Use a repository-level shared asset library with stable domain IDs and immutable semantic versions. Each version owns an `asset.yaml` declaring:

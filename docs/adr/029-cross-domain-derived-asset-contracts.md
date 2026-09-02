@@ -4,6 +4,9 @@
 
 Accepted.
 
+**Narrowed by [ADR 072](072-pragmatic-production-realignment.md):** adaptation/publication
+contracts remain available; transfer is optional evidence, not a completion criterion.
+
 ## Context
 
 The benchmark established reusable geometry, motion, speech, scene, and publication mechanics, but those contracts did not yet make atmospheric VFX, surface materials, or fitted clothing reusable derivation domains. Leaving those decisions embedded in a campaign would make later trailers repeat the same implementation work and would reward visual success without proving transferability.

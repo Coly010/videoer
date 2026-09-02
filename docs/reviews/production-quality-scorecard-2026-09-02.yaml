@@ -1,3 +1,6 @@
+# Secondary engineering diagnostic for the Blender cinematic subsystem — not the definition of
+# finished-video quality. See docs/quality-model.md and ADR 072. `transfer`/`reuseOutsideBenchmark`
+# are historical data under the old mandatory scoring; the schema no longer requires them.
 schemaVersion: 1
 id: production-quality-portfolio-2026-09-02
 baselineId: accepted-library-and-audit-evidence-2026-09-01

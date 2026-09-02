@@ -4,6 +4,9 @@
 
 Accepted.
 
+**Narrowed by [ADR 072](072-pragmatic-production-realignment.md):** a valid finishing pass;
+byte-identical rerender required only where that identity has product value.
+
 ## Context
 
 Blender scenes already use a controlled AgX view transform and 2D scene effects can add grain or vignette, but complete cinematic deliveries had no reusable finishing contract after 3D rendering and editorial compositing. Embedding an FFmpeg graph in one campaign would make the look non-searchable, non-versioned and impossible to invalidate through scene fingerprints. Applying a heavy global grade would also conceal weak lighting and materials instead of improving them.

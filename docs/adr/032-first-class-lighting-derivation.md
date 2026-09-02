@@ -4,6 +4,9 @@
 
 Accepted.
 
+**Narrowed by [ADR 072](072-pragmatic-production-realignment.md):** a valid reusable asset type;
+transfer across campaigns is optional evidence, not a target.
+
 ## Context
 
 Videoer could resolve complete reusable lighting rigs, but early rigs were packaged as `environment` assets because the library had no lighting asset kind. A campaign could add local lights, yet it could not derive, verify, publish, and independently reuse a spatially transformed rig. That made lighting adaptation either campaign-owned duplication or an unverified manifest claim.

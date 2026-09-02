@@ -1,6 +1,12 @@
 # ADR 020: Project-owned character, skeleton, and motion representation
 
-Status: Accepted for implementation
+Status: Superseded for the production human by [ADR 074](074-mpfb-rigify-is-the-production-human.md).
+
+**Superseded by [ADR 074](074-mpfb-rigify-is-the-production-human.md):** the production human is now
+MPFB's hm08 CC0 mesh + a Rigify rig. The project-owned body and canonical production skeleton this
+ADR defined are retired as production targets (code kept, deprecated, until a migration removes or
+repoints it). **Narrowed earlier by [ADR 072](072-pragmatic-production-realignment.md):** the
+renderer-independence framing was already optional rather than mandatory.
 
 ## Decision
 

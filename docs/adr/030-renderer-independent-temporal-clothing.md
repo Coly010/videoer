@@ -4,6 +4,9 @@
 
 Accepted.
 
+**Narrowed by [ADR 072](072-pragmatic-production-realignment.md):** valid where animated fitted
+clothing is actually needed; not mandatory scaffolding for every garment.
+
 ## Context
 
 Static skin-weight checks are necessary but not sufficient for animated clothing. The original long-dress weighting passed normalized-weight and hem-influence checks yet could put a foot behind the skirt surface, pull the skirt into a leg-driven fan, or create a silhouette that was implausible between a few visually sampled frames. A renderer image alone also cannot reliably distinguish a shaded cloth facet from body penetration.

@@ -1,8 +1,33 @@
 # Character creation and acceptance
 
+> **Direction ([ADR 074](adr/074-mpfb-rigify-is-the-production-human.md)): the production human is
+> MPFB's hm08 CC0 mesh + a Rigify rig. Everything that needs a human character points there.**
+> Videoer's own procedural body mesh and canonical 52-joint production skeleton (the
+> `geometry production-human` / `createProductionTemplateHuman` foundation described lower down) are
+> **retired as production targets** — they were persistently visually rejected, and the MPFB/Rigify
+> human built on the same CC0 base is dramatically higher quality. The owned-human code below is
+> **deprecated-for-production and kept only until a migration removes or repoints it**; it is
+> documented here as history, not as the recommended path. No code was removed when this direction
+> was set — see ADR 074's "Not now".
+
 Videoer separates mechanical character validity from visual production acceptance. A valid mesh, completed Blender render, or passing walk report does not make a character production-ready.
 
-## Build the project-owned human foundation
+## Production human: MPFB (hm08 CC0) + Rigify
+
+The production human is created by MPFB — the same pinned CC0 hm08 base, but kept as MPFB's *full*
+mesh with a generated Rigify rig, rather than reduced into a project-owned contract. See
+`scripts/blender/render_mpfb_motion_probe.py` (`create_rigged_human`) for how the body and
+`rigify.human_toes` rig are generated, and `docs/install-blender.md` for the MPFB/Rigify install.
+Human motion is authored against the Rigify rig as native actions — see the source-provenanced CC0
+bake path below (`scripts/blender/render_cc0_rigify_action_reel.py`), which is the current
+motion-authoring direction. That walk is grounded and strides correctly but its arm carriage is
+still unsolved (see the CC0→Rigify section further down); the model + rig direction is settled, the
+walking performance is not.
+
+## Deprecated: the project-owned human foundation
+
+> Retained for the existing benchmark and as history only. Do not build new production characters
+> this way — use MPFB/Rigify (above).
 
 ```bash
 npm run video -- geometry production-human work/character \
@@ -11,11 +36,11 @@ npm run video -- geometry production-human work/character \
   --height 1.72
 ```
 
-The generator writes renderer-independent geometry, validation, metadata, canonical views, face and bilateral hand close-ups, and a turntable. Version 2 preserves the canonical 22-joint retargeting core and adds 30 named finger joints, project-owned palm/finger surfaces, deterministic ownership/blending checks, and measured flexion response. The continuous body and hand surfaces use the declared `deterministic-dual-quaternion-v1` skinning mode. Blender is only an adapter; the serialized asset contains no Blender or Three.js classes.
+The generator writes renderer-independent geometry, validation, metadata, canonical views, face and bilateral hand close-ups, and a turntable. Version 2 preserves the canonical 22-joint retargeting core and adds 30 named finger joints, project-owned palm/finger surfaces, deterministic ownership/blending checks, and measured flexion response. The continuous body and hand surfaces use the declared `deterministic-dual-quaternion-v1` skinning mode. Blender is only an adapter; the serialized asset contains no Blender or Three.js classes. This owned mesh is exactly the representation ADR 074 retires; it is documented for the benchmark that still uses it, not recommended for new work.
 
 Generated foundations remain `validated`. Visual evidence generation is not approval.
 
-## Stable-topology production-base experiment
+## Stable-topology production-base experiment (deprecated, see ADR 074)
 
 `createProductionTemplateHuman` converts the pinned CC0 hm08 OBJ and authored weight file under `assets/character-bases/makehuman-hm08/` into the same renderer-independent character contract. It preserves the canonical 52-joint hierarchy, uses an anatomical A-pose, and records the source hashes, licence, topology, skinning mode, and deterministic weight-reduction policy. The procedural mannequin remains the motion/IK proxy; it is not the production mesh.
 
@@ -30,6 +55,19 @@ Declarative cinematic geometry sources may now name `productionRigProfilePath`. 
 The canonical mapping is an interchange and diagnostic route, not the only permissible performance authority. `scripts/blender/render_native_rigify_walk_probe.py` is an explicit experimental alternative that creates the MPFB/Rigify body and keys animator-facing Rigify root, torso, arm, IK-foot, pole, heel, spin, and toe controls directly. It does not load a canonical motion clip or write the 52 mapped controls. Its first rendered walk remains rejected: direct controls expose the required authoring surface but do not manufacture a natural performance. Keep resulting actions Blender-native and clearly labelled experimental until a source-provenanced action, evaluated contact/deformation gates, and multi-view visual review accept them. A CC0 Quaternius locomotion subset is the next candidate input to retarget and bake onto this full rig; the canonical derivative then becomes companion metadata rather than the production action source.
 
 `scripts/blender/render_cc0_rigify_action_reel.py` is the first source-provenanced experiment on that path. It imports the immutable `Universal Animation Library[Standard].zip` source workspace (official CC0 archive, SHA-256 `cc73fc4e495b82958207316596317a3f40b9fa38065bde1027937452da537724`), retains the source armature only for evaluation, and bakes selected source torso, limb, hand, finger, toe, and root channels onto native Rigify FK controls. It never reads a Videoer canonical motion asset. The mapping is source-specific control adaptation, not a canonical interchange asset, and the source mannequin is explicitly hidden from evidence renders. The first walk, jog, and interaction MP4s are deliberately `experimental-not-accepted`: they prove the provider-free MPFB/Rigify action pipeline and expose remaining posture, arm-carriage, contact, and wardrobe work. Do not publish these actions to the reusable library until the source adapter has complete animated-channel coverage, independent contact/continuity gates, an accepted clothed multi-view review, and source-free baked-action playback verification.
+
+The reel exposes a `VIDEOER_CC0_REEL_MODE` selector over three retarget bakes, developed in that order:
+
+- `ik-end-effectors` (default, v1): drives Rigify IK hand/foot targets from source end-effector world positions. Grounds the feet but leaves the torso and arms at rest, so the body reads as a stiff mannequin sliding along a walk path.
+- `world-fk` (v12): retargets every mapped bone's world-space rotation delta onto Rigify FK controls plus the scaled world root travel. This strides and grounds the legs but splays the arms out horizontally, because the arm chain's source/target bone-axis conventions differ enough that a world-space delta mis-orients them.
+- `local-fk-grounded` (v13): local-space FK rotation deltas + the world-space metre-scaled root translation that grounds the feet. Grounds the body and strides the legs, but the arms sit in a bent-up "guard" in front of the chest.
+- `rest-compensated` (v14): rest-pose-compensated rotation transfer, `T_pose = T_rest · S_rest⁻¹ · S_pose` per bone — the textbook fix for two rigs with different rest poses. Marginally cleaner arm world-orientation than v13, but the arms still stay in the same bent-up guard through the whole cycle.
+
+**Honest status of the arms (unsolved).** Watched across the full 41-frame cycle, all four modes leave the arms in a bent-up guard posture that never opens into a natural swing. When four different retarget formulations (IK, world-FK, local-FK, rest-compensated) fail the *same* way, the cause is almost certainly not the retarget math — it is most likely the source clip's own stylised game-engine arm carriage, or something in the arm/hand skin binding. Another rotation-space tweak will not fix it. Do not add a v15 retarget mode chasing this; that is the rabbit hole.
+
+**Side-to-side, diagnosed.** `rootTravel` for the Walk_Loop is `[0, 1.78, 0]` — dead-straight forward, zero lateral drift. The weaving in the evidence MP4 is the render camera being glued to the root (cancelling that forward travel) plus torso yaw, not a motion defect. A fixed or path-tracking camera that lets the forward travel read would remove it. Cheap presentation fix, separate from the arm problem.
+
+**Where this leaves the experiment.** The pipeline is proven (source-provenanced CC0 action → grounded native Rigify bake), and legs/grounding/forward-travel are good. The arm carriage is the remaining blocker and is not a quick retarget fix. Under [ADR 072](adr/072-pragmatic-production-realignment.md) this stays `experimental-not-accepted` and nothing depends on it, so the right move is to **stop here** rather than grind. When a real campaign needs a walking character, the higher-value paths to weigh are: (a) try a different, less stylised source walk clip or animation library; (b) use Videoer's own canonical procedural gait, which has no cross-rig mismatch and was rejected only for weight/foot-roll/silhouette, not broken arms; or (c) accept the CC0 legs and hand-correct only the arm carriage. Do not pursue any of these speculatively ahead of a shot that needs them.
 
 Blender 4.5 stores imported FBX takes in action slots. The adapter must select both the source action and its object slot before sampling; action-only selection evaluates the rest pose and creates a frozen movie. Frozen MP4s are rejected evidence even when their duration and codec are valid. The repair is covered by frame-separated video review, not by the encoding check alone.
 

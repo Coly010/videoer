@@ -158,6 +158,286 @@ def bake_action(source, target, source_action, target_name):
     return {"sourceAction": source_action.name, "targetAction": action.name, "start": start, "end": end, "frames": end - start + 1, "nativeIkControls": len(ik_map), "sourceScale": scale}
 
 
+def world_rotation(armature, pose_bone):
+    """Pure world-space rotation of a pose bone, with any import scale stripped."""
+    return (armature.matrix_world @ pose_bone.matrix).to_3x3().normalized()
+
+
+def bake_action_world_fk(source, target, source_action, target_name):
+    """Retarget every mapped source bone onto Rigify FK controls in world space.
+
+    The original FK bake (v1) copied local ``matrix_basis`` rotation deltas.
+    That silently assumes both skeletons share bone-axis conventions and rest
+    poses, which the Quaternius mannequin and Rigify do not — limbs ended up in
+    the wrong world orientation and the body floated.  The later IK-only bake
+    fixed grounding but discarded all torso/arm/finger rotation, producing a
+    mannequin posture.
+
+    This mode keeps the good half of each: it transfers the *world-space*
+    rotation change of every source bone relative to its own rest pose onto the
+    matching Rigify control's rest orientation, and drives the root with the
+    scaled world-space translation the IK bake used for grounding.
+    """
+    mapping = full_control_map()
+    missing_source = [name for name in mapping if source.pose.bones.get(name) is None]
+    missing_target = [name for name in mapping.values() if target.pose.bones.get(name) is None]
+    if missing_source or missing_target:
+        raise RuntimeError(f"Incomplete full-joint source adapter: source={missing_source}, target={missing_target}")
+    scene = bpy.context.scene
+
+    # Source rest, in world space, with no action assigned.
+    source.animation_data_clear()
+    scene.frame_set(1)
+    bpy.context.view_layer.update()
+    source_rest_rotation = {name: world_rotation(source, source.pose.bones[name]) for name in mapping}
+    source_rest_root = (source.matrix_world @ source.pose.bones["root"].matrix).translation.copy()
+    source_rest_ball = (source.matrix_world @ source.pose.bones["ball_l"].matrix).translation.copy()
+
+    # Target rest, in world space, FK mode, identity pose.
+    target.animation_data_clear()
+    configure_fk(target)
+    for pose_bone in target.pose.bones:
+        pose_bone.matrix_basis.identity()
+    bpy.context.view_layer.update()
+    target_rest_rotation = {control: world_rotation(target, target.pose.bones[control]) for control in mapping.values()}
+    target_rest_root = (target.matrix_world @ target.pose.bones["root"].matrix).translation.copy()
+    target_rest_foot = (target.matrix_world @ target.pose.bones["foot_fk.L"].matrix).translation.copy()
+    scale = (target_rest_foot - target_rest_root).length / ((source_rest_ball - source_rest_root).length or 1.0)
+    target_world_inverse = target.matrix_world.to_3x3().normalized().inverted()
+
+    source.animation_data_create()
+    source.animation_data.action = source_action
+    if source_action.slots:
+        source.animation_data.action_slot = source_action.slots[0]
+    target.animation_data_create()
+    action = bpy.data.actions.new(target_name)
+    target.animation_data.action = action
+    start, end = (round(value) for value in source_action.frame_range)
+    scene.frame_start, scene.frame_end = start, end
+
+    # Only the armatures need evaluating while baking; keep the heavy skinned
+    # meshes out of the depsgraph until rendering.
+    meshes = [item for item in bpy.context.scene.objects if item.type == "MESH"]
+    previous_visibility = {item.name: item.hide_viewport for item in meshes}
+    for item in meshes:
+        item.hide_viewport = True
+
+    for frame in range(start, end + 1):
+        scene.frame_set(frame)
+        bpy.context.view_layer.update()
+        root = target.pose.bones["root"]
+        root.rotation_mode = "QUATERNION"
+        source_root_now = (source.matrix_world @ source.pose.bones["root"].matrix).translation
+        root.location = target_world_inverse @ ((source_root_now - source_rest_root) * scale)
+        root.rotation_quaternion = (1, 0, 0, 0)
+        key(root, frame, location=True)
+        bpy.context.view_layer.update()
+        # ``full_control_map`` lists parents before children, so each control's
+        # parent is already posed when its world matrix is read.
+        for source_name, control_name in mapping.items():
+            world_delta = world_rotation(source, source.pose.bones[source_name]) @ source_rest_rotation[source_name].inverted()
+            desired_world = world_delta @ target_rest_rotation[control_name]
+            control = target.pose.bones[control_name]
+            control.rotation_mode = "QUATERNION"
+            posed = (target_world_inverse @ desired_world).normalized().to_4x4()
+            posed.translation = control.matrix.translation
+            control.matrix = posed
+            key(control, frame)
+            bpy.context.view_layer.update()
+        for side in ("L", "R"):
+            parent = target.pose.bones[f"thigh_parent.{side}"]
+            parent.keyframe_insert(data_path='["IK_FK"]', frame=frame)
+            parent.keyframe_insert(data_path='["IK_Stretch"]', frame=frame)
+            target.pose.bones[f"upper_arm_parent.{side}"].keyframe_insert(data_path='["IK_FK"]', frame=frame)
+
+    for item in meshes:
+        item.hide_viewport = previous_visibility[item.name]
+    bpy.context.view_layer.update()
+    for curve in action.fcurves:
+        for point in curve.keyframe_points:
+            point.interpolation = "BEZIER"
+    return {"sourceAction": source_action.name, "targetAction": action.name, "start": start, "end": end, "frames": end - start + 1, "mappedControls": len(mapping), "sourceScale": scale}
+
+
+def bake_action_local_fk_grounded(source, target, source_action, target_name):
+    """Local-space FK rotation deltas (v1's method, which posed limbs plausibly)
+    combined with the world-space scaled root translation the IK bake used to
+    ground the body. v1 floated because it only copied the source root's local
+    location; this drives the root with the same metre-scaled world travel that
+    kept the IK feet on the floor, while keeping every limb's authored rotation.
+    """
+    mapping = full_control_map()
+    missing_source = [name for name in mapping if source.pose.bones.get(name) is None]
+    missing_target = [name for name in mapping.values() if target.pose.bones.get(name) is None]
+    if missing_source or missing_target:
+        raise RuntimeError(f"Incomplete full-joint source adapter: source={missing_source}, target={missing_target}")
+    scene = bpy.context.scene
+
+    source.animation_data_clear()
+    scene.frame_set(1)
+    bpy.context.view_layer.update()
+    source_rest_basis = {name: source.pose.bones[name].matrix_basis.copy() for name in mapping}
+    source_rest_root = (source.matrix_world @ source.pose.bones["root"].matrix).translation.copy()
+    source_rest_ball = (source.matrix_world @ source.pose.bones["ball_l"].matrix).translation.copy()
+
+    target.animation_data_clear()
+    configure_fk(target)
+    for pose_bone in target.pose.bones:
+        pose_bone.matrix_basis.identity()
+    bpy.context.view_layer.update()
+    target_rest_root = (target.matrix_world @ target.pose.bones["root"].matrix).translation.copy()
+    target_rest_foot = (target.matrix_world @ target.pose.bones["foot_fk.L"].matrix).translation.copy()
+    scale = (target_rest_foot - target_rest_root).length / ((source_rest_ball - source_rest_root).length or 1.0)
+    target_world_inverse = target.matrix_world.to_3x3().normalized().inverted()
+
+    source.animation_data_create()
+    source.animation_data.action = source_action
+    if source_action.slots:
+        source.animation_data.action_slot = source_action.slots[0]
+    target.animation_data_create()
+    action = bpy.data.actions.new(target_name)
+    target.animation_data.action = action
+    start, end = (round(value) for value in source_action.frame_range)
+    scene.frame_start, scene.frame_end = start, end
+
+    meshes = [item for item in bpy.context.scene.objects if item.type == "MESH"]
+    previous_visibility = {item.name: item.hide_viewport for item in meshes}
+    for item in meshes:
+        item.hide_viewport = True
+
+    for frame in range(start, end + 1):
+        scene.frame_set(frame)
+        bpy.context.view_layer.update()
+        root = target.pose.bones["root"]
+        root.rotation_mode = "QUATERNION"
+        source_root_now = (source.matrix_world @ source.pose.bones["root"].matrix).translation
+        root.location = target_world_inverse @ ((source_root_now - source_rest_root) * scale)
+        root.rotation_quaternion = (1, 0, 0, 0)
+        key(root, frame, location=True)
+        for source_name, control_name in mapping.items():
+            delta = source_rest_basis[source_name].inverted() @ source.pose.bones[source_name].matrix_basis
+            control = target.pose.bones[control_name]
+            control.rotation_mode = "QUATERNION"
+            control.rotation_quaternion = delta.to_quaternion()
+            key(control, frame)
+        for side in ("L", "R"):
+            parent = target.pose.bones[f"thigh_parent.{side}"]
+            parent.keyframe_insert(data_path='["IK_FK"]', frame=frame)
+            parent.keyframe_insert(data_path='["IK_Stretch"]', frame=frame)
+            target.pose.bones[f"upper_arm_parent.{side}"].keyframe_insert(data_path='["IK_FK"]', frame=frame)
+
+    for item in meshes:
+        item.hide_viewport = previous_visibility[item.name]
+    bpy.context.view_layer.update()
+    for curve in action.fcurves:
+        for point in curve.keyframe_points:
+            point.interpolation = "BEZIER"
+    return {"sourceAction": source_action.name, "targetAction": action.name, "start": start, "end": end, "frames": end - start + 1, "mappedControls": len(mapping), "sourceScale": scale}
+
+
+def bake_action_rest_compensated(source, target, source_action, target_name):
+    """Rest-pose-compensated rotation retarget: the textbook fix for two rigs
+    whose rest poses differ (Quaternius arms rest near-horizontal, Rigify arms
+    rest ~45 deg down).  v13 copied local rotation deltas directly, which only
+    holds when both rigs share a rest orientation — true enough for the legs,
+    false for the arms, so the arm motion was applied in the wrong frame.
+
+    For each bone the target's world rotation is  T_rest . S_rest^-1 . S_pose,
+    i.e. the source bone's motion expressed in the *source's* own rest frame,
+    then re-expressed in the *target's* rest frame.  Root translation stays the
+    world-space metre-scaled travel that grounds the feet.
+    """
+    mapping = full_control_map()
+    missing_source = [name for name in mapping if source.pose.bones.get(name) is None]
+    missing_target = [name for name in mapping.values() if target.pose.bones.get(name) is None]
+    if missing_source or missing_target:
+        raise RuntimeError(f"Incomplete full-joint source adapter: source={missing_source}, target={missing_target}")
+    scene = bpy.context.scene
+
+    source.animation_data_clear()
+    scene.frame_set(1)
+    bpy.context.view_layer.update()
+    source_rest_rotation = {name: world_rotation(source, source.pose.bones[name]) for name in mapping}
+    source_rest_root = (source.matrix_world @ source.pose.bones["root"].matrix).translation.copy()
+    source_rest_ball = (source.matrix_world @ source.pose.bones["ball_l"].matrix).translation.copy()
+
+    target.animation_data_clear()
+    configure_fk(target)
+    for pose_bone in target.pose.bones:
+        pose_bone.matrix_basis.identity()
+    bpy.context.view_layer.update()
+    target_rest_rotation = {control: world_rotation(target, target.pose.bones[control]) for control in mapping.values()}
+    target_rest_root = (target.matrix_world @ target.pose.bones["root"].matrix).translation.copy()
+    target_rest_foot = (target.matrix_world @ target.pose.bones["foot_fk.L"].matrix).translation.copy()
+    scale = (target_rest_foot - target_rest_root).length / ((source_rest_ball - source_rest_root).length or 1.0)
+    target_world_inverse = target.matrix_world.to_3x3().normalized().inverted()
+
+    source.animation_data_create()
+    source.animation_data.action = source_action
+    if source_action.slots:
+        source.animation_data.action_slot = source_action.slots[0]
+    target.animation_data_create()
+    action = bpy.data.actions.new(target_name)
+    target.animation_data.action = action
+    start, end = (round(value) for value in source_action.frame_range)
+    scene.frame_start, scene.frame_end = start, end
+
+    meshes = [item for item in bpy.context.scene.objects if item.type == "MESH"]
+    previous_visibility = {item.name: item.hide_viewport for item in meshes}
+    for item in meshes:
+        item.hide_viewport = True
+
+    root_start = None
+    root_end = None
+    for frame in range(start, end + 1):
+        scene.frame_set(frame)
+        bpy.context.view_layer.update()
+        root = target.pose.bones["root"]
+        root.rotation_mode = "QUATERNION"
+        source_root_now = (source.matrix_world @ source.pose.bones["root"].matrix).translation
+        displacement = target_world_inverse @ ((source_root_now - source_rest_root) * scale)
+        root.location = displacement
+        root.rotation_quaternion = (1, 0, 0, 0)
+        key(root, frame, location=True)
+        bpy.context.view_layer.update()
+        if frame == start:
+            root_start = displacement.copy()
+        if frame == end:
+            root_end = displacement.copy()
+        for source_name, control_name in mapping.items():
+            source_pose = world_rotation(source, source.pose.bones[source_name])
+            desired_world = target_rest_rotation[control_name] @ source_rest_rotation[source_name].inverted() @ source_pose
+            control = target.pose.bones[control_name]
+            control.rotation_mode = "QUATERNION"
+            posed = (target_world_inverse @ desired_world).normalized().to_4x4()
+            posed.translation = control.matrix.translation
+            control.matrix = posed
+            key(control, frame)
+            bpy.context.view_layer.update()
+        for side in ("L", "R"):
+            parent = target.pose.bones[f"thigh_parent.{side}"]
+            parent.keyframe_insert(data_path='["IK_FK"]', frame=frame)
+            parent.keyframe_insert(data_path='["IK_Stretch"]', frame=frame)
+            target.pose.bones[f"upper_arm_parent.{side}"].keyframe_insert(data_path='["IK_FK"]', frame=frame)
+
+    for item in meshes:
+        item.hide_viewport = previous_visibility[item.name]
+    bpy.context.view_layer.update()
+    for curve in action.fcurves:
+        for point in curve.keyframe_points:
+            point.interpolation = "BEZIER"
+    travel = (root_end - root_start) if (root_start is not None and root_end is not None) else Vector()
+    return {"sourceAction": source_action.name, "targetAction": action.name, "start": start, "end": end, "frames": end - start + 1, "mappedControls": len(mapping), "sourceScale": scale, "rootTravel": [round(travel.x, 4), round(travel.y, 4), round(travel.z, 4)]}
+
+
+BAKE_MODES = {
+    "ik-end-effectors": ("cc0-full-source-to-native-rigify-fk-v1", bake_action),
+    "world-fk": ("cc0-world-space-fk-retarget-v12", bake_action_world_fk),
+    "local-fk-grounded": ("cc0-local-fk-rotation-world-root-v13", bake_action_local_fk_grounded),
+    "rest-compensated": ("cc0-rest-pose-compensated-retarget-v14", bake_action_rest_compensated),
+}
+
+
 def remove_source(source):
     bpy.data.objects.remove(source, do_unlink=True)
     for item in list(bpy.data.objects):
@@ -198,12 +478,16 @@ def main():
     scene.render.image_settings.color_mode = "RGBA"
     reports = []
     selected = tuple(os.environ.get("VIDEOER_CC0_REEL_ACTIONS", "Walk_Loop,Jog_Fwd_Loop,Interact").split(","))
+    mode = os.environ.get("VIDEOER_CC0_REEL_MODE", "ik-end-effectors")
+    if mode not in BAKE_MODES:
+        raise RuntimeError(f"Unknown VIDEOER_CC0_REEL_MODE '{mode}'; expected one of {sorted(BAKE_MODES)}")
+    authoring, bake = BAKE_MODES[mode]
     actions = {action.name.rsplit("|", 1)[-1]: action for action in bpy.data.actions if "|" in action.name}
     for clip in selected:
         source_action = actions.get(clip)
         if source_action is None:
             raise RuntimeError(f"Required CC0 source action unavailable: {clip}")
-        report = bake_action(source, target, source_action, f"videoer.experimental.cc0-rigify.{clip}.v1")
+        report = bake(source, target, source_action, f"videoer.experimental.cc0-rigify.{clip}.v1")
         height = float(asset.get("metadata", {}).get("parameters", {}).get("height", 1.72))
         rigify_adapter.configure_mpfb_camera(scene, camera, height, 3.2, 2.2, -1, "three-quarter")
         scene.frame_set(report["start"])
@@ -229,7 +513,7 @@ def main():
     bpy.context.preferences.filepaths.save_version = 0
     bpy.ops.wm.save_as_mainfile(filepath=os.path.join(output, "cc0-rigify-action-reel.blend"))
     with open(os.path.join(output, "cc0-rigify-action-reel-report.json"), "w", encoding="utf-8") as handle:
-        json.dump({"schemaVersion": 1, "status": "experimental-not-accepted", "authoring": "cc0-full-source-to-native-rigify-fk-v1", "canonicalMotionUsed": False, "source": source_file, "geometry": geometry_file, "characterBinding": binding_file, "assembly": assembly_report, "blender": bpy.app.version_string, "actions": reports}, handle, indent=2)
+        json.dump({"schemaVersion": 1, "status": "experimental-not-accepted", "authoring": authoring, "bakeMode": mode, "canonicalMotionUsed": False, "source": source_file, "geometry": geometry_file, "characterBinding": binding_file, "assembly": assembly_report, "blender": bpy.app.version_string, "actions": reports}, handle, indent=2)
         handle.write("\n")
 
 

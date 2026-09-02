@@ -4,6 +4,9 @@
 
 Accepted.
 
+**Narrowed by [ADR 072](072-pragmatic-production-realignment.md):** a valid technique for the
+Blender character path; not mandatory for every hair need.
+
 ## Context
 
 Character definitions referred to hair, but the only implementation was a head-weighted scalp mass fused into character generation. The asset library had no `hair` kind. That prevented independent provenance, fitting, style reuse, material evolution, verification, and eventual secondary motion.

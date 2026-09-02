@@ -2,6 +2,10 @@
 
 Status: Accepted
 
+**Narrowed by [ADR 073](073-three-js-is-a-conversion-utility-not-a-backend.md):** Three.js is not
+currently a working rendering backend — no `three-3d` adapter exists, and nothing renders through
+it. It is a geometry/skeleton/morph conversion utility exercised only by a structural test today.
+
 ## Decision
 
 - Remotion owns delivery timeline, shot sequencing, transitions, audio, captions, typography, UI/product layers, and final composition.

@@ -4,6 +4,9 @@
 
 Accepted.
 
+**Narrowed by [ADR 072](072-pragmatic-production-realignment.md):** a valid reusable asset type;
+unrelated-campaign transfer is optional evidence, not a target.
+
 ## Context
 
 Videoer could generate campaign-local text overlays and resolve reviewed images, but it could not derive, verify, publish, and transfer an editorial identity as a first-class asset. Recreating a title card in each campaign loses lineage and can silently change the font, motif, safe area, contrast, or copy layout. Hashes alone are insufficient because a broken producer can rewrite an altered PNG, its treatment JSON, its report, and all declared hashes together.

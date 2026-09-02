@@ -43,7 +43,7 @@ import {
   polyHavenMaterialSourceImportRequestSchema,
 } from './assets/sources/model.js';
 import { resolveProductionAssets, validateProductionPlan } from './application/production.js';
-import { validateQualityScorecard } from './application/quality-scorecard.js';
+import { validateFinishedVideoReview, validateQualityScorecard } from './application/quality-scorecard.js';
 import { validateProductionQualityReelReview } from './quality/production-quality-reel-review.js';
 import type { AssetKind } from './production/model.js';
 import {
@@ -214,6 +214,17 @@ program
     const data = await validateQualityScorecard(scorecardFile);
     output(this, 'quality-scorecard.validate', data, (result) =>
       `✓ ${result.id}: ${result.domains} domains, ${result.evidence} evidence references`,
+    );
+  });
+
+program
+  .command('finished-video-review')
+  .argument('<review-file>')
+  .description('validate a whole-finished-video quality review (the primary acceptance surface)')
+  .action(async function (reviewFile: string) {
+    const data = await validateFinishedVideoReview(reviewFile);
+    output(this, 'finished-video-review.validate', data, (result) =>
+      `✓ ${result.id}: ${result.verdict}, ${result.defects} noted defect(s)`,
     );
   });
 
@@ -2744,7 +2755,7 @@ geometry
   .option('--id <asset-id>', 'stable character asset id', 'character.production-human-foundation')
   .option('--asset-version <version>', 'immutable semantic asset version', '0.2.0')
   .option('--no-probe', 'skip Blender render probes')
-  .description('generate and inspect the stable-topology production-human foundation')
+  .description('[DEPRECATED — ADR 074: the production human is MPFB/Rigify] generate and inspect the retired project-owned production-human foundation')
   .action(async function (
     directory: string,
     options: {
@@ -2791,7 +2802,7 @@ geometry
   .option('--id <asset-id>', 'stable character asset id', 'character.humanoid-mannequin')
   .option('--asset-version <version>', 'immutable semantic asset version', '0.1.0')
   .option('--no-probe', 'skip Blender render probes')
-  .description('generate, validate, rig, and render a parametric humanoid mannequin')
+  .description('[DEPRECATED — ADR 074: the production human is MPFB/Rigify] generate, validate, rig, and render the retired parametric humanoid mannequin')
   .action(async function (
     directory,
     options: {
@@ -2857,7 +2868,7 @@ characterMotion
   .command('create-walk')
   .argument('<output-json>')
   .option('--style <style>', 'neutral, cautious, or confident', 'neutral')
-  .description('create a deterministic phase-based natural walk clip')
+  .description('[DEPRECATED — ADR 074: human motion is authored on the Rigify rig] create a deterministic phase-based procedural walk clip for the retired canonical skeleton')
   .action(async function (path, options: { style: string }) {
     if (!(options.style in gaitStyles))
       throw new Error(

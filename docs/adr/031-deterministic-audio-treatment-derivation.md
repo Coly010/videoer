@@ -4,6 +4,9 @@
 
 Accepted.
 
+**Narrowed by [ADR 072](072-pragmatic-production-realignment.md):** a valid reusable derivation;
+byte-identical rerender is required only where byte identity itself has product value.
+
 ## Context
 
 Videoer could create a campaign-local procedural soundtrack or reuse a verified WAV unchanged, but it could not derive and publish a new non-speech treatment from a verified score. Adding an ad hoc FFmpeg graph to one product trailer would have produced sound without a reusable parameter contract, protected parent lineage, independent semantic approval, or downstream reuse.

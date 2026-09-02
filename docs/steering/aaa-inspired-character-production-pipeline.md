@@ -1,5 +1,12 @@
 # Steering Check: AAA-Inspired Character Production Pipeline
 
+> **Historical, completed governance check.** Its checklist (already-implemented vs. missing vs.
+> next-step) was answered in `docs/progress/cinematic-system.md`. Its own instruction not to
+> duplicate working infrastructure is now the general architecture-creation threshold in
+> [`docs/product-principles.md`](../product-principles.md). Character/animation work is no longer
+> obligated to reach "AAA-inspired" completeness before shipping a campaign — see
+> [ADR 072](../adr/072-pragmatic-production-realignment.md). Kept for historical record.
+
 Continue pursuing the existing autonomous cinematic production-system goal.
 This is a **cautionary steering instruction**, not a replacement goal.
 

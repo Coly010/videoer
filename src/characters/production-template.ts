@@ -382,6 +382,11 @@ const material = (id: string, baseColor: Vec4, roughness: number): GeometryMater
  * Converts the pinned CC0 hm08 topology and authored weights into Videoer's
  * stable domain format. This is a production-base experiment, not a verified
  * character and not a replacement for visual acceptance.
+ *
+ * @deprecated Retired as a production target by ADR 074. The production human is
+ * MPFB's hm08 CC0 mesh + a Rigify rig (`scripts/blender/render_mpfb_motion_probe.py`),
+ * which keeps the full mesh instead of reducing it into this owned contract.
+ * Retained only for the existing benchmark and tests until a migration removes it.
  */
 export function createProductionTemplateHuman(
   source: string,

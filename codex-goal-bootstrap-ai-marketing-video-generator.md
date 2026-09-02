@@ -1,5 +1,14 @@
 # Codex Goal: Establish the Architecture and Initial Repository for the AI Marketing Video Generator
 
+> **Historical goal document — largely still current.** This document's product principle
+> ("good-looking marketing output per unit of cost and effort", style-agnostic, provider-independent)
+> is exactly what [`docs/product-principles.md`](docs/product-principles.md) restores as the
+> durable policy after later work (ADRs 017–071) drifted into renderer-independent/transfer/
+> conformance architecture this document never asked for. See
+> [ADR 072](docs/adr/072-pragmatic-production-realignment.md). Read this document as historical
+> context for the original mission, not as a live task list; `docs/product-principles.md` and
+> `AGENTS.md` are the current steering surface.
+
 ## Objective
 
 Build the architectural foundation and initial repository structure for a **local-first, CLI-first AI marketing video generator** that can produce polished short-form marketing videos for:

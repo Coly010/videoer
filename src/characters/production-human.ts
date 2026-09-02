@@ -180,6 +180,12 @@ const defaultAppearance: HumanoidAppearance = {
   leather: [0.025, 0.02, 0.018, 1],
 };
 
+/**
+ * @deprecated Retired as a production target by ADR 074. The production human is
+ * MPFB's hm08 CC0 mesh + a Rigify rig, not this project-owned procedural body.
+ * Retained only for the existing reference benchmark and tests until a migration
+ * removes or repoints it; do not build new production characters this way.
+ */
 export function createProductionHuman(
   input: HumanoidParameters = {},
   appearance: HumanoidAppearance = defaultAppearance,

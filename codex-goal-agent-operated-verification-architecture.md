@@ -1,5 +1,12 @@
 # Codex Goal: Evolve the Architecture for Agent-Operated Generation, Verification, and Iteration
 
+> **Historical goal document — largely still current.** Its verification/inspection architecture,
+> campaign workspace model, provenance metadata, and draft/final render lifecycle remain accurate
+> and are not superseded. It did not itself mandate renderer independence, cross-campaign transfer,
+> or benchmark conformance — that doctrine emerged later, through ADRs 017–071, and is narrowed by
+> [ADR 072](docs/adr/072-pragmatic-production-realignment.md). See
+> [`docs/product-principles.md`](docs/product-principles.md) for the current durable policy.
+
 ## Objective
 
 Update the existing AI Marketing Video Generator repository so that its architecture explicitly supports **Codex as the primary operator/interface during development and likely during normal personal usage**.

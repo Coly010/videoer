@@ -4,6 +4,9 @@
 
 Accepted on 2026-08-30.
 
+**Narrowed by [ADR 072](072-pragmatic-production-realignment.md):** valid for the Blender path
+specifically; not required for every 3D or composited shot.
+
 ## Context
 
 Verified characters, motions, props, and environments do not by themselves prove that a shot works. Passing isolated probes previously allowed spatially wrong travel, hidden interaction contact, disconnected staging, and timing drift to survive until visual review. Embedding those decisions only in a Blender script would make the production model backend-specific and difficult to validate before rendering.

@@ -1,5 +1,13 @@
 # Autonomous cinematic system progress
 
+> **Historical iteration log.** This is a detailed, dated record of how the Blender-backed
+> cinematic subsystem was built, including rejected attempts (gait v1–v22, face/hand topology,
+> lighting rig revisions). It is retained for provenance and for anyone extending that subsystem,
+> but it is not the default context for new work and it predates
+> [ADR 072](../adr/072-pragmatic-production-realignment.md)'s realignment. For a short, current
+> summary of what Videoer is and how to work on it today, read
+> [`docs/current-state.md`](../current-state.md) first.
+
 Last updated: 2026-09-01
 
 ## Architecture map

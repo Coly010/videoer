@@ -4,6 +4,9 @@
 
 Accepted.
 
+**Narrowed by [ADR 072](072-pragmatic-production-realignment.md):** a valid technique; a supplied
+or generated sound is equally acceptable when cheaper or better for the shot.
+
 ## Context
 
 Videoer could render deterministic soundtrack plans and derive complete audio treatments, but its benchmark door and page cues were generic filtered white-noise intervals embedded inside one score. They were not isolated inventory, could not carry action synchronization points, and could not be independently searched, adapted, verified, or reused. A verified soundtrack therefore did not prove a reusable sound-effects pipeline.
