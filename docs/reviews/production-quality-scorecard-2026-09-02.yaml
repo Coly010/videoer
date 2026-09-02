@@ -1,0 +1,99 @@
+schemaVersion: 1
+id: production-quality-portfolio-2026-09-02
+baselineId: accepted-library-and-audit-evidence-2026-09-01
+updatedAt: 2026-09-02
+purpose: >-
+  Cross-system production-quality loop. The benchmark remains an integration instrument;
+  canonical probes and representative transfers are the reusable acceptance surface.
+reviewCriteria: [silhouette, scale, material-response, lighting-hierarchy, motion, continuity, atmosphere, compositing, audio]
+domains:
+  - id: environment-geometry-and-dressing
+    status: blocked
+    scores: { structuralCorrectness: 4, stillImageAppearance: 2, temporalBehaviour: 3, transfer: 3, reuseOutsideBenchmark: 3, visibleDeltaFromBaseline: 0 }
+    canonicalProbes: [{ id: city-establish, evidence: [../../campaigns/reference-cinematic-production-audit/verification/shots/city-establish/contact-sheet.png] }]
+    integratedEvidence: [../../campaigns/reference-cinematic-production-audit/verification/shots/city-establish/contact-sheet.png]
+    findings: [Existing street modules transfer, but the representative set remains planar, sparse, and weak in inhabited depth.]
+    nextAction: Build a non-benchmark high-density set family with scale, occupancy, and semantic host anchors.
+  - id: portable-props
+    status: accepted
+    scores: { structuralCorrectness: 4, stillImageAppearance: 3, temporalBehaviour: 2, transfer: 4, reuseOutsideBenchmark: 4, visibleDeltaFromBaseline: 3 }
+    canonicalProbes: [{ id: workshop-transfer, evidence: [../../library/props/joiners-workbench/0.1.0/verification/historic-forge-workroom-family-contact-sheet.png] }]
+    integratedEvidence: [../../library/props/joiners-workbench/0.1.0/verification/contemporary-maker-lab-family-contact-sheet.png]
+    findings: [Portable workstation and furnishing inventory is verified for medium and background distance, not hero interaction.] 
+    nextAction: Add handheld, organic, and hero-close prop families through the existing anchor and transfer contracts.
+  - id: materials-and-textures
+    status: accepted
+    scores: { structuralCorrectness: 4, stillImageAppearance: 3, temporalBehaviour: 3, transfer: 4, reuseOutsideBenchmark: 4, visibleDeltaFromBaseline: 3 }
+    canonicalProbes: [{ id: environmental-material-gallery, evidence: [../../library/materials/rain-aged-mineral-plaster/0.2.0/verification/contact-sheet.png] }]
+    integratedEvidence: [../../campaigns/reference-cinematic-production-audit/verification/shots/city-establish/contact-sheet.png]
+    findings: [Architecture materials have metre-scaled response and transfer evidence; character, fabric, product, and decal coverage is absent.]
+    nextAction: Extend the existing material factory with reusable fabric, skin, painted-metal, and product-surface tiers.
+  - id: lighting
+    status: blocked
+    scores: { structuralCorrectness: 4, stillImageAppearance: 2, temporalBehaviour: 3, transfer: 4, reuseOutsideBenchmark: 4, visibleDeltaFromBaseline: 2 }
+    canonicalProbes: [{ id: bookshop-warm-transfer, evidence: [../../library/lighting/bookshop-warm-interior/0.1.0/verification/contact-sheet.png] }]
+    integratedEvidence: [../../campaigns/reference-cinematic-production-audit/verification/shots/city-establish/contact-sheet.png]
+    findings: [Rig topology and exposure gates transfer, but the representative exterior contains black voids and weak focal hierarchy.]
+    nextAction: Create a practical-led exterior/interior hierarchy probe and integrate it into an unrelated set.
+  - id: atmosphere-compositing-and-vfx
+    status: accepted
+    scores: { structuralCorrectness: 4, stillImageAppearance: 3, temporalBehaviour: 4, transfer: 3, reuseOutsideBenchmark: 3, visibleDeltaFromBaseline: 3 }
+    canonicalProbes: [{ id: source-bound-smoke, evidence: [../../library/vfx/source-bound-smoke-embers/0.1.0/verification/historic-forge/contact-sheet.png] }]
+    integratedEvidence: [../../campaigns/reference-cinematic-production-audit/verification/shots/city-establish/contact-sheet.png]
+    findings: [Sparse-volume smoke is accepted at medium/background range; practical flame and integrated layered effects remain weak.]
+    nextAction: Deliver portable practical-fire and secondary-particle integration with a final-composite transfer.
+  - id: production-characters
+    status: blocked
+    scores: { structuralCorrectness: 2, stillImageAppearance: 1, temporalBehaviour: 1, transfer: 2, reuseOutsideBenchmark: 2, visibleDeltaFromBaseline: 0 }
+    canonicalProbes: [{ id: anatomical-review, evidence: [../../campaigns/after-hours-character-conformance/work/scenes/intentional-walk/verification/contact-sheet.png] }]
+    integratedEvidence: [../../campaigns/reference-cinematic-production-audit/verification/shots/character-approach/contact-sheet.png]
+    findings: [The current implicit human remains a body-volume prototype, not a hero-distance production character.]
+    nextAction: Build anatomical topology, identity-capable face, and articulated hand evidence before performance polish.
+  - id: clothing-and-hair
+    status: blocked
+    scores: { structuralCorrectness: 3, stillImageAppearance: 1, temporalBehaviour: 1, transfer: 2, reuseOutsideBenchmark: 2, visibleDeltaFromBaseline: 0 }
+    canonicalProbes: [{ id: dark-dress-temporal, evidence: [../../library/clothing/elara-midnight-dress/0.1.0/verification/walk-neutral/contact-sheet.png] }]
+    integratedEvidence: [../../campaigns/reference-cinematic-production-audit/verification/shots/character-approach/contact-sheet.png]
+    findings: [The dress and card hair have reusable contracts but are limited to medium/background and lack production garment or secondary-motion fidelity.]
+    nextAction: Add panelled garments, material tiers, and deterministic hair/cloth temporal acceptance probes.
+  - id: animation-and-interaction
+    status: blocked
+    scores: { structuralCorrectness: 4, stillImageAppearance: 1, temporalBehaviour: 1, transfer: 3, reuseOutsideBenchmark: 3, visibleDeltaFromBaseline: 0 }
+    canonicalProbes: [{ id: rejected-natural-walk, evidence: [../../campaigns/reference-cinematic-benchmark/work/motions/walk-natural-neutral/verification/contact-sheet.png] }]
+    integratedEvidence: [../../campaigns/reference-cinematic-production-audit/verification/shots/character-approach/contact-sheet.png]
+    findings: [Contact and path mechanics work, while the retained human gait review rejects weight, foot roll, and silhouette.] 
+    nextAction: Build grounded performance layers and typed grip/support interactions, not another isolated gait calibration.
+  - id: cameras
+    status: blocked
+    scores: { structuralCorrectness: 4, stillImageAppearance: 2, temporalBehaviour: 2, transfer: 3, reuseOutsideBenchmark: 3, visibleDeltaFromBaseline: 1 }
+    canonicalProbes: [{ id: semantic-camera-evidence, evidence: [../../campaigns/reference-cinematic-production-audit/verification/shots/city-establish/framing-report.json] }]
+    integratedEvidence: [../../campaigns/reference-cinematic-production-audit/verification/shots/city-establish/contact-sheet.png]
+    findings: [Clearance and target fidelity are verified, but reusable shot grammar, screen direction, focus, and temporal composition are absent.]
+    nextAction: Add a renderer-independent cinematography layer above raw paths.
+  - id: sound-design-and-layering
+    status: blocked
+    scores: { structuralCorrectness: 5, stillImageAppearance: 0, temporalBehaviour: 4, transfer: 3, reuseOutsideBenchmark: 3, visibleDeltaFromBaseline: 2 }
+    canonicalProbes: [{ id: representative-sfx-audition, evidence: [../../campaigns/reference-cinematic-benchmark/work/audio/production-sfx-audition-v1/audition-verification.json] }]
+    integratedEvidence: [../../campaigns/reference-cinematic-production-audit/work/audio/soundtrack.wav]
+    findings: [Deterministic waveform and timing pass, but no accountable listening review accepts hierarchy, masking, spatiality, or material identity.]
+    nextAction: Add a provenance-bound mix-review record and broaden reusable ambience and foley inventory.
+  - id: renderer-settings-and-final-image
+    status: accepted
+    scores: { structuralCorrectness: 5, stillImageAppearance: 3, temporalBehaviour: 4, transfer: 3, reuseOutsideBenchmark: 4, visibleDeltaFromBaseline: 3 }
+    canonicalProbes: [{ id: production-clean-profile, evidence: [../../library/lighting/bookshop-warm-interior/0.1.0/verification/scene-render.json] }]
+    integratedEvidence: [../../campaigns/reference-cinematic-production-audit/verification/shots/city-establish/contact-sheet.png]
+    findings: [Fixed-seed production-clean Cycles/OIDN removes material grain, but finishing cannot compensate for incomplete sets or lighting.] 
+    nextAction: Retain this profile and validate it against the upcoming representative quality reel.
+  - id: cross-renderer-runtime-transfer
+    status: blocked
+    scores: { structuralCorrectness: 3, stillImageAppearance: 2, temporalBehaviour: 2, transfer: 2, reuseOutsideBenchmark: 3, visibleDeltaFromBaseline: 1 }
+    canonicalProbes: [{ id: declarative-campaign-build, evidence: [../../campaigns/reference-cinematic-production-audit/declarative-build-report.json] }]
+    integratedEvidence: [../../verification/cinematic-scene/contact-sheet.png]
+    findings: [Renderer-independent contracts transfer across Blender probes and declarative assembly, while Three.js remains outside Remotion final rendering.]
+    nextAction: Define a real cross-runtime representative render comparison rather than claiming adapter-level transfer.
+iterations:
+  - id: baseline-portfolio-2026-09-02
+    domains: [environment-geometry-and-dressing, lighting, production-characters, clothing-and-hair, animation-and-interaction, cameras, sound-design-and-layering, cross-renderer-runtime-transfer]
+    decision: accepted
+    evidence: [../../campaigns/reference-cinematic-production-audit/verification/shots/city-establish/contact-sheet.png, ../../campaigns/reference-cinematic-benchmark/work/motions/walk-natural-neutral/verification/visual-review.json]
+    finding: Existing evidence establishes a broad baseline and rejects further narrow surface-only iteration as a portfolio strategy.

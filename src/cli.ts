@@ -43,6 +43,7 @@ import {
   polyHavenMaterialSourceImportRequestSchema,
 } from './assets/sources/model.js';
 import { resolveProductionAssets, validateProductionPlan } from './application/production.js';
+import { validateQualityScorecard } from './application/quality-scorecard.js';
 import type { AssetKind } from './production/model.js';
 import {
   createMannequin,
@@ -203,6 +204,17 @@ const program = new Command()
   .version('0.2.0')
   .option('--debug', 'show stack traces')
   .option('--json', 'emit a stable machine-readable envelope');
+
+program
+  .command('quality-scorecard')
+  .argument('<scorecard-file>')
+  .description('validate cross-system quality evidence and canonical-probe coverage')
+  .action(async function (scorecardFile: string) {
+    const data = await validateQualityScorecard(scorecardFile);
+    output(this, 'quality-scorecard.validate', data, (result) =>
+      `✓ ${result.id}: ${result.domains} domains, ${result.evidence} evidence references`,
+    );
+  });
 
 const cinematicCampaign = program
   .command('cinematic-campaign')
