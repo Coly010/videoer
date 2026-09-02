@@ -9,6 +9,7 @@ import { verifyCinematicScene } from '../src/cinematic/verification.js';
 import { boxPart, mergeMeshParts } from '../src/geometry/primitives.js';
 import { saveGeometry } from '../src/geometry/io.js';
 import { sampleCinematicCamera } from '../src/cinematic/camera-path.js';
+import { verifyCinematicShotIntent } from '../src/cinematic/camera-intent.js';
 import { saveMotionClip } from '../src/motion/io.js';
 import {
   aggregateCinematicRenderVerification,
@@ -347,6 +348,131 @@ describe('renderer-independent executable cinematic scenes', () => {
     expect(sampled.position[0]).toBeCloseTo(0.585786, 5);
     expect(sampled.target[0]).toBeCloseTo(0.585786, 5);
     expect(sampled.lensMillimeters).toBeCloseTo(45.857864, 5);
+  });
+
+  it('verifies typed shot intent against the shared camera sampler and framing gates', () => {
+    const scene = cinematicSceneSchema.parse({
+      ...fixture,
+      camera: {
+        intent: {
+          id: 'hero-push-in',
+          purpose: 'coverage',
+          movement: 'push-in',
+          framingGateIds: ['hero-framing'],
+          sampleCount: 9,
+          maximumSpeedMetersPerSecond: 1,
+          maximumAccelerationMetersPerSecondSquared: 0.01,
+          minimumProgressMeters: 0.2,
+        },
+        keyframes: [
+          {
+            time: 0,
+            position: [0, 1, -4],
+            target: [0, 1, 0],
+            lensMillimeters: 50,
+            easing: 'linear',
+          },
+          {
+            time: fixture.durationSeconds,
+            position: [0, 1, -3],
+            target: [0, 1, 0],
+            lensMillimeters: 50,
+          },
+        ],
+      },
+      renderGates: [
+        {
+          id: 'hero-framing',
+          type: 'subject-framing',
+          entityId: 'heroine',
+          minimumScreenHeightPercentage: 20,
+          maximumScreenHeightPercentage: 75,
+        },
+      ],
+      qualityGates: [
+        { id: 'verify-hero-push-in', type: 'camera-shot-intent', intentId: 'hero-push-in' },
+      ],
+    });
+    const result = verifyCinematicShotIntent(scene, {
+      id: 'verify-hero-push-in',
+      type: 'camera-shot-intent',
+      intentId: 'hero-push-in',
+    });
+    expect(result).toMatchObject({
+      status: 'pass',
+      measurements: {
+        movement: 'push-in',
+        framingGateIds: ['hero-framing'],
+        maximumAccelerationMetersPerSecondSquared: 0,
+      },
+    });
+  });
+
+  it('rejects a camera path whose measured motion contradicts its typed intent', () => {
+    const scene = cinematicSceneSchema.parse({
+      ...fixture,
+      camera: {
+        intent: {
+          id: 'locked-coverage',
+          purpose: 'coverage',
+          movement: 'locked-off',
+          framingGateIds: ['hero-coverage'],
+          maximumSpeedMetersPerSecond: 4,
+          maximumAccelerationMetersPerSecondSquared: 10,
+        },
+        keyframes: [
+          { time: 0, position: [0, 1, -4], target: [0, 1, 0], lensMillimeters: 50 },
+          {
+            time: fixture.durationSeconds,
+            position: [1, 1, -4],
+            target: [1, 1, 0],
+            lensMillimeters: 50,
+          },
+        ],
+      },
+      renderGates: [
+        {
+          id: 'hero-coverage',
+          type: 'subject-coverage',
+          entityId: 'heroine',
+          minimumVisibleAreaPercentage: 20,
+          minimumVisibleScreenHeightPercentage: 20,
+        },
+      ],
+      qualityGates: [
+        { id: 'verify-locked-coverage', type: 'camera-shot-intent', intentId: 'locked-coverage' },
+      ],
+    });
+    expect(
+      verifyCinematicShotIntent(scene, {
+        id: 'verify-locked-coverage',
+        type: 'camera-shot-intent',
+        intentId: 'locked-coverage',
+      }),
+    ).toMatchObject({
+      status: 'fail',
+      measurements: { directionPasses: false },
+    });
+  });
+
+  it('requires shot-intent framing to bind an image framing gate', () => {
+    expect(
+      cinematicSceneSchema.safeParse({
+        ...fixture,
+        camera: {
+          intent: {
+            id: 'bad-intent',
+            purpose: 'coverage',
+            movement: 'free-move',
+            framingGateIds: ['visibility'],
+            maximumSpeedMetersPerSecond: 3,
+            maximumAccelerationMetersPerSecondSquared: 3,
+          },
+          keyframes: fixture.camera.keyframes,
+        },
+        renderGates: [{ id: 'visibility', type: 'frame-visibility', maximumBlackPercentage: 50 }],
+      }),
+    ).toMatchObject({ success: false });
   });
 
   it('rejects obstructed semantic sightlines before rendering and respects entity transforms', async () => {

@@ -90,6 +90,49 @@ export const cinematicCameraKeyframeSchema = z.object({
   easing: z.enum(['linear', 'ease-in-out']).default('ease-in-out'),
 });
 
+/**
+ * An editorially meaningful camera brief.  It deliberately describes the
+ * movement and the render gates that prove framing, while the keyframes stay
+ * the single executable source of camera motion.
+ */
+export const cinematicShotIntentSchema = z
+  .object({
+    id: cinematicIdentifierSchema,
+    purpose: z.enum([
+      'establish',
+      'reveal',
+      'coverage',
+      'dialogue',
+      'action',
+      'product',
+      'transition',
+    ]),
+    movement: z.enum([
+      'locked-off',
+      'push-in',
+      'pull-back',
+      'lateral-move',
+      'rising-move',
+      'falling-move',
+      'free-move',
+    ]),
+    framingGateIds: z.array(cinematicIdentifierSchema).min(1),
+    sampleCount: z.number().int().min(3).max(241).default(25),
+    minimumSpeedMetersPerSecond: z.number().nonnegative().default(0),
+    maximumSpeedMetersPerSecond: z.number().positive(),
+    maximumAccelerationMetersPerSecondSquared: z.number().nonnegative(),
+    minimumProgressMeters: z.number().nonnegative().default(0.05),
+    distanceToleranceMeters: z.number().nonnegative().default(0.02),
+  })
+  .superRefine((intent, context) => {
+    if (intent.minimumSpeedMetersPerSecond > intent.maximumSpeedMetersPerSecond)
+      context.addIssue({
+        code: 'custom',
+        path: ['minimumSpeedMetersPerSecond'],
+        message: 'shot intent minimum speed exceeds maximum speed',
+      });
+  });
+
 export const cinematicLightSchema = z
   .object({
     id: cinematicIdentifierSchema,
@@ -142,6 +185,11 @@ export const cinematicQualityGateSchema = z.discriminatedUnion('type', [
     sampleCount: z.number().int().min(3).max(241).default(25),
     minimumCameraClearanceMeters: z.number().positive().max(5).default(0.15),
     targetOcclusionToleranceMeters: z.number().nonnegative().max(5).default(0.35),
+  }),
+  z.object({
+    id: cinematicIdentifierSchema,
+    type: z.literal('camera-shot-intent'),
+    intentId: cinematicIdentifierSchema,
   }),
   z.object({
     id: cinematicIdentifierSchema,
@@ -471,7 +519,10 @@ export const cinematicSceneSchema = z
       intent: 'deterministic-final',
     }),
     entities: z.array(cinematicSceneEntitySchema).min(1),
-    camera: z.object({ keyframes: z.array(cinematicCameraKeyframeSchema).min(1) }),
+    camera: z.object({
+      keyframes: z.array(cinematicCameraKeyframeSchema).min(1),
+      intent: cinematicShotIntentSchema.optional(),
+    }),
     lightingRigPath: z.string().min(1).optional(),
     lights: z.array(cinematicLightSchema).default([]),
     atmosphere: cinematicAtmosphereSchema,
@@ -578,6 +629,13 @@ export const cinematicSceneSchema = z
               path: ['qualityGates', index, 'obstacleEntityIds', obstacleIndex],
               message: 'camera path clearance gate references an unknown obstacle entity',
             });
+      } else if (gate.type === 'camera-shot-intent') {
+        if (!scene.camera.intent || gate.intentId !== scene.camera.intent.id)
+          ctx.addIssue({
+            code: 'custom',
+            path: ['qualityGates', index, 'intentId'],
+            message: 'camera shot-intent gate must reference the scene camera intent',
+          });
       } else if (gate.type === 'mutual-facing') {
         for (const field of ['firstEntityId', 'secondEntityId'] as const)
           if (!entityIds.has(gate[field]))
@@ -668,6 +726,26 @@ export const cinematicSceneSchema = z
           path: ['renderGates', index],
           message: 'subject framing minimum height exceeds maximum height',
         });
+    }
+    if (scene.camera.intent) {
+      for (const [intentGateIndex, gateId] of scene.camera.intent.framingGateIds.entries()) {
+        const gate = scene.renderGates.find((candidate) => candidate.id === gateId);
+        if (
+          !gate ||
+          ![
+            'subject-framing',
+            'subject-coverage',
+            'entity-set-coverage',
+            'entity-set-frame-presence',
+          ].includes(gate.type)
+        )
+          ctx.addIssue({
+            code: 'custom',
+            path: ['camera', 'intent', 'framingGateIds', intentGateIndex],
+            message:
+              'shot intent framing gates must reference a subject or entity-set framing render gate',
+          });
+      }
     }
     for (const [index, overlay] of scene.overlays.entries()) {
       if (overlay.startSeconds >= overlay.endSeconds || overlay.endSeconds > scene.durationSeconds)

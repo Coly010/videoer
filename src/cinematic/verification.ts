@@ -5,6 +5,7 @@ import { loadMotionClip } from '../motion/io.js';
 import { sampleMotionTrack } from '../motion/model.js';
 import { transformPoint } from '../interactions/transforms.js';
 import type { CinematicScene } from './model.js';
+import { verifyCinematicShotIntent } from './camera-intent.js';
 import { verifyCameraPathClearance } from './camera-path.js';
 import { loadGeometry } from '../geometry/io.js';
 import {
@@ -637,6 +638,10 @@ export async function verifyCinematicScene(scene: CinematicScene, sceneFile: str
     });
   }
   for (const gate of scene.qualityGates) {
+    if (gate.type === 'camera-shot-intent') {
+      checks.push(verifyCinematicShotIntent(scene, gate));
+      continue;
+    }
     if (gate.type === 'camera-path-clearance') {
       checks.push(await verifyCameraPathClearance(scene, sceneFile, gate));
       continue;

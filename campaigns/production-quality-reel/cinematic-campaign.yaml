@@ -1,0 +1,214 @@
+schemaVersion: 1
+id: campaign.production-quality-reel
+fps: 24
+resolution: { width: 640, height: 360, percentage: 100 }
+assetLibrary: ../../library
+
+# Reuse-only integration instrument. The reel must expose library capability
+# gaps, rather than create campaign-specific substitutes for them.
+geometry:
+  - id: old-city
+    library:
+      type: environment
+      query: continuous wet old-city street and bookshop interior
+      tags: [old-city, narrow-street, bookshop, warm-interior]
+      capabilities: [deterministic-seed, exterior-continuity, opposing-street-depth]
+      preferredAsset: { id: environment.old-city-bookshop, version: 0.2.1 }
+      artifactRole: geometry
+  - id: wall-lantern
+    library:
+      type: prop
+      query: old-city practical wall lantern
+      tags: [lantern, practical, old-city]
+      preferredAsset: { id: prop.old-city-wall-lantern, version: 0.5.0 }
+      artifactRole: geometry
+  - id: bookshop-door
+    library:
+      type: prop
+      query: articulated bookshop door
+      tags: [door, bookshop, articulated]
+      preferredAsset: { id: prop.bookshop-door, version: 0.1.0 }
+      artifactRole: geometry
+  - id: elara
+    library:
+      type: character
+      query: recurring production character with verified dress and hair
+      tags: [humanoid, woman, recurring, project-owned]
+      capabilities: [canonical-humanoid-rig, walk-deformation, mesh-hair, fitted-long-dress]
+      preferredAsset: { id: character.elara-vale, version: 0.1.4 }
+      artifactRole: geometry
+
+motions:
+  - id: cautious-walk
+    library:
+      type: motion
+      query: Elara-proportioned cautious walk
+      tags: [humanoid, walk, cautious, naturalistic, elara-vale, retargeted]
+      capabilities: [canonical-humanoid, root-motion, foot-contact, planted-contact-constraints, elara-proportions]
+      preferredAsset: { id: motion.walk-natural-cautious-elara, version: 1.1.0 }
+      artifactRole: motion
+
+motionTimelines:
+  - id: character-crossing-performance
+    clipId: motion.production-quality-reel.crossing
+    path: work/motions/character-crossing-performance.json
+    frames: 72
+    layers:
+      - { id: gait, motion: cautious-walk, mode: base, startFrame: 0, endFrame: 72, playback: loop }
+    metadata: { purpose: reusable library gait integrated with a dressed production character }
+
+lightingSources:
+  - id: dusk-practical-rig
+    library:
+      type: lighting
+      query: overcast dusk exterior with warm practicals
+      tags: [lighting-rig, dusk, warm-practicals]
+      capabilities: [reusable-rig, coherent-exposure]
+      preferredAsset: { id: lighting.bookshop-dusk-exterior, version: 0.1.0 }
+      artifactRole: lighting-rig
+
+vfxSources:
+  - id: rainy-dusk
+    library:
+      type: vfx
+      query: camera depth rainy dusk with world-space surface response
+      tags: [rain, fog, dusk, ground-splashes]
+      capabilities: [camera-depth, deterministic-seed, foreground-background, world-space-surface-response]
+      preferredAsset: { id: vfx.rainy-dusk-depth, version: 0.2.0 }
+      artifactRole: vfx
+
+finishSources:
+  - id: restrained-finish
+    library:
+      type: vfx
+      query: renderer-independent restrained cinematic finish
+      tags: [cinematic-finish, grading, bloom, grain]
+      capabilities: [renderer-independent-finish-profile, post-editorial-compositing]
+      preferredAsset: { id: vfx.soft-atmospheric-finish, version: 0.1.0 }
+      artifactRole: finish-profile
+
+audioSources:
+  - id: restrained-pulse
+    library:
+      type: audio
+      query: deterministic restrained cinematic pulse
+      tags: [cinematic-score, restrained, deterministic, provider-free]
+      capabilities: [provider-free, stereo-48khz, deterministic-treatment]
+      preferredAsset: { id: audio.beacon-one-product-pulse, version: 1.0.0 }
+      artifactRole: audio
+
+soundtrackPath: work/audio/production-quality-reel.wav
+soundtrack:
+  schemaVersion: 1
+  id: audio.production-quality-reel
+  durationSeconds: 8
+  sampleRate: 48000
+  channels: 2
+  cues:
+    - { id: reused-pulse, kind: audio-source, source: restrained-pulse, startSeconds: 0, endSeconds: 8, gain: 0.46, purpose: library score continuity }
+    - { id: rain-bed, kind: noise-bed, startSeconds: 0, endSeconds: 8, gain: 0.028, seed: 9021, purpose: deterministic exterior atmosphere }
+    - { id: threshold-accent, kind: tonal-accent, startSeconds: 6, endSeconds: 8, gain: 0.045, frequencyHz: 196, purpose: practical and editorial resolution }
+  metadata: { providerFree: true, role: integrated-quality-review }
+
+shots:
+  - id: wet-street-establish
+    frames: 48
+    entities:
+      - { id: city, geometry: old-city, role: environment }
+      - { id: practical-lantern, geometry: wall-lantern, role: set-dressing, transform: { position: [-2.7, 2.25, -2.5], rotation: [0, 0.4, 0], scale: [1, 1, 1] } }
+    camera:
+      keyframes:
+        - { time: 0, position: { world: [4.5, 2.2, 6.8] }, target: { world: [0, 1.25, -1.5] }, lensMillimeters: 36 }
+        - { time: 2, position: { world: [3.7, 2.0, 5.5] }, target: { world: [0, 1.3, -1.9] }, lensMillimeters: 42 }
+    lighting: dusk-practical-rig
+    vfx: rainy-dusk
+    finish: restrained-finish
+    renderGates:
+      - { id: establish-visible, type: frame-visibility, maximumBlackPercentage: 76 }
+      - { id: establish-highlight-detail, type: frame-overexposure, maximumWhitePercentage: 14 }
+    landmarks:
+      - { id: arrival, progress: 0, description: street depth and practical hierarchy establish scale }
+      - { id: depth-reveal, progress: 1, description: wet materials, rain layers and bookshop threshold remain separated }
+    metadata: { grammar: environmental-establish, systems: [environment, dressing, materials, lighting, vfx, finish] }
+
+  - id: practical-material-detail
+    frames: 48
+    entities:
+      - { id: city, geometry: old-city, role: environment }
+      - { id: practical-lantern, geometry: wall-lantern, role: prop, transform: { position: [-1.35, 2.15, -1.8], rotation: [0, 0.15, 0], scale: [1, 1, 1] } }
+    camera:
+      keyframes:
+        - { time: 0, position: { world: [-0.1, 1.65, 1.1] }, target: { world: [-1.35, 1.95, -1.8] }, lensMillimeters: 72 }
+        - { time: 2, position: { world: [0.18, 1.58, 0.82] }, target: { world: [-1.35, 1.95, -1.8] }, lensMillimeters: 80 }
+    lighting: dusk-practical-rig
+    vfx: rainy-dusk
+    finish: restrained-finish
+    renderGates:
+      - { id: detail-visible, type: frame-visibility, maximumBlackPercentage: 70 }
+      - { id: detail-highlight-control, type: frame-overexposure, maximumWhitePercentage: 12 }
+    landmarks:
+      - { id: practical-read, progress: 0, description: practical fixture reads as a physical source against wet architecture }
+      - { id: material-response, progress: 1, description: metal, glazing and wet mineral response retain highlight detail }
+    metadata: { grammar: practical-material-detail, systems: [portable-prop, materials, lighting, camera, finish] }
+
+  - id: character-crossing
+    frames: 72
+    entities:
+      - { id: city, geometry: old-city, role: environment }
+      - id: performer
+        geometry: elara
+        role: character
+        transform: { position: [0, 0, 2.4], rotation: [0, 0, 0], scale: [1, 1, 1] }
+        motion: { source: character-crossing-performance, startFrame: 0, endFrame: 72 }
+    camera:
+      keyframes:
+        - { time: 0, position: { world: [3.7, 1.65, 2.9] }, target: { world: [0, 1.0, 0.8] }, lensMillimeters: 44 }
+        - { time: 3, position: { world: [2.4, 1.55, -0.4] }, target: { world: [0, 1.0, -1.5] }, lensMillimeters: 48 }
+    lighting: dusk-practical-rig
+    vfx: rainy-dusk
+    finish: restrained-finish
+    qualityGates:
+      - { id: crossing-forward-motion, type: directional-motion, entityId: performer, minimumDistanceMeters: 1.1, minimumForwardDot: 0.9 }
+    renderGates:
+      - { id: crossing-visible, type: frame-visibility, maximumBlackPercentage: 74 }
+      - { id: crossing-full-body, type: subject-framing, entityId: performer, minimumScreenHeightPercentage: 30, maximumScreenHeightPercentage: 88, marginPercentage: 2 }
+    landmarks:
+      - { id: first-contact, progress: 0, description: dressed character begins a grounded crossing }
+      - { id: silhouette-pass, progress: 0.55, description: dress, hair, rain and practical rim retain a readable silhouette }
+      - { id: final-contact, progress: 1, description: gait remains planted and forward-aligned through the set }
+    metadata: { grammar: character-crossing, systems: [character, clothing, hair, motion, camera, vfx] }
+
+  - id: threshold-resolve
+    frames: 24
+    entities:
+      - { id: city, geometry: old-city, role: environment }
+      - { id: threshold-door, geometry: bookshop-door, role: prop, transform: { position: [0.2, 0, -2.65], rotation: [0, 0, 0], scale: [1, 1, 1] } }
+      - { id: performer, geometry: elara, role: character, transform: { position: [0, 0, -0.9], rotation: [0, 0, 0], scale: [1, 1, 1] } }
+    camera:
+      keyframes:
+        - { time: 0, position: { world: [2.8, 1.7, 1.9] }, target: { world: [0, 1.15, -1.5] }, lensMillimeters: 55 }
+        - { time: 1, position: { world: [2.55, 1.68, 1.5] }, target: { world: [0, 1.15, -1.5] }, lensMillimeters: 60 }
+    lighting: dusk-practical-rig
+    vfx: rainy-dusk
+    finish: restrained-finish
+    renderGates:
+      - { id: resolve-visible, type: frame-visibility, maximumBlackPercentage: 74 }
+      - { id: resolve-highlight-detail, type: frame-overexposure, maximumWhitePercentage: 14 }
+    landmarks:
+      - { id: threshold-hold, progress: 0, description: practical interior threshold connects exterior and character space }
+      - { id: final-composite, progress: 1, description: sound, atmosphere and finish resolve without obscuring story space }
+    metadata: { grammar: threshold-resolution, systems: [interaction-space, props, lighting, atmosphere, compositing, audio] }
+
+delivery:
+  id: edit.production-quality-reel
+  directory: delivery
+  codec: h264
+  pixelFormat: yuv420p
+  fastStart: true
+
+metadata:
+  purpose: cross-system-quality-improvement-integration-instrument
+  benchmarkIndependent: true
+  assetPolicy: reuse-only-immutable-verified-library-assets
+  reviewCriteria: [silhouette, scale, material-response, lighting-hierarchy, motion, continuity, atmosphere, compositing, audio]
+  expectedEvidence: [contact-sheet, per-shot-motion-clips, render-gate-reports, edit-report, independent-visual-review]

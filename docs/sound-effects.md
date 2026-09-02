@@ -21,4 +21,10 @@ Recipes are defined in `src/audio/sound-effect-presets.ts` and rendered by `src/
 
 Do not publish a candidate merely because its hash, duration, waveform, and spectrogram pass. Listen to the isolated master and in at least one representative mix. Reject synthetic buzzing, broadband hiss, wrong material scale, excessive transients, masking, or a sound that only works in the benchmark. Once accepted, publish it through the ordinary immutable asset workflow and use it from soundtrack plans as an `audio-source` cue.
 
+## Mix review record
+
+Use `soundMixReviewSchema` from `src/audio/review.ts` to record a listener's decision for a published audio asset. The record binds the review to an immutable master hash, its provenance record, the deterministic soundtrack-plan ID/hash, and distinct isolated, integrated, and motion evidence. Its validator also ensures every cue claimed by hierarchy, masking, spatial depth, sync, continuity, or material-identity findings exists in the plan.
+
+An accepted review must show controlled masking, credible material identity, unbroken continuity, and sync within its recorded tolerance. It complements render hashes and loudness checks: the reviewer remains responsible for hierarchy, scale, spatial depth, and reuse beyond one campaign.
+
 The first generated set is intentionally `validated`, not `verified`. The v1 one-pole filter experiment is rejected evidence: its door and footstep spectrograms leaked excessive broadband energy. The current renderer uses four cascaded high-pass and low-pass stages before candidate regeneration.
