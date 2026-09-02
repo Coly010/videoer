@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "status": "rejected",
+  "publicationAllowed": false,
+  "scope": "routed, mass-conserving construction-surface dirt history across unrelated historic and contemporary hosts",
+  "provenance": {
+    "equationBasis": "research-grounded public-domain EPA buildup/washoff form",
+    "parameterStatus": "heuristic",
+    "siteCalibrated": false,
+    "claim": "deterministic cinematic synthesis evidence, not a surveyed history or civil-engineering prediction"
+  },
+  "targetedSubsystemVerdict": {
+    "surfaceWaterV2Routing": "pass",
+    "dirtMassConservation": "pass",
+    "rendererTransfer": "pass",
+    "productionEnvironmentVisualAcceptance": "reject"
+  },
+  "acceptedSystemEvidence": [
+    "surface-water v2 persists a separately hashed acyclic Priority-Flood parent tree with one live four-neighbour routing node per active receiver cell and at least one export root",
+    "surface-history v2 binds the exact receiver, water-field and routing hashes and rejects schema, topology, rank or identity drift",
+    "material-specific installation or repair age produces separate persistent and loose kilograms; only loose mass is mobilized, transported, captured or exported",
+    "per-cell and whole-field dirt mass balance passes within the declared numerical tolerance",
+    "Blender validates routing-bound mass evidence before independently mapping loose and persistent coverage to renderer material response",
+    "the refined thin-dielectric optical surface accepts and binds water v2 without changing its conserved reconstruction algorithm or degrading v1 identity",
+    "historic and contemporary hosts pass the targeted structural and renderer gates without changing or rerendering the benchmark"
+  ],
+  "nativeRendererEvidence": {
+    "semanticControlMeanAbsoluteLinearDifference": 0.010853743574881702,
+    "dirtMassErrorKilograms": 0
+  },
+  "transferEvidence": {
+    "historic-masonry-shopfront": {
+      "cellCount": 3157,
+      "routingSha256": "b2af20a4abf2817b81d08ef5e3350daab13dfbc0a20ef8b9f5266fcc0acbd12d",
+      "historyFieldSha256": "248377956608de5c571bb3c3d6e3387c924388eea63692b9166107b8ff00a0c1",
+      "inputKilograms": 22.876711199999374,
+      "persistentKilograms": 8.859819816000126,
+      "looseKilograms": 12.938950612950219,
+      "exportedKilograms": 1.0779407710498086,
+      "errorKilograms": -7.780442956573097e-13
+    },
+    "contemporary-plaster-mixed-use": {
+      "cellCount": 3654,
+      "routingSha256": "9def850e6419ebf1a7f355ffcfeacf32d5bf1cc7b533fa37d924f397e5486795",
+      "historyFieldSha256": "0c7ef14efb8b3ed01bf7bb253f55ac088c9e221c80f57f3cdd148b3c606b8e62",
+      "inputKilograms": 4.376375999999857,
+      "persistentKilograms": 1.0584561600000466,
+      "looseKilograms": 3.0745251771610773,
+      "exportedKilograms": 0.2433946628389106,
+      "errorKilograms": -1.7763568394002505e-13
+    }
+  },
+  "blockingVisualDefects": [
+    "neither assembled host reaches production photorealism and no environment or paving material is publishable from this evidence",
+    "exposure and runoff are nearly saturated across both receivers, while traffic affects roughly 77 to 79 percent of cells, so the intended causal channels lack spatial discrimination",
+    "traffic crossings, repair footprints, shelter effects and drainage or gutter history are not identifiable in either assembled contact sheet",
+    "historic paving remains orderly, uniformly new, smooth-edged and mineral-poor",
+    "contemporary paving remains pale, broadly glossy and closer to polished ceramic than weathered concrete",
+    "the current heuristic profiles prove causal transport and material response, not a location-specific accumulated history"
+  ],
+  "nextGenericDependencies": [
+    "dedicated traffic-only, repair-only, runoff-only and dirt-mass-only witness renders",
+    "non-saturating exposure and runoff normalization with narrower route influence",
+    "explicit pedestrian route-choice and twin-wheel vehicle pass-density synthesis",
+    "event-led repair ledgers and material-batch discontinuity",
+    "temporal multi-date verification",
+    "richer mineral and concrete response plus bounded silhouette and course irregularity",
+    "the already recorded facade, glazing, interior and atmospheric production gaps"
+  ],
+  "queuedReusableWork": {
+    "productionClothing": "Remains queued behind the current higher-priority reusable environment/material work: garment panels and pattern construction, seams, hems, thickness, shoulder and armhole quality, base weights and correctives, folds and wrinkles, cloth materials, selective simulation, and temporal verification. This is reusable-system work, not benchmark-specific polishing."
+  },
+  "notes": "The targeted reusable subsystem passes while assembled visual publication remains explicitly rejected. The benchmark was not rerendered."
+}

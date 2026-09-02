@@ -15,7 +15,11 @@ import { loadProductionCharacterBinding } from '../characters/production-binding
 import { sha256File } from '../assets/library.js';
 import { geometryTextureDependencies } from '../materials/texture-maps.js';
 import { verifyStaticSurfaceWaterField } from '../environments/surface-water.js';
-import { verifySurfaceHistoryField } from '../environments/surface-history.js';
+import { verifyStaticSurfaceWaterFieldV2 } from '../environments/surface-water.js';
+import {
+  verifySurfaceHistoryField,
+  verifySurfaceHistoryFieldV2,
+} from '../environments/surface-history.js';
 import {
   reconstructSurfaceWaterOpticalSurface,
   verifySurfaceWaterOpticalSurface,
@@ -186,9 +190,11 @@ export async function verifyCinematicScene(scene: CinematicScene, sceneFile: str
     const geometryPath = resolve(sourceDirectory, entity.geometryPath);
     const fieldPath = resolve(sourceDirectory, entity.surfaceWaterFieldPath!);
     try {
-      const verification = verifyStaticSurfaceWaterField(
-        JSON.parse(await readFile(fieldPath, 'utf8')),
-      );
+      const rawField = JSON.parse(await readFile(fieldPath, 'utf8'));
+      const verification =
+        rawField.schemaVersion === 2
+          ? verifyStaticSurfaceWaterFieldV2(rawField)
+          : verifyStaticSurfaceWaterField(rawField);
       const geometry = await loadGeometry(geometryPath);
       const geometrySha256 = await sha256File(geometryPath);
       const receiverMatches =
@@ -232,13 +238,20 @@ export async function verifyCinematicScene(scene: CinematicScene, sceneFile: str
     const waterPath = resolve(sourceDirectory, entity.surfaceWaterFieldPath!);
     const historyPath = resolve(sourceDirectory, entity.surfaceHistoryFieldPath!);
     try {
-      const waterVerification = verifyStaticSurfaceWaterField(
-        JSON.parse(await readFile(waterPath, 'utf8')),
-      );
-      const historyVerification = verifySurfaceHistoryField(
-        JSON.parse(await readFile(historyPath, 'utf8')),
-        waterVerification.field,
-      );
+      const rawWater = JSON.parse(await readFile(waterPath, 'utf8'));
+      const rawHistory = JSON.parse(await readFile(historyPath, 'utf8'));
+      const waterVerification =
+        rawWater.schemaVersion === 2
+          ? verifyStaticSurfaceWaterFieldV2(rawWater)
+          : verifyStaticSurfaceWaterField(rawWater);
+      const historyVerification =
+        rawHistory.schemaVersion === 2 && waterVerification.field.schemaVersion === 2
+          ? verifySurfaceHistoryFieldV2(rawHistory, waterVerification.field)
+          : rawHistory.schemaVersion === 1 && waterVerification.field.schemaVersion === 1
+            ? verifySurfaceHistoryField(rawHistory, waterVerification.field)
+            : (() => {
+                throw new Error('surface-history and source-water schema versions must match');
+              })();
       const geometry = await loadGeometry(geometryPath);
       const geometrySha256 = await sha256File(geometryPath);
       const receiverMatched =
@@ -288,9 +301,11 @@ export async function verifyCinematicScene(scene: CinematicScene, sceneFile: str
     const fieldPath = resolve(sourceDirectory, entity.surfaceWaterFieldPath!);
     const opticalPath = resolve(sourceDirectory, entity.surfaceWaterOpticalSurfacePath!);
     try {
-      const fieldVerification = verifyStaticSurfaceWaterField(
-        JSON.parse(await readFile(fieldPath, 'utf8')),
-      );
+      const rawField = JSON.parse(await readFile(fieldPath, 'utf8'));
+      const fieldVerification =
+        rawField.schemaVersion === 2
+          ? verifyStaticSurfaceWaterFieldV2(rawField)
+          : verifyStaticSurfaceWaterField(rawField);
       const opticalVerification = verifySurfaceWaterOpticalSurface(
         JSON.parse(await readFile(opticalPath, 'utf8')),
       );

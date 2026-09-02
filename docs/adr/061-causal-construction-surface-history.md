@@ -21,7 +21,7 @@ The field binds the exact water semantic hash, receiver file/semantic hashes, tr
 
 `SurfaceMaterial.historyResponse` is separate from broad object-space `weathering`, construction-local `unitVariation`, and transient `surfaceWaterResponse`. It maps each causal channel independently to bounded colour and roughness changes. Blender consumes the sidecar before copying the receiver materials for transient wet optics. Renderer identities do not enter the persistent field.
 
-Future versions will extend the causal state rather than collapse it into one grime scalar: directional exposure, drainage distance, loose and persistent dirt mass, washoff/export balance, pedestrian and twin-wheel pass density, event-led repair ledgers, and temporal samples remain separate planned channels.
+Version 2 extends the same sidecar without collapsing causality. It binds the exact hash of a schema-v2 water routing tree, derives material-specific accumulated dirt mass from the effective installation or repair age, separates persistent from mobile mass, mobilizes only loose mass through a bounded exponential runoff response, transports it once in downstream-rank order, captures a declared fraction per receiving cell, and records exported mass. Per-cell loose mass and whole-field input mass must balance exactly within the declared numerical tolerance. Loose and persistent coverage are bounded optical-response mappings of conserved kilograms, not substitute mass variables. Directional exposure, pedestrian and twin-wheel pass density, event-led repair ledgers and multi-date samples remain later independent channels.
 
 ## Verification
 
@@ -34,8 +34,11 @@ Acceptance requires:
 - exact reuse of water exposure/runoff rather than parallel shelter or drainage solvers;
 - scene fingerprinting and verification of field bytes and semantic identities;
 - native Blender rejection of stale topology/ranges and a semantic/control render pair with measurable decoded-pixel change;
+- exact source-water routing identity and schema compatibility, one-pass downstream transport, non-negative mass channels, per-cell `initial + incoming = final + outflow`, and whole-field `input = persistent + loose + exported`;
 - transfer through unrelated historic and contemporary paving receivers before visual publication.
 
 ## Consequences
 
 The first historic and contemporary transfer fields pass structural verification over 3,157 and 3,654 exact water cells. They are not accepted as photographic environments: the profiles are explicit synthesis fixtures rather than site observations, richer dirt transport and event history are still missing, and the host worlds retain previously recorded material/environment defects. This tranche creates reusable causal infrastructure; it does not claim that the benchmark or either transfer host is finished.
+
+The buildup/washoff equation family is research-grounded, but the first material loading, persistence, washoff, capture and coverage-response values are declared cinematic synthesis heuristics. They are not site observations, stormwater pollutant calibration or civil-engineering predictions. A future profile may be called calibrated only when it carries an identified dataset, units, fitting method, error measure, licence, retrieval date and content hash; absent that evidence, review and publication must retain `heuristic` provenance.

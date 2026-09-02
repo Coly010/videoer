@@ -76,7 +76,9 @@ import {
 } from './application/surface-water.js';
 import {
   createPavingSurfaceHistoryField,
+  createPavingSurfaceHistoryV2Field,
   loadSurfaceHistoryProfile,
+  loadSurfaceHistoryV2Profile,
 } from './application/surface-history.js';
 import {
   createOldCitySurfaceMaterialAssets,
@@ -1297,6 +1299,7 @@ environment
   .argument('<output-scene>')
   .requiredOption('--id <scene-id>', 'stable identity for the derived transfer scene')
   .option('--optical-surface <path>', 'exact smooth optical surface derived from the water field')
+  .option('--surface-history <path>', 'exact causal surface-history field derived from water v2')
   .description('derive a scene with an exact geometry/transform-bound surface-water receiver')
   .action(async function (
     sourceScene: string,
@@ -1304,13 +1307,14 @@ environment
     pavingGeometry: string,
     surfaceWaterField: string,
     outputScene: string,
-    options: { id: string; opticalSurface?: string },
+    options: { id: string; opticalSurface?: string; surfaceHistory?: string },
   ) {
     const data = await rebindCinematicSurfaceWaterReceiver({
       sourceScenePath: sourceScene,
       receiverEntityId,
       pavingGeometryPath: pavingGeometry,
       surfaceWaterFieldPath: surfaceWaterField,
+      ...(options.surfaceHistory ? { surfaceHistoryFieldPath: options.surfaceHistory } : {}),
       ...(options.opticalSurface ? { surfaceWaterOpticalSurfacePath: options.opticalSurface } : {}),
       outputScenePath: outputScene,
       sceneId: options.id,
@@ -1329,6 +1333,7 @@ environment
   .argument('<atmospheric-vfx>')
   .argument('<assembly-profile>')
   .argument('<output-field>')
+  .option('--schema-version <version>', 'surface-water field schema (1 or 2)', '1')
   .description(
     'derive a deterministic mass-conserving surface-water field from paving, rain, material and shelter evidence',
   )
@@ -1340,19 +1345,56 @@ environment
   ) {
     const profilePath = resolve(assemblyProfile);
     const profile = await loadSurfaceWaterAssemblyProfile(profilePath);
-    const data = await createPavingSurfaceWaterField({
+    const schemaVersion = Number(this.opts().schemaVersion);
+    if (schemaVersion !== 1 && schemaVersion !== 2)
+      throw new Error('surface-water schema version must be 1 or 2');
+    const common = {
       pavingGeometryPath: pavingGeometry,
       atmosphericVfxPath: atmosphericVfx,
       profile,
       profileDirectory: dirname(profilePath),
       outputPath: outputField,
-    });
+    };
+    const data =
+      schemaVersion === 2
+        ? await createPavingSurfaceWaterField({ ...common, fieldSchemaVersion: 2 })
+        : await createPavingSurfaceWaterField(common);
     output(
       this,
       'environment.create-surface-water-field',
       data,
       (result) =>
         `✓ ${result.field.grid.activeCellCount} receiver cells solved with mass-balance error ${result.field.massBalance.errorCubicMeters} → ${result.path}`,
+    );
+  });
+environment
+  .command('create-surface-history-v2-field')
+  .argument('<paving-geometry>')
+  .argument('<surface-water-v2-field>')
+  .argument('<history-v2-profile>')
+  .argument('<output-field>')
+  .description(
+    'derive mass-conserving construction dirt and causal history from an exact routed water-v2 field',
+  )
+  .action(async function (
+    pavingGeometry: string,
+    surfaceWaterField: string,
+    historyProfile: string,
+    outputField: string,
+  ) {
+    const profile = await loadSurfaceHistoryV2Profile(historyProfile);
+    const data = await createPavingSurfaceHistoryV2Field({
+      pavingGeometryPath: pavingGeometry,
+      surfaceWaterFieldPath: surfaceWaterField,
+      profile,
+      outputPath: outputField,
+    });
+    output(
+      this,
+      'environment.create-surface-history-v2-field',
+      data,
+      (result) =>
+        `✓ ${result.field.cells.length} receiver cells conserve dirt mass with ${result.field.dirtMassBalance.errorKilograms} kg error → ${result.path}`,
     );
   });
 environment

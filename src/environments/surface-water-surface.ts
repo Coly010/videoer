@@ -2,8 +2,11 @@ import { z } from 'zod';
 import { canonicalSha256 } from '../assets/sources/cache.js';
 import {
   surfaceWaterFieldSchema,
+  surfaceWaterFieldV2Schema,
   verifyStaticSurfaceWaterField,
+  verifyStaticSurfaceWaterFieldV2,
   type SurfaceWaterField,
+  type SurfaceWaterFieldV2,
 } from './surface-water.js';
 
 const identifier = z.string().regex(/^[a-z][a-z0-9-]*(?:\.[a-z0-9-]+)*$/);
@@ -125,6 +128,7 @@ type SurfaceWaterOpticalSurfaceOptionsV1 = z.input<
 type SurfaceWaterOpticalSurfaceOptionsV2 = z.input<
   typeof surfaceWaterOpticalSurfaceOptionsV2Schema
 >;
+type OpticalSourceWaterField = SurfaceWaterField | SurfaceWaterFieldV2;
 
 interface ScalarVertex {
   key: string;
@@ -267,23 +271,29 @@ function boundaryShapeMetrics(
 }
 
 export function reconstructSurfaceWaterOpticalSurface(
-  fieldValue: SurfaceWaterField,
+  fieldValue: OpticalSourceWaterField,
   optionsValue: SurfaceWaterOpticalSurfaceOptionsV1,
 ): SurfaceWaterOpticalSurfaceV1;
 export function reconstructSurfaceWaterOpticalSurface(
-  fieldValue: SurfaceWaterField,
+  fieldValue: OpticalSourceWaterField,
   optionsValue: SurfaceWaterOpticalSurfaceOptionsV2,
 ): SurfaceWaterOpticalSurfaceV2;
 export function reconstructSurfaceWaterOpticalSurface(
-  fieldValue: SurfaceWaterField,
+  fieldValue: OpticalSourceWaterField,
   optionsValue: SurfaceWaterOpticalSurfaceOptions,
 ): SurfaceWaterOpticalSurface;
 export function reconstructSurfaceWaterOpticalSurface(
-  fieldValue: SurfaceWaterField,
+  fieldValue: OpticalSourceWaterField,
   optionsValue: SurfaceWaterOpticalSurfaceOptions,
 ): SurfaceWaterOpticalSurface {
-  const field = surfaceWaterFieldSchema.parse(fieldValue);
-  const fieldVerification = verifyStaticSurfaceWaterField(field);
+  const field =
+    fieldValue.schemaVersion === 2
+      ? surfaceWaterFieldV2Schema.parse(fieldValue)
+      : surfaceWaterFieldSchema.parse(fieldValue);
+  const fieldVerification =
+    field.schemaVersion === 2
+      ? verifyStaticSurfaceWaterFieldV2(field)
+      : verifyStaticSurfaceWaterField(field);
   if (!fieldVerification.valid)
     throw new Error(
       `cannot reconstruct invalid surface-water field: ${fieldVerification.issues.join('; ')}`,
@@ -309,7 +319,7 @@ export function reconstructSurfaceWaterOpticalSurface(
           cellColumn! >= 0 && cellColumn! < columns && cellRow! >= 0 && cellRow! < rows,
       )
       .map(([cellColumn, cellRow]) => cellByIndex.get(cellRow! * columns + cellColumn!))
-      .filter((cell): cell is SurfaceWaterField['cells'][number] => Boolean(cell));
+      .filter((cell): cell is OpticalSourceWaterField['cells'][number] => Boolean(cell));
     const groundY = adjacent.length
       ? adjacent.reduce((sum, cell) => sum + cell.worldPosition[1], 0) / adjacent.length
       : 0;

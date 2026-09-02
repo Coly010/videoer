@@ -1455,7 +1455,10 @@ def create_surface_water_optical_surface(definition, field_report):
 
 def create_surface_water(definition, receiver_asset, receiver_mesh):
     field = load_json(definition["surfaceWaterFieldPath"])
-    if field.get("generator") != "videoer.static-surface-water.v1":
+    if field.get("generator") not in (
+        "videoer.static-surface-water.v1",
+        "videoer.static-surface-water.v2",
+    ):
         raise RuntimeError(
             f"Entity '{definition['id']}' surface-water field has an unsupported generator"
         )
@@ -1621,7 +1624,8 @@ def create_surface_water(definition, receiver_asset, receiver_mesh):
 def create_surface_history(definition, receiver_asset, receiver_mesh):
     field = load_json(definition["surfaceHistoryFieldPath"])
     water = load_json(definition["surfaceWaterFieldPath"])
-    if field.get("generator") != "videoer.construction-surface-history.v1":
+    schema_version = field.get("schemaVersion")
+    if field.get("generator") != f"videoer.construction-surface-history.v{schema_version}" or schema_version not in (1, 2):
         raise RuntimeError(
             f"Entity '{definition['id']}' surface-history field has an unsupported generator"
         )
@@ -1631,6 +1635,17 @@ def create_surface_history(definition, receiver_asset, receiver_mesh):
         raise RuntimeError(
             f"Entity '{definition['id']}' surface-history field does not bind its exact source water"
         )
+    if schema_version == 2:
+        if water.get("generator") != "videoer.static-surface-water.v2":
+            raise RuntimeError(
+                f"Entity '{definition['id']}' surface-history v2 requires surface-water v2"
+            )
+        if field.get("sourceWaterField", {}).get("routingSha256") != water.get(
+            "routing", {}
+        ).get("routingSha256"):
+            raise RuntimeError(
+                f"Entity '{definition['id']}' surface-history routing identity is stale"
+            )
     if field.get("receiver", {}).get("geometryId") != receiver_asset.get("id"):
         raise RuntimeError(
             f"Entity '{definition['id']}' surface-history receiver identity does not match geometry"
@@ -1645,8 +1660,25 @@ def create_surface_history(definition, receiver_asset, receiver_mesh):
         raise RuntimeError(
             f"Entity '{definition['id']}' surface-history topology does not match source water"
         )
+    dirt_totals = {
+        "inputKilograms": 0.0,
+        "persistentKilograms": 0.0,
+        "looseKilograms": 0.0,
+        "mobilizedKilograms": 0.0,
+        "depositedKilograms": 0.0,
+    }
+    dirt_by_index = {}
     for history_cell, water_cell in zip(field["cells"], water["cells"]):
-        identity = ("index", "row", "column", "worldPosition", "triangleIndex", "materialId")
+        identity = (
+            "index",
+            "row",
+            "column",
+            "worldPosition",
+            "triangleIndex",
+            "materialId",
+            "targetClass",
+            "coverage",
+        )
         if any(history_cell.get(key) != water_cell.get(key) for key in identity):
             raise RuntimeError(
                 f"Entity '{definition['id']}' surface-history cell topology is stale"
@@ -1663,6 +1695,117 @@ def create_surface_history(definition, receiver_asset, receiver_mesh):
                 raise RuntimeError(
                     f"Entity '{definition['id']}' surface-history channel '{channel}' is invalid"
                 )
+        if schema_version == 2:
+            dirt = history_cell.get("dirt", {})
+            for channel in (
+                "builtUpMassKilograms",
+                "persistentMassKilograms",
+                "initialLooseMassKilograms",
+                "incomingSuspendedMassKilograms",
+                "mobilizedMassKilograms",
+                "depositedMassKilograms",
+                "finalLooseMassKilograms",
+                "suspendedOutflowMassKilograms",
+            ):
+                value = dirt.get(channel)
+                if not isinstance(value, (int, float)) or not math.isfinite(value) or value < 0:
+                    raise RuntimeError(
+                        f"Entity '{definition['id']}' surface-history dirt mass '{channel}' is invalid"
+                    )
+            for channel in ("looseCoverage", "persistentCoverage"):
+                value = dirt.get(channel)
+                if not isinstance(value, (int, float)) or not math.isfinite(value) or value < 0 or value > 1:
+                    raise RuntimeError(
+                        f"Entity '{definition['id']}' surface-history dirt coverage '{channel}' is invalid"
+                    )
+            cell_tolerance = max(1e-12, dirt["builtUpMassKilograms"] * 1e-10)
+            if abs(
+                dirt["builtUpMassKilograms"]
+                - dirt["persistentMassKilograms"]
+                - dirt["initialLooseMassKilograms"]
+            ) > cell_tolerance:
+                raise RuntimeError(
+                    f"Entity '{definition['id']}' surface-history dirt cell {history_cell['index']} violates buildup partition"
+                )
+            if dirt["mobilizedMassKilograms"] > dirt["initialLooseMassKilograms"] + cell_tolerance:
+                raise RuntimeError(
+                    f"Entity '{definition['id']}' surface-history dirt cell {history_cell['index']} mobilizes unavailable mass"
+                )
+            transport_error = (
+                dirt["incomingSuspendedMassKilograms"]
+                + dirt["mobilizedMassKilograms"]
+                - dirt["depositedMassKilograms"]
+                - dirt["suspendedOutflowMassKilograms"]
+            )
+            if abs(transport_error) > cell_tolerance:
+                raise RuntimeError(
+                    f"Entity '{definition['id']}' surface-history dirt cell {history_cell['index']} violates transport balance"
+                )
+            cell_error = (
+                dirt["initialLooseMassKilograms"]
+                + dirt["incomingSuspendedMassKilograms"]
+                - dirt["finalLooseMassKilograms"]
+                - dirt["suspendedOutflowMassKilograms"]
+            )
+            if abs(cell_error) > max(1e-12, dirt["initialLooseMassKilograms"] * 1e-10):
+                raise RuntimeError(
+                    f"Entity '{definition['id']}' surface-history dirt cell {history_cell['index']} violates mass balance"
+                )
+            dirt_totals["inputKilograms"] += dirt["builtUpMassKilograms"]
+            dirt_totals["persistentKilograms"] += dirt["persistentMassKilograms"]
+            dirt_totals["looseKilograms"] += dirt["finalLooseMassKilograms"]
+            dirt_totals["mobilizedKilograms"] += dirt["mobilizedMassKilograms"]
+            dirt_totals["depositedKilograms"] += dirt["depositedMassKilograms"]
+            dirt_by_index[history_cell["index"]] = dirt
+
+    if schema_version == 2:
+        mass = field.get("dirtMassBalance", {})
+        for channel in (
+            "inputKilograms",
+            "persistentKilograms",
+            "looseKilograms",
+            "exportedKilograms",
+            "mobilizedKilograms",
+            "depositedKilograms",
+            "errorKilograms",
+        ):
+            value = mass.get(channel)
+            if not isinstance(value, (int, float)) or not math.isfinite(value):
+                raise RuntimeError(
+                    f"Entity '{definition['id']}' surface-history dirt total '{channel}' is invalid"
+                )
+        total_tolerance = max(1e-12, mass["inputKilograms"] * 1e-10)
+        for channel, measured in dirt_totals.items():
+            if abs(mass[channel] - measured) > total_tolerance:
+                raise RuntimeError(
+                    f"Entity '{definition['id']}' surface-history dirt total '{channel}' differs from its cells"
+                )
+        root_indices = {
+            node["index"]
+            for node in water.get("routing", {}).get("nodes", [])
+            if node.get("downstreamIndex") is None
+        }
+        measured_export = sum(
+            dirt_by_index[index]["suspendedOutflowMassKilograms"]
+            for index in root_indices
+        )
+        if abs(mass["exportedKilograms"] - measured_export) > total_tolerance:
+            raise RuntimeError(
+                f"Entity '{definition['id']}' surface-history exported dirt differs from routing roots"
+            )
+        dirt_error = mass.get("inputKilograms", 0) - (
+            mass.get("persistentKilograms", 0)
+            + mass.get("looseKilograms", 0)
+            + mass.get("exportedKilograms", 0)
+        )
+        if abs(dirt_error) > max(1e-12, mass.get("inputKilograms", 0) * 1e-10):
+            raise RuntimeError(
+                f"Entity '{definition['id']}' surface-history dirt field violates mass balance"
+            )
+        if abs(dirt_error - mass["errorKilograms"]) > total_tolerance:
+            raise RuntimeError(
+                f"Entity '{definition['id']}' surface-history recorded dirt error is stale"
+            )
 
     columns = field["grid"]["columns"]
     rows = field["grid"]["rows"]
@@ -1686,6 +1829,27 @@ def create_surface_history(definition, receiver_asset, receiver_mesh):
     image.colorspace_settings.name = "Non-Color"
     image.pixels.foreach_set(pixels)
     image.pack()
+    dirt_image = None
+    if schema_version == 2:
+        dirt_pixels = [0.0] * (columns * rows * 4)
+        for cell in field["cells"]:
+            pixel = cell["index"] * 4
+            dirt_pixels[pixel : pixel + 4] = [
+                cell["dirt"]["looseCoverage"] * cell["coverage"],
+                cell["dirt"]["persistentCoverage"] * cell["coverage"],
+                0.0,
+                1.0,
+            ]
+        dirt_image = bpy.data.images.new(
+            f"{definition['id']}-surface-dirt-mass-field",
+            width=columns,
+            height=rows,
+            alpha=True,
+            float_buffer=True,
+        )
+        dirt_image.colorspace_settings.name = "Non-Color"
+        dirt_image.pixels.foreach_set(dirt_pixels)
+        dirt_image.pack()
     uv_layer = receiver_mesh.data.uv_layers.get("surface_history_uv")
     if uv_layer is None:
         uv_layer = receiver_mesh.data.uv_layers.new(name="surface_history_uv")
@@ -1713,7 +1877,8 @@ def create_surface_history(definition, receiver_asset, receiver_mesh):
     for slot_index, original in enumerate(list(receiver_mesh.data.materials)):
         material_definition = definitions[slot_index] if slot_index < len(definitions) else None
         response = (material_definition or {}).get("surface", {}).get("historyResponse")
-        if not response:
+        dirt_response = (material_definition or {}).get("surface", {}).get("dirtMassResponse")
+        if not response and not (dirt_image and dirt_response):
             continue
         material = original.copy()
         material.name = f"{original.name}-receiver-history"
@@ -1740,59 +1905,109 @@ def create_surface_history(definition, receiver_asset, receiver_mesh):
         links.new(texture.outputs["Color"], separate.inputs["Color"])
 
         base = principled.inputs["Base Color"]
-        base_source = base.links[0].from_socket if base.is_linked else None
-        base_default = tuple(base.default_value)
-        if base.is_linked:
-            links.remove(base.links[0])
-        current_color = base_source
-        for response_name, output_name in zip(response_names, channel_outputs):
-            response_value = response[response_name]
-            signal_output = (
-                texture.outputs["Alpha"]
-                if output_name == "Alpha"
-                else separate.outputs[output_name]
-            )
-            scale = nodes.new("ShaderNodeMath")
-            scale.operation = "MULTIPLY_ADD"
-            scale.inputs[1].default_value = response_value["colorMultiplier"] - 1
-            scale.inputs[2].default_value = 1
-            links.new(signal_output, scale.inputs[0])
-            multiply = nodes.new("ShaderNodeMixRGB")
-            multiply.blend_type = "MULTIPLY"
-            multiply.inputs[0].default_value = 1
-            links.new(scale.outputs[0], multiply.inputs[2])
-            if current_color:
-                links.new(current_color, multiply.inputs[1])
-            else:
-                multiply.inputs[1].default_value = base_default
-            current_color = multiply.outputs[0]
-        links.new(current_color, base)
-
         roughness = principled.inputs["Roughness"]
-        current_roughness = roughness.links[0].from_socket if roughness.is_linked else None
-        roughness_default = roughness.default_value
-        if roughness.is_linked:
-            links.remove(roughness.links[0])
-        for response_name, output_name in zip(response_names, channel_outputs):
-            signal_output = (
-                texture.outputs["Alpha"]
-                if output_name == "Alpha"
-                else separate.outputs[output_name]
-            )
-            delta = nodes.new("ShaderNodeMath")
-            delta.operation = "MULTIPLY"
-            delta.inputs[1].default_value = response[response_name]["roughnessOffset"]
-            links.new(signal_output, delta.inputs[0])
-            add = nodes.new("ShaderNodeMath")
-            add.operation = "ADD"
-            add.use_clamp = True
-            if current_roughness:
-                links.new(current_roughness, add.inputs[0])
-            else:
-                add.inputs[0].default_value = roughness_default
-            links.new(delta.outputs[0], add.inputs[1])
-            current_roughness = add.outputs[0]
-        links.new(current_roughness, roughness)
+        if response:
+            base_source = base.links[0].from_socket if base.is_linked else None
+            base_default = tuple(base.default_value)
+            if base.is_linked:
+                links.remove(base.links[0])
+            current_color = base_source
+            for response_name, output_name in zip(response_names, channel_outputs):
+                response_value = response[response_name]
+                signal_output = (
+                    texture.outputs["Alpha"]
+                    if output_name == "Alpha"
+                    else separate.outputs[output_name]
+                )
+                scale = nodes.new("ShaderNodeMath")
+                scale.operation = "MULTIPLY_ADD"
+                scale.inputs[1].default_value = response_value["colorMultiplier"] - 1
+                scale.inputs[2].default_value = 1
+                links.new(signal_output, scale.inputs[0])
+                multiply = nodes.new("ShaderNodeMixRGB")
+                multiply.blend_type = "MULTIPLY"
+                multiply.inputs[0].default_value = 1
+                links.new(scale.outputs[0], multiply.inputs[2])
+                if current_color:
+                    links.new(current_color, multiply.inputs[1])
+                else:
+                    multiply.inputs[1].default_value = base_default
+                current_color = multiply.outputs[0]
+            links.new(current_color, base)
+
+            current_roughness = roughness.links[0].from_socket if roughness.is_linked else None
+            roughness_default = roughness.default_value
+            if roughness.is_linked:
+                links.remove(roughness.links[0])
+            for response_name, output_name in zip(response_names, channel_outputs):
+                signal_output = (
+                    texture.outputs["Alpha"]
+                    if output_name == "Alpha"
+                    else separate.outputs[output_name]
+                )
+                delta = nodes.new("ShaderNodeMath")
+                delta.operation = "MULTIPLY"
+                delta.inputs[1].default_value = response[response_name]["roughnessOffset"]
+                links.new(signal_output, delta.inputs[0])
+                add = nodes.new("ShaderNodeMath")
+                add.operation = "ADD"
+                add.use_clamp = True
+                if current_roughness:
+                    links.new(current_roughness, add.inputs[0])
+                else:
+                    add.inputs[0].default_value = roughness_default
+                links.new(delta.outputs[0], add.inputs[1])
+                current_roughness = add.outputs[0]
+            links.new(current_roughness, roughness)
+        if dirt_image and dirt_response:
+            dirt_texture = nodes.new("ShaderNodeTexImage")
+            dirt_texture.name = "videoer-surface-dirt-mass-field"
+            dirt_texture.image = dirt_image
+            dirt_texture.interpolation = "Linear"
+            dirt_texture.extension = "EXTEND"
+            dirt_separate = nodes.new("ShaderNodeSeparateColor")
+            dirt_separate.name = "videoer-surface-dirt-mass-channels"
+            links.new(uv.outputs["UV"], dirt_texture.inputs["Vector"])
+            links.new(dirt_texture.outputs["Color"], dirt_separate.inputs["Color"])
+            current_color = base.links[0].from_socket if base.is_linked else None
+            base_default = tuple(base.default_value)
+            if base.is_linked:
+                links.remove(base.links[0])
+            for response_name, output_name in (("loose", "Red"), ("persistent", "Green")):
+                scale = nodes.new("ShaderNodeMath")
+                scale.operation = "MULTIPLY_ADD"
+                scale.inputs[1].default_value = dirt_response[response_name]["colorMultiplier"] - 1
+                scale.inputs[2].default_value = 1
+                links.new(dirt_separate.outputs[output_name], scale.inputs[0])
+                multiply = nodes.new("ShaderNodeMixRGB")
+                multiply.blend_type = "MULTIPLY"
+                multiply.inputs[0].default_value = 1
+                if current_color:
+                    links.new(current_color, multiply.inputs[1])
+                else:
+                    multiply.inputs[1].default_value = base_default
+                links.new(scale.outputs[0], multiply.inputs[2])
+                current_color = multiply.outputs[0]
+            links.new(current_color, base)
+            current_roughness = roughness.links[0].from_socket if roughness.is_linked else None
+            roughness_default = roughness.default_value
+            if roughness.is_linked:
+                links.remove(roughness.links[0])
+            for response_name, output_name in (("loose", "Red"), ("persistent", "Green")):
+                delta = nodes.new("ShaderNodeMath")
+                delta.operation = "MULTIPLY"
+                delta.inputs[1].default_value = dirt_response[response_name]["roughnessOffset"]
+                links.new(dirt_separate.outputs[output_name], delta.inputs[0])
+                add = nodes.new("ShaderNodeMath")
+                add.operation = "ADD"
+                add.use_clamp = True
+                if current_roughness:
+                    links.new(current_roughness, add.inputs[0])
+                else:
+                    add.inputs[0].default_value = roughness_default
+                links.new(delta.outputs[0], add.inputs[1])
+                current_roughness = add.outputs[0]
+            links.new(current_roughness, roughness)
         response_materials.append(material_definition["id"])
     if not response_materials:
         raise RuntimeError(
@@ -1802,12 +2017,25 @@ def create_surface_history(definition, receiver_asset, receiver_mesh):
         "entityId": definition["id"],
         "fieldId": field["id"],
         "fieldSha256": field["fieldSha256"],
+        "schemaVersion": schema_version,
         "sourceWaterFieldSha256": field["sourceWaterField"]["fieldSha256"],
         "activeCellCount": field["grid"]["activeCellCount"],
         "responseMaterialIds": sorted(response_materials),
         "trafficAffectedCellCount": sum(cell["trafficWear"] > 0 for cell in field["cells"]),
         "runoffAffectedCellCount": sum(cell["runoffStaining"] > 0 for cell in field["cells"]),
         "repairAffectedCellCount": sum(cell["repairInfluence"] > 0 for cell in field["cells"]),
+        **(
+            {
+                "dirtMassBalance": field["dirtMassBalance"],
+                "dirtResponseMaterialIds": sorted(
+                    material["id"]
+                    for material in definitions
+                    if material.get("surface", {}).get("dirtMassResponse")
+                ),
+            }
+            if schema_version == 2
+            else {}
+        ),
     }
 
 

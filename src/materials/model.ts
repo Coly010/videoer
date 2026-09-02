@@ -366,6 +366,18 @@ export const surfaceMaterialSchema = z
         }),
       })
       .optional(),
+    dirtMassResponse: z
+      .object({
+        loose: z.object({
+          colorMultiplier: z.number().min(0.25).max(1.5),
+          roughnessOffset: z.number().min(-0.5).max(0.5),
+        }),
+        persistent: z.object({
+          colorMultiplier: z.number().min(0.25).max(1.5),
+          roughnessOffset: z.number().min(-0.5).max(0.5),
+        }),
+      })
+      .optional(),
     metallic: z.number().min(0).max(1).default(0),
     unitVariation: surfaceUnitVariationSchema.optional(),
     textureMaps: hashBoundTextureMapSetSchema.optional(),

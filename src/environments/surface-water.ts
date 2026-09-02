@@ -181,6 +181,30 @@ export const surfaceWaterFieldSchema = z.object({
 
 export type SurfaceWaterField = z.infer<typeof surfaceWaterFieldSchema>;
 
+const drainageRoutingNodeSchema = z.object({
+  index: z.number().int().nonnegative(),
+  downstreamIndex: z.number().int().nonnegative().nullable(),
+  rank: z.number().int().nonnegative(),
+});
+
+export const surfaceWaterFieldV2Schema = surfaceWaterFieldSchema
+  .omit({ schemaVersion: true, generator: true, fieldSha256: true })
+  .extend({
+    schemaVersion: z.literal(2),
+    generator: z.literal('videoer.static-surface-water.v2'),
+    fieldSha256: sha256,
+    routing: z.object({
+      model: z.literal('priority-flood-parent-tree-v1'),
+      routingSha256: sha256,
+      nodes: z.array(drainageRoutingNodeSchema),
+    }),
+  });
+
+export type SurfaceWaterFieldV2 = z.infer<typeof surfaceWaterFieldV2Schema>;
+const surfaceWaterFieldV2WithoutHashSchema = surfaceWaterFieldV2Schema.omit({
+  fieldSha256: true,
+});
+
 export function verifyStaticSurfaceWaterField(value: unknown) {
   const field = surfaceWaterFieldSchema.parse(value);
   const { fieldSha256, ...withoutHash } = field;
@@ -204,6 +228,73 @@ export function verifyStaticSurfaceWaterField(value: unknown) {
   )
     issues.push(`surface-water mass balance is invalid by ${error} cubic metres`);
   return { valid: issues.length === 0, issues, field, expectedFieldSha256 };
+}
+
+export function verifyStaticSurfaceWaterFieldV2(value: unknown) {
+  const field = surfaceWaterFieldV2Schema.parse(value);
+  const { fieldSha256, ...withoutHash } = field;
+  const issues: string[] = [];
+  const expectedFieldSha256 = canonicalSha256(withoutHash);
+  if (fieldSha256 !== expectedFieldSha256)
+    issues.push(
+      `surface-water v2 field hash mismatch: expected ${expectedFieldSha256}, got ${fieldSha256}`,
+    );
+  const { routingSha256, ...routingWithoutHash } = field.routing;
+  const expectedRoutingSha256 = canonicalSha256(routingWithoutHash);
+  if (routingSha256 !== expectedRoutingSha256)
+    issues.push(
+      `surface-water routing hash mismatch: expected ${expectedRoutingSha256}, got ${routingSha256}`,
+    );
+  const accounted =
+    field.massBalance.absorbedCubicMeters +
+    field.massBalance.filmCubicMeters +
+    field.massBalance.edgeCubicMeters +
+    field.massBalance.puddleCubicMeters +
+    field.massBalance.dischargedCubicMeters;
+  const error = field.massBalance.incidentCubicMeters - accounted;
+  const tolerance = Math.max(1e-12, field.massBalance.incidentCubicMeters * 1e-10);
+  if (
+    Math.abs(error) > tolerance ||
+    Math.abs(error - field.massBalance.errorCubicMeters) > tolerance
+  )
+    issues.push(`surface-water v2 mass balance is invalid by ${error} cubic metres`);
+  const cellIndices = new Set(field.cells.map((cell) => cell.index));
+  const nodesByIndex = new Map(field.routing.nodes.map((node) => [node.index, node]));
+  const ranks = field.routing.nodes.map((node) => node.rank);
+  if (
+    field.routing.nodes.length !== field.cells.length ||
+    nodesByIndex.size !== field.cells.length ||
+    field.routing.nodes.some((node) => !cellIndices.has(node.index))
+  )
+    issues.push('surface-water routing must contain exactly one node per active cell');
+  if (
+    new Set(ranks).size !== ranks.length ||
+    [...ranks].sort((left, right) => left - right).some((rank, index) => rank !== index)
+  )
+    issues.push('surface-water routing ranks must be a zero-based permutation');
+  let rootCount = 0;
+  for (const node of field.routing.nodes) {
+    if (node.downstreamIndex === null) {
+      rootCount += 1;
+      continue;
+    }
+    const downstream = nodesByIndex.get(node.downstreamIndex);
+    if (!downstream) {
+      issues.push(`surface-water routing node ${node.index} has no live downstream node`);
+      continue;
+    }
+    const column = node.index % field.grid.columns;
+    const row = Math.floor(node.index / field.grid.columns);
+    const downstreamColumn = downstream.index % field.grid.columns;
+    const downstreamRow = Math.floor(downstream.index / field.grid.columns);
+    if (Math.abs(column - downstreamColumn) + Math.abs(row - downstreamRow) !== 1)
+      issues.push(`surface-water routing node ${node.index} does not route to a four-neighbour`);
+    if (downstream.rank >= node.rank)
+      issues.push(`surface-water routing node ${node.index} does not descend in rank`);
+  }
+  if (field.cells.length > 0 && rootCount === 0)
+    issues.push('surface-water routing has no export root');
+  return { valid: issues.length === 0, issues, field, expectedFieldSha256, expectedRoutingSha256 };
 }
 
 interface Triangle {
@@ -392,7 +483,15 @@ function sampleOffsets(count: 1 | 4 | 9) {
   );
 }
 
-export function compileStaticSurfaceWater(inputValue: SurfaceWaterFieldInput): SurfaceWaterField {
+export function compileStaticSurfaceWater(inputValue: SurfaceWaterFieldInput): SurfaceWaterField;
+export function compileStaticSurfaceWater(
+  inputValue: SurfaceWaterFieldInput,
+  options: { schemaVersion: 2 },
+): SurfaceWaterFieldV2;
+export function compileStaticSurfaceWater(
+  inputValue: SurfaceWaterFieldInput,
+  options?: { schemaVersion: 2 },
+): SurfaceWaterField | SurfaceWaterFieldV2 {
   const input = surfaceWaterFieldInputSchema.parse(inputValue);
   const receiverTriangles = triangles(input.receiver.geometry, input.receiver.transform);
   const shelterEvidence = [...input.shelters]
@@ -415,7 +514,11 @@ export function compileStaticSurfaceWater(inputValue: SurfaceWaterFieldInput): S
     materialResponses,
     shelters: [...input.shelters].sort((left, right) => left.id.localeCompare(right.id)),
   };
-  const inputSha256 = canonicalSha256(canonicalInput);
+  const inputSha256 = canonicalSha256(
+    options?.schemaVersion === 2
+      ? { ...canonicalInput, outputSchemaVersion: 2, routingModel: 'priority-flood-parent-tree-v1' }
+      : canonicalInput,
+  );
   let minimumX = Number.POSITIVE_INFINITY;
   let maximumX = Number.NEGATIVE_INFINITY;
   let minimumZ = Number.POSITIVE_INFINITY;
@@ -694,10 +797,8 @@ export function compileStaticSurfaceWater(inputValue: SurfaceWaterFieldInput): S
     throw new Error(
       `surface-water mass balance error ${errorCubicMeters} exceeds tolerance ${tolerance}`,
     );
-  const fieldWithoutHash = {
-    schemaVersion: 1 as const,
+  const commonField = {
     id: input.id,
-    generator: 'videoer.static-surface-water.v1' as const,
     inputSha256,
     receiver: {
       geometryId: input.receiver.geometry.id,
@@ -744,6 +845,44 @@ export function compileStaticSurfaceWater(inputValue: SurfaceWaterFieldInput): S
       dischargedCubicMeters,
       errorCubicMeters,
     },
+  };
+  if (options?.schemaVersion === 2) {
+    const { id, ...commonWithoutId } = commonField;
+    const rankByWorkingIndex = new Map(
+      floodOrder.map((workingIndex, rank) => [workingIndex, rank]),
+    );
+    const routingWithoutHash = {
+      model: 'priority-flood-parent-tree-v1' as const,
+      nodes: working
+        .map((item, workingIndex) => ({
+          index: item.cell.index,
+          downstreamIndex: item.parent === undefined ? null : working[item.parent]!.cell.index,
+          rank: rankByWorkingIndex.get(workingIndex)!,
+        }))
+        .sort((left, right) => left.index - right.index),
+    };
+    const fieldWithoutHash = {
+      schemaVersion: 2 as const,
+      id,
+      generator: 'videoer.static-surface-water.v2' as const,
+      ...commonWithoutId,
+      routing: {
+        ...routingWithoutHash,
+        routingSha256: canonicalSha256(routingWithoutHash),
+      },
+    };
+    const canonicalField = surfaceWaterFieldV2WithoutHashSchema.parse(fieldWithoutHash);
+    return surfaceWaterFieldV2Schema.parse({
+      ...canonicalField,
+      fieldSha256: canonicalSha256(canonicalField),
+    });
+  }
+  const { id, ...commonWithoutId } = commonField;
+  const fieldWithoutHash = {
+    schemaVersion: 1 as const,
+    id,
+    generator: 'videoer.static-surface-water.v1' as const,
+    ...commonWithoutId,
   };
   return surfaceWaterFieldSchema.parse({
     ...fieldWithoutHash,

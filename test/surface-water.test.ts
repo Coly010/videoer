@@ -5,6 +5,7 @@ import type { GeometryAsset } from '../src/geometry/model.js';
 import {
   compileStaticSurfaceWater,
   verifyStaticSurfaceWaterField,
+  verifyStaticSurfaceWaterFieldV2,
   type SurfaceWaterFieldInput,
 } from '../src/environments/surface-water.js';
 
@@ -75,7 +76,11 @@ function input(
     receiver: {
       geometry: receiver(),
       geometrySha256: canonicalSha256(receiver()),
-      transform: { position: [0, 0, 0] as const, rotation: [0, 0, 0] as const, scale: [1, 1, 1] as const },
+      transform: {
+        position: [0, 0, 0] as const,
+        rotation: [0, 0, 0] as const,
+        scale: [1, 1, 1] as const,
+      },
     },
     drainage: {
       localDirection: [1, 0] as const,
@@ -197,9 +202,9 @@ describe('receiver-aware static surface-water fields', () => {
     const porous = compileStaticSurfaceWater(input({ absorptionCapacityMeters: 0.008 }));
     const sealed = compileStaticSurfaceWater(input({ absorptionCapacityMeters: 0 }));
 
-    expect(porous.cells.map((cell) => [cell.index, cell.triangleIndex, cell.worldPosition])).toEqual(
-      sealed.cells.map((cell) => [cell.index, cell.triangleIndex, cell.worldPosition]),
-    );
+    expect(
+      porous.cells.map((cell) => [cell.index, cell.triangleIndex, cell.worldPosition]),
+    ).toEqual(sealed.cells.map((cell) => [cell.index, cell.triangleIndex, cell.worldPosition]));
     expect(porous.massBalance.absorbedCubicMeters).toBeGreaterThan(
       sealed.massBalance.absorbedCubicMeters,
     );
@@ -220,9 +225,9 @@ describe('receiver-aware static surface-water fields', () => {
     const field = compileStaticSurfaceWater(value);
 
     expect(field.cells.some((cell) => cell.puddleDepthMeters > 0)).toBe(true);
-    expect(
-      Math.max(...field.cells.map((cell) => cell.puddleDepthMeters)),
-    ).toBeLessThanOrEqual(response(0).retention.maximumPuddleDepthMeters);
+    expect(Math.max(...field.cells.map((cell) => cell.puddleDepthMeters))).toBeLessThanOrEqual(
+      response(0).retention.maximumPuddleDepthMeters,
+    );
     expect(Math.abs(field.massBalance.errorCubicMeters)).toBeLessThan(1e-12);
   });
 
@@ -244,5 +249,22 @@ describe('receiver-aware static surface-water fields', () => {
     const unresolved = input();
     unresolved.materialResponses = {};
     expect(() => compileStaticSurfaceWater(unresolved)).toThrow(/missing for 'stone'/u);
+  });
+
+  it('persists an exact hashed priority-flood parent tree in schema v2', () => {
+    const legacy = compileStaticSurfaceWater(input());
+    const field = compileStaticSurfaceWater(input(), { schemaVersion: 2 });
+
+    expect(field.cells).toEqual(legacy.cells);
+    expect(field.massBalance).toEqual(legacy.massBalance);
+    expect(field.routing.nodes).toHaveLength(field.cells.length);
+    expect(field.routing.nodes.some((node) => node.downstreamIndex === null)).toBe(true);
+    expect(verifyStaticSurfaceWaterFieldV2(field)).toMatchObject({ valid: true });
+
+    const forged = structuredClone(field);
+    const nonRoot = forged.routing.nodes.find((node) => node.downstreamIndex !== null)!;
+    nonRoot.downstreamIndex = nonRoot.index;
+    expect(verifyStaticSurfaceWaterFieldV2(forged)).toMatchObject({ valid: false });
+    expect(() => verifyStaticSurfaceWaterFieldV2(legacy)).toThrow();
   });
 });

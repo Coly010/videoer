@@ -43,7 +43,11 @@ def main():
                         "longTermExposure": {"colorMultiplier": 1.02, "roughnessOffset": 0.03},
                         "runoffStaining": {"colorMultiplier": 0.72, "roughnessOffset": 0.12},
                         "repairInfluence": {"colorMultiplier": 1.1, "roughnessOffset": -0.04},
-                    }
+                    },
+                    "dirtMassResponse": {
+                        "loose": {"colorMultiplier": 0.7, "roughnessOffset": 0.16},
+                        "persistent": {"colorMultiplier": 0.82, "roughnessOffset": 0.1},
+                    },
                 },
             }
         ],
@@ -77,6 +81,18 @@ def main():
                 "repairInfluence": 1 if index == 3 else 0,
                 "repairId": "repair-a" if index == 3 else None,
                 "repairRelativeAge": 0.1 if index == 3 else 0,
+                "dirt": {
+                    "builtUpMassKilograms": 1,
+                    "persistentMassKilograms": 0.25,
+                    "initialLooseMassKilograms": 0.75,
+                    "incomingSuspendedMassKilograms": 0,
+                    "mobilizedMassKilograms": 0.1,
+                    "depositedMassKilograms": 0.05,
+                    "finalLooseMassKilograms": 0.7,
+                    "suspendedOutflowMassKilograms": 0.05,
+                    "looseCoverage": 0.7 if column == 0 else 0.25,
+                    "persistentCoverage": 0.25,
+                },
             }
         )
     grid = {
@@ -95,8 +111,17 @@ def main():
         "transformSha256": "c" * 64,
     }
     water = {
+        "schemaVersion": 2,
         "id": "environment.surface-history-native-water",
+        "generator": "videoer.static-surface-water.v2",
         "fieldSha256": "d" * 64,
+        "routing": {
+            "routingSha256": "f" * 64,
+            "nodes": [
+                {"index": index, "downstreamIndex": None, "rank": index}
+                for index in range(4)
+            ],
+        },
         "grid": grid,
         "cells": [
             {
@@ -108,20 +133,35 @@ def main():
                     "worldPosition",
                     "triangleIndex",
                     "materialId",
+                    "targetClass",
+                    "coverage",
                 )
             }
             for cell in cells
         ],
     }
     history = {
-        "schemaVersion": 1,
+        "schemaVersion": 2,
         "id": "environment.surface-history-native",
-        "generator": "videoer.construction-surface-history.v1",
+        "generator": "videoer.construction-surface-history.v2",
         "fieldSha256": "e" * 64,
         "receiver": receiver,
-        "sourceWaterField": {"id": water["id"], "fieldSha256": water["fieldSha256"]},
+        "sourceWaterField": {
+            "id": water["id"],
+            "fieldSha256": water["fieldSha256"],
+            "routingSha256": water["routing"]["routingSha256"],
+        },
         "grid": grid,
         "cells": cells,
+        "dirtMassBalance": {
+            "inputKilograms": 4,
+            "persistentKilograms": 1,
+            "looseKilograms": 2.8,
+            "exportedKilograms": 0.2,
+            "mobilizedKilograms": 0.4,
+            "depositedKilograms": 0.2,
+            "errorKilograms": 0,
+        },
     }
     water_path = os.path.join(output, "water.json")
     history_path = os.path.join(output, "history.json")
@@ -149,6 +189,8 @@ def main():
             raise RuntimeError(f"surface history lacks required node '{name}'")
     if mesh.data.uv_layers.get("surface_history_uv") is None:
         raise RuntimeError("surface history did not bind its receiver UV domain")
+    if nodes.get("videoer-surface-dirt-mass-field") is None:
+        raise RuntimeError("surface history v2 did not bind physical dirt-mass channels")
     invalid = json.loads(json.dumps(history))
     invalid["cells"][0]["runoffStaining"] = 2
     write_json(history_path, invalid)
@@ -199,6 +241,9 @@ def main():
     field_image = nodes["videoer-surface-history-field"].image
     field_image.pixels.foreach_set([0.0] * len(field_image.pixels))
     field_image.update()
+    dirt_image = nodes["videoer-surface-dirt-mass-field"].image
+    dirt_image.pixels.foreach_set([0.0] * len(dirt_image.pixels))
+    dirt_image.update()
     scene.render.filepath = control_path
     bpy.ops.render.render(write_still=True)
     semantic = bpy.data.images.load(semantic_path, check_existing=False)

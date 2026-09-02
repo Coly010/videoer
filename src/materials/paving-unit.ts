@@ -87,6 +87,15 @@ export function createPavingUnitSurfaceMaterial(kind: PavingUnitMaterialKind): S
           runoffStaining: { colorMultiplier: 0.78, roughnessOffset: 0.1 },
           repairInfluence: { colorMultiplier: 1.07, roughnessOffset: -0.025 },
         },
+    dirtMassResponse: historic
+      ? {
+          loose: { colorMultiplier: 0.72, roughnessOffset: 0.16 },
+          persistent: { colorMultiplier: 0.8, roughnessOffset: 0.1 },
+        }
+      : {
+          loose: { colorMultiplier: 0.76, roughnessOffset: 0.14 },
+          persistent: { colorMultiplier: 0.84, roughnessOffset: 0.08 },
+        },
     metallic: 0,
     metadata: {
       generator: 'videoer.procedural-paving-unit-material.v1',

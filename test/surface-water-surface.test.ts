@@ -1,7 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { canonicalSha256 } from '../src/assets/sources/cache.js';
 import type { GeometryAsset } from '../src/geometry/model.js';
-import { compileStaticSurfaceWater } from '../src/environments/surface-water.js';
+import {
+  compileStaticSurfaceWater,
+  type SurfaceWaterField,
+  type SurfaceWaterFieldInput,
+  type SurfaceWaterFieldV2,
+} from '../src/environments/surface-water.js';
 import {
   reconstructSurfaceWaterOpticalSurface,
   verifySurfaceWaterOpticalSurface,
@@ -49,9 +54,11 @@ function depressionReceiver(): GeometryAsset {
   };
 }
 
-function puddleField() {
+function puddleField(): SurfaceWaterField;
+function puddleField(schemaVersion: 2): SurfaceWaterFieldV2;
+function puddleField(schemaVersion?: 2): SurfaceWaterField | SurfaceWaterFieldV2 {
   const geometry = depressionReceiver();
-  return compileStaticSurfaceWater({
+  const input: SurfaceWaterFieldInput = {
     schemaVersion: 1,
     id: 'environment.optical-water-field',
     receiver: {
@@ -87,7 +94,10 @@ function puddleField() {
     shelters: [],
     grid: { cellSizeMeters: 0.5, supersample: 4, shelterRayMaximumMeters: 10 },
     solver: { edgeHeightThresholdMeters: 0.002, maximumCellCount: 1_000 },
-  });
+  };
+  return schemaVersion === 2
+    ? compileStaticSurfaceWater(input, { schemaVersion: 2 })
+    : compileStaticSurfaceWater(input);
 }
 
 const options = {
@@ -241,5 +251,37 @@ describe('smooth surface-water optical reconstruction', () => {
         appearance: { ...refinedOptions.appearance, ior: 1.5 },
       }),
     ).toThrow();
+  });
+
+  it('preserves refined optical reconstruction when the exact source field adds v2 routing', () => {
+    const legacyField = puddleField();
+    const field = puddleField(2);
+    const legacySurface = reconstructSurfaceWaterOpticalSurface(legacyField, refinedOptions);
+    const surface = reconstructSurfaceWaterOpticalSurface(field, refinedOptions);
+
+    expect(surface.sourceFieldSha256).toBe(field.fieldSha256);
+    expect(surface.sourceFieldSha256).not.toBe(legacySurface.sourceFieldSha256);
+    expect(surface.reconstructionSha256).not.toBe(legacySurface.reconstructionSha256);
+    expect(surface.positions).toEqual(legacySurface.positions);
+    expect(surface.groundHeightsMeters).toEqual(legacySurface.groundHeightsMeters);
+    expect(surface.depthsMeters).toEqual(legacySurface.depthsMeters);
+    expect(surface.indices).toEqual(legacySurface.indices);
+    expect(surface.report).toEqual(legacySurface.report);
+    expect(surface.report.sourcePuddleVolumeCubicMeters).toBeCloseTo(
+      field.massBalance.puddleCubicMeters,
+      12,
+    );
+    expect(surface.report.reconstructedVolumeCubicMeters).toBeCloseTo(
+      field.massBalance.puddleCubicMeters,
+      12,
+    );
+    expect(surface.report.refinedCellSizeMeters).toBeCloseTo(field.grid.cellSizeMeters / 4, 12);
+    expect(verifySurfaceWaterOpticalSurface(surface)).toMatchObject({ valid: true, issues: [] });
+
+    const forged = structuredClone(field);
+    forged.routing.nodes[0]!.rank = forged.routing.nodes[1]!.rank;
+    expect(() => reconstructSurfaceWaterOpticalSurface(forged, refinedOptions)).toThrow(
+      /invalid surface-water field/u,
+    );
   });
 });

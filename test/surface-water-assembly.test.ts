@@ -8,6 +8,7 @@ import { sha256File } from '../src/assets/library.js';
 import {
   createPavingSurfaceWaterField,
   createSurfaceWaterOpticalSurface,
+  rebindCinematicSurfaceWaterReceiver,
   rebindSurfaceWaterAssemblyProfile,
   surfaceWaterAssemblyProfileSchema,
 } from '../src/application/surface-water.js';
@@ -127,6 +128,48 @@ describe('paving surface-water assembly', () => {
       materialResponseSources: { embedded: [targets.continuousJoint] },
     });
     expect(await sha256File(result.path)).toMatch(/^[a-f0-9]{64}$/u);
+    const routed = await createPavingSurfaceWaterField({
+      pavingGeometryPath: geometryPath,
+      atmosphericVfxPath: vfxPath,
+      profile,
+      profileDirectory: directory,
+      outputPath: join(directory, 'surface-water-field-v2.json'),
+      fieldSchemaVersion: 2,
+    });
+    expect(routed.field.cells).toEqual(result.field.cells);
+    expect(routed.field.massBalance).toEqual(result.field.massBalance);
+    expect(routed.field.routing.nodes).toHaveLength(routed.field.cells.length);
+    const routedOptical = await createSurfaceWaterOpticalSurface({
+      surfaceWaterFieldPath: routed.path,
+      outputPath: join(directory, 'surface-water-v2-optical.json'),
+      surface: {
+        schemaVersion: 2,
+        id: 'environment.contemporary-paver-routed-optical-water',
+        contourDepthMeters: 0.00001,
+        opticalOffsetMeters: 0.0002,
+        maximumVolumeCorrectionFactor: 20,
+        subcellDivisions: 4,
+        appearance: {
+          model: 'thin-dielectric-water-v1',
+          ior: 1.333,
+          roughness: 0.035,
+          absorptionColorLinear: [0.72, 0.9, 0.95],
+          absorptionDistanceMeters: 4,
+        },
+      },
+    });
+    expect(routedOptical.surface.sourceFieldSha256).toBe(routed.field.fieldSha256);
+    expect(routedOptical.surface.report.reconstructedVolumeCubicMeters).toBeCloseTo(
+      routed.field.massBalance.puddleCubicMeters,
+      12,
+    );
+    expect(routedOptical.surface.schemaVersion).toBe(2);
+    if (routedOptical.surface.schemaVersion !== 2)
+      throw new Error('expected refined routed optical surface');
+    expect(routedOptical.surface.report.refinedCellSizeMeters).toBeCloseTo(
+      routed.field.grid.cellSizeMeters / 4,
+      12,
+    );
     const history = await createPavingSurfaceHistoryField({
       pavingGeometryPath: geometryPath,
       surfaceWaterFieldPath: result.path,
@@ -331,6 +374,47 @@ describe('paving surface-water assembly', () => {
         }),
       ]),
     );
+
+    const routedScene = await rebindCinematicSurfaceWaterReceiver({
+      sourceScenePath: scenePath,
+      receiverEntityId: 'receiver',
+      pavingGeometryPath: geometryPath,
+      surfaceWaterFieldPath: routed.path,
+      surfaceWaterOpticalSurfacePath: routedOptical.path,
+      outputScenePath: join(directory, 'routed-scene.json'),
+      sceneId: 'scene.surface-water-v2-binding',
+    });
+    expect(routedScene.scene.entities[0]).toMatchObject({
+      surfaceWaterFieldPath: resolve(routed.path),
+      surfaceWaterOpticalSurfacePath: resolve(routedOptical.path),
+    });
+    expect(routedScene.scene.entities[0]!.surfaceHistoryFieldPath).toBeUndefined();
+    expect(await verifyCinematicScene(routedScene.scene, routedScene.path)).toMatchObject({
+      status: 'pass',
+      checks: expect.arrayContaining([
+        expect.objectContaining({
+          id: 'receiver.surface-water-optical-surface',
+          status: 'pass',
+        }),
+      ]),
+    });
+
+    const routedBytes = await readFile(routed.path, 'utf8');
+    const forgedRouted = JSON.parse(routedBytes);
+    forgedRouted.routing.nodes[0].rank = forgedRouted.routing.nodes[1].rank;
+    await writeFile(routed.path, `${JSON.stringify(forgedRouted, null, 2)}\n`, 'utf8');
+    await expect(
+      rebindCinematicSurfaceWaterReceiver({
+        sourceScenePath: scenePath,
+        receiverEntityId: 'receiver',
+        pavingGeometryPath: geometryPath,
+        surfaceWaterFieldPath: routed.path,
+        surfaceWaterOpticalSurfacePath: routedOptical.path,
+        outputScenePath: join(directory, 'forged-routed-scene.json'),
+        sceneId: 'scene.forged-surface-water-v2-binding',
+      }),
+    ).rejects.toThrow(/surface-water receiver field is invalid/u);
+    await writeFile(routed.path, routedBytes, 'utf8');
 
     const opticalBytes = await readFile(cliRefinedPath, 'utf8');
     const forgedOptical = JSON.parse(opticalBytes);

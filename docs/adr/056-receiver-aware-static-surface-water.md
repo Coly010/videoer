@@ -30,6 +30,8 @@ The field records both the exact file SHA-256 supplied and proven by the assembl
 
 Blender consumes the same field through a continuous packed field texture and generated receiver UV layer. It modulates the existing material's albedo, roughness and clear coat rather than adding one transparent plane per solver cell. Splash positions are deterministically weighted among eligible exposed wet cells; the legacy rectangular bounds remain only for scenes without a field during migration.
 
+Schema v2 additionally persists the exact Priority-Flood parent tree already produced by the conserved solver. Every active cell owns one content-addressed routing node with its cell index, either one four-neighbour downstream index or an export root, and a unique flood rank. Downstream ranks must be lower, so the graph is acyclic and reaches an outlet. The routing hash is part of the water-field identity. Schema v1 remains readable for existing consumers, but transported construction history requires v2 and may not reconstruct a parallel drainage graph.
+
 ## Verification
 
 Acceptance of the structural subsystem requires:
@@ -43,6 +45,7 @@ Acceptance of the structural subsystem requires:
 - a real sampled depression to retain bounded puddle water before overflow;
 - translated/rotated transforms to change identity while preserving equivalent local response;
 - stale geometry, VFX, shelter or field hashes and wrong target classes to fail closed;
+- schema-v2 routing to contain exactly one node per active cell, a zero-based rank permutation, at least one export root, only live four-neighbour edges and strictly descending downstream ranks, with both its independent hash and enclosing field hash verified;
 - historic-sett and contemporary-paver transfer through the same compiler, assembly, scene verification and Blender implementation;
 - visual inspection before publication.
 

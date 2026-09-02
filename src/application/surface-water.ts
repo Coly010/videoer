@@ -4,11 +4,14 @@ import { z } from 'zod';
 import { sha256File } from '../assets/library.js';
 import {
   compileStaticSurfaceWater,
-  surfaceWaterFieldSchema,
   surfaceWaterMaterialResponseSchema,
   verifyStaticSurfaceWaterField,
+  verifyStaticSurfaceWaterFieldV2,
   type SurfaceWaterField,
+  type SurfaceWaterFieldInput,
+  type SurfaceWaterFieldV2,
 } from '../environments/surface-water.js';
+import { verifySurfaceHistoryFieldV2 } from '../environments/surface-history.js';
 import {
   reconstructSurfaceWaterOpticalSurface,
   surfaceWaterOpticalSurfaceOptionsSchema,
@@ -99,14 +102,29 @@ function expectedTargetClass(
   return undefined;
 }
 
-export async function createPavingSurfaceWaterField(options: {
+type CreatePavingSurfaceWaterFieldOptions = {
   pavingGeometryPath: string;
   atmosphericVfxPath: string;
   profile: SurfaceWaterAssemblyProfile;
   profileDirectory: string;
   outputPath: string;
   reportPath?: string;
-}): Promise<{ field: SurfaceWaterField; path: string; report: unknown; reportPath: string }> {
+};
+
+export function createPavingSurfaceWaterField(
+  options: CreatePavingSurfaceWaterFieldOptions & { fieldSchemaVersion: 2 },
+): Promise<{ field: SurfaceWaterFieldV2; path: string; report: unknown; reportPath: string }>;
+export function createPavingSurfaceWaterField(
+  options: CreatePavingSurfaceWaterFieldOptions & { fieldSchemaVersion?: 1 },
+): Promise<{ field: SurfaceWaterField; path: string; report: unknown; reportPath: string }>;
+export async function createPavingSurfaceWaterField(
+  options: CreatePavingSurfaceWaterFieldOptions & { fieldSchemaVersion?: 1 | 2 },
+): Promise<{
+  field: SurfaceWaterField | SurfaceWaterFieldV2;
+  path: string;
+  report: unknown;
+  reportPath: string;
+}> {
   const profile = surfaceWaterAssemblyProfileSchema.parse(options.profile);
   const pavingPath = resolve(options.pavingGeometryPath);
   const vfxPath = resolve(options.atmosphericVfxPath);
@@ -196,7 +214,7 @@ export async function createPavingSurfaceWaterField(options: {
     };
   });
   const flux = vfx.rain.surfaceFlux;
-  const field = compileStaticSurfaceWater({
+  const fieldInput: SurfaceWaterFieldInput = {
     schemaVersion: 1,
     id: profile.id,
     receiver: {
@@ -220,7 +238,11 @@ export async function createPavingSurfaceWaterField(options: {
     shelters,
     grid: profile.grid,
     solver: profile.solver,
-  });
+  };
+  const field: SurfaceWaterField | SurfaceWaterFieldV2 =
+    options.fieldSchemaVersion === 2
+      ? compileStaticSurfaceWater(fieldInput, { schemaVersion: 2 })
+      : compileStaticSurfaceWater(fieldInput);
   const path = await writeJsonAtomically(options.outputPath, field);
   const reportPath = resolve(
     options.reportPath ?? `${options.outputPath.replace(/\.json$/u, '')}-report.json`,
@@ -233,6 +255,10 @@ export async function createPavingSurfaceWaterField(options: {
     receiver: { id: geometry.id, path: pavingPath, sha256: liveGeometrySha256 },
     atmosphere: { id: vfx.id, path: vfxPath, sha256: liveVfxSha256 },
     activeCellCount: field.grid.activeCellCount,
+    fieldSchemaVersion: field.schemaVersion,
+    ...(field.schemaVersion === 2
+      ? { routingSha256: field.routing.routingSha256, routingNodeCount: field.routing.nodes.length }
+      : {}),
     splashEligibleCellCount: field.cells.filter((cell) => cell.splashEligible).length,
     massBalance: field.massBalance,
     materialResponseSources: {
@@ -328,7 +354,10 @@ export async function createSurfaceWaterOpticalSurface(options: {
 }) {
   const fieldPath = resolve(options.surfaceWaterFieldPath);
   const fieldValue = JSON.parse(await readFile(fieldPath, 'utf8'));
-  const fieldVerification = verifyStaticSurfaceWaterField(fieldValue);
+  const fieldVerification =
+    fieldValue.schemaVersion === 2
+      ? verifyStaticSurfaceWaterFieldV2(fieldValue)
+      : verifyStaticSurfaceWaterField(fieldValue);
   if (!fieldVerification.valid)
     throw new Error(
       `surface-water optical source field is invalid: ${fieldVerification.issues.join('; ')}`,
@@ -358,6 +387,7 @@ export async function rebindCinematicSurfaceWaterReceiver(options: {
   receiverEntityId: string;
   pavingGeometryPath: string;
   surfaceWaterFieldPath: string;
+  surfaceHistoryFieldPath?: string;
   surfaceWaterOpticalSurfacePath?: string;
   outputScenePath: string;
   sceneId?: string;
@@ -365,11 +395,20 @@ export async function rebindCinematicSurfaceWaterReceiver(options: {
   const scene = await loadCinematicScene(options.sourceScenePath);
   const geometryPath = resolve(options.pavingGeometryPath);
   const fieldPath = resolve(options.surfaceWaterFieldPath);
-  const [geometry, geometrySha256, field] = await Promise.all([
+  const [geometry, geometrySha256, rawField] = await Promise.all([
     loadGeometry(geometryPath),
     sha256File(geometryPath),
-    readFile(fieldPath, 'utf8').then((value) => surfaceWaterFieldSchema.parse(JSON.parse(value))),
+    readFile(fieldPath, 'utf8').then((value) => JSON.parse(value)),
   ]);
+  const fieldVerification =
+    rawField.schemaVersion === 2
+      ? verifyStaticSurfaceWaterFieldV2(rawField)
+      : verifyStaticSurfaceWaterField(rawField);
+  if (!fieldVerification.valid)
+    throw new Error(
+      `surface-water receiver field is invalid: ${fieldVerification.issues.join('; ')}`,
+    );
+  const field = fieldVerification.field;
   if (field.receiver.geometryId !== geometry.id || field.receiver.geometrySha256 !== geometrySha256)
     throw new Error('surface-water field does not bind the requested paving geometry');
   const entity = scene.entities.find((candidate) => candidate.id === options.receiverEntityId);
@@ -380,6 +419,20 @@ export async function rebindCinematicSurfaceWaterReceiver(options: {
     );
   entity.geometryPath = geometryPath;
   entity.surfaceWaterFieldPath = fieldPath;
+  if (options.surfaceHistoryFieldPath) {
+    if (field.schemaVersion !== 2)
+      throw new Error('surface-history v2 binding requires a surface-water v2 field');
+    const historyPath = resolve(options.surfaceHistoryFieldPath);
+    const historyVerification = verifySurfaceHistoryFieldV2(
+      JSON.parse(await readFile(historyPath, 'utf8')),
+      field,
+    );
+    if (!historyVerification.valid)
+      throw new Error(
+        `surface-history v2 field is invalid: ${historyVerification.issues.join('; ')}`,
+      );
+    entity.surfaceHistoryFieldPath = historyPath;
+  } else delete entity.surfaceHistoryFieldPath;
   if (options.surfaceWaterOpticalSurfacePath) {
     const opticalPath = resolve(options.surfaceWaterOpticalSurfacePath);
     const verification = verifySurfaceWaterOpticalSurface(
