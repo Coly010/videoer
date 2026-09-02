@@ -434,12 +434,19 @@ export async function verifyCinematicScene(scene: CinematicScene, sceneFile: str
               id: opticalVerification.surface.id,
               ...opticalVerification.surface.options,
             }
-          : {
-              schemaVersion: 2,
-              id: opticalVerification.surface.id,
-              ...opticalVerification.surface.options,
-              appearance: opticalVerification.surface.appearance,
-            },
+          : opticalVerification.surface.schemaVersion === 2
+            ? {
+                schemaVersion: 2,
+                id: opticalVerification.surface.id,
+                ...opticalVerification.surface.options,
+                appearance: opticalVerification.surface.appearance,
+              }
+            : {
+                schemaVersion: 3,
+                id: opticalVerification.surface.id,
+                ...opticalVerification.surface.options,
+                appearance: opticalVerification.surface.appearance,
+              },
       );
       const sourceFieldMatched =
         opticalVerification.surface.sourceFieldId === fieldVerification.field.id &&
@@ -478,7 +485,7 @@ export async function verifyCinematicScene(scene: CinematicScene, sceneFile: str
           fieldIssues: fieldVerification.issues,
           triangleCount: opticalVerification.surface.report.triangleCount,
           schemaVersion: opticalVerification.surface.schemaVersion,
-          ...(opticalVerification.surface.schemaVersion === 2
+          ...(opticalVerification.surface.schemaVersion !== 1
             ? {
                 appearance: opticalVerification.surface.appearance,
                 boundaryPerimeterMeters: opticalVerification.surface.report.boundaryPerimeterMeters,
@@ -486,6 +493,17 @@ export async function verifyCinematicScene(scene: CinematicScene, sceneFile: str
                   opticalVerification.surface.report.axisAlignedBoundaryLengthRatio,
                 maximumAxisAlignedBoundaryRunMeters:
                   opticalVerification.surface.report.maximumAxisAlignedBoundaryRunMeters,
+                ...(opticalVerification.surface.schemaVersion === 3
+                  ? {
+                      sourceSupportAreaSquareMeters:
+                        opticalVerification.surface.report.sourceSupportAreaSquareMeters,
+                      projectedAreaSquareMeters:
+                        opticalVerification.surface.report.projectedAreaSquareMeters,
+                      projectedAreaRatio: opticalVerification.surface.report.projectedAreaRatio,
+                      maximumReconstructedDepthMeters:
+                        opticalVerification.surface.report.maximumReconstructedDepthMeters,
+                    }
+                  : {}),
               }
             : {}),
           reconstructedVolumeCubicMeters:

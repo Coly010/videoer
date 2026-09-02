@@ -124,6 +124,15 @@ const refinedOptions = {
   },
 };
 
+const conservativeOptions = {
+  schemaVersion: 3 as const,
+  id: 'environment.optical-water-surface-conservative',
+  opticalOffsetMeters: 0.000_2,
+  maximumVolumeCorrectionFactor: 30,
+  subcellDivisions: 8,
+  appearance: refinedOptions.appearance,
+};
+
 describe('smooth surface-water optical reconstruction', () => {
   it('creates deterministic shared triangulation with interpolated non-cell boundary vertices', () => {
     const field = puddleField();
@@ -282,6 +291,56 @@ describe('smooth surface-water optical reconstruction', () => {
     forged.routing.nodes[0]!.rank = forged.routing.nodes[1]!.rank;
     expect(() => reconstructSurfaceWaterOpticalSurface(forged, refinedOptions)).toThrow(
       /invalid surface-water field/u,
+    );
+  });
+
+  it('separates v3 wet support from depth while conserving source area, volume and peak depth', () => {
+    const field = puddleField(2);
+    const first = reconstructSurfaceWaterOpticalSurface(field, conservativeOptions);
+    const repeated = reconstructSurfaceWaterOpticalSurface(field, conservativeOptions);
+    const sourceSupportArea = field.cells
+      .filter((cell) => cell.puddleDepthMeters > 0)
+      .reduce((sum, cell) => sum + cell.coverage * field.grid.cellSizeMeters ** 2, 0);
+
+    expect(first).toEqual(repeated);
+    expect(first).toMatchObject({
+      schemaVersion: 3,
+      generator: 'videoer.surface-water-optical-surface.v3',
+      supportModel: 'wendland-c2-area-calibrated-v1',
+      appearance: conservativeOptions.appearance,
+    });
+    expect(first.report.sourceSupportAreaSquareMeters).toBeCloseTo(sourceSupportArea, 10);
+    expect(first.report.projectedAreaSquareMeters).toBeCloseTo(sourceSupportArea, 8);
+    expect(first.report.projectedAreaRatio).toBeCloseTo(1, 8);
+    expect(first.report.reconstructedVolumeCubicMeters).toBeCloseTo(
+      field.massBalance.puddleCubicMeters,
+      12,
+    );
+    expect(first.report.maximumReconstructedDepthMeters).toBeLessThanOrEqual(
+      first.report.maximumSourcePuddleDepthMeters + 1e-12,
+    );
+    expect(first.report.receiverEscapeAreaSquareMeters).toBe(0);
+    expect(first.report.nonGridAlignedBoundaryVertexCount).toBeGreaterThan(0);
+    expect(verifySurfaceWaterOpticalSurface(first)).toMatchObject({ valid: true, issues: [] });
+
+    const forged = structuredClone(first);
+    forged.report.projectedAreaSquareMeters *= 1.25;
+    const { reconstructionSha256: _discarded, ...withoutHash } = forged;
+    void _discarded;
+    forged.reconstructionSha256 = canonicalSha256(withoutHash);
+    expect(verifySurfaceWaterOpticalSurface(forged).valid).toBe(false);
+  });
+
+  it('fails closed when a legacy field cannot locate partial wet-cell support', () => {
+    const field = structuredClone(puddleField());
+    const wetCell = field.cells.find((cell) => cell.puddleDepthMeters > 0)!;
+    wetCell.coverage = 0.5;
+    const { fieldSha256: _discarded, ...withoutHash } = field;
+    void _discarded;
+    field.fieldSha256 = canonicalSha256(withoutHash);
+
+    expect(() => reconstructSurfaceWaterOpticalSurface(field, conservativeOptions)).toThrow(
+      /persisted subcell receiver mask/u,
     );
   });
 });

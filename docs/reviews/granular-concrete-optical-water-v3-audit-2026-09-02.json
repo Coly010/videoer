@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-09-02",
+  "scope": "reusable support-conserving optical-water reconstruction on an unrelated contemporary construction host",
+  "benchmarkSpecific": false,
+  "source": {
+    "scene": "work/material-sources/hosts/contemporary-plaster-mixed-use/granular/scene-wet.json",
+    "surfaceWaterFieldSha256": "b5d26f6b469feb0b3f6cd221d4aea192c7183ba7b9dfb02806514729b816091a",
+    "activeCellCount": 3654,
+    "puddleCellCount": 201,
+    "puddleVolumeCubicMeters": 0.0022902092750705983,
+    "sourceSupportAreaSquareMeters": 2.894400000000009,
+    "maximumSourcePuddleDepthMeters": 0.0027837045208499714
+  },
+  "rejectedV2": {
+    "projectedAreaSquareMeters": 14.110623141880128,
+    "projectedAreaRatio": 4.8751461932974305,
+    "reason": "Depth interpolation and a near-zero depth contour inflated sparse finite-volume puddles into broad contiguous reflective sheets. Volume conservation did not constrain support."
+  },
+  "acceptedV3Mechanics": {
+    "surface": "work/material-sources/hosts/contemporary-plaster-mixed-use/granular/surface-water-v3-optical.json",
+    "scene": "work/material-sources/hosts/contemporary-plaster-mixed-use/granular/scene-wet-v3.json",
+    "reconstructionSha256": "08f5256be0f0ed3a5b10fd5b80e3d5d8316c6f7c73191e486c07294e6a9d4c12",
+    "supportModel": "wendland-c2-area-calibrated-v1",
+    "projectedAreaSquareMeters": 2.894400000000019,
+    "projectedAreaRatio": 1.0000000000000036,
+    "reconstructedVolumeCubicMeters": 0.002290209275070598,
+    "volumeErrorCubicMeters": 4.336808689942018e-19,
+    "maximumReconstructedDepthMeters": 0.0027837045208499714,
+    "volumeCorrectionFactor": 1.003863305292891,
+    "triangleCount": 37168,
+    "cinematicGates": "4/4 pass",
+    "receiverEscapeAreaSquareMeters": 0
+  },
+  "visualEvidence": {
+    "v2": "work/material-sources/hosts/contemporary-plaster-mixed-use/granular/verification/wet/probe-frames/050-paving-relief.png",
+    "v3": "work/material-sources/hosts/contemporary-plaster-mixed-use/granular/verification/wet-v3/probe-frames/050-paving-relief.png",
+    "ssim": 0.964758,
+    "psnrDb": 34.854765,
+    "finding": "The large dark contiguous v2 puddle patches are removed. Broad whole-surface gloss remains because the independent receiver film response covers 3595 of 3654 active cells."
+  },
+  "publication": {
+    "status": "rejected",
+    "reason": "The v3 reconstruction mechanics are accepted, but the host is not photographic: near-continuous film response remains too broadly glossy and the facade, glazing, interior and precipitation integration remain simplified.",
+    "nextReusableGap": "Separate physically plausible thin-film optical response and spatial coverage from conserved puddle optics without weakening the exact surface-water field or tuning a benchmark shot."
+  },
+  "queuedProductionClothing": {
+    "priority": "after the current higher-priority reusable environment/material/water tranche",
+    "benchmarkSpecific": false,
+    "gaps": [
+      "garment panels and pattern construction",
+      "seams",
+      "hems",
+      "physical thickness",
+      "shoulder and armhole quality",
+      "reusable base weights and targeted correctives",
+      "folds and wrinkles",
+      "production cloth materials",
+      "selective simulation",
+      "deterministic temporal verification"
+    ]
+  }
+}

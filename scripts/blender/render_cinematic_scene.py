@@ -1210,7 +1210,7 @@ def create_surface_water_optical_surface(definition, field_report):
     surface = load_json(definition["surfaceWaterOpticalSurfacePath"])
     entity_id = definition["id"]
     schema_version = surface.get("schemaVersion")
-    if schema_version not in (1, 2):
+    if schema_version not in (1, 2, 3):
         raise RuntimeError(f"Entity '{entity_id}' optical water surface schema is unsupported")
     expected_generator = f"videoer.surface-water-optical-surface.v{schema_version}"
     if surface.get("generator") != expected_generator:
@@ -1257,7 +1257,7 @@ def create_surface_water_optical_surface(definition, field_report):
     if not isinstance(optical_offset, (int, float)) or not math.isfinite(optical_offset):
         raise RuntimeError(f"Entity '{entity_id}' optical water surface offset is invalid")
 
-    if schema_version == 2:
+    if schema_version in (2, 3):
         appearance = surface.get("appearance")
         if not isinstance(appearance, dict) or appearance.get("model") != "thin-dielectric-water-v1":
             raise RuntimeError(f"Entity '{entity_id}' optical water appearance is unsupported")
@@ -1364,6 +1364,47 @@ def create_surface_water_optical_surface(definition, field_report):
         or abs(reconstructed_volume - source_volume) > volume_tolerance
     ):
         raise RuntimeError(f"Entity '{entity_id}' optical water surface does not conserve volume")
+    if schema_version == 3:
+        source_support_area = report.get("sourceSupportAreaSquareMeters")
+        declared_projected_area = report.get("projectedAreaSquareMeters")
+        projected_area_ratio = report.get("projectedAreaRatio")
+        maximum_source_depth = report.get("maximumSourcePuddleDepthMeters")
+        maximum_reconstructed_depth = report.get("maximumReconstructedDepthMeters")
+        maximum_allowed_depth = report.get("maximumAllowedReconstructedDepthMeters")
+        receiver_escape_area = report.get("receiverEscapeAreaSquareMeters")
+        if not all(
+            isinstance(value, (int, float)) and math.isfinite(value) and value >= 0
+            for value in (
+                source_support_area,
+                declared_projected_area,
+                projected_area_ratio,
+                maximum_source_depth,
+                maximum_reconstructed_depth,
+                maximum_allowed_depth,
+                receiver_escape_area,
+            )
+        ):
+            raise RuntimeError(f"Entity '{entity_id}' optical water v3 support report is invalid")
+        area_tolerance = max(1e-8, source_support_area * 1e-4)
+        expected_area_ratio = projected_area / source_support_area if source_support_area > 0 else 0
+        if (
+            abs(projected_area - declared_projected_area) > area_tolerance
+            or abs(projected_area - source_support_area) > area_tolerance
+            or abs(projected_area_ratio - expected_area_ratio) > 1e-9
+        ):
+            raise RuntimeError(
+                f"Entity '{entity_id}' optical water v3 inflates source wet support"
+            )
+        if (
+            maximum_allowed_depth != maximum_source_depth
+            or maximum_reconstructed_depth > maximum_allowed_depth + 1e-12
+            or (depths and max(depths) > maximum_allowed_depth + 1e-12)
+        ):
+            raise RuntimeError(
+                f"Entity '{entity_id}' optical water v3 exceeds source maximum depth"
+            )
+        if receiver_escape_area != 0:
+            raise RuntimeError(f"Entity '{entity_id}' optical water v3 escapes receiver support")
 
     mesh_data = bpy.data.meshes.new(f"{entity_id}-optical-water-surface")
     mesh_data.from_pydata(vertices, [], faces)
@@ -1445,7 +1486,9 @@ def create_surface_water_optical_surface(definition, field_report):
             if cycles
             else "thin-fresnel-transparent-eevee-approximation-v2"
         ),
-        "appearanceSource": "surface-v2" if schema_version == 2 else "legacy-v1-adaptation",
+        "appearanceSource": (
+            f"surface-v{schema_version}" if schema_version in (2, 3) else "legacy-v1-adaptation"
+        ),
         "ior": ior,
         "roughness": roughness,
         "depthAttribute": "videoer_water_depth_meters",

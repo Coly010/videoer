@@ -1555,7 +1555,7 @@ environment
   .requiredOption('--id <surface-id>', 'stable optical surface identity')
   .option(
     '--schema-version <version>',
-    'optical surface schema (1 legacy, 2 refined)',
+    'optical surface schema (1 legacy, 2 depth-contoured, 3 support-conserving)',
     (value) => Number.parseInt(value, 10),
     1,
   )
@@ -1618,7 +1618,7 @@ environment
       waterAbsorptionDistance: number;
     },
   ) {
-    if (options.schemaVersion !== 1 && options.schemaVersion !== 2)
+    if (options.schemaVersion !== 1 && options.schemaVersion !== 2 && options.schemaVersion !== 3)
       throw new Error(`unsupported optical surface schema version ${options.schemaVersion}`);
     const absorptionColor = options.waterAbsorptionColor
       .split(',')
@@ -1642,21 +1642,36 @@ environment
               opticalOffsetMeters: options.opticalOffset,
               maximumVolumeCorrectionFactor: options.maximumVolumeCorrection,
             }
-          : {
-              schemaVersion: 2,
-              id: options.id,
-              contourDepthMeters: options.contourDepth,
-              opticalOffsetMeters: options.opticalOffset,
-              maximumVolumeCorrectionFactor: options.maximumVolumeCorrection,
-              subcellDivisions: options.subcellDivisions,
-              appearance: {
-                model: 'thin-dielectric-water-v1',
-                ior: options.waterIor,
-                roughness: options.waterRoughness,
-                absorptionColorLinear: absorptionColor as [number, number, number],
-                absorptionDistanceMeters: options.waterAbsorptionDistance,
+          : options.schemaVersion === 2
+            ? {
+                schemaVersion: 2,
+                id: options.id,
+                contourDepthMeters: options.contourDepth,
+                opticalOffsetMeters: options.opticalOffset,
+                maximumVolumeCorrectionFactor: options.maximumVolumeCorrection,
+                subcellDivisions: options.subcellDivisions,
+                appearance: {
+                  model: 'thin-dielectric-water-v1',
+                  ior: options.waterIor,
+                  roughness: options.waterRoughness,
+                  absorptionColorLinear: absorptionColor as [number, number, number],
+                  absorptionDistanceMeters: options.waterAbsorptionDistance,
+                },
+              }
+            : {
+                schemaVersion: 3,
+                id: options.id,
+                opticalOffsetMeters: options.opticalOffset,
+                maximumVolumeCorrectionFactor: options.maximumVolumeCorrection,
+                subcellDivisions: options.subcellDivisions,
+                appearance: {
+                  model: 'thin-dielectric-water-v1',
+                  ior: options.waterIor,
+                  roughness: options.waterRoughness,
+                  absorptionColorLinear: absorptionColor as [number, number, number],
+                  absorptionDistanceMeters: options.waterAbsorptionDistance,
+                },
               },
-            },
     });
     output(
       this,

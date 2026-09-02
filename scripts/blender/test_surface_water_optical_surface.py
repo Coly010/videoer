@@ -89,6 +89,44 @@ def optical_fixture():
     }
 
 
+def optical_v3_fixture():
+    surface = optical_fixture()
+    surface["schemaVersion"] = 3
+    surface["id"] = "surface-water.probe-optical-puddle-v3"
+    surface["generator"] = "videoer.surface-water-optical-surface.v3"
+    surface["supportModel"] = "wendland-c2-area-calibrated-v1"
+    surface["options"].pop("contourDepthMeters")
+    projected_area = 0.0
+    for offset in range(0, len(surface["indices"]), 3):
+        a, b, c = [
+            surface["positions"][index] for index in surface["indices"][offset : offset + 3]
+        ]
+        projected_area += (
+            abs((b[0] - a[0]) * (c[2] - a[2]) - (b[2] - a[2]) * (c[0] - a[0]))
+            * 0.5
+        )
+    report = surface["report"]
+    report.update(
+        {
+            "sourceSupportAreaSquareMeters": projected_area,
+            "projectedAreaSquareMeters": projected_area,
+            "projectedAreaErrorSquareMeters": 0,
+            "projectedAreaRatio": 1,
+            "sourceMeanPuddleDepthMeters": report["sourcePuddleVolumeCubicMeters"]
+            / projected_area,
+            "supportContourThreshold": 0.4,
+            "receiverContourThreshold": 0.5,
+            "depthCorrectionFactor": 1,
+            "maximumAllowedReconstructedDepthMeters": report[
+                "maximumSourcePuddleDepthMeters"
+            ],
+            "receiverCoverageModel": "legacy-full-wet-cell-kernel-mask-v1",
+            "receiverEscapeAreaSquareMeters": 0,
+        }
+    )
+    return surface
+
+
 def render_linear_pixels(scene, path):
     scene.render.filepath = path
     bpy.ops.render.render(write_still=True)
@@ -327,6 +365,41 @@ def main():
     assert_thin_dielectric_structure(
         water, report, surface, "thin-dielectric-interface-cycles-v2"
     )
+
+    surface_v3 = optical_v3_fixture()
+    surface_v3_path = os.path.join(output, "optical-surface-v3.json")
+    with open(surface_v3_path, "w", encoding="utf-8") as handle:
+        json.dump(surface_v3, handle, indent=2)
+        handle.write("\n")
+    v3_definition = {
+        **definition,
+        "id": "environment.optical-water-probe-v3",
+        "surfaceWaterOpticalSurfacePath": surface_v3_path,
+    }
+    v3_report = renderer.create_surface_water_optical_surface(v3_definition, field_report)
+    if v3_report["appearanceSource"] != "surface-v3":
+        raise RuntimeError("optical puddle v3 did not preserve its appearance source")
+    if abs(
+        v3_report["projectedAreaSquareMeters"]
+        - surface_v3["report"]["sourceSupportAreaSquareMeters"]
+    ) > 1e-8:
+        raise RuntimeError("optical puddle v3 did not preserve source support area")
+    forged_support = copy.deepcopy(surface_v3)
+    forged_support["report"]["sourceSupportAreaSquareMeters"] *= 2
+    forged_support_path = os.path.join(output, "invalid-optical-support-v3.json")
+    with open(forged_support_path, "w", encoding="utf-8") as handle:
+        json.dump(forged_support, handle)
+    try:
+        renderer.create_surface_water_optical_surface(
+            {**v3_definition, "surfaceWaterOpticalSurfacePath": forged_support_path}, field_report
+        )
+    except RuntimeError as error:
+        invalid_support_rejected = "inflates source wet support" in str(error)
+    else:
+        invalid_support_rejected = False
+    if not invalid_support_rejected:
+        raise RuntimeError("optical puddle v3 accepted forged source support area")
+    bpy.data.objects.remove(bpy.data.objects[v3_report["objectName"]], do_unlink=True)
 
     invalid = copy.deepcopy(surface)
     invalid["indices"][0] = len(invalid["positions"])
