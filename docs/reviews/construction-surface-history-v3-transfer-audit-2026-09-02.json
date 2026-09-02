@@ -10,13 +10,18 @@
     "dirtMassEquivalence": "pass",
     "boundDryRoughnessProvenance": "pass",
     "constructionResponsePreflight": "pass",
-    "nativeBlenderConsumption": "pass",
+    "nativeBlenderConstructionResponseConsumption": "pass",
+    "signedJointDisplacement": "pass",
+    "constructionTargetTessellation": "pass",
+    "transformSafeBorderAndGutterResponse": "pass",
+    "rendererFailurePropagation": "pass",
     "productionEnvironmentVisualAcceptance": "reject"
   },
   "historic": {
     "activeCellCount": 3157,
-    "fieldSha256": "b1c40f9dd0444fad4c6f70c1ef2ee2b14e2ebda934762f7d3e5ecb66e7408080",
-    "waterFieldSha256": "91020253da4585ab2e2030968f37f020c30e3181923a40f84b40cff8ff7e8941",
+    "receiverSha256": "e0d2d83ed871125c4846a89eb58897454e0f1482984f15e0cce313895d0093fc",
+    "fieldSha256": "7bd83c9f48d762e193a2099bbe6541d8b78000a0b53943e1c8e559416ce01367",
+    "waterFieldSha256": "bc59a1273adba84848571bec497a3a940d5fe69f6d7d3b46994d99eb390a071f",
     "routingSha256": "b2af20a4abf2817b81d08ef5e3350daab13dfbc0a20ef8b9f5266fcc0acbd12d",
     "trafficAffectedCellCount": 1163,
     "trafficMaximum": 0.823767799998457,
@@ -31,6 +36,17 @@
     "correctedMedianEffectiveRoughness": 0.2074,
     "correctedMeanEffectiveRoughness": 0.2431978,
     "preCorrectionToCorrectedContactSheetPsnrDecibels": 42.508392,
+    "correctedRoughnessToConstructionResponseContactSheetPsnrDecibels": 39.679241,
+    "constructionResponse": {
+      "materialIds": ["dark-grit-joint", "dark-stone-gutter", "granite-kerb"],
+      "jointKind": "natural-joint",
+      "signedMaximumJointDisplacementMeters": 0.00288,
+      "maximumTargetSegmentMetersBefore": 10.176566123962402,
+      "maximumTargetSegmentMetersAfter": 0.11972440034151077,
+      "maximumAllowedTargetSegmentMeters": 0.12,
+      "targetFaceCountBefore": 12,
+      "targetFaceCountAfter": 86700
+    },
     "activeMaterialParticipation": {
       "activeMaterialCount": 8,
       "opticalResponseMaterialCount": 8,
@@ -44,8 +60,9 @@
   },
   "contemporary": {
     "activeCellCount": 3654,
-    "fieldSha256": "eedd582e736b3219a80ae6821fb25ebbedab8e386a44f7e86c55fe14de5b31f1",
-    "waterFieldSha256": "7cd0bab99adb0c6762a814340669ad77167e1ada2b9d69f64d83b3f9064c6ff2",
+    "receiverSha256": "cab15abf8983d2420aa6f24b67c52f7b91b678a3a445704c99ec4b8bc2d3a75f",
+    "fieldSha256": "31ea214ecb9838c0bedb8176d563721636ab46c09d1716134ca7ce8e4eaf08cb",
+    "waterFieldSha256": "62acd982536282538a6a84bb96827664315a5169618daa31ab316bbc0da6de53",
     "routingSha256": "9def850e6419ebf1a7f355ffcfeacf32d5bf1cc7b533fa37d924f397e5486795",
     "trafficAffectedCellCount": 1462,
     "trafficMaximum": 0.6987819004296458,
@@ -60,6 +77,17 @@
     "correctedMedianEffectiveRoughness": 0.2006,
     "correctedMeanEffectiveRoughness": 0.2093373,
     "preCorrectionToCorrectedContactSheetPsnrDecibels": 42.835584,
+    "correctedRoughnessToConstructionResponseContactSheetPsnrDecibels": 47.327127,
+    "constructionResponse": {
+      "materialIds": ["contemporary-kerb", "linear-channel-stone", "polymeric-dark-joint"],
+      "jointKind": "polymeric-joint",
+      "signedMaximumJointDisplacementMeters": -0.00165,
+      "maximumTargetSegmentMetersBefore": 11.351761817932129,
+      "maximumTargetSegmentMetersAfter": 0.11949233710765839,
+      "maximumAllowedTargetSegmentMeters": 0.12,
+      "targetFaceCountBefore": 12,
+      "targetFaceCountAfter": 108300
+    },
     "activeMaterialParticipation": {
       "activeMaterialCount": 8,
       "opticalResponseMaterialCount": 8,
@@ -86,17 +114,22 @@
     "the existing atomic paving-construction binder now validates exact kerb, gutter and soldier-course target compatibility; missing, extra and wrong-kind bindings preserve prior output",
     "surface-water dry roughness is now provenance-bound to the live surface-material midpoint; direct assembly rejects stale profiles and rebinding derives corrected values without altering water or dirt conservation",
     "TypeScript scene verification and canonical Blender independently reject active joint, substrate or border cells whose material lacks the target-class-compatible typed construction response",
-    "both authoritative-profile three-landmark host probes completed with canonical Blender and host Metal access"
+    "natural-joint dirt coverage drives bounded top-face fill through true displacement, while polymeric traffic/throughflow causality drives seeded coherent recession with exact-zero response below onset",
+    "only target-material faces are tessellated for construction height, and both host reports prove maximum segments below the 0.12 m source-field cell size",
+    "world-to-object normal transformation preserves kerb and gutter face classification under arbitrary object transforms; gutter deposition is dirt-dependent and leaves field dirt mass unchanged",
+    "active substrate adds normal response without inventing uncalibrated height, while inactive substrate creates no construction nodes",
+    "unhandled Blender renderer exceptions now terminate the native process nonzero rather than producing a false successful probe",
+    "both authoritative-profile three-landmark host probes completed with canonical Blender and host Metal access and report all three expected construction-response materials"
   ],
   "blockingFindings": [
     "historic paving remains overly orderly, uniform and mineral-poor",
     "the contradictory near-mirror wet roughness is corrected, but contemporary paving remains pale, overly smooth at mesoscales and visually dominated by broad optical water",
     "repair and causal route history are still too subtle to identify confidently in assembled beauty views",
-    "all active construction materials now consume the field, but current joint and border response is limited to bounded color and roughness; fill recession, coherent polymeric failure, kerb-face isolation, gutter flow-core cleaning versus margin deposition and exposed-substrate normal or geometry response remain future reusable material work",
+    "typed joint, border and active-substrate response is now rendered, but the restrained construction-scale effect cannot substitute for richer homogeneous mineral/concrete source character and mesoscale unit variation",
     "facades, glazing, inhabited interiors and precipitation remain below photographic acceptance",
     "the profiles are deterministic cinematic heuristics rather than surveyed or calibrated site histories"
   ],
-  "nextGenericChange": "Add provenance-complete homogeneous CC0 mineral/concrete bases behind the existing material contract, then consume the typed construction responses as joint, border and active-substrate normal or geometry behavior on unrelated hosts; do not amplify v3 channels or tune the benchmark.",
+  "nextGenericChange": "Add provenance-complete homogeneous mineral/concrete bases behind the existing material contract, followed by richer reusable facade, glazing, interior and receiver-aware precipitation/atmosphere systems; do not amplify construction channels or tune the benchmark.",
   "queuedReusableWork": {
     "productionClothing": "Queued behind current higher-priority reusable environment/material work: garment panels and pattern construction, seams, hems, thickness, shoulder and armhole quality, base weights and correctives, folds and wrinkles, cloth materials, selective simulation, and temporal verification. This is reusable-system work, not benchmark-specific polishing."
   }

@@ -6,6 +6,7 @@ import math
 import os
 import random
 import sys
+import traceback
 from bpy_extras.object_utils import world_to_camera_view
 from mathutils import Matrix, Vector
 
@@ -1926,6 +1927,27 @@ def create_surface_history(definition, receiver_asset, receiver_mesh):
         dirt_image.colorspace_settings.name = "Non-Color"
         dirt_image.pixels.foreach_set(dirt_pixels)
         dirt_image.pack()
+    construction_image = None
+    if schema_version == 3:
+        construction_pixels = [0.0] * (columns * rows * 4)
+        for cell in field["cells"]:
+            pixel = cell["index"] * 4
+            construction_pixels[pixel : pixel + 4] = [
+                cell["trafficWear"] * cell["coverage"],
+                cell["runoffThroughflowStaining"] * cell["coverage"],
+                cell["retainedWaterStaining"] * cell["coverage"],
+                1.0,
+            ]
+        construction_image = bpy.data.images.new(
+            f"{definition['id']}-construction-surface-response-field",
+            width=columns,
+            height=rows,
+            alpha=True,
+            float_buffer=True,
+        )
+        construction_image.colorspace_settings.name = "Non-Color"
+        construction_image.pixels.foreach_set(construction_pixels)
+        construction_image.pack()
     uv_layer = receiver_mesh.data.uv_layers.get("surface_history_uv")
     if uv_layer is None:
         uv_layer = receiver_mesh.data.uv_layers.new(name="surface_history_uv")
@@ -1998,6 +2020,7 @@ def create_surface_history(definition, receiver_asset, receiver_mesh):
                     )
     response_materials = []
     dirt_response_materials = []
+    construction_response_reports = []
     unmapped_materials = []
     channel_outputs = ("Red", "Green", "Blue", "Alpha")
     response_contract = "historyResponseV3" if schema_version == 3 else "historyResponse"
@@ -2046,22 +2069,85 @@ def create_surface_history(definition, receiver_asset, receiver_mesh):
         separate.name = "videoer-surface-history-channels"
         links.new(uv.outputs["UV"], texture.inputs["Vector"])
         links.new(texture.outputs["Color"], separate.inputs["Color"])
+        construction_separate = None
+        if construction_image is not None:
+            construction_texture = nodes.new("ShaderNodeTexImage")
+            construction_texture.name = "videoer-construction-surface-response-field"
+            construction_texture.image = construction_image
+            construction_texture.interpolation = "Linear"
+            construction_texture.extension = "EXTEND"
+            construction_separate = nodes.new("ShaderNodeSeparateColor")
+            construction_separate.name = "videoer-construction-surface-response-channels"
+            links.new(uv.outputs["UV"], construction_texture.inputs["Vector"])
+            links.new(construction_texture.outputs["Color"], construction_separate.inputs["Color"])
+
+        surface_definition = (material_definition or {}).get("surface", {})
+        construction_response = surface_definition.get("constructionSurfaceResponse")
+        dirt_texture = None
+        dirt_separate = None
+        if dirt_image is not None and (dirt_response or construction_response):
+            dirt_texture = nodes.new("ShaderNodeTexImage")
+            dirt_texture.name = "videoer-surface-dirt-mass-field"
+            dirt_texture.image = dirt_image
+            dirt_texture.interpolation = "Linear"
+            dirt_texture.extension = "EXTEND"
+            dirt_separate = nodes.new("ShaderNodeSeparateColor")
+            dirt_separate.name = "videoer-surface-dirt-mass-channels"
+            links.new(uv.outputs["UV"], dirt_texture.inputs["Vector"])
+            links.new(dirt_texture.outputs["Color"], dirt_separate.inputs["Color"])
+
+        construction_signals = None
+        if construction_response:
+            if schema_version != 3 or construction_separate is None or dirt_separate is None:
+                raise RuntimeError(
+                    f"Entity '{definition['id']}' construction response material '{material_id}' lacks v3 hydrology or dirt fields"
+                )
+            construction_result = construction_surface_response.apply_construction_surface_response(
+                material,
+                material.node_tree,
+                principled,
+                construction_response,
+                (receiver_asset.get("metadata") or {}).get("definition"),
+                material_id,
+                separate.outputs["Red"],
+                construction_separate.outputs["Green"],
+                construction_separate.outputs["Blue"],
+                dirt_separate.outputs["Red"],
+                dirt_separate.outputs["Green"],
+                field_cell_size_meters=cell_size,
+                receiver_object=receiver_mesh,
+            )
+            construction_signals = construction_result["signals"]
+            construction_response_reports.append(construction_result["report"])
 
         base = principled.inputs["Base Color"]
         roughness = principled.inputs["Roughness"]
+        history_signal_outputs = {}
+        for response_name, output_name in zip(response_names, channel_outputs):
+            signal_output = (
+                texture.outputs["Alpha"]
+                if output_name == "Alpha"
+                else separate.outputs[output_name]
+            )
+            if response_name == "trafficWear" and construction_signals:
+                signal_output = construction_signals["traffic"]
+            elif construction_response and construction_response["kind"] == "paving-border":
+                face_gate = nodes.new("ShaderNodeMath")
+                face_gate.name = f"videoer-construction-border-{response_name}-history-gate"
+                face_gate.operation = "MULTIPLY"
+                links.new(signal_output, face_gate.inputs[0])
+                links.new(construction_signals["construction"], face_gate.inputs[1])
+                signal_output = face_gate.outputs[0]
+            history_signal_outputs[response_name] = signal_output
         if response:
             base_source = base.links[0].from_socket if base.is_linked else None
             base_default = tuple(base.default_value)
             if base.is_linked:
                 links.remove(base.links[0])
             current_color = base_source
-            for response_name, output_name in zip(response_names, channel_outputs):
+            for response_name, _output_name in zip(response_names, channel_outputs):
                 response_value = response[response_name]
-                signal_output = (
-                    texture.outputs["Alpha"]
-                    if output_name == "Alpha"
-                    else separate.outputs[output_name]
-                )
+                signal_output = history_signal_outputs[response_name]
                 scale = nodes.new("ShaderNodeMath")
                 scale.operation = "MULTIPLY_ADD"
                 scale.inputs[1].default_value = response_value["colorMultiplier"] - 1
@@ -2082,12 +2168,8 @@ def create_surface_history(definition, receiver_asset, receiver_mesh):
             roughness_default = roughness.default_value
             if roughness.is_linked:
                 links.remove(roughness.links[0])
-            for response_name, output_name in zip(response_names, channel_outputs):
-                signal_output = (
-                    texture.outputs["Alpha"]
-                    if output_name == "Alpha"
-                    else separate.outputs[output_name]
-                )
+            for response_name, _output_name in zip(response_names, channel_outputs):
+                signal_output = history_signal_outputs[response_name]
                 delta = nodes.new("ShaderNodeMath")
                 delta.operation = "MULTIPLY"
                 delta.inputs[1].default_value = response[response_name]["roughnessOffset"]
@@ -2103,25 +2185,21 @@ def create_surface_history(definition, receiver_asset, receiver_mesh):
                 current_roughness = add.outputs[0]
             links.new(current_roughness, roughness)
         if dirt_image and dirt_response:
-            dirt_texture = nodes.new("ShaderNodeTexImage")
-            dirt_texture.name = "videoer-surface-dirt-mass-field"
-            dirt_texture.image = dirt_image
-            dirt_texture.interpolation = "Linear"
-            dirt_texture.extension = "EXTEND"
-            dirt_separate = nodes.new("ShaderNodeSeparateColor")
-            dirt_separate.name = "videoer-surface-dirt-mass-channels"
-            links.new(uv.outputs["UV"], dirt_texture.inputs["Vector"])
-            links.new(dirt_texture.outputs["Color"], dirt_separate.inputs["Color"])
             current_color = base.links[0].from_socket if base.is_linked else None
             base_default = tuple(base.default_value)
             if base.is_linked:
                 links.remove(base.links[0])
             for response_name, output_name in (("loose", "Red"), ("persistent", "Green")):
+                dirt_signal = (
+                    construction_signals[response_name]
+                    if construction_signals
+                    else dirt_separate.outputs[output_name]
+                )
                 scale = nodes.new("ShaderNodeMath")
                 scale.operation = "MULTIPLY_ADD"
                 scale.inputs[1].default_value = dirt_response[response_name]["colorMultiplier"] - 1
                 scale.inputs[2].default_value = 1
-                links.new(dirt_separate.outputs[output_name], scale.inputs[0])
+                links.new(dirt_signal, scale.inputs[0])
                 multiply = nodes.new("ShaderNodeMixRGB")
                 multiply.blend_type = "MULTIPLY"
                 multiply.inputs[0].default_value = 1
@@ -2137,10 +2215,15 @@ def create_surface_history(definition, receiver_asset, receiver_mesh):
             if roughness.is_linked:
                 links.remove(roughness.links[0])
             for response_name, output_name in (("loose", "Red"), ("persistent", "Green")):
+                dirt_signal = (
+                    construction_signals[response_name]
+                    if construction_signals
+                    else dirt_separate.outputs[output_name]
+                )
                 delta = nodes.new("ShaderNodeMath")
                 delta.operation = "MULTIPLY"
                 delta.inputs[1].default_value = dirt_response[response_name]["roughnessOffset"]
-                links.new(dirt_separate.outputs[output_name], delta.inputs[0])
+                links.new(dirt_signal, delta.inputs[0])
                 add = nodes.new("ShaderNodeMath")
                 add.operation = "ADD"
                 add.use_clamp = True
@@ -2180,6 +2263,7 @@ def create_surface_history(definition, receiver_asset, receiver_mesh):
                         "constructionSurfaceResponse"
                     )
                 ),
+                "constructionResponses": construction_response_reports,
             }
             if schema_version == 3
             else {}
@@ -2856,12 +2940,6 @@ def main():
     for entity in manifest["entities"]:
         asset, armature, mesh = create_entity(entity, manifest["fps"], manifest["durationSeconds"])
         entity_meshes[entity["id"]] = mesh
-        if entity.get("surfaceHistoryFieldPath"):
-            if not entity.get("surfaceWaterFieldPath"):
-                raise RuntimeError(
-                    f"Entity '{entity['id']}' cannot render surface history without its source water"
-                )
-            surface_history_fields.append(create_surface_history(entity, asset, mesh))
         if entity.get("surfaceWaterFieldPath"):
             field_report = create_surface_water(entity, asset, mesh)
             if entity.get("surfaceWaterOpticalSurfacePath"):
@@ -2873,6 +2951,15 @@ def main():
             raise RuntimeError(
                 f"Entity '{entity['id']}' cannot render an optical water surface without its source field"
             )
+        if entity.get("surfaceHistoryFieldPath"):
+            if not entity.get("surfaceWaterFieldPath"):
+                raise RuntimeError(
+                    f"Entity '{entity['id']}' cannot render surface history without its source water"
+                )
+            # History construction responses may tessellate exact target material faces for
+            # signed render displacement. Bind water UVs and reconstruct its separate optical
+            # surface first while receiver indices still match the persisted source geometry.
+            surface_history_fields.append(create_surface_history(entity, asset, mesh))
         if entity.get("fixturePath"):
             create_fixture_lights(entity, entity["id"], asset, armature, mesh)
     with open(
@@ -3043,7 +3130,14 @@ rigify_adapter = load_module("render_mpfb_motion_probe.py", "videoer_mpfb_rigify
 production_character_assembly = load_module(
     "production_character_assembly.py", "videoer_production_character_assembly"
 )
+construction_surface_response = load_module(
+    "construction_surface_response.py", "videoer_construction_surface_response"
+)
 openvdb_smoke = load_module("openvdb_smoke.py", "videoer_openvdb_smoke")
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception:
+        traceback.print_exc()
+        sys.exit(1)

@@ -119,6 +119,7 @@ export function createPavingGranularSurfaceMaterial(kind: PavingGranularKind): S
       ? {
           kind: 'natural-joint' as const,
           geometryBasis: 'authored-joint-recession' as const,
+          heightRepresentation: 'render-mesh-displacement-required' as const,
           clogging: {
             driver: 'dirt-coverage' as const,
             looseWeight: 0.65,
@@ -133,6 +134,7 @@ export function createPavingGranularSurfaceMaterial(kind: PavingGranularKind): S
         ? {
             kind: 'polymeric-joint' as const,
             geometryBasis: 'authored-joint-recession' as const,
+            heightRepresentation: 'render-mesh-displacement-required' as const,
             coherentFailure: {
               driver: 'traffic-and-throughflow' as const,
               trafficWeight: 0.68,
@@ -148,6 +150,7 @@ export function createPavingGranularSurfaceMaterial(kind: PavingGranularKind): S
         : {
             kind: 'exposed-substrate' as const,
             activation: 'active-history-cells-only' as const,
+            heightRepresentation: 'none-no-calibrated-height' as const,
             normal: { strengthScale: 1.1 },
             dirtDepositionScale: 1.25,
           };

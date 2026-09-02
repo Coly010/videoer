@@ -46,6 +46,7 @@ export const constructionSurfaceResponseSchema = z
     z.object({
       kind: z.literal('natural-joint'),
       geometryBasis: z.literal('authored-joint-recession'),
+      heightRepresentation: z.literal('render-mesh-displacement-required'),
       clogging: z.object({
         driver: z.literal('dirt-coverage'),
         looseWeight: z.number().min(0).max(4),
@@ -59,6 +60,7 @@ export const constructionSurfaceResponseSchema = z
     z.object({
       kind: z.literal('polymeric-joint'),
       geometryBasis: z.literal('authored-joint-recession'),
+      heightRepresentation: z.literal('render-mesh-displacement-required'),
       coherentFailure: z.object({
         driver: z.literal('traffic-and-throughflow'),
         trafficWeight: z.number().min(0).max(4),
@@ -79,8 +81,11 @@ export const constructionSurfaceResponseSchema = z
         .min(1)
         .refine((faces) => new Set(faces).size === faces.length, 'history faces must be unique'),
       faceTransitionCosine: z.number().min(0).max(1),
+      faceMaskFormula: z.literal('smoothstep-minimum-alignment-cosine'),
       gutterZones: z
         .object({
+          coreDriver: z.literal('throughflow-times-clean-surface'),
+          marginDriver: z.literal('retained-water-times-dirt-coverage'),
           coreWidthFraction: z.number().positive().max(1),
           transitionWidthFraction: z.number().nonnegative().max(0.5),
           coreThroughflowCleaning: z.number().min(0).max(1),
@@ -91,6 +96,7 @@ export const constructionSurfaceResponseSchema = z
     z.object({
       kind: z.literal('exposed-substrate'),
       activation: z.literal('active-history-cells-only'),
+      heightRepresentation: z.literal('none-no-calibrated-height'),
       normal: z.object({ strengthScale: z.number().min(0).max(2) }),
       dirtDepositionScale: z.number().min(0).max(2),
     }),

@@ -112,9 +112,12 @@ export function createPavingBorderSurfaceMaterial(kind: PavingBorderMaterialKind
       geometryBasis: 'authored-border-profile',
       historyFaces: gutter ? ['top'] : ['top', 'paving-facing'],
       faceTransitionCosine: gutter ? 0.72 : 0.64,
+      faceMaskFormula: 'smoothstep-minimum-alignment-cosine',
       ...(gutter
         ? {
             gutterZones: {
+              coreDriver: 'throughflow-times-clean-surface',
+              marginDriver: 'retained-water-times-dirt-coverage',
               coreWidthFraction: 0.46,
               transitionWidthFraction: 0.12,
               coreThroughflowCleaning: historic ? 0.78 : 0.7,
