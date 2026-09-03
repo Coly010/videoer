@@ -12,8 +12,10 @@ per-bone rest/roll math.  For each selected clip it
    so the control-vs-deform rest-pose offset is compensated — the setting that
    fixes the historically broken arm carriage,
 4. bakes the constrained controls into a native Rigify action, and
-5. renders fixed-camera side + three-quarter evidence (stills, mp4, contact
-   sheet) plus a ``report.json``.
+5. renders fixed-camera evidence from three views - side, rear three-quarter
+   (walker recedes) and front three-quarter (``three-quarter-reverse``: walker
+   approaches, so the front is judged too) - as stills, mp4 and contact sheet,
+   plus a ``report.json``.
 
 Expy Kit code is GPL-3.0; the Quaternius source is CC0-1.0; both are fully local
 and provider-free.  Rendered media is not thereby forced under the GPL.
@@ -233,15 +235,42 @@ def bake_constrained(target, source, action, start, end, controls):
     return baked
 
 
-def fixed_camera(scene, camera, height, view, mid_y, span):
-    """A fixed camera framing the whole travel (never glued to the root)."""
+# Evidence views rendered for every clip. The retargeted walks travel along +Y,
+# so a camera on the -Y side sits BEHIND the walker: the original "three-quarter"
+# only ever showed the back of the body (and of any garment - a tie or a skirt
+# front was never in frame). "three-quarter-reverse" mirrors it to the far side
+# of the travel so the walker approaches the camera and the front is judged too.
+EVIDENCE_VIEWS = ("side", "three-quarter", "three-quarter-reverse")
+
+
+def fixed_camera(scene, camera, height, view, mid_y, span, travel=1.0):
+    """A fixed camera framing the whole travel (never glued to the root).
+
+    ``view``:
+
+    * ``side`` - profile from -X.
+    * ``three-quarter`` - REAR three-quarter: behind the walker (against the
+      direction of travel) and to the -X side; the walker recedes, showing the
+      back of the body and garments.
+    * ``three-quarter-reverse`` - FRONT three-quarter: ahead of the walker on the
+      same -X side; the walker comes towards the camera, showing the face, chest,
+      tie and skirt/dress front.
+
+    ``travel`` is the sign of the root's Y travel over the clip (+1 = walks
+    towards +Y); it decides which side of the travel is "ahead".
+    """
     distance = max(4.6, span * 1.7)
     target = Vector((0, mid_y, height * 0.52))
+    ahead = 1.0 if travel >= 0 else -1.0
     if view == "side":
         camera.location = Vector((-distance, mid_y, height * 0.56))
-    else:  # three-quarter, from the front (-Y) and -X side
+    elif view == "three-quarter-reverse":
         camera.location = Vector(
-            (-distance * 0.78, mid_y - distance * 0.62, height * 0.58)
+            (-distance * 0.78, mid_y + ahead * distance * 0.62, height * 0.58)
+        )
+    else:  # three-quarter (rear): behind the walker, -X side
+        camera.location = Vector(
+            (-distance * 0.78, mid_y - ahead * distance * 0.62, height * 0.58)
         )
     camera.data.lens = 40
     camera.rotation_euler = (target - camera.location).to_track_quat("-Z", "Y").to_euler()
@@ -312,6 +341,7 @@ def process_clip(clip, asset, geometry_file, source_file, output, mpfb_module,
     y1 = target.pose.bones["root"].matrix.translation.y
     mid_y = (y0 + y1) / 2.0
     span = abs(y1 - y0)
+    travel = 1.0 if y1 >= y0 else -1.0
 
     bpy.data.objects.remove(source, do_unlink=True)
     scene, camera, _, _ = geometry_probe.configure_scene(asset, output)
@@ -323,9 +353,9 @@ def process_clip(clip, asset, geometry_file, source_file, output, mpfb_module,
     scene.render.fps = 24
     height = float(asset.get("metadata", {}).get("parameters", {}).get("height", 1.72))
 
-    evidence = {"stills": [], "videos": [], "contactSheets": []}
-    for view in ("side", "three-quarter"):
-        fixed_camera(scene, camera, height, view, mid_y, span)
+    evidence = {"views": list(EVIDENCE_VIEWS), "stills": [], "videos": [], "contactSheets": []}
+    for view in EVIDENCE_VIEWS:
+        fixed_camera(scene, camera, height, view, mid_y, span, travel)
         scene.render.image_settings.file_format = "PNG"
         for frame in (start, (start + end) // 2, end):
             scene.frame_set(frame)

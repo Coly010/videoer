@@ -149,21 +149,31 @@ sourcing route.
 | Pyjama top | Hybrid | Procedural | loose fit, light sim |
 | Pyjama bottoms | Loose | Procedural (leg tubes, drawstring waist pin) | soft, low stiffness |
 
-**Recommended sourcing, in priority order:**
+**Recommended sourcing, in priority order (revised by [ADR 077](../adr/077-cc0-mhclo-garments-are-the-production-wardrobe.md),**
+**Phase 5 below — this flips the original priority order once real assets were fitted and compared**
+**against the procedural output):**
 
-1. **Procedural generation from the hm08 body** — *primary*. Select a torso/leg vertex region on
-   the CC0 body, duplicate, shrinkwrap outward with clearance, solidify, offset; derive the
-   waistband/shoulder pin group from the top ring. Fully **licence-clean** (a derivative of CC0
-   hm08), controllable, headless, no downloads, and it is what the proof already does. Covers every
-   loose/tight garment; produces all 10 garments if needed.
-2. **MPFB `ClothesService.fit_clothes_to_human` + a pinned CC0 MakeHuman clothes pack** —
-   *secondary accelerator* for structured garments (shirt, trousers, jeans, sweater, dress) where a
-   good CC0 MHCLO exists. The MakeHuman community packs **`shirts01`, `pants01`, `dress01` are
-   CC0**; fitting them is headless. Caveats: nothing is bundled in the pinned install (add a pinned,
-   hash-verified pack the way MPFB itself is pinned), and MPFB's *MakeClothes authoring* is known
-   broken — but *fitting existing* MHCLO works.
+1. **MPFB `ClothesService`/`HumanService.add_mhclo_asset` + six pinned CC0 MakeHuman clothes packs**
+   — *primary*. `shirts01`, `pants01`, `dress01`, `skirts01`, `shoes01`, `suits01` are pinned by URL,
+   byte size, and sha256 (`scripts/install-makehuman-clothes-packs.sh`) and licence-scanned into a
+   committed clearance record (`scripts/blender/mhclo_asset_manifest.py`): 56 of 64 garments
+   approved. Fitting is headless and fast (~1 s/garment) and produces artist-modelled garments that
+   touch the body at support points and bridge concavities — the procedural class below cannot do
+   either, because it duplicates the body surface itself. Caveats now known from actually fitting all
+   64: many assets are authored to MPFB's HELPER geometry and reference zero skin vertices (coverage
+   must be computed spatially, never from the asset's own vertex list); 10 of 64 ship no delete group
+   and need one generated; inter-garment layering ignores the asset's `z_depth` field entirely; and
+   licence metadata disagrees within single assets often enough that the more-restrictive-wins rule is
+   load-bearing, not a formality. See ADR 077 for the full pipeline and every fix.
+2. **Procedural generation from the hm08 body** — *fallback*, used only where no cleared CC0 asset
+   exists for a needed garment, and the only route to a genuinely simulated, swinging hem (every
+   fitted `.mhclo` garment is armature-only). Select a torso/leg vertex region on the CC0 body,
+   duplicate, shrinkwrap outward with clearance, solidify, offset; derive the waistband/shoulder pin
+   group from the top ring. Fully **licence-clean** (a derivative of CC0 hm08), controllable,
+   headless, no downloads. Its output reads as an inflated body rather than separately authored
+   clothing (ADR 077's Context), which is exactly why it is no longer the primary route.
 3. **Other CC0 garment packs** — *fallback only*; each needs per-asset licence verification and
-   retopo/fit work. Lower priority; the first two cover the outfits.
+   retopo/fit work. Lower priority; the first two cover the outfits verified so far.
 
 Fitted garments reuse the existing, proven
 [`production_character_assembly.transfer_body_weights`](../../scripts/blender/production_character_assembly.py)
@@ -224,6 +234,19 @@ pipeline integration speculatively (ADR 072).
 - **Phase 4 — caching + pipeline integration (only when a campaign needs it).** Content-address the
   point-cache bake by garment+body+motion+settings hash; expose clothing as a resolvable wardrobe
   input in the cinematic pipeline. Deferred per ADR 072.
+- **Phase 5 — CC0 `.mhclo` production wardrobe ([ADR 077](../adr/077-cc0-mhclo-garments-are-the-production-wardrobe.md), done).**
+  Pinned six CC0 MakeHuman clothes packs (`shirts01`, `pants01`, `dress01`, `skirts01`, `shoes01`,
+  `suits01`; sha256 + byte size) and licence-scanned all 64 garments into a committed clearance
+  record. Fitted real garments via `HumanService.add_mhclo_asset` for four multi-garment outfits on
+  the same Expy Kit walk, computing skin coverage spatially (many assets fit MPFB's HELPER geometry,
+  not skin), generating delete groups where none shipped, resolving inner/outer garment overlap with
+  a proximity-limited clearance push, and taming MakeSkin's Bump node. Ran the same mechanical gate
+  plus a new hidden-skin-boundary-coverage check and an informational inter-garment clearance check.
+  Result: one of four outfits (`mh-suit-boots`) passes the mechanical gate outright; the other three
+  read clean at 1024 px but each fails one small, localized poke-through/hidden-skin check. This
+  supersedes item 1 of the sourcing priority above (MPFB `ClothesService` is now primary), demoting
+  procedural generation to a fallback for garments with no cleared asset and the only route to a
+  simulated hem.
 
 ## Headless verification
 
@@ -241,16 +264,31 @@ from the old [`temporal.ts`](../../src/clothing/temporal.ts) values):
 - **Body penetration**: BVH of the body per frame, fraction of garment verts inside (signed
   distance < −tolerance) **< 2% over the clip and < 5% on any single frame** → else FAIL
   (proof's naive skirt hit 11.3% → correctly FAILED).
+- **Body poke-through (body → garment)**: for every skin vertex under the garment, cast a ray
+  *inward* along the skin normal; meeting the garment within ~2.5 cm means the fabric is under the
+  skin there — the body has broken through and skin shows. Gated on the worst frame: **~0 for
+  fitted** (a fitted garment deforms identically to the skin, so any poke-through is a defect),
+  **< 2% for simulated hems** (brief collision misses over fast legs). This is the check the eye
+  makes; the garment-into-body penetration check above misses a body *face* pushing out between
+  garment vertices, which is exactly what the knee/shoulder skin patches on the first fitted
+  trousers/sweater were (their penetration fractions were ~0). A failing poke-through is written
+  into the report's `notes` in plain words so it is never silent.
 - **Anchor drift**: pinned waistband/shoulder verts stay within tolerance of their fitted position
-  relative to the body → keeps the garment on.
+  relative to the body → keeps the garment on. The waistband is cut to the body's own cross-section
+  profile (not a circle of the maximum hip radius), so the bound is tight (6 cm).
 - **Self-intersection sampling**: sample non-adjacent garment vertex pairs closer than
   `self_distance_min` → catches collapse (sampled to stay cheap).
 - **Edge strain**: local edge stretch ≤ **1.35×**, compression ≥ **0.65×** (reused thresholds) →
   catches solver blow-ups and over-stretch.
 
-Visual: N-frame contact sheets across the walk cycle from **side + three-quarter** (reuse the Expy
-Kit reel's fixed-camera + `contact_sheet` helpers), reviewed for silhouette, fold quality, no
-poke-through, and whether the drape reads as its fabric — folded into the finished-video review.
+Visual: N-frame contact sheets across the walk cycle from **three fixed views** — side, rear
+three-quarter (the walker recedes; back of the garments) and **front three-quarter**
+(`three-quarter-reverse`: the walker approaches the camera, so the face, chest, tie and skirt/dress
+front are judged) — reusing the Expy Kit reel's fixed-camera + `contact_sheet` helpers, reviewed for
+silhouette, fold quality, no poke-through, and whether the drape reads as its fabric — folded into
+the finished-video review. The retargeted walks travel along +Y, so the original single
+three-quarter camera on the −Y side only ever saw the back; the front view is what caught the
+floating skirt waistbands and the never-visible tie.
 
 ## Reuse assessment of the retired clothing code
 

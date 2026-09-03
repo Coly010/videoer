@@ -1,0 +1,3171 @@
+{
+  "schemaVersion": 1,
+  "id": "wardrobe.makehuman-cc0-clothes-packs",
+  "version": "1.0.0",
+  "basemesh": "hm08",
+  "generator": "scripts/blender/mhclo_asset_manifest.py",
+  "generatedFromRoot": "work/sources/makehuman-cc0-clothes-packs-v1",
+  "packs": [
+    {
+      "pack": "shirts01",
+      "url": "https://files.makehumancommunity.org/asset_packs/shirts01/shirts01_cc0.zip",
+      "bytes": 24479483,
+      "sha256": "a5a723b0e84a109bb190fcfeac7f1de4138d875da3e30fe5b3340eac9f38bcd3",
+      "packManifest": "packs/shirts01.json",
+      "assets": [
+        "elvs_crude_t-shirt_male",
+        "joepal_crude_t-shirt_female",
+        "namuhekam_male_polo_shirt",
+        "skalldyrssuppe_tube_top_funky_colors",
+        "toigo_basic_tucked_t-shirt",
+        "toigo_bodice-style_top",
+        "toigo_camisole_top",
+        "toigo_fisherman_sweater",
+        "toigo_keyhole_tank_top",
+        "toigo_turtleneck_halter_top"
+      ]
+    },
+    {
+      "pack": "pants01",
+      "url": "https://files.makehumancommunity.org/asset_packs/pants01/pants01_cc0.zip",
+      "bytes": 21908723,
+      "sha256": "e4e0ec60db34f279be291a83cfd7b342a7c5cf09bb7676682a5f39f4f6ac4ad9",
+      "packManifest": "packs/pants01.json",
+      "assets": [
+        "cortu_cargo_pants",
+        "cortu_jeans_shorts",
+        "toigo_harem_pants",
+        "toigo_wool_pants"
+      ]
+    },
+    {
+      "pack": "dress01",
+      "url": "https://files.makehumancommunity.org/asset_packs/dress01/dress01_cc0.zip",
+      "bytes": 46598791,
+      "sha256": "f49ba54a3c93acd3c3307cc5a96cfc65daf8abfed9212a7e580791d821c9e93a",
+      "packManifest": "packs/dress01.json",
+      "assets": [
+        "aethelraed_flapper_dress",
+        "mindfront_kimono",
+        "toigo_bodice_dress_with_lace_ruffle_skirt",
+        "toigo_camisole_dress_with_full_skirt",
+        "toigo_cut_out_dress",
+        "toigo_dress_with_tiered_skirt",
+        "toigo_halter_dress_knee_length",
+        "toigo_halter_dress_midi",
+        "toigo_halter_dress_with_fluted_skirt",
+        "toigo_keyhole_neck_dress",
+        "toigo_shift_dress",
+        "toigo_strapless_ruffle_top_dress",
+        "wdg_mycenaean_tunic"
+      ]
+    },
+    {
+      "pack": "skirts01",
+      "url": "https://files.makehumancommunity.org/asset_packs/skirts01/skirts01_cc0.zip",
+      "bytes": 29554534,
+      "sha256": "293fa0c15e28e8dcea8dfff20cae31aa4b0d1268a6e6ba0a53a92ebb0f36c882",
+      "packManifest": "packs/skirts01.json",
+      "assets": [
+        "frankyaye_mini_skirt_01",
+        "frankyaye_mini_skirt_02",
+        "toigo_long_full_skirt",
+        "toigo_skirt_with_lace_ruffle",
+        "toigo_tiered_mini_skirt",
+        "toigo_tiered_skirt"
+      ]
+    },
+    {
+      "pack": "shoes01",
+      "url": "https://files.makehumancommunity.org/asset_packs/shoes01/shoes01_cc0.zip",
+      "bytes": 82953569,
+      "sha256": "ded3f70428505eabbf1f6d7b5f61196a7366ef20757103d276ad0ed336c35ada",
+      "packManifest": "packs/shoes01.json",
+      "assets": [
+        "cortu_floppy_overknee_shoes",
+        "cortu_t-bar",
+        "culturalibre_hero_boots_1",
+        "culturalibre_hero_boots_2",
+        "culturalibre_hero_boots_3",
+        "culturalibre_hero_boots_4",
+        "culturalibre_hero_boots_5",
+        "culturalibre_heroine_boots_1",
+        "culturalibre_heroine_boots_2",
+        "culturalibre_heroine_boots_3",
+        "culturalibre_heroine_boots_4",
+        "culturalibre_male_boots",
+        "grinsegold_female_pirate_boots",
+        "scailman_gogo_platform_boots",
+        "scailman_semitransparent_water_boots",
+        "toigo_ankle_boots_female",
+        "toigo_ankle_boots_male",
+        "toigo_ballet_flats",
+        "toigo_ballet_flats_with_bows",
+        "toigo_ballet_flats_with_flowers",
+        "toigo_flats",
+        "toigo_mj_cloth_shoes",
+        "toigo_stiletto_booties"
+      ]
+    },
+    {
+      "pack": "suits01",
+      "url": "https://files.makehumancommunity.org/asset_packs/suits01/suits01_cc0.zip",
+      "bytes": 42624017,
+      "sha256": "2b1d8676f3863b188e9eea98c1d8f234543d54c440e791d92b819f8ee1861f19",
+      "packManifest": "packs/suits01.json",
+      "assets": [
+        "toigo_female_double-breasted_suit",
+        "toigo_female_suit",
+        "toigo_female_suit_2",
+        "toigo_male_double-breasted_suit",
+        "toigo_male_suit_3",
+        "toigo_male_suit_tie_and_jacket",
+        "toigo_suit_with_dinner_jacket",
+        "toigo_suit_with_jacket_and_bowtie"
+      ]
+    }
+  ],
+  "assets": [
+    {
+      "asset": "aethelraed_flapper_dress",
+      "pack": "dress01",
+      "mhcloPath": "clothes/aethelraed_flapper_dress/aethelraed_flapper_dress.mhclo",
+      "sha256": {
+        "mhclo": "39147be04b4e70ef401c2c24db99956530dac5a697c78112818b8ed97b2e1b6e",
+        "obj": "b85166d2eaa99d8f7d492068b7c26cb1c30e05b1ef492bbda6e0ae0583b9d1a5",
+        "mhmat": "1fbccc3aaa7afdf43e91884601c235b03156bc023ce34f5f5e52b7cb9e8a07ab",
+        "textures": {
+          "flapper_dress_green.png": "dfc2c638617608bbb0d3066384d5581fb7a0e8d88a70e0ce436c13a309f13a30"
+        }
+      },
+      "title": "Flapper_Dress_1",
+      "author": "Aethelraed_Unraed",
+      "originalAuthor": null,
+      "category": "Gown/Robe",
+      "tags": [
+        "female",
+        "historical",
+        "dress"
+      ],
+      "sourceUrl": "http://www.makehumancommunity.org/node/581",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "helper",
+        "matchedBaseVertices": 1585,
+        "matchedSkinVertices": 0,
+        "matchedHelperVertices": 1585,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 4510,
+        "zDepth": 50,
+        "vertices": 6690,
+        "faces": 6434
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "cortu_cargo_pants",
+      "pack": "pants01",
+      "mhcloPath": "clothes/cortu_cargo_pants/cortu_cargo_pants.mhclo",
+      "sha256": {
+        "mhclo": "5bc0c7282a5a2694d55b6df2ed5642a382d89d0b77bd98703dac7e110e51fada",
+        "obj": "705467843e1136ca9bc91736efe9601a9cd7243abdeaa9752d69ea53f0974089",
+        "mhmat": "f0718c17a792c56d947525d0fb49ad3b7f9bb33b27acb8353dd94827096f497e",
+        "textures": {
+          "cargo_pants_diff.png": "b091229d558aed8ad41f31235265e98164a2f709158f4113d0ce0e072f680197",
+          "cargo_pants_norm.png": "0851011ad2fd36f6ad2bd1bdd6202bad32fb555b7d6cdb6b474811ba5a5fe7a6"
+        }
+      },
+      "title": "cargo_pants",
+      "author": "Cortu",
+      "originalAuthor": null,
+      "category": "Pants",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/2798",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "Cortu Johnstone - CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "skin",
+        "matchedBaseVertices": 598,
+        "matchedSkinVertices": 598,
+        "matchedHelperVertices": 0,
+        "shipsDeleteGroup": false,
+        "deleteVertices": 0,
+        "zDepth": 50,
+        "vertices": 211,
+        "faces": 196
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "cortu_floppy_overknee_shoes",
+      "pack": "shoes01",
+      "mhcloPath": "clothes/cortu_floppy_overknee_shoes/cortu_floppy_overknee_shoes.mhclo",
+      "sha256": {
+        "mhclo": "847421d4ba77173ccdda43474797d1c09a7123ae2b0cb482919e4b1c50287134",
+        "obj": "be1359b7cad1750d509d79cb33d016ed1611ef3bdd16ca5a72e630f8a285a76c",
+        "mhmat": "3e73704772d2f57a9ccd62a01e24aa3325a4e2b4fdb25f3da54ef5ca4e2a48f3",
+        "textures": {
+          "floppy_overknee_shoe_diff.png": "97b69480fc4f9ac5b85e1983f93cfc1e293fbb5c8ba1f5c394ece0d561bf8399",
+          "floppy_overknee_shoe_norm.png": "8b6e424713468e8719ad352b873fa40a9bf7c488079e0e44788c7811a19de37d"
+        }
+      },
+      "title": "floppy_overknee_shoe",
+      "author": "Cortu",
+      "originalAuthor": null,
+      "category": "Shoes/Boots/Socks",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/2803",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "Cortu Johnstone - CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "skin",
+        "matchedBaseVertices": 1900,
+        "matchedSkinVertices": 1900,
+        "matchedHelperVertices": 0,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 3118,
+        "zDepth": 50,
+        "vertices": 1586,
+        "faces": 1564
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "cortu_jeans_shorts",
+      "pack": "pants01",
+      "mhcloPath": "clothes/cortu_jeans_shorts/cortu_jeans_shorts.mhclo",
+      "sha256": {
+        "mhclo": "f26d763703d6730789df5b9818e4871665928d502b4f68762c8aa96fd3779fab",
+        "obj": "b541561dbe3eef586b643a1e38e15c5bbabce0f46ed7d1f75326b9cfcfd467a1",
+        "mhmat": "91234aad335549161f166b4c9fae8322d6896469efcbf8c64d84ffd56747675c",
+        "textures": {
+          "jean_shorts_diff.png": "36c3c78d65b2b044975bce458fdd93d203e5aaf8a48b890370c02ae8321051c7",
+          "jean_shorts_norm.png": "3fb964ed5ad1313a074650ce7957085a6fcde1d8339c86f21e2874c345356c13"
+        }
+      },
+      "title": "jean_shorts",
+      "author": "Cortu",
+      "originalAuthor": null,
+      "category": "Pants",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/2800",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "Cortu Johnstone - CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "skin",
+        "matchedBaseVertices": 422,
+        "matchedSkinVertices": 422,
+        "matchedHelperVertices": 0,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 277,
+        "zDepth": 50,
+        "vertices": 285,
+        "faces": 250
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "cortu_t-bar",
+      "pack": "shoes01",
+      "mhcloPath": "clothes/cortu_t-bar/cortu_t-bar.mhclo",
+      "sha256": {
+        "mhclo": "6379ee1c2f6f203de916ad26cd3006b6e51ae6e53bf715d54e4dfb12e1a1e04e",
+        "obj": "0ce547cf67b4c024a531dce7c621296ab9e2ad93f8444c576f512426e34cb248",
+        "mhmat": "f803bc09b6a0ccd906fd2fe4ab0bebf493fd1cb0c78f5620e5caa017b2e1574c",
+        "textures": {
+          "tbar_diff.png": "292b0c0908566378ea93cf5c45f30f732bb6ca64709235356191666472176bf5",
+          "tbar_norm.png": "41c20255eaeee1445d2c3ca41d32f0d6d27aed1d3cdd3cd904eebbdb326bf620"
+        }
+      },
+      "title": "tbar",
+      "author": "Cortu",
+      "originalAuthor": null,
+      "category": "Shoes/Boots/Socks",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/2801",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "Cortu Johnstone - CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "skin",
+        "matchedBaseVertices": 555,
+        "matchedSkinVertices": 555,
+        "matchedHelperVertices": 0,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 2160,
+        "zDepth": 50,
+        "vertices": 392,
+        "faces": 352
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "culturalibre_hero_boots_1",
+      "pack": "shoes01",
+      "mhcloPath": "clothes/culturalibre_hero_boots_1/culturalibre_hero_boots_1.mhclo",
+      "sha256": {
+        "mhclo": "c752e83c54ccf48bf10fc07080a3fcde30917dfc7910f770db2dac73df48a1ed",
+        "obj": "92840992d97834a2238bc537b268c4a959cdac0b757f4d1f2b21a21ff998240f",
+        "mhmat": "726bb6661c197e20c1cb6da18e608ccdce53f75654f175e61b438affe926d31d",
+        "textures": {
+          "hero_boots_1.png": "75fce08c30f2510e57170d1b21a821f936b36c20ce32fadcf36a47d0430caecf"
+        }
+      },
+      "title": "hero_boots_1",
+      "author": "culturalibre",
+      "originalAuthor": null,
+      "category": "Shoes/Boots/Socks",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/2081",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC-0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "skin",
+        "matchedBaseVertices": 1100,
+        "matchedSkinVertices": 1100,
+        "matchedHelperVertices": 0,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 2758,
+        "zDepth": 50,
+        "vertices": 1448,
+        "faces": 1444
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "culturalibre_hero_boots_2",
+      "pack": "shoes01",
+      "mhcloPath": "clothes/culturalibre_hero_boots_2/culturalibre_hero_boots_2.mhclo",
+      "sha256": {
+        "mhclo": "b8046c7e7b9cf39ea93d1155fbb76f9bdfc612c7a0ea140a11aba38a68f3542f",
+        "obj": "dd1bd5b4b5cac58ef1a624a52776be71f5f9a4b6295c9074971dee5cc8d48521",
+        "mhmat": "a18dd597d6a3cd852a0b301681c3da96a900c1441b20141ef8ad6540231fea31",
+        "textures": {
+          "blue.png": "605c22b08c5fa0f00cef40f7db561a40493d1c8820b2e17faa12c856bb9f42e6"
+        }
+      },
+      "title": "hero_boots_2",
+      "author": "culturalibre",
+      "originalAuthor": null,
+      "category": "Shoes/Boots/Socks",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/2132",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC-0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "skin",
+        "matchedBaseVertices": 1082,
+        "matchedSkinVertices": 1082,
+        "matchedHelperVertices": 0,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 2718,
+        "zDepth": 50,
+        "vertices": 1160,
+        "faces": 1156
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "culturalibre_hero_boots_3",
+      "pack": "shoes01",
+      "mhcloPath": "clothes/culturalibre_hero_boots_3/culturalibre_hero_boots_3.mhclo",
+      "sha256": {
+        "mhclo": "a874339dc5a73e3a9b8f49ac019d9d7c5e556bf659b117bbd605f5635927c73f",
+        "obj": "4029abb3a62505b59f9e1954dd1bbabd3ca580852492a4a0a8e41227e1ea35f5",
+        "mhmat": "ae64d72ce3a02aab1f180c5357dfe3dede9886238e26322f8aaa2effd986033e",
+        "textures": {
+          "green.png": "3e8fcdd7c569f0244d1983fdc42394f5a129274aef1169a6126d605f7473fcdd"
+        }
+      },
+      "title": "hero_boots_3",
+      "author": "culturalibre",
+      "originalAuthor": null,
+      "category": "Shoes/Boots/Socks",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/2138",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC-0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "skin",
+        "matchedBaseVertices": 1092,
+        "matchedSkinVertices": 1092,
+        "matchedHelperVertices": 0,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 2718,
+        "zDepth": 50,
+        "vertices": 1160,
+        "faces": 1156
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "culturalibre_hero_boots_4",
+      "pack": "shoes01",
+      "mhcloPath": "clothes/culturalibre_hero_boots_4/culturalibre_hero_boots_4.mhclo",
+      "sha256": {
+        "mhclo": "bb891ea15c086f04dacda9fb91f7983f759c84bc88daef917ef11c1fce741d4c",
+        "obj": "f1e5766d54ffe2e797380ba22eae01cc5aa76d05c80c8d039e11fd535af43b8b",
+        "mhmat": "a18dd597d6a3cd852a0b301681c3da96a900c1441b20141ef8ad6540231fea31",
+        "textures": {
+          "blue.png": "4ed07fb880ee70e00e8081d5d99a6d452acac39a2c70b174b0635ca8da46fb15"
+        }
+      },
+      "title": "hero_boots_4",
+      "author": "culturalibre",
+      "originalAuthor": null,
+      "category": "Shoes/Boots/Socks",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/2167",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC-0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "skin",
+        "matchedBaseVertices": 1008,
+        "matchedSkinVertices": 1008,
+        "matchedHelperVertices": 0,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 2678,
+        "zDepth": 50,
+        "vertices": 1160,
+        "faces": 1156
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "culturalibre_hero_boots_5",
+      "pack": "shoes01",
+      "mhcloPath": "clothes/culturalibre_hero_boots_5/culturalibre_hero_boots_5.mhclo",
+      "sha256": {
+        "mhclo": "21dfb2877b4be4c53d2e70bc8ea44506bc8712f10936721f9cb57eaa741736d0",
+        "obj": "d5b46e9e0bde15418547407c5f8fff2822bcd0a9ef94f240b3394fcd66d2a896",
+        "mhmat": "5e182f274b219daf94a8a8a09b069d436918dfc877f9aa2ad22995bff6716a72",
+        "textures": {
+          "red.png": "de135e1ff850b020d9d445dad0f511656a4be0c239567aa4d4c0072ec1f06efe"
+        }
+      },
+      "title": "hero_boots_5",
+      "author": "culturalibre",
+      "originalAuthor": null,
+      "category": "Shoes/Boots/Socks",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/2424",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC-0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "skin",
+        "matchedBaseVertices": 1844,
+        "matchedSkinVertices": 1844,
+        "matchedHelperVertices": 0,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 2798,
+        "zDepth": 70,
+        "vertices": 5780,
+        "faces": 5776
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "culturalibre_heroine_boots_1",
+      "pack": "shoes01",
+      "mhcloPath": "clothes/culturalibre_heroine_boots_1/culturalibre_heroine_boots_1.mhclo",
+      "sha256": {
+        "mhclo": "8a3cacdfe6263754b2560a6c4de66cf46bd313db62b59b9e44def2c1f080bf0e",
+        "obj": "7946732291472f05489e9bdff7634968e60a5279c1bc835fc85b3df3f666356c",
+        "mhmat": "672b4e5deffe23cdf55988e51a6dfd9ce24c70ef5862de0d9465f0b4d674828b",
+        "textures": {
+          "black.png": "5108ec4fe09d1c82b4ad8cad0ab2e02ff9c0523798441780e46d2e01732bb736"
+        }
+      },
+      "title": "heroine_boots_1",
+      "author": "culturalibre",
+      "originalAuthor": null,
+      "category": "Shoes/Boots/Socks",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/2155",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC-0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "skin",
+        "matchedBaseVertices": 1739,
+        "matchedSkinVertices": 1739,
+        "matchedHelperVertices": 0,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 3334,
+        "zDepth": 50,
+        "vertices": 2056,
+        "faces": 2052
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "culturalibre_heroine_boots_2",
+      "pack": "shoes01",
+      "mhcloPath": "clothes/culturalibre_heroine_boots_2/culturalibre_heroine_boots_2.mhclo",
+      "sha256": {
+        "mhclo": "ea31ccff10b8f1909e0698e56d5a23fee5a19454f4037de39299f58dd78a0cf3",
+        "obj": "f6ee5ad38f3ac5b49dd17c4071c1f2284fb197be9311dd628a0f59cde5b815df",
+        "mhmat": "f0738f57471b57e8eead4d2078f456b2ea038d2390168350387464ad371b8a0f",
+        "textures": {
+          "green.png": "564f11a124583bcc70e4891a82b2668399f5404dbeba286db68d93de26239262"
+        }
+      },
+      "title": "heroine_boots_2",
+      "author": "culturalibre",
+      "originalAuthor": null,
+      "category": "Shoes/Boots/Socks",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/2181",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC-0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "skin",
+        "matchedBaseVertices": 1150,
+        "matchedSkinVertices": 1150,
+        "matchedHelperVertices": 0,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 2678,
+        "zDepth": 50,
+        "vertices": 1364,
+        "faces": 1360
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "culturalibre_heroine_boots_3",
+      "pack": "shoes01",
+      "mhcloPath": "clothes/culturalibre_heroine_boots_3/culturalibre_heroine_boots_3.mhclo",
+      "sha256": {
+        "mhclo": "0f9b6943641462b299ab85b7817022554b15ef6d8fc1977aa006f65637ffdaa2",
+        "obj": "291d7d76d75a1aec9c36aa7b19e1cbae73510504c00fa3d063599b774b1ff62a",
+        "mhmat": "26b552d989ef3e6451f15a266f29ffe9c6750ffef98da6a0a953b0f212f9f7a0",
+        "textures": {
+          "purple.png": "208cb0a8900e9d03f8d4713aee99886c3034b1ec8bfbc25dafc8cdfd1db64d0a"
+        }
+      },
+      "title": "heroine_boots_3",
+      "author": "culturalibre",
+      "originalAuthor": null,
+      "category": "Shoes/Boots/Socks",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/2187",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC-0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "skin",
+        "matchedBaseVertices": 1174,
+        "matchedSkinVertices": 1174,
+        "matchedHelperVertices": 0,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 2718,
+        "zDepth": 50,
+        "vertices": 1364,
+        "faces": 1360
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "culturalibre_heroine_boots_4",
+      "pack": "shoes01",
+      "mhcloPath": "clothes/culturalibre_heroine_boots_4/culturalibre_heroine_boots_4.mhclo",
+      "sha256": {
+        "mhclo": "bd9fde255adde94814e2778e8550f5613c58f7f79bcb2ffdc7271431a24807f0",
+        "obj": "74b457ce751107e9469ed01e18cb5c009c008b1dbd73dbd11c2cd4a44b8d33e8",
+        "mhmat": "75cb5668a812a8b05efd5bc36ec0976355dbe38e7319681fe4f29b9103ef4c6d",
+        "textures": {}
+      },
+      "title": "heroine_boots_4",
+      "author": "culturalibre",
+      "originalAuthor": null,
+      "category": "Shoes/Boots/Socks",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/2464",
+      "licence": {
+        "spdx": "CC-BY-4.0",
+        "name": "Creative Commons Attribution 4.0 International",
+        "commercialUse": "allowed",
+        "attributionRequired": true,
+        "url": "https://creativecommons.org/licenses/by/4.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC-BY-4.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC-0",
+        "agreement": "conflict"
+      },
+      "clearance": "review-required",
+      "clearanceReason": "The pack manifest declares CC-BY-4.0 while the .mhclo header declares CC0-1.0; the more restrictive CC-BY-4.0 governs, giving clearance review-required.",
+      "fitting": {
+        "fitReference": "skin",
+        "matchedBaseVertices": 1012,
+        "matchedSkinVertices": 1012,
+        "matchedHelperVertices": 0,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 2758,
+        "zDepth": 50,
+        "vertices": 852,
+        "faces": 856
+      },
+      "parseWarnings": [
+        "referenced diffuseTexture 'red.png' does not exist on disk; skipped"
+      ]
+    },
+    {
+      "asset": "culturalibre_male_boots",
+      "pack": "shoes01",
+      "mhcloPath": "clothes/culturalibre_male_boots/culturalibre_male_boots.mhclo",
+      "sha256": {
+        "mhclo": "a22e7c3725a69ef5fc1267cad8622082e445b7d194d4cd0b253be6bc809d925f",
+        "obj": "6901f0cef7c0ae8eeeaf476b1a77e2b93fa3fe66d111627911cc914c3633711a",
+        "mhmat": "5190e2e5aeb3ec3ac2139f13279f02eeda8d20fcd294d616b67ccb16b9eeff26",
+        "textures": {
+          "boot.png": "43846dcf912b3f72bfff3e26aec04013f4bfcfb4238f5187f46358c262849116"
+        }
+      },
+      "title": "male_boots",
+      "author": "culturalibre",
+      "originalAuthor": null,
+      "category": "Shoes/Boots/Socks",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/2548",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC-0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "skin",
+        "matchedBaseVertices": 1744,
+        "matchedSkinVertices": 1744,
+        "matchedHelperVertices": 0,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 2758,
+        "zDepth": 70,
+        "vertices": 15308,
+        "faces": 15384
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "elvs_crude_t-shirt_male",
+      "pack": "shirts01",
+      "mhcloPath": "clothes/elvs_crude_t-shirt_male/elvs_crude_t-shirt_male.mhclo",
+      "sha256": {
+        "mhclo": "64dd3e6e2fbba39cc792854e0ae3e2c4829a37fa4e4b690f463c2956476294da",
+        "obj": "3389b981a826396213cce2e69f40b3d9eca6cdfadcfcbee2774acb1dfb322fa7",
+        "mhmat": "4e456f7b85ff3023b2ec3b4ed58b0ccceac621f3a02f4887d04eaa2a781b229a",
+        "textures": {
+          "crude_male_tex.png": "0704c69ec9ebaf4a9ab0ba04a103a9350939971ca8222f130f4e3defecdc2231"
+        }
+      },
+      "title": "crude_male_shirt",
+      "author": "Elvaerwyn",
+      "originalAuthor": null,
+      "category": "Shirt/T-shirt/Sweater",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1416",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "skin",
+        "matchedBaseVertices": 1433,
+        "matchedSkinVertices": 1433,
+        "matchedHelperVertices": 0,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 892,
+        "zDepth": 50,
+        "vertices": 1095,
+        "faces": 1034
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "frankyaye_mini_skirt_01",
+      "pack": "skirts01",
+      "mhcloPath": "clothes/frankyaye_mini_skirt_01/frankyaye_mini_skirt_01.mhclo",
+      "sha256": {
+        "mhclo": "1371920e0f8850b4bea413bddd4ba1621409c230f1365743e1928246db5f1be0",
+        "obj": "289fecdd56a58da3f71648ab847b2576c9e93fa0cd9599222552a4a8e9cc6a11",
+        "mhmat": "d9d8ad20b073ce69854765ddf1ca86651eac083fa93be77f8c22b10303cb3585",
+        "textures": {
+          "mini_skirt_01_diffuse.png": "e9b7c8ee33c7ec216f92d237bad54025bc21e4032ca1c090d8b354ef74a19a46"
+        }
+      },
+      "title": "Mini_Skirt_01",
+      "author": "frankyaye",
+      "originalAuthor": null,
+      "category": "Skirt",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/129",
+      "licence": {
+        "spdx": "AGPL-3.0-or-later",
+        "name": "GNU Affero General Public License v3.0 or later",
+        "commercialUse": "unknown",
+        "attributionRequired": true,
+        "url": "https://www.gnu.org/licenses/agpl-3.0.html",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "AGPL-3.0-or-later",
+        "mhcloHeaderLicenceRaw": "AGPL3 (see also http://www.makehuman.org/doc/node/external_tools_license.html)",
+        "agreement": "conflict"
+      },
+      "clearance": "rejected",
+      "clearanceReason": "The pack manifest declares CC0-1.0 while the .mhclo header declares AGPL-3.0-or-later; the more restrictive AGPL-3.0-or-later governs, giving clearance rejected.",
+      "fitting": {
+        "fitReference": "skin",
+        "matchedBaseVertices": 378,
+        "matchedSkinVertices": 378,
+        "matchedHelperVertices": 0,
+        "shipsDeleteGroup": false,
+        "deleteVertices": 0,
+        "zDepth": 50,
+        "vertices": 905,
+        "faces": 860
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "frankyaye_mini_skirt_02",
+      "pack": "skirts01",
+      "mhcloPath": "clothes/frankyaye_mini_skirt_02/frankyaye_mini_skirt_02.mhclo",
+      "sha256": {
+        "mhclo": "25c83a5c68d79b2a7e8b42b62e4855eeb702ddff04c9e0e8526752c8fa088d52",
+        "obj": "46ddeba16b7f7e0f2c69f832811fbb361209f33547ca347744507d95a50526a7",
+        "mhmat": "cf9be3f76d1b0e98cd94cc53b5008f9158b224fcfdb871060b96734dd00a7333",
+        "textures": {
+          "mini_skirt_01_diffuse.png": "e9b7c8ee33c7ec216f92d237bad54025bc21e4032ca1c090d8b354ef74a19a46"
+        }
+      },
+      "title": "Mini_Skirt_02",
+      "author": "frankyaye",
+      "originalAuthor": null,
+      "category": "Skirt",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/131",
+      "licence": {
+        "spdx": "AGPL-3.0-or-later",
+        "name": "GNU Affero General Public License v3.0 or later",
+        "commercialUse": "unknown",
+        "attributionRequired": true,
+        "url": "https://www.gnu.org/licenses/agpl-3.0.html",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "AGPL-3.0-or-later",
+        "mhcloHeaderLicenceRaw": "AGPL3 (see also http://www.makehuman.org/doc/node/external_tools_license.html)",
+        "agreement": "conflict"
+      },
+      "clearance": "rejected",
+      "clearanceReason": "The pack manifest declares CC0-1.0 while the .mhclo header declares AGPL-3.0-or-later; the more restrictive AGPL-3.0-or-later governs, giving clearance rejected.",
+      "fitting": {
+        "fitReference": "skin",
+        "matchedBaseVertices": 474,
+        "matchedSkinVertices": 474,
+        "matchedHelperVertices": 0,
+        "shipsDeleteGroup": false,
+        "deleteVertices": 0,
+        "zDepth": 50,
+        "vertices": 1385,
+        "faces": 1300
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "grinsegold_female_pirate_boots",
+      "pack": "shoes01",
+      "mhcloPath": "clothes/grinsegold_female_pirate_boots/grinsegold_female_pirate_boots.mhclo",
+      "sha256": {
+        "mhclo": "afc5bfc250967f3d77878298a7253f629d349715d5ee72e088d710f65b8e7ecc",
+        "obj": "c9988eb33c2bf69ac93b57725b3a2d2bf3bc02123ac8d7baa17dce9fc16c9225",
+        "mhmat": "787da33539ef950bd48c2186ab3586fb4a5555800bf91527fa922e8a3cb9df46",
+        "textures": {
+          "BootsDiff.jpg": "3a5ac0bc0e42a718ee20af58ab9db6597193bdaf5934920a279ba500d582b95c",
+          "Boots_Bump.jpg": "55f6d07115647a8af8f145d4d3b8ad2880d17731390dadebb6f656ade793a620",
+          "BootsNormals.jpg": "e3f47ac41b3217d4ed1068ddfac5ed3a1de7b3b79e43358061c22a86e8b89a43",
+          "BootsSpec.jpg": "792e3cf9d23db845e8f42be0747ce2dfd889b845390d6a72304a8776699b182b",
+          "Tileable_metal_scratch_rust_texture_SPECULAR.jpg": "89a1b7eadde2994f609c1deb380239c18df00efa6de7e4937ba2d9915d9b012a"
+        }
+      },
+      "title": "LeatherBoots_2cm",
+      "author": "grinsegold",
+      "originalAuthor": null,
+      "category": "Shoes/Boots/Socks",
+      "tags": [
+        "shoes"
+      ],
+      "sourceUrl": "http://www.makehumancommunity.org/node/211",
+      "licence": {
+        "spdx": "AGPL-3.0-or-later",
+        "name": "GNU Affero General Public License v3.0 or later",
+        "commercialUse": "unknown",
+        "attributionRequired": true,
+        "url": "https://www.gnu.org/licenses/agpl-3.0.html",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "AGPL-3.0-or-later",
+        "mhcloHeaderLicenceRaw": "AGPL3 (see also http://www.makehuman.org/doc/node/external_tools_license.html)",
+        "agreement": "conflict"
+      },
+      "clearance": "rejected",
+      "clearanceReason": "The pack manifest declares CC0-1.0 while the .mhclo header declares AGPL-3.0-or-later; the more restrictive AGPL-3.0-or-later governs, giving clearance rejected.",
+      "fitting": {
+        "fitReference": "skin",
+        "matchedBaseVertices": 2170,
+        "matchedSkinVertices": 2170,
+        "matchedHelperVertices": 0,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 2606,
+        "zDepth": 50,
+        "vertices": 31862,
+        "faces": 31776
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "joepal_crude_t-shirt_female",
+      "pack": "shirts01",
+      "mhcloPath": "clothes/joepal_crude_t-shirt_female/joepal_crude_t-shirt_female.mhclo",
+      "sha256": {
+        "mhclo": "4feb91f93f9228d0ba3c030cf325f5896143583d81025311ae37b1c9c2dc04a7",
+        "obj": "83d20bb41bd5335d020c7e8b6bf5f969dd6cd93a5d5e84bac63cb222a135e9b4",
+        "mhmat": "69749cb47afa4184ea3978153f34e1160a61675cf6ad7dce4f650a4bf1cacc1c",
+        "textures": {
+          "CrudeFemaleTshirtDiffuse.png": "a9783054a946e51f2fde74cda2e9dc313d04ad1ddde811fe67f7a1616da0fc94"
+        }
+      },
+      "title": "CrudeFemaleTshirt",
+      "author": "Joel Palmius",
+      "originalAuthor": null,
+      "category": "Shirt/T-shirt/Sweater",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/894",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "skin",
+        "matchedBaseVertices": 1416,
+        "matchedSkinVertices": 1416,
+        "matchedHelperVertices": 0,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 1560,
+        "zDepth": 50,
+        "vertices": 1095,
+        "faces": 1034
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "mindfront_kimono",
+      "pack": "dress01",
+      "mhcloPath": "clothes/mindfront_kimono/mindfront_kimono.mhclo",
+      "sha256": {
+        "mhclo": "c1c736e8449f65d19e408b43fa5ab20106deedfa9d5563952dbbf1f9519c8f1f",
+        "obj": "db3c68dac67b15f46b187442570e67ed0d25496db8d7226cbcdd18e40546b5e2",
+        "mhmat": "3d9beb418e5a8dfc5f8d4b539591f2d5719a3ab9402499b969c9626b45b84b43",
+        "textures": {
+          "F_Kimono_COL.png": "dbb80df9187513e418c8d062c39e3da1743b096887f9a75bc1e3737814fad9eb",
+          "F_Kimono_NRM.png": "e925f39fb718658331dc917731c4a408f9013eff727c5cd63344d003007399ef",
+          "F_Kimono_SPEC.png": "3ba0f09b2d947d33cc0a630e59d95ba76800321379081564e511a086475f825b"
+        }
+      },
+      "title": "F_Kimono",
+      "author": "Mindfront",
+      "originalAuthor": null,
+      "category": "Gown/Robe",
+      "tags": [
+        "female",
+        "robe",
+        "casual"
+      ],
+      "sourceUrl": "http://www.makehumancommunity.org/node/3171",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "helper",
+        "matchedBaseVertices": 1783,
+        "matchedSkinVertices": 0,
+        "matchedHelperVertices": 1783,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 2817,
+        "zDepth": 61,
+        "vertices": 3546,
+        "faces": 3461
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "namuhekam_male_polo_shirt",
+      "pack": "shirts01",
+      "mhcloPath": "clothes/namuhekam_male_polo_shirt/namuhekam_male_polo_shirt.mhclo",
+      "sha256": {
+        "mhclo": "1639239b0d6d16ef2ca98f1f5af1af447d1e9e6950cd0fad9ecf774fa597434b",
+        "obj": "aaee5f49077a8bacb8b1077910e4b9cc7946d587c75e367273f4ecaf94abd627",
+        "mhmat": "fb47735dab1f3aacf39b9aea7e9c8343ea47c39f8a13fab559ba505b7c28356c",
+        "textures": {
+          "Polo_Base_Color.png": "d8e74dbcc3e79227dd7f6d8b1e0ed6c614eb11d4dc3cfeb935222783c23ae64b"
+        }
+      },
+      "title": "Polo t-shirt",
+      "author": "namuhekam",
+      "originalAuthor": null,
+      "category": "Shirt/T-shirt/Sweater",
+      "tags": [
+        "male",
+        "casual",
+        "profession",
+        "contemporary"
+      ],
+      "sourceUrl": "http://www.makehumancommunity.org/node/2909",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "mixed",
+        "matchedBaseVertices": 2045,
+        "matchedSkinVertices": 1040,
+        "matchedHelperVertices": 1005,
+        "shipsDeleteGroup": false,
+        "deleteVertices": 0,
+        "zDepth": 50,
+        "vertices": 2189,
+        "faces": 2053
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "scailman_gogo_platform_boots",
+      "pack": "shoes01",
+      "mhcloPath": "clothes/scailman_gogo_platform_boots/scailman_gogo_platform_boots.mhclo",
+      "sha256": {
+        "mhclo": "e457e3b6096aa0e3a072f08c164137e16d0829f6f3f4e75820d89a443a280017",
+        "obj": "81235e6f93a726a307272ad06029691314f4de05b1bf08c9f09823041e5a0484",
+        "mhmat": "aed507a38a1d16d3ecf4ba51ce65fbd9a0747061009905ce3477898563c3ae5c",
+        "textures": {
+          "gogo_boots.png": "88c592cd2b5950103bb3475f06e5312a94e78db1604dc9a558f4366655865b53"
+        }
+      },
+      "title": "gogo_boots",
+      "author": "scailman",
+      "originalAuthor": null,
+      "category": "Shoes/Boots/Socks",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1467",
+      "licence": {
+        "spdx": "AGPL-3.0-or-later",
+        "name": "GNU Affero General Public License v3.0 or later",
+        "commercialUse": "unknown",
+        "attributionRequired": true,
+        "url": "https://www.gnu.org/licenses/agpl-3.0.html",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "AGPL-3.0-or-later",
+        "mhcloHeaderLicenceRaw": "AGPL3 (see also http://www.makehuman.org/doc/node/external_tools_license.html)",
+        "agreement": "conflict"
+      },
+      "clearance": "rejected",
+      "clearanceReason": "The pack manifest declares CC0-1.0 while the .mhclo header declares AGPL-3.0-or-later; the more restrictive AGPL-3.0-or-later governs, giving clearance rejected.",
+      "fitting": {
+        "fitReference": "skin",
+        "matchedBaseVertices": 1010,
+        "matchedSkinVertices": 1010,
+        "matchedHelperVertices": 0,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 2947,
+        "zDepth": 50,
+        "vertices": 5196,
+        "faces": 5034
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "scailman_semitransparent_water_boots",
+      "pack": "shoes01",
+      "mhcloPath": "clothes/scailman_semitransparent_water_boots/scailman_semitransparent_water_boots.mhclo",
+      "sha256": {
+        "mhclo": "cb35a4bd901a64dcc2eb4538260e97cceceeaa616458eff03be00b2eb7858e0f",
+        "obj": "0f55d9b2799f9308c749ab8f6a2cb5e3b6586a19e838165db034155008fc6238",
+        "mhmat": "287a221ec1c8778f4ef897de0a96c8f1f72253f9fc3eddc5c2356392805c85ff",
+        "textures": {
+          "Botas_102.png": "f9e5077ffc0574cfdb270085e923d56b7cdaa6e2f45d65cf1f5bf2e9d553c64d"
+        }
+      },
+      "title": "Botas_102",
+      "author": "scailman",
+      "originalAuthor": null,
+      "category": "Shoes/Boots/Socks",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1778",
+      "licence": {
+        "spdx": "AGPL-3.0-or-later",
+        "name": "GNU Affero General Public License v3.0 or later",
+        "commercialUse": "unknown",
+        "attributionRequired": true,
+        "url": "https://www.gnu.org/licenses/agpl-3.0.html",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "AGPL-3.0-or-later",
+        "mhcloHeaderLicenceRaw": "AGPL3 (see also http://www.makehuman.org/doc/node/external_tools_license.html)",
+        "agreement": "conflict"
+      },
+      "clearance": "rejected",
+      "clearanceReason": "The pack manifest declares CC0-1.0 while the .mhclo header declares AGPL-3.0-or-later; the more restrictive AGPL-3.0-or-later governs, giving clearance rejected.",
+      "fitting": {
+        "fitReference": "skin",
+        "matchedBaseVertices": 1562,
+        "matchedSkinVertices": 1562,
+        "matchedHelperVertices": 0,
+        "shipsDeleteGroup": false,
+        "deleteVertices": 0,
+        "zDepth": 50,
+        "vertices": 5468,
+        "faces": 5376
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "skalldyrssuppe_tube_top_funky_colors",
+      "pack": "shirts01",
+      "mhcloPath": "clothes/skalldyrssuppe_tube_top_funky_colors/skalldyrssuppe_tube_top_funky_colors.mhclo",
+      "sha256": {
+        "mhclo": "99f193451b32a6640b8114439fa6051a7e36832068d933f87156b215ea030a93",
+        "obj": "d1e8a972011ce8f26a5897be48556f7affeb896fe5875b2658b0820db7701656",
+        "mhmat": "ed5f6a50742abee855d457f7616f6b88f564180743860e8d1ddfffeb02112264",
+        "textures": {
+          "tube_top_diff.png": "aa964af2a43c0b9986978e601c23b4ec66f52601148ea75a6247e20e245e5dca"
+        }
+      },
+      "title": "tube_top",
+      "author": "skalldyrssuppe",
+      "originalAuthor": null,
+      "category": "Shirt/T-shirt/Sweater",
+      "tags": [
+        "top",
+        "egen"
+      ],
+      "sourceUrl": "http://www.makehumancommunity.org/node/975",
+      "licence": {
+        "spdx": "AGPL-3.0-or-later",
+        "name": "GNU Affero General Public License v3.0 or later",
+        "commercialUse": "unknown",
+        "attributionRequired": true,
+        "url": "https://www.gnu.org/licenses/agpl-3.0.html",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "AGPL-3.0-or-later",
+        "mhcloHeaderLicenceRaw": "AGPL3 (see also http://www.makehuman.org/doc/node/external_tools_license.html)",
+        "agreement": "conflict"
+      },
+      "clearance": "rejected",
+      "clearanceReason": "The pack manifest declares CC0-1.0 while the .mhclo header declares AGPL-3.0-or-later; the more restrictive AGPL-3.0-or-later governs, giving clearance rejected.",
+      "fitting": {
+        "fitReference": "skin",
+        "matchedBaseVertices": 795,
+        "matchedSkinVertices": 795,
+        "matchedHelperVertices": 0,
+        "shipsDeleteGroup": false,
+        "deleteVertices": 0,
+        "zDepth": 50,
+        "vertices": 1456,
+        "faces": 1456
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "toigo_ankle_boots_female",
+      "pack": "shoes01",
+      "mhcloPath": "clothes/toigo_ankle_boots_female/toigo_ankle_boots_female.mhclo",
+      "sha256": {
+        "mhclo": "a1ada0a96d7085ed60293e1b4aac1dabc80ed3ee50647aaff6d68b6c23b82967",
+        "obj": "dfceab7514940456f7ecf5879cc6c686192e7c24d64e1c5356c7a9f09c5ae6c9",
+        "mhmat": "89cf13d01cbfbc261782572c13aa8cc0b6ff1a4f60131f33136ecc6b720b647a",
+        "textures": {
+          "BootsAnkle.png": "2d915244856deb7220e067564aafb2fbbdf00002482dee99d38ca666d239aa98",
+          "BootsAnkle-norm.png": "d4bbc26383a8c191be31a645c5ddfdea4c3ba27d56140305271c4553dbaae8a3",
+          "BootsAnkle-spec.png": "30e2ce35ab197a55f43f2cdae248940445b5fe14de30eebe4f3c2aed96a80802"
+        }
+      },
+      "title": "Boots_Ankle",
+      "author": "MargaretToigo",
+      "originalAuthor": null,
+      "category": "Shoes/Boots/Socks",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1738",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "helper",
+        "matchedBaseVertices": 392,
+        "matchedSkinVertices": 0,
+        "matchedHelperVertices": 392,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 2206,
+        "zDepth": 50,
+        "vertices": 2084,
+        "faces": 2060
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "toigo_ankle_boots_male",
+      "pack": "shoes01",
+      "mhcloPath": "clothes/toigo_ankle_boots_male/toigo_ankle_boots_male.mhclo",
+      "sha256": {
+        "mhclo": "0143dbcfdac444a42af339bcc65352af8ad6d8d2519457aa1aff89a639dd554a",
+        "obj": "b23f306d072e5ec89b5958242111e647a76db374a8ff219b006010ff2e504294",
+        "mhmat": "0731fd75bc7333f83010e64d9d5ff7441a0067bc79e3baf489f9ec7abcb47aba",
+        "textures": {
+          "BootsAnkleM.png": "0e476df27c5ddebca2c55ce889abd46387ba405f34833de81db466d1a4b1ca5b",
+          "BootsAnkle-norm.png": "d4bbc26383a8c191be31a645c5ddfdea4c3ba27d56140305271c4553dbaae8a3",
+          "BootsAnkle-spec.png": "30e2ce35ab197a55f43f2cdae248940445b5fe14de30eebe4f3c2aed96a80802"
+        }
+      },
+      "title": "Boots_Ankle_Male",
+      "author": "MargaretToigo",
+      "originalAuthor": null,
+      "category": "Shoes/Boots/Socks",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1743",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "helper",
+        "matchedBaseVertices": 550,
+        "matchedSkinVertices": 0,
+        "matchedHelperVertices": 550,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 2246,
+        "zDepth": 50,
+        "vertices": 2084,
+        "faces": 2060
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "toigo_ballet_flats",
+      "pack": "shoes01",
+      "mhcloPath": "clothes/toigo_ballet_flats/toigo_ballet_flats.mhclo",
+      "sha256": {
+        "mhclo": "9c7336e6b07c7fb004e8c7bb0bd6bc6c49208d7e9fdf09ae5702d1f279d96e4a",
+        "obj": "80fd320014dacaa1a58740ae5ee8a37ab32bac05c6f68ddebf1ad1b4a1c86b8c",
+        "mhmat": "5964fab9d98a254515c356cb0ec619fcc58470df8d9340734dedcd5f0a59b783",
+        "textures": {
+          "BalletFlats.png": "f72c35c56b670e0936b548090e1f362220e6abbb2cec210674c1c86a5864ef12",
+          "BalletFlatsPlainNorm.png": "2162a61c88fdd2b85e7bfea8c1e260cdd679838a66c0c6ed79b77188a02f7b94",
+          "BalletFlatsSPEC.png": "94b7f68f2b13623e6dc8708d0fa037c2f8527eb439d44b245ed003ef737e6bfa"
+        }
+      },
+      "title": "Flats_ballet",
+      "author": "MargaretToigo",
+      "originalAuthor": null,
+      "category": "Shoes/Boots/Socks",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1734",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "helper",
+        "matchedBaseVertices": 346,
+        "matchedSkinVertices": 0,
+        "matchedHelperVertices": 346,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 1919,
+        "zDepth": 50,
+        "vertices": 4558,
+        "faces": 4480
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "toigo_ballet_flats_with_bows",
+      "pack": "shoes01",
+      "mhcloPath": "clothes/toigo_ballet_flats_with_bows/toigo_ballet_flats_with_bows.mhclo",
+      "sha256": {
+        "mhclo": "cd84dc419613869364c623d65a7d6cf48e6b4202da8512171ee11f8be53c686c",
+        "obj": "5abc1c19969915838644108a2ad6c2c6a7eb12b328d8c217e44dd70d84b398ae",
+        "mhmat": "aec7f3be89233c6046dc6517633b87d8ad80fbd288c0fb7fbf32813406d62990",
+        "textures": {
+          "BalletFlatsBowUV.png": "1e7073edd2cca0a49d9ee0a050c9726030bb4878557760409aa0fe2d60938888",
+          "BalletFlatsBowNORM.png": "95c1727a84b3670e0f58e50b2ca53c01d7a0b3596acbca619b584d3fa75f518c",
+          "BalletFlatsSPEC.png": "94b7f68f2b13623e6dc8708d0fa037c2f8527eb439d44b245ed003ef737e6bfa"
+        }
+      },
+      "title": "Flats_ballet_bow",
+      "author": "MargaretToigo",
+      "originalAuthor": null,
+      "category": "Shoes/Boots/Socks",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1735",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "helper",
+        "matchedBaseVertices": 346,
+        "matchedSkinVertices": 0,
+        "matchedHelperVertices": 346,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 1919,
+        "zDepth": 50,
+        "vertices": 7756,
+        "faces": 7432
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "toigo_ballet_flats_with_flowers",
+      "pack": "shoes01",
+      "mhcloPath": "clothes/toigo_ballet_flats_with_flowers/toigo_ballet_flats_with_flowers.mhclo",
+      "sha256": {
+        "mhclo": "ae629aa72e97f50199ae9b6ac84ef3ad1c8dfadf3d6469e62550bb95aed6e99b",
+        "obj": "47d96b8321345844ed8708f94583424a40f30212c3a61a94c0295c80a5fdc43b",
+        "mhmat": "86082e41a5401c103dc7de3e711348b9df52abfe63149c8fcd90e53b12e87e7c",
+        "textures": {
+          "BalletFlatsFlowerUV.png": "7d65814bed89d804be1ebdae93038f305c14485cf4ab25225dbfb60c0eaa5a4f",
+          "BalletFlatsFlowerNORM.png": "ba236e4bff05f90e438d12dbf385ed19cc5315bc412f15eb62cae29494c5f5f7",
+          "BalletFlatsSPEC.png": "94b7f68f2b13623e6dc8708d0fa037c2f8527eb439d44b245ed003ef737e6bfa"
+        }
+      },
+      "title": "Flats_ballet_flower",
+      "author": "MargaretToigo",
+      "originalAuthor": null,
+      "category": "Shoes/Boots/Socks",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1736",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "helper",
+        "matchedBaseVertices": 350,
+        "matchedSkinVertices": 0,
+        "matchedHelperVertices": 350,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 1919,
+        "zDepth": 50,
+        "vertices": 5340,
+        "faces": 5136
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "toigo_basic_tucked_t-shirt",
+      "pack": "shirts01",
+      "mhcloPath": "clothes/toigo_basic_tucked_t-shirt/toigo_basic_tucked_t-shirt.mhclo",
+      "sha256": {
+        "mhclo": "c34bd03895c5ad9ec46965ef7d5f3e5e8c567630797ab312f8762c1d9fde8f71",
+        "obj": "22159cf14d1f6831f931b49625f8f7692910bac22499c43466c0b5a2159b4d03",
+        "mhmat": "44098003a7ed47cd4c613d04adcdccaae47fe0d2b380bf3c25f105a739814f94",
+        "textures": {
+          "T-shirt_basic-bump.png": "dfe923b14a9188857d12eb227ceb6365dcf1ec3cd97e42f30c6fe3ae2c474578",
+          "T-shirt_basic.png": "c1992ad975e14aa2cef891ff9632d28283607b2de6160d72e350f059043a063b"
+        }
+      },
+      "title": "T-shirt_basic_tucked",
+      "author": "MargaretToigo",
+      "originalAuthor": null,
+      "category": "Shirt/T-shirt/Sweater",
+      "tags": [
+        "t-shirt",
+        "shirt",
+        "top",
+        "knit",
+        "casual"
+      ],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1203",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "skin",
+        "matchedBaseVertices": 1496,
+        "matchedSkinVertices": 1496,
+        "matchedHelperVertices": 0,
+        "shipsDeleteGroup": false,
+        "deleteVertices": 0,
+        "zDepth": 50,
+        "vertices": 1391,
+        "faces": 1350
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "toigo_bodice-style_top",
+      "pack": "shirts01",
+      "mhcloPath": "clothes/toigo_bodice-style_top/toigo_bodice-style_top.mhclo",
+      "sha256": {
+        "mhclo": "995f41209f5366483a94158d779e1dae2d8fd580914c1b15673c4b6722b81030",
+        "obj": "08be587b0a95de97e331a8432e9f33444783411f2060614a4f0776749fd70c25",
+        "mhmat": "b67abab1e4ba409122b093bf773ee686d00fee19c77f34a1f7bbbcfc581b262a",
+        "textures": {
+          "Bodice.png": "291ca9c9bfdef0d1684f0c94e7fe1e1b4264ac5ecd3a08f89c243b2be49ecc6a",
+          "Bodice-NORM.png": "f0ee8ff32f153d1b7d691d72d901c9f47e4af1846c787cde8db7b59dcc9752fe",
+          "Bodice-spec.png": "915cd0dd9acf3caed0cee1b72df921693752e05ed58476247f137f36bb6839c8"
+        }
+      },
+      "title": "Bodice_style_top",
+      "author": "MargaretToigo",
+      "originalAuthor": null,
+      "category": "Shirt/T-shirt/Sweater",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1667",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "skin",
+        "matchedBaseVertices": 937,
+        "matchedSkinVertices": 937,
+        "matchedHelperVertices": 0,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 813,
+        "zDepth": 50,
+        "vertices": 1017,
+        "faces": 972
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "toigo_bodice_dress_with_lace_ruffle_skirt",
+      "pack": "dress01",
+      "mhcloPath": "clothes/toigo_bodice_dress_with_lace_ruffle_skirt/toigo_bodice_dress_with_lace_ruffle_skirt.mhclo",
+      "sha256": {
+        "mhclo": "f49359f662fb69891ba19280ad5d59724b914b755f7c772fcb1f1ab6401cfcef",
+        "obj": "e625b6e1117866b1d16765180c1a9d9eb60b2cd44622185df8d0cefd989cf9cb",
+        "mhmat": "6f3b8563cb26542b2a7742b41f3af33603e5197ee60033cf67fc1e39a891740d",
+        "textures": {
+          "SkirtLaceRuffle.png": "6747b01cdac38ab49accac3ed3e0271cfea8d08f690b7bb2766beed4946bfe09"
+        }
+      },
+      "title": "Dress_Bodice_Ruffle_Skirt",
+      "author": "MargaretToigo",
+      "originalAuthor": null,
+      "category": "Gown/Robe",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1706",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "helper",
+        "matchedBaseVertices": 956,
+        "matchedSkinVertices": 0,
+        "matchedHelperVertices": 956,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 1312,
+        "zDepth": 50,
+        "vertices": 4488,
+        "faces": 4420
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "toigo_camisole_dress_with_full_skirt",
+      "pack": "dress01",
+      "mhcloPath": "clothes/toigo_camisole_dress_with_full_skirt/toigo_camisole_dress_with_full_skirt.mhclo",
+      "sha256": {
+        "mhclo": "be6932ff7c09e7b5ef74c6b3575485265b20996f791729c363df089979aade2f",
+        "obj": "bcfc40134106228563e7dc85385b4b06585d21a5103ff249658fba9526cc8d7a",
+        "mhmat": "251afe9de54c4d59b8ce7ff95ab474e2e4cc8661ba24991bf188b1065a772df0",
+        "textures": {
+          "CamisoleDressUV.png": "564bac9a17874ec4785b62a37a7646bfb6e4b427ac7748bd8303d1d864dad5a3"
+        }
+      },
+      "title": "Dress_Camisole_Full_Skirt",
+      "author": "MargaretToigo",
+      "originalAuthor": null,
+      "category": "Gown/Robe",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1730",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "helper",
+        "matchedBaseVertices": 1281,
+        "matchedSkinVertices": 0,
+        "matchedHelperVertices": 1281,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 1768,
+        "zDepth": 50,
+        "vertices": 5504,
+        "faces": 5396
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "toigo_camisole_top",
+      "pack": "shirts01",
+      "mhcloPath": "clothes/toigo_camisole_top/toigo_camisole_top.mhclo",
+      "sha256": {
+        "mhclo": "2954430d051b9707acdb9fee2aebdc8a250aab473f32452ef6b86684e8c26ffc",
+        "obj": "2f4377c34c55608299ebae72717073b258b12f0ba1783d10db1fc037601be377",
+        "mhmat": "c12632e85622cc6b64a6e8f81fbbfc6862d6a56c1df332fb3c8644dbccba4bdc",
+        "textures": {
+          "CamisoleTop.png": "9277a2c8bbd15c379302b8f08f33420e87e8df4cfb234a83b698856c595a8385"
+        }
+      },
+      "title": "Camisole_Top",
+      "author": "MargaretToigo",
+      "originalAuthor": null,
+      "category": "Shirt/T-shirt/Sweater",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1726",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "helper",
+        "matchedBaseVertices": 726,
+        "matchedSkinVertices": 0,
+        "matchedHelperVertices": 726,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 917,
+        "zDepth": 50,
+        "vertices": 4224,
+        "faces": 4116
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "toigo_cut_out_dress",
+      "pack": "dress01",
+      "mhcloPath": "clothes/toigo_cut_out_dress/toigo_cut_out_dress.mhclo",
+      "sha256": {
+        "mhclo": "71cedf6a1e0dc49125951d62584b4cf47e09182a21fc3908ef847e82447e7841",
+        "obj": "b9a01ed51ef9cb06efbe8c549c6c211b5a2b02769a4ca8f382261c0ded01d21d",
+        "mhmat": "461e55b205637cc771ee57e81472b9b5f9e50b5cdd3b374974157a96ba740958",
+        "textures": {
+          "cutOutDress.png": "bd40ac98ce72e49ebb39a8b5eac60216f0d9c1becfd1960a8d114a766ed66785"
+        }
+      },
+      "title": "Dress_Cut_Outs",
+      "author": "MargaretToigo",
+      "originalAuthor": null,
+      "category": "Gown/Robe",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1704",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "helper",
+        "matchedBaseVertices": 1500,
+        "matchedSkinVertices": 0,
+        "matchedHelperVertices": 1500,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 2266,
+        "zDepth": 50,
+        "vertices": 3151,
+        "faces": 3078
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "toigo_dress_with_tiered_skirt",
+      "pack": "dress01",
+      "mhcloPath": "clothes/toigo_dress_with_tiered_skirt/toigo_dress_with_tiered_skirt.mhclo",
+      "sha256": {
+        "mhclo": "cfe1e93603f745d3afa96d6571c62f6188388a72b4c965c5dfff4d59584e5d17",
+        "obj": "6ca771439191fedd2d6dad2b8cb9df2c497b33ea91e4043e2b259dae8e4e9187",
+        "mhmat": "3a53c7e499e4b325d06a0f1804ebb0185ba9d98d7d821d3a6683d6a53d674f17",
+        "textures": {
+          "DressTierSkirt.png": "7dc22616ee48d4c24044be1897dbaf006ce1484ce873adb12a7031e6444ab96f"
+        }
+      },
+      "title": "DressTierSkirt",
+      "author": "MargaretToigo",
+      "originalAuthor": null,
+      "category": "Gown/Robe",
+      "tags": [
+        "dress"
+      ],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1640",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "helper",
+        "matchedBaseVertices": 1403,
+        "matchedSkinVertices": 0,
+        "matchedHelperVertices": 1403,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 2151,
+        "zDepth": 50,
+        "vertices": 9643,
+        "faces": 9448
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "toigo_female_double-breasted_suit",
+      "pack": "suits01",
+      "mhcloPath": "clothes/toigo_female_double-breasted_suit/toigo_female_double-breasted_suit.mhclo",
+      "sha256": {
+        "mhclo": "87b9b5499c67904338fe2ac271977dccabb3e603e3d2a5f90a62a633d5504913",
+        "obj": "5adfdcf7f43efafd89f778f4d61122ab559dc6afbfb63d8fa741ef60c02e2697",
+        "mhmat": "6cb410ea629f27d50da019dc5fd514d7f729ed3108a42ce9996e1ce447beb8fa",
+        "textures": {
+          "DB-suit-Fem.png": "d3f52f73401982399a79f210f4570f21138e8ddb312042cb6ea31d8c9666790e",
+          "DB-suit-Fem-norm.png": "cacd846e25b71181b9c49e12392b403c9c98765fe637238aaef498a39d8c94fe",
+          "DB-suit-spec.png": "e9833b05fcc3e9f89d0ca6e4ae1f919185e0dcb481bb68464f13b46b872b15ad"
+        }
+      },
+      "title": "Fem_Suit_Double_Breasted",
+      "author": "MargaretToigo",
+      "originalAuthor": null,
+      "category": "Unsorted/other",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1742",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "helper",
+        "matchedBaseVertices": 2243,
+        "matchedSkinVertices": 0,
+        "matchedHelperVertices": 2243,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 3608,
+        "zDepth": 50,
+        "vertices": 5393,
+        "faces": 5031
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "toigo_female_suit",
+      "pack": "suits01",
+      "mhcloPath": "clothes/toigo_female_suit/toigo_female_suit.mhclo",
+      "sha256": {
+        "mhclo": "60c5e83133dbca9419e383b34d8354c3b2276890e94cafac4347ecfd7c1969bf",
+        "obj": "6c4380d0fb78e2b523d3b0a78519c5d6da71432314a6d84a67ccde3d2a77e87d",
+        "mhmat": "921c5abd123790d4bdb4df25920c20e48fb607dbabd606633054cde96f626da1",
+        "textures": {
+          "MHSuitsFem-diff.png": "f1d15f99341184f87d9657e0ef754150b51f4d00d503e393beb6e11cf1c60507",
+          "MHSuitsFem-spec.png": "5fc68a680a283085f31d978ab3013a1009147bd705d2868d5bbd6e245c1ae1cc",
+          "MHSuitsFem-bump.png": "6ee0b07619f2124734bdd1ec9f22582264452d92144cb54e4a3c4f69aeb552ae"
+        }
+      },
+      "title": "Fem_Suit",
+      "author": "MargaretToigo",
+      "originalAuthor": null,
+      "category": "Unsorted/other",
+      "tags": [
+        "suit",
+        "female"
+      ],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1324",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "helper",
+        "matchedBaseVertices": 1753,
+        "matchedSkinVertices": 0,
+        "matchedHelperVertices": 1753,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 2874,
+        "zDepth": 50,
+        "vertices": 14396,
+        "faces": 13969
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "toigo_female_suit_2",
+      "pack": "suits01",
+      "mhcloPath": "clothes/toigo_female_suit_2/toigo_female_suit_2.mhclo",
+      "sha256": {
+        "mhclo": "3156c2113c18028dd8d12f3d4ad77b29008cd982a444f86f5d18be003240929c",
+        "obj": "a322ac52ac113b08e5436dea787768180740c86db7e0a2b07b274b36a16467b3",
+        "mhmat": "c6cd9227461acb3bdcb1bd3ea4784f3af23a83185b51b321fe1101321e1823d9",
+        "textures": {
+          "Fsuit2.png": "b3f0a27b957783696a6b9bed71ba73779831515418a72d3f4680cdc972ce990a",
+          "Fsuit2-norm.png": "2ce673245d1fb62b6aec0e785bb498268aaeef25a2576612393cc4ddc7cfc8bd",
+          "Fsuit2-spec.png": "da7de2e179f4c06e35b6453232edc9c0aac752cda13e218b9ace54ef0cbbca51"
+        }
+      },
+      "title": "Fem_Suit2",
+      "author": "MargaretToigo",
+      "originalAuthor": null,
+      "category": "Unsorted/other",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1739",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "helper",
+        "matchedBaseVertices": 2351,
+        "matchedSkinVertices": 0,
+        "matchedHelperVertices": 2351,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 3854,
+        "zDepth": 50,
+        "vertices": 8509,
+        "faces": 8107
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "toigo_fisherman_sweater",
+      "pack": "shirts01",
+      "mhcloPath": "clothes/toigo_fisherman_sweater/toigo_fisherman_sweater.mhclo",
+      "sha256": {
+        "mhclo": "b454960bdd61985f246e88e547a127a75d590dc87d6c1a4062fb7c7c281d8999",
+        "obj": "2844465f4e798666a90f631ea4a89ae30d3e526ef045a978d338908750d21d09",
+        "mhmat": "254c011b3edae8cbab7adb2d082de670dd41b26324bf5772318b7557a127fd64",
+        "textures": {
+          "shirt-knit.png": "a7d526797da4cdc1a79603a35abebf41e577277267f36db6641cdb6cebe6ffb1",
+          "shirt-knit-NORM.png": "c3458d9b5174d7c34beed74618828c26f479200512d691a6bada34e7ea5d9a62"
+        }
+      },
+      "title": "Sweater_Fisherman",
+      "author": "MargaretToigo",
+      "originalAuthor": null,
+      "category": "Shirt/T-shirt/Sweater",
+      "tags": [
+        "sweater",
+        "shirt",
+        "top",
+        "knit"
+      ],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1187",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "skin",
+        "matchedBaseVertices": 2240,
+        "matchedSkinVertices": 2240,
+        "matchedHelperVertices": 0,
+        "shipsDeleteGroup": false,
+        "deleteVertices": 0,
+        "zDepth": 50,
+        "vertices": 2126,
+        "faces": 2082
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "toigo_flats",
+      "pack": "shoes01",
+      "mhcloPath": "clothes/toigo_flats/toigo_flats.mhclo",
+      "sha256": {
+        "mhclo": "31058d682d683f5f2265b25343014d6f0f9e1fc3635c425f00d00787a6c3114a",
+        "obj": "1e4a6461f152e2cdb63e19cd304edf2e9d73a6cbc01c903829351e109f27c27a",
+        "mhmat": "94538be79887546222d290fd930a7322772802df90aefa603f48ec76494de4a1",
+        "textures": {
+          "Shoe.png": "78a108a691b26cd2beba2685091f4e21aad8227922d76f405e991cb389802be0",
+          "ShoeSpec.png": "e77e1ba73b14a03fda678da6e87a7803c05a379d56453953f6940f6acb268e69"
+        }
+      },
+      "title": "Flats",
+      "author": "MargaretToigo",
+      "originalAuthor": null,
+      "category": "Shoes/Boots/Socks",
+      "tags": [
+        "shoes"
+      ],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1117",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "skin",
+        "matchedBaseVertices": 1674,
+        "matchedSkinVertices": 1674,
+        "matchedHelperVertices": 0,
+        "shipsDeleteGroup": false,
+        "deleteVertices": 0,
+        "zDepth": 50,
+        "vertices": 28808,
+        "faces": 28800
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "toigo_halter_dress_knee_length",
+      "pack": "dress01",
+      "mhcloPath": "clothes/toigo_halter_dress_knee_length/toigo_halter_dress_knee_length.mhclo",
+      "sha256": {
+        "mhclo": "043447253bdb06272eb2565cc7fb484f5cf1c010d0e251314135b72287a5c374",
+        "obj": "b7edb42f6a8087c46ea79c011669f2207c5f5656a6c17ff1d9435c8a05dfa4f6",
+        "mhmat": "ccdb35f08daf4b4896e6f7a655c89eee39170793fe3d095482ab326056dfa64b",
+        "textures": {
+          "DressCloth3UV.png": "45ec64abbb9346751de8059f7c77bc719c9a7d5186c895168f1a8432ea0ec26a"
+        }
+      },
+      "title": "Dress_Knee_Halter",
+      "author": "MargaretToigo",
+      "originalAuthor": null,
+      "category": "Gown/Robe",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1853",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "helper",
+        "matchedBaseVertices": 945,
+        "matchedSkinVertices": 0,
+        "matchedHelperVertices": 945,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 1123,
+        "zDepth": 50,
+        "vertices": 2031,
+        "faces": 1968
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "toigo_halter_dress_midi",
+      "pack": "dress01",
+      "mhcloPath": "clothes/toigo_halter_dress_midi/toigo_halter_dress_midi.mhclo",
+      "sha256": {
+        "mhclo": "1ab5986d058dd9a0dc6872f24ef8a47aa171835db8a0dab67c4d8ba97e9da0df",
+        "obj": "6091ab3ef6352f997ef1207150b07918b776089461853baded57680d4c8b4918",
+        "mhmat": "62c5ae6c3860951cff71fe14ce41849f1baa8de480dc8c7bc9b2e8ef170896e3",
+        "textures": {
+          "DressClothUV.png": "e426a20f1f1f47b08910263945e8312e4f2087bd68d278845e0e13dc4230f5f1"
+        }
+      },
+      "title": "Dress_Midi_Halter",
+      "author": "MargaretToigo",
+      "originalAuthor": null,
+      "category": "Gown/Robe",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1854",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "helper",
+        "matchedBaseVertices": 1074,
+        "matchedSkinVertices": 0,
+        "matchedHelperVertices": 1074,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 1543,
+        "zDepth": 50,
+        "vertices": 2655,
+        "faces": 2592
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "toigo_halter_dress_with_fluted_skirt",
+      "pack": "dress01",
+      "mhcloPath": "clothes/toigo_halter_dress_with_fluted_skirt/toigo_halter_dress_with_fluted_skirt.mhclo",
+      "sha256": {
+        "mhclo": "3325e36d35ff7e6413c772eddbd23923277963bcab4a9c123dcb42398ef12b62",
+        "obj": "57f2c71a5ceacea90847450d209ad10ede175cbb2fa2a8590e49f84f56c91157",
+        "mhmat": "3c3ff62a82b807b4dbf03b8972b98a7ea872f9b0df2ad1c3f73ad6e035a3c433",
+        "textures": {
+          "DressCloth2UV.png": "e770a2ced07bee2b94fe72fad480a3ebd3d036cd125acb1bf5e2ccb08048a496"
+        }
+      },
+      "title": "Dress_Long_Fluted_Skirt",
+      "author": "MargaretToigo",
+      "originalAuthor": null,
+      "category": "Gown/Robe",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1855",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "helper",
+        "matchedBaseVertices": 1208,
+        "matchedSkinVertices": 0,
+        "matchedHelperVertices": 1208,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 1883,
+        "zDepth": 50,
+        "vertices": 3279,
+        "faces": 3216
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "toigo_harem_pants",
+      "pack": "pants01",
+      "mhcloPath": "clothes/toigo_harem_pants/toigo_harem_pants.mhclo",
+      "sha256": {
+        "mhclo": "9cdfb91852c9d3952ef621d58aeb0b73f1be98b5448c84bb621dc45f3b828287",
+        "obj": "5b3ae43d2a2e52c9bf825e4c56f4aed69ef8221cfa3fa0d1c86e721cc6c7e57d",
+        "mhmat": "bda009f2d77cd3d0c3af6268026d08f1e294f0c0806b1679b4bdd3dc0c96de9c",
+        "textures": {
+          "HaremPants.png": "75067b13c0d28293e99fda8b5156e80496622bf42c5abd32491a5456da4dd04c"
+        }
+      },
+      "title": "Pants_Harem",
+      "author": "MargaretToigo",
+      "originalAuthor": null,
+      "category": "Pants",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1728",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "helper",
+        "matchedBaseVertices": 1004,
+        "matchedSkinVertices": 0,
+        "matchedHelperVertices": 1004,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 1272,
+        "zDepth": 50,
+        "vertices": 5527,
+        "faces": 5456
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "toigo_keyhole_neck_dress",
+      "pack": "dress01",
+      "mhcloPath": "clothes/toigo_keyhole_neck_dress/toigo_keyhole_neck_dress.mhclo",
+      "sha256": {
+        "mhclo": "c167b8e68fd4d837f2e6b94b803a08111d6ee6866809adc2ac703e5b7bc87d18",
+        "obj": "01a4158a5b5ab1a70f8d78e015084ccbdc1af84d29f5c949a19113beaa18bd05",
+        "mhmat": "203eb64f476f13dcaa0b22a0825f2e603a2d51fa1d951bb1ccb7211b2974726a",
+        "textures": {
+          "ZebraD.png": "8bb1750470c8d3bad3bffc3330eae9504e3cddf9c481bb22cb4bafe56f090a69"
+        }
+      },
+      "title": "Dress_Keyhole_Neck",
+      "author": "MargaretToigo",
+      "originalAuthor": null,
+      "category": "Gown/Robe",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1613",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "helper",
+        "matchedBaseVertices": 1176,
+        "matchedSkinVertices": 0,
+        "matchedHelperVertices": 1176,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 1436,
+        "zDepth": 50,
+        "vertices": 9067,
+        "faces": 8944
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "toigo_keyhole_tank_top",
+      "pack": "shirts01",
+      "mhcloPath": "clothes/toigo_keyhole_tank_top/toigo_keyhole_tank_top.mhclo",
+      "sha256": {
+        "mhclo": "3d806939bb7a31d7868800a90aeccbc2c327b64ba389965e0d575b9ff27a16d3",
+        "obj": "ab1cf8d5ea20ea88fa2af49a8c82bb57b0875fd3245701abf2aee6ab8020c601",
+        "mhmat": "6cdb64864b29896a03032d3aee32579c7242f5a538fd5eb68e49a2c6f1f96d78",
+        "textures": {
+          "Giraffe.png": "d65c8852e82d9f5b44511f645bb3a53567fa33f749b4148824183cbe8c8dbe01"
+        }
+      },
+      "title": "Tank_Keyhole_Neck",
+      "author": "MargaretToigo",
+      "originalAuthor": null,
+      "category": "Shirt/T-shirt/Sweater",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1606",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "helper",
+        "matchedBaseVertices": 702,
+        "matchedSkinVertices": 0,
+        "matchedHelperVertices": 702,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 881,
+        "zDepth": 50,
+        "vertices": 726,
+        "faces": 676
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "toigo_long_full_skirt",
+      "pack": "skirts01",
+      "mhcloPath": "clothes/toigo_long_full_skirt/toigo_long_full_skirt.mhclo",
+      "sha256": {
+        "mhclo": "29ee266a19f81b4d5159782ed652b5df5574d0ace240112d1fea63b643a28dd4",
+        "obj": "876bbae3c54414fdb93d38b581629fdc80ffe58dd4504731d47ed0c668a08561",
+        "mhmat": "98ad203aa9fcb4a7d160101caedb183594f35b4c7389ef12ba5681fd51061720",
+        "textures": {
+          "skirtFullLong.png": "a4475e2bf9a3906a2e6c39df90f3c8aefadfc5e2b16a76a3445390a7f48296db"
+        }
+      },
+      "title": "Skirt_Full_Long",
+      "author": "MargaretToigo",
+      "originalAuthor": null,
+      "category": "Skirt",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1727",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "helper",
+        "matchedBaseVertices": 838,
+        "matchedSkinVertices": 0,
+        "matchedHelperVertices": 838,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 1276,
+        "zDepth": 50,
+        "vertices": 2992,
+        "faces": 2924
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "toigo_male_double-breasted_suit",
+      "pack": "suits01",
+      "mhcloPath": "clothes/toigo_male_double-breasted_suit/toigo_male_double-breasted_suit.mhclo",
+      "sha256": {
+        "mhclo": "f2a801dcdc36add906e5ec86712007059d6a799585a4434eefab2a10521293f7",
+        "obj": "6bdfe62ca674b169db7a8a3b1df7508e194ed21ab0d252e8ff29a1c0c54e201f",
+        "mhmat": "36cb1dbf3f71d0db88302cf3c8da49b30223a44894bcd9b5b54407f206b8f026",
+        "textures": {
+          "DB-suit.png": "0bc92b75e95e4d9a7e2d5f0d9ce1dad6ed442442d4d93217d3fd3984e5ac5a26",
+          "DB-suit-norm.png": "e319cfe8f91fc473a85e38303ecc70b48f427877d367bfbbeed9e2c59f30c94f",
+          "DB-suit-spec.png": "e9833b05fcc3e9f89d0ca6e4ae1f919185e0dcb481bb68464f13b46b872b15ad"
+        }
+      },
+      "title": "Suit_Double_Breasted",
+      "author": "MargaretToigo",
+      "originalAuthor": null,
+      "category": "Unsorted/other",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1740",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "helper",
+        "matchedBaseVertices": 2251,
+        "matchedSkinVertices": 0,
+        "matchedHelperVertices": 2251,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 3596,
+        "zDepth": 50,
+        "vertices": 5393,
+        "faces": 5031
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "toigo_male_suit_3",
+      "pack": "suits01",
+      "mhcloPath": "clothes/toigo_male_suit_3/toigo_male_suit_3.mhclo",
+      "sha256": {
+        "mhclo": "e5457dffafce4a5f44e179278c712e64a040b5e5e3aa41f15ed8100be5694c01",
+        "obj": "1412a998988f19696e00637afd69e64499d727a0c6ab7527f8713129990f0e43",
+        "mhmat": "be7be987fa5aede1aee34112cbbc1ff5a803240f21ee16f40655efb6161cd92e",
+        "textures": {
+          "NewSuit3.png": "7a3fa6cf10d3fcc2946469efcf066e2f5898d1a9dfa10a3df4a1ff2495dc17dc",
+          "NewSuit3-norm.png": "118115b7ecd7254e3f0da718ac728ca9113ae602ba6e77f59b7272490eb87f95",
+          "NewSuit3-spec.png": "a08f5774194f56770cc9fecb117667554b0769fdbb74dd87ecd3ac3df9da110b"
+        }
+      },
+      "title": "Suit3",
+      "author": "MargaretToigo",
+      "originalAuthor": null,
+      "category": "Unsorted/other",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1733",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "helper",
+        "matchedBaseVertices": 2343,
+        "matchedSkinVertices": 0,
+        "matchedHelperVertices": 2343,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 3848,
+        "zDepth": 50,
+        "vertices": 8527,
+        "faces": 8125
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "toigo_male_suit_tie_and_jacket",
+      "pack": "suits01",
+      "mhcloPath": "clothes/toigo_male_suit_tie_and_jacket/toigo_male_suit_tie_and_jacket.mhclo",
+      "sha256": {
+        "mhclo": "7f927081c996cf42014ed2c78b9f10914740c7503eeaf9e176df0fc250dc2803",
+        "obj": "7d80f673d1645bfcf6b6747f4a9e418c0cab65ac6330718cfc760962497ccb7d",
+        "mhmat": "88074bc1c5f9d7fe09bbffd84fe0a4bad3e2930c02911103a112cea917159e4e",
+        "textures": {
+          "Suit-tie-Jacket-bump.png": "82323b583a893feb3ec8fb37d91c338865c42fb659d30805eb2a9c4d42cda581",
+          "Suit-tie-Jacket-spec.png": "f8f66b5ed833f8ef2418f340f42e6b5d7bf75f31ae5bf3e593ba6cdacfa9f81b",
+          "Suit-tie-Jacket-diff.png": "27d98ecf5500f89d1bf363510def211e9e8c74f4ecc44daad7a7916e32dfc250"
+        }
+      },
+      "title": "Jacket_Tie_Pants",
+      "author": "MargaretToigo",
+      "originalAuthor": null,
+      "category": "Unsorted/other",
+      "tags": [
+        "pants"
+      ],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1265",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "helper",
+        "matchedBaseVertices": 2343,
+        "matchedSkinVertices": 0,
+        "matchedHelperVertices": 2343,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 3552,
+        "zDepth": 50,
+        "vertices": 9980,
+        "faces": 9601
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "toigo_mj_cloth_shoes",
+      "pack": "shoes01",
+      "mhcloPath": "clothes/toigo_mj_cloth_shoes/toigo_mj_cloth_shoes.mhclo",
+      "sha256": {
+        "mhclo": "6e81c1d6475a03b91a2c7002176883efce5e2a0b129d6c8cb00864415cdb905e",
+        "obj": "adcfd0886d1e25a165511419db017075afa95ea5f3d172b1f10af7a1a8fcea48",
+        "mhmat": "e36cc865d562690c4391d7f78dd1ee7e5690f9219ac2438b1ec4d24442f27b86",
+        "textures": {
+          "MJ-shoes3.png": "fa20149c846d9cb9d4837363f82dac87892efed7a152bbf966566f623062da4b",
+          "MJ-shoes-spec.png": "ab31b8e8fa442a5d4bd549f27a00655446dcf116b6de421b6f8f6143376a4055",
+          "MJ-shoes3-NORM.png": "ad8cd38ee91bc27d9ccf8c666b8e55036bd5ef8df0dedec1ec40dd23572baba6"
+        }
+      },
+      "title": "MJ-Shoes",
+      "author": "MargaretToigo",
+      "originalAuthor": null,
+      "category": "Shoes/Boots/Socks",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1700",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "skin",
+        "matchedBaseVertices": 644,
+        "matchedSkinVertices": 644,
+        "matchedHelperVertices": 0,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 1730,
+        "zDepth": 50,
+        "vertices": 556,
+        "faces": 502
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "toigo_shift_dress",
+      "pack": "dress01",
+      "mhcloPath": "clothes/toigo_shift_dress/toigo_shift_dress.mhclo",
+      "sha256": {
+        "mhclo": "fb6587b7775b6fc11251772117c6e16f4f78c43b5987d69d560df32d648d8bff",
+        "obj": "b7607930f54a7444bee1077f0d97a9d835131d206e777a1d132fac924a23ad50",
+        "mhmat": "9abee1654f3f7cf3b2ead5d15e1a72497a137a2d426a10fbb495af5eae70ef82",
+        "textures": {
+          "ShiftDress.png": "ea7f1d0a2009702745a8cf99190bbdb9dee523486f9c7a53be2ddeb4c01d9fc8"
+        }
+      },
+      "title": "Dress_Shift",
+      "author": "MargaretToigo",
+      "originalAuthor": null,
+      "category": "Gown/Robe",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1724",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "helper",
+        "matchedBaseVertices": 1224,
+        "matchedSkinVertices": 0,
+        "matchedHelperVertices": 1224,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 1513,
+        "zDepth": 50,
+        "vertices": 6892,
+        "faces": 6784
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "toigo_skirt_with_lace_ruffle",
+      "pack": "skirts01",
+      "mhcloPath": "clothes/toigo_skirt_with_lace_ruffle/toigo_skirt_with_lace_ruffle.mhclo",
+      "sha256": {
+        "mhclo": "d8650bbb06adb94d5c73453fe4c7079a17161b0fdd442c829a739aa0876610ed",
+        "obj": "3c2523c0a7d1a61f4667570598c27922e57f7bc16d2ad95f940fae6808f8cdd7",
+        "mhmat": "efe7fd0920c3db051c6585c355a3c1d7c44219c203de607ee4bfde93045085fe",
+        "textures": {
+          "LaceRuffleSkirt.png": "053f1419244c59d862969fa359eef9e1ae798045bdd8e8e51b221b19866fb5ea"
+        }
+      },
+      "title": "Skirt_Full_Lace_Ruffle",
+      "author": "MargaretToigo",
+      "originalAuthor": null,
+      "category": "Skirt",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1731",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "helper",
+        "matchedBaseVertices": 522,
+        "matchedSkinVertices": 0,
+        "matchedHelperVertices": 522,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 554,
+        "zDepth": 50,
+        "vertices": 2856,
+        "faces": 2788
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "toigo_stiletto_booties",
+      "pack": "shoes01",
+      "mhcloPath": "clothes/toigo_stiletto_booties/toigo_stiletto_booties.mhclo",
+      "sha256": {
+        "mhclo": "c608c158cea620adbb8a77c8c87a219674d7dbf61b44cb9eb5c8389d10557a0c",
+        "obj": "b073d2103e0a1e21509851fa1ca70cfc92fee78da2e114696a12a910cda44529",
+        "mhmat": "b45d834cfb7f86c89530e1f3b37652e8f820e9790b3d788d541cf60a96400582",
+        "textures": {
+          "bootiesUV.png": "3d4c2558a5c09ffbc2e0c17b79c3d771ef4834265f8adae762d3792f6624451d",
+          "bootiesNORM.png": "4c9bd3967d9bc6d27acce7e55ee273899a798248e280c59570f50f6529d2106c"
+        }
+      },
+      "title": "Booties_stiletto",
+      "author": "MargaretToigo",
+      "originalAuthor": null,
+      "category": "Shoes/Boots/Socks",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1694",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "helper",
+        "matchedBaseVertices": 304,
+        "matchedSkinVertices": 0,
+        "matchedHelperVertices": 304,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 2206,
+        "zDepth": 50,
+        "vertices": 22414,
+        "faces": 22332
+      },
+      "parseWarnings": [
+        "referenced specularmapTexture 'boooties-spec.png' does not exist on disk; skipped"
+      ]
+    },
+    {
+      "asset": "toigo_strapless_ruffle_top_dress",
+      "pack": "dress01",
+      "mhcloPath": "clothes/toigo_strapless_ruffle_top_dress/toigo_strapless_ruffle_top_dress.mhclo",
+      "sha256": {
+        "mhclo": "5afaef4141fd2272e09003d1d3718893471cb88de91772e6e215eaed41adb112",
+        "obj": "97d2906bc2064a4de1be890faadc7fb882011080a34b8de47e462d0b87575b66",
+        "mhmat": "061e4afb3a2ca334685d6c1b9424de9d7f866d9d7a0f149eebf96ca84aa06a91",
+        "textures": {
+          "SkirtRuffleTop.png": "35be488906286f6f73869a717e57ea3470a4679e867bde6d270b886aca022895"
+        }
+      },
+      "title": "Dress_Strapless_Ruffle_Top",
+      "author": "MargaretToigo",
+      "originalAuthor": null,
+      "category": "Gown/Robe",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1705",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "helper",
+        "matchedBaseVertices": 931,
+        "matchedSkinVertices": 0,
+        "matchedHelperVertices": 931,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 1313,
+        "zDepth": 50,
+        "vertices": 5301,
+        "faces": 5168
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "toigo_suit_with_dinner_jacket",
+      "pack": "suits01",
+      "mhcloPath": "clothes/toigo_suit_with_dinner_jacket/toigo_suit_with_dinner_jacket.mhclo",
+      "sha256": {
+        "mhclo": "ef83aa8df98402e5523d67c1557dcaa301e2dc8d168f77cfd6561f3e22a53d00",
+        "obj": "76ab0a64933f23c08d721524b21be47a9bfd2dae159b01d24ee47137862d6f49",
+        "mhmat": "775e98eaae91e5d5fa5a334fa67910f49c0b61ef104574b2229a7d47035965ea",
+        "textures": {
+          "SuitDinnerJacket.png": "83d78368f20b5a5dda93ec1828f8ba70af3acda30b0b2b6a682126e276a0af4f",
+          "SuitDinnerJacket-norm.png": "c8e5628ac38c45e92afc9ee6f2df384219a7298bcbde7995132a954b98b929d7",
+          "SuitDinnerJacket-spec.png": "b9480171c870d2dad1c2373ef0496043c821c59c130355c6c8e63f14076d43fe"
+        }
+      },
+      "title": "Suit_Dinner_Jacket",
+      "author": "MargaretToigo",
+      "originalAuthor": null,
+      "category": "Unsorted/other",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1746",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "helper",
+        "matchedBaseVertices": 2265,
+        "matchedSkinVertices": 0,
+        "matchedHelperVertices": 2265,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 3550,
+        "zDepth": 50,
+        "vertices": 8069,
+        "faces": 7650
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "toigo_suit_with_jacket_and_bowtie",
+      "pack": "suits01",
+      "mhcloPath": "clothes/toigo_suit_with_jacket_and_bowtie/toigo_suit_with_jacket_and_bowtie.mhclo",
+      "sha256": {
+        "mhclo": "ec88fc4b60531e0c601bd0f553576f32d54b49821990aae0f3f23391af65ba1c",
+        "obj": "10e273f7eeb2238df1e2c6b7c3013fcb00a868f8e9fc88513e94e2204b20de49",
+        "mhmat": "8ebb7313b4dda918c43308290160f076dcf4bf608c63a7d1916d97a7a30f0ea0",
+        "textures": {
+          "SuitBowtie-bump.png": "ca412f5832bec875c3212727dfeacd87515abf89b2419c7247090fb0ba456981",
+          "SuitBowtie-spec.png": "28a8f6c21eb82511b7ef1baa056a08bc225241fc732925b42b9463e7f991d97d",
+          "SuitBowtie-diff2.png": "9c386f415b3624527ea73b7772eceb35afb1e30a1cc92cd7d78c99ce997b6c0b"
+        }
+      },
+      "title": "Jacket_bowtie_Pants",
+      "author": "MargaretToigo",
+      "originalAuthor": null,
+      "category": "Unsorted/other",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1317",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "helper",
+        "matchedBaseVertices": 2343,
+        "matchedSkinVertices": 0,
+        "matchedHelperVertices": 2343,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 3592,
+        "zDepth": 50,
+        "vertices": 12849,
+        "faces": 12327
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "toigo_tiered_mini_skirt",
+      "pack": "skirts01",
+      "mhcloPath": "clothes/toigo_tiered_mini_skirt/toigo_tiered_mini_skirt.mhclo",
+      "sha256": {
+        "mhclo": "48fdcaedcbbfdf49c023818bc765ae2fb1054bc3db45bb15c88e965e4c6204bd",
+        "obj": "f81fde12201f188ba2390362a00bdec1d297f953b9c599008b719b7751cca615",
+        "mhmat": "a610f5b1261f5086566db8ad51d6b755fb785baf459460797c171ff52f1f0d7f",
+        "textures": {
+          "SkirtMini-blackLeather.png": "76f515076ec14b8c77889c0dcbc7b29676e3737909c7f70ec5edb2490c46cf5e",
+          "SkirtMini-blackLeather-NORM.png": "1080d7bcf8992fe63d348a5e29027c57e814df7fa13cc7721977b50ba8db1aa5",
+          "SkirtMini-blackLeather-spec.png": "28c9c3811af457ed274c4065268c69f8446f6f76c59a5a90a72db42c5b22e0e4"
+        }
+      },
+      "title": "Tier_Skirt_Mini",
+      "author": "MargaretToigo",
+      "originalAuthor": null,
+      "category": "Skirt",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1668",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "helper",
+        "matchedBaseVertices": 283,
+        "matchedSkinVertices": 0,
+        "matchedHelperVertices": 283,
+        "shipsDeleteGroup": false,
+        "deleteVertices": 0,
+        "zDepth": 50,
+        "vertices": 5472,
+        "faces": 5328
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "toigo_tiered_skirt",
+      "pack": "skirts01",
+      "mhcloPath": "clothes/toigo_tiered_skirt/toigo_tiered_skirt.mhclo",
+      "sha256": {
+        "mhclo": "cab11bb05f906156ad571f8cccc03f73ea78212a0376e1b6e8f369e4a909245b",
+        "obj": "1d1032708077c4863ffcfb6deee3c27261a3a582c97dce8e9603e94d7c097cae",
+        "mhmat": "faaf69214ad10fd23fe2ebbb07a886999f86a8fc6775ae00629ba5605307987c",
+        "textures": {
+          "ShadesTex-PINK.png": "cd981ab28ff1916e168f64c7933a82a022fae670b6b301f0c307a1807f4a7b3a"
+        }
+      },
+      "title": "Tier_Skirt",
+      "author": "MargaretToigo",
+      "originalAuthor": null,
+      "category": "Skirt",
+      "tags": [
+        "dress"
+      ],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1641",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "helper",
+        "matchedBaseVertices": 769,
+        "matchedSkinVertices": 0,
+        "matchedHelperVertices": 769,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 1116,
+        "zDepth": 50,
+        "vertices": 6552,
+        "faces": 6480
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "toigo_turtleneck_halter_top",
+      "pack": "shirts01",
+      "mhcloPath": "clothes/toigo_turtleneck_halter_top/toigo_turtleneck_halter_top.mhclo",
+      "sha256": {
+        "mhclo": "f9768a84dabe755ef6b50ca2e1763f2cbedc7e09ce4133bd2520c2430832582e",
+        "obj": "de2bb66a761c74b90f4f289d244b5c49a566c7755f8fb7281a3c5e2c1d0ad64c",
+        "mhmat": "faaf69214ad10fd23fe2ebbb07a886999f86a8fc6775ae00629ba5605307987c",
+        "textures": {
+          "ShadesTex-PINK.png": "cd981ab28ff1916e168f64c7933a82a022fae670b6b301f0c307a1807f4a7b3a"
+        }
+      },
+      "title": "Turtleneck_Halter",
+      "author": "MargaretToigo",
+      "originalAuthor": null,
+      "category": "Shirt/T-shirt/Sweater",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1642",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "helper",
+        "matchedBaseVertices": 703,
+        "matchedSkinVertices": 0,
+        "matchedHelperVertices": 703,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 958,
+        "zDepth": 50,
+        "vertices": 2875,
+        "faces": 2752
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "toigo_wool_pants",
+      "pack": "pants01",
+      "mhcloPath": "clothes/toigo_wool_pants/toigo_wool_pants.mhclo",
+      "sha256": {
+        "mhclo": "ac1a57a817976d80ece8a88698873d54de7f252d01ba3dca5e361693621fcf22",
+        "obj": "e02cd1e417ca3365e4dafc033f415c5186739df535d98810075cface0ce59c96",
+        "mhmat": "fedf31e98ea92b57c8f45e10ec167d420f5eb11b9410feb075c321c3798fdb53",
+        "textures": {
+          "Pants_wool.png": "a820b0dc4f9f881956a068f26889ca677b696dbdccfdbf2a168e7b327b390ab6"
+        }
+      },
+      "title": "Pants_Wool",
+      "author": "MargaretToigo",
+      "originalAuthor": null,
+      "category": "Pants",
+      "tags": [
+        "pants",
+        "male"
+      ],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1194",
+      "licence": {
+        "spdx": "CC0-1.0",
+        "name": "CC0 1.0 Universal",
+        "commercialUse": "allowed",
+        "attributionRequired": false,
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "CC0-1.0",
+        "mhcloHeaderLicenceRaw": "CC0",
+        "agreement": "agree"
+      },
+      "clearance": "approved",
+      "clearanceReason": "The pack manifest and the .mhclo header both declare CC0-1.0; clearance is approved.",
+      "fitting": {
+        "fitReference": "skin",
+        "matchedBaseVertices": 1453,
+        "matchedSkinVertices": 1453,
+        "matchedHelperVertices": 0,
+        "shipsDeleteGroup": false,
+        "deleteVertices": 0,
+        "zDepth": 50,
+        "vertices": 1372,
+        "faces": 1337
+      },
+      "parseWarnings": []
+    },
+    {
+      "asset": "wdg_mycenaean_tunic",
+      "pack": "dress01",
+      "mhcloPath": "clothes/wdg_mycenaean_tunic/wdg_mycenaean_tunic.mhclo",
+      "sha256": {
+        "mhclo": "08cbe26da9933317eea77d34ae1cf781be94896025091d8f14db36a4a4f00c29",
+        "obj": "ae29b7229deda4fb2facf82f9ad8278178bb9cc9a0b8a83e43f778339ad18f9f",
+        "mhmat": "297497b840c280e7bf765189e2e68c3c5464d925ae5c14f59230b38a003ba825",
+        "textures": {
+          "Mycenaean_Tunic_texture.png": "9a0cb2b998c1c83a8cfae7dd50727c7d5ff51dfc0b13c5b9dfed2d80fd3aa4c1"
+        }
+      },
+      "title": "Mycenaean_Tunic",
+      "author": "WDG",
+      "originalAuthor": null,
+      "category": "Gown/Robe",
+      "tags": [],
+      "sourceUrl": "http://www.makehumancommunity.org/node/1763",
+      "licence": {
+        "spdx": "AGPL-3.0-or-later",
+        "name": "GNU Affero General Public License v3.0 or later",
+        "commercialUse": "unknown",
+        "attributionRequired": true,
+        "url": "https://www.gnu.org/licenses/agpl-3.0.html",
+        "shareAlike": false,
+        "noDerivatives": false,
+        "packManifestLicence": "CC0-1.0",
+        "mhcloHeaderLicence": "AGPL-3.0-or-later",
+        "mhcloHeaderLicenceRaw": "AGPL3 (see also http://www.makehuman.org/doc/node/external_tools_license.html)",
+        "agreement": "conflict"
+      },
+      "clearance": "rejected",
+      "clearanceReason": "The pack manifest declares CC0-1.0 while the .mhclo header declares AGPL-3.0-or-later; the more restrictive AGPL-3.0-or-later governs, giving clearance rejected.",
+      "fitting": {
+        "fitReference": "helper",
+        "matchedBaseVertices": 1423,
+        "matchedSkinVertices": 0,
+        "matchedHelperVertices": 1423,
+        "shipsDeleteGroup": true,
+        "deleteVertices": 2399,
+        "zDepth": 50,
+        "vertices": 1371,
+        "faces": 1330
+      },
+      "parseWarnings": []
+    }
+  ],
+  "summary": {
+    "total": 64,
+    "approved": 56,
+    "reviewRequired": 1,
+    "rejected": 7
+  }
+}

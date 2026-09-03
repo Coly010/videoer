@@ -29,23 +29,70 @@ forward travel — and generalises across the CC0 clip library (walk, jog, …) 
 `render_cc0_rigify_action_reel.py` are superseded (see the CC0→Rigify history below); do not add new
 hand-rolled modes.
 
-## Clothing (Blender-native cloth) — [ADR 076](adr/076-blender-native-cloth-system.md)
+## Clothing — CC0 MakeHuman garments are the production wardrobe — [ADR 077](adr/077-cc0-mhclo-garments-are-the-production-wardrobe.md)
 
-Clothing on the production human is Blender-native (built-in Cloth modifier + armature-deformed
-fitted garments), not the retired renderer-independent CPU cloth ([ADR 030](adr/030-renderer-independent-temporal-clothing.md)).
-`scripts/blender/render_cloth_walk.py` (parametrized by `GARMENT_SPECS`) builds the MPFB/Rigify body
-+ Expy Kit walk, generates a garment in one of three classes — **fitted** (duplicate a body surface
-region + armature deform; rock-stable), **loose** (Cloth modifier with an armature-locked,
-gradient-weighted pin), or **hybrid** (fitted upper + loose hem) — simulates over the walk, runs a
-headless mechanical gate (explosion / velocity / body-penetration / anchor / self-intersection +
-bulk percentile edge-strain, garment-class-aware, + a blow-up catch), and renders contact sheets.
+The production wardrobe is real CC0 MakeHuman `.mhclo` garments, fitted onto the MPFB/Rigify
+production human via MPFB's `ClothesService`/`HumanService.add_mhclo_asset` — not the earlier
+procedural body-surface-duplicate garments, which are now a fallback (see below). Six CC0 MakeHuman
+Community packs (64 garments) are pinned by sha256 + byte size
+(`scripts/install-makehuman-clothes-packs.sh`) and licence-scanned into a committed clearance record
+(`scripts/blender/mhclo_asset_manifest.py`, `assets/wardrobe/makehuman-cc0-clothes-packs-v1.json`):
+56 approved, 1 review-required, 7 rejected (quarantined on AGPL header licences despite CC0 pack
+manifests — the more restrictive of the two licence signals always governs).
+`scripts/blender/render_cloth_walk.py` still runs the whole harness: an `OUTFIT_SPECS` entry with
+`"kind": "mhclo"` lists an outfit's garments innermost first, fits each one onto the walking body,
+sha256-verifies it again against the clearance record at load time, hides skin it covers with a
+delete-group MASK modifier (shipped as authored, spatially generated, or shipped-and-extended),
+pushes an outer garment clear of an inner one where a hem is authored inside a waistband
+(`clear_over`), optionally pushes a garment clear of skin it is authored too close to (`clear_skin`),
+tames MakeSkin's Bump node so knits read as knits rather than nets, then runs the same headless
+mechanical gate and three-fixed-view (side, rear three-quarter, front three-quarter) evidence render
+as every other garment class. The gate itself is unchanged from ADR 076 (explosion / velocity /
+garment-into-body penetration / **body-through-garment poke-through** / self-intersection + bulk
+percentile edge-strain), plus, for `mhclo` outfits only, a hidden-skin-boundary-uncovered check and
+an informational inter-garment clearance check. A failing check is written into the report's `notes`
+in plain words.
 
-Verified on the Expy Kit walk: crop top, jeans, trousers, shirt, sweater, pyjama top, pyjama bottoms
-and tie (fitted); mini skirt and dress (loose/hybrid, with cloth-simulated flowing skirts); plus two
-assembled multi-garment outfits (sweater+jeans, shirt+tie+trousers). Hard-won details (garment
-generated from the body surface for exact fit; loose garments armature-locked to a stable hoop, not
-the swinging thighs; the disk point-cache invalidated per bake; the fitting cross-section excluding
-the arms that hang at waist height in the A-pose) are recorded in ADR 076 and the script.
+**Acceptance status (2026-09-03; evidence under**
+**`work/characters/production-rig-scene-integration/cloth-phase5-mhclo/`, git-ignored):** of the four
+verified outfits, only `mh-suit-boots` (male suit + tie + jacket, ankle boots) passes the mechanical
+gate outright. The other three render well and read clean at 1024 px but each fails one small,
+localized mechanical check: `mh-sweater-wool-boots` (the fisherman sweater pokes through at 1.03%
+worst frame, 7 of 41 frames, deepest 2.5 mm — the sweater and wool pants deform under different bones
+and cross each other at pose time, which no rest-mesh clearance push can fix); `mh-halter-dress-boots`
+(5 persistent poking vertices at the neck strap edge, 0.52%, marginally over the 0.5% bound);
+`mh-tshirt-harem-boots` (the tucked t-shirt at 1.02% across all 41 frames and the harem pants at
+1.30% worst frame, both a couple of millimetres deep). None of these is visible in the renders; each
+is left as a recorded mechanical fail rather than a loosened bound.
+
+Hard-won details (the full numbered list is in ADR 077): many assets are fitted to MPFB's HELPER
+geometry and reference zero skin vertices in their own correspondence data, so skin coverage must be
+computed **spatially** — rays along the body's shape-key-mix normal — never from the asset's own
+vertex list; 10 of 64 assets ship no delete group at all and need one generated from that spatial
+footprint; layering ignores the asset's `z_depth` (Blender does not use it for draw order or
+collision), so a hem authored inside a waistband needs the outer garment pushed clear of the inner
+one — feathered, reach-capped, never a uniform inflate (that recreates the wetsuit problem this
+decision exists to fix); nearest-point sign tests are undefined near a garment's own open edges, so
+rays decide coverage and clearance everywhere; and every fitted asset is sha256-verified against the
+clearance record both when the pack is installed and again when the garment is loaded, so redirecting
+the data root cannot launder an unapproved mesh under an approved name.
+
+The earlier procedural fitted / loose / hybrid classes (`GARMENT_SPECS`, still driven by
+`render_cloth_walk.py`) are retained as a **fallback** for garments with no cleared CC0 equivalent,
+and remain the **only route to a genuinely simulated, swinging hem** — every `.mhclo` garment above
+is armature-only. Their own hard-won details, recorded in [ADR 076](adr/076-blender-native-cloth-system.md)
+and the script, are still true for that class: the garment must be generated from the body surface
+for exact topology; **the MPFB body's shape keys must be frozen on a duplicate** (a mesh with shape
+keys ignores `vertex.co`, so the first fitted garments sat exactly on the skin — the "body breaking
+through the trousers"); **the body's two-modifier armature stack must be mirrored**; the helper
+deform bones (knee/pelvis/shoulder helpers, lower spine) must be in the garment region or the knees
+and waistband are holes; loose garments are armature-locked to a stable hoop, not the swinging
+thighs; **skirt rings are cut to the body's per-angle profile**, not a circle of the maximum hip
+radius (the floating waistband); the disk point-cache is invalidated per bake; the fitting
+cross-section excludes the arms that hang at waist height in the A-pose. Re-verified 2026-09-03
+alongside the mhclo work (one code state), the procedural regressions still pass unchanged: the
+standalone sweater (poke 0.12%, edge p99 1.20) and the shirt+tie+trousers outfit. Evidence for the
+procedural class: `work/characters/production-rig-scene-integration/cloth-phase4/` (git-ignored).
 
 ## Deprecated: the project-owned human foundation
 
